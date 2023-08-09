@@ -79,11 +79,7 @@ $(LINK_OVERLAY).o: $(LINK_OVERLAY).S
 $(LINK_OVERLAY).S: $(OVERLAY)
 	./gen-overlay-symbols.sh $< $@
 
-$(BLOB_OVERLAY).o: $(BLOB_OVERLAY).c
-
-$(BLOB_OVERLAY).c: $(OVERLAY).bin
-	echo "const " > $@
-	xxd -i $< >> $@
+$(BLOB_OVERLAY).S: $(OVERLAY).bin
 
 $(TARGET): $(OBJS)
 	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
@@ -100,5 +96,5 @@ bsp/dp32g030/%.h: hardware/dp32g030/%.def
 -include $(DEPS)
 
 clean:
-	rm -f $(TARGET).bin $(TARGET) $(OBJS) $(DEPS) $(OVERLAY).bin $(OVERLAY) $(OVERLAY).o $(OVERLAY).d $(LINK_OVERLAY).o $(LINK_OVERLAY).S $(BLOB_OVERLAY).o $(BLOB_OVERLAY).c
+	rm -f $(TARGET).bin $(TARGET) $(OBJS) $(DEPS) $(OVERLAY).bin $(OVERLAY) $(OVERLAY).o $(OVERLAY).d $(LINK_OVERLAY).o $(LINK_OVERLAY).S $(BLOB_OVERLAY).o
 
