@@ -50,6 +50,6 @@ void EEPROM_WriteBuffer(uint16_t Address, const void *pBuffer)
 
 	I2C_Stop();
 
-	SYSTEM_DelayUs(10);
+	SYSTEM_DelayMs(10);
 }
 

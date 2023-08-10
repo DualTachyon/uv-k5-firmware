@@ -70,7 +70,7 @@ void ST7565_BlitFullScreen(void)
 		SPI_WaitForUndocumentedTxFifoStatusBit();
 	}
 
-	SYSTEM_DelayUs(20);
+	SYSTEM_DelayMs(20);
 	SPI_ToggleMasterMode(&SPI0->CR, true);
 }
 
@@ -116,7 +116,7 @@ void ST7565_Init(void)
 	ST7565_Configure_GPIO_B11();
 	SPI_ToggleMasterMode(&SPI0->CR, false);
 	ST7565_WriteByte(0xE2);
-	SYSTEM_DelayUs(0x78);
+	SYSTEM_DelayMs(0x78);
 	ST7565_WriteByte(0xA2);
 	ST7565_WriteByte(0xC0);
 	ST7565_WriteByte(0xA1);
@@ -126,14 +126,14 @@ void ST7565_Init(void)
 	ST7565_WriteByte(0x81);
 	ST7565_WriteByte(0x1F);
 	ST7565_WriteByte(0x2B);
-	SYSTEM_DelayUs(1);
+	SYSTEM_DelayMs(1);
 	ST7565_WriteByte(0x2E);
-	SYSTEM_DelayUs(1);
+	SYSTEM_DelayMs(1);
 	ST7565_WriteByte(0x2F);
 	ST7565_WriteByte(0x2F);
 	ST7565_WriteByte(0x2F);
 	ST7565_WriteByte(0x2F);
-	SYSTEM_DelayUs(0x28);
+	SYSTEM_DelayMs(0x28);
 	ST7565_WriteByte(0x40);
 	ST7565_WriteByte(0xAF);
 	SPI_WaitForUndocumentedTxFifoStatusBit();
@@ -144,11 +144,11 @@ void ST7565_Init(void)
 void ST7565_Configure_GPIO_B11(void)
 {
 	GPIO_SetBit(&GPIOB->DATA, 11);
-	SYSTEM_DelayUs(1);
+	SYSTEM_DelayMs(1);
 	GPIO_ClearBit(&GPIOB->DATA, 11);
-	SYSTEM_DelayUs(20);
+	SYSTEM_DelayMs(20);
 	GPIO_SetBit(&GPIOB->DATA, 11);
-	SYSTEM_DelayUs(120);
+	SYSTEM_DelayMs(120);
 }
 
 void ST7565_SelectColumnAndLine(uint8_t Column, uint8_t Line)

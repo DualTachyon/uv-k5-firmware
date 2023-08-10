@@ -26,7 +26,7 @@ void SYSTICK_Init(void)
 	gTickMultiplier = 48;
 }
 
-void SYSTICK_Delay(uint32_t Delay)
+void SYSTICK_DelayUs(uint32_t Delay)
 {
 	uint32_t i;
 	uint32_t Start;
