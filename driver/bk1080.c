@@ -32,19 +32,19 @@ void BK1080_Init(uint16_t Channel, bool bDoScan)
 				BK1080_WriteRegister(i, BK1080_RegisterTable[i]);
 			}
 			SYSTEM_DelayMs(250);
-			BK1080_WriteRegister(REG_25_INTERNAL, 0xA83C);
-			BK1080_WriteRegister(REG_25_INTERNAL, 0xA8BC);
+			BK1080_WriteRegister(BK1080_REG_25_INTERNAL, 0xA83C);
+			BK1080_WriteRegister(BK1080_REG_25_INTERNAL, 0xA8BC);
 			SYSTEM_DelayMs(60);
 			gIsInitBK1080 = true;
 		} else {
-			BK1080_WriteRegister(REG_02_POWER_CONFIGURATION, 0x0201);
+			BK1080_WriteRegister(BK1080_REG_02_POWER_CONFIGURATION, 0x0201);
 		}
-		BK1080_WriteRegister(REG_05_SYSTEM_CONFIGURATION2, 0x0A5F);
-		BK1080_WriteRegister(REG_03_CHANNEL, Channel - 760);
+		BK1080_WriteRegister(BK1080_REG_05_SYSTEM_CONFIGURATION2, 0x0A5F);
+		BK1080_WriteRegister(BK1080_REG_03_CHANNEL, Channel - 760);
 		SYSTEM_DelayMs(10);
-		BK1080_WriteRegister(REG_03_CHANNEL, (Channel - 760) | 0x8000);
+		BK1080_WriteRegister(BK1080_REG_03_CHANNEL, (Channel - 760) | 0x8000);
 	} else {
-		BK1080_WriteRegister(REG_02_POWER_CONFIGURATION, 0x0241);
+		BK1080_WriteRegister(BK1080_REG_02_POWER_CONFIGURATION, 0x0241);
 		GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_BK1080);
 	}
 }
