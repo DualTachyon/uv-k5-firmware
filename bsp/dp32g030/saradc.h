@@ -195,6 +195,8 @@
 #define SARADC_IF_FIFO_HFULL_VALUE_SET          1U
 #define SARADC_IF_FIFO_HFULL_BITS_SET           (SARADC_IF_FIFO_HFULL_VALUE_SET << SARADC_IF_FIFO_HFULL_SHIFT)
 
+#define SARADC_CH0_ADDR                         (SARADC_BASE_ADDR + 0x0010U)
+#define SARADC_CH0                              (*(volatile uint32_t *)SARADC_CH0_ADDR)
 #define SARADC_EXTTRIG_SEL_ADDR                 (SARADC_BASE_ADDR + 0x00B0U)
 #define SARADC_EXTTRIG_SEL                      (*(volatile uint32_t *)SARADC_EXTTRIG_SEL_ADDR)
 
@@ -223,6 +225,28 @@
 #define SARADC_CALIB_KD_VALID_BITS_NO           (SARADC_CALIB_KD_VALID_VALUE_NO << SARADC_CALIB_KD_VALID_SHIFT)
 #define SARADC_CALIB_KD_VALID_VALUE_YES         1U
 #define SARADC_CALIB_KD_VALID_BITS_YES          (SARADC_CALIB_KD_VALID_VALUE_YES << SARADC_CALIB_KD_VALID_SHIFT)
+
+/* -------- ADC_CHx -------- */
+
+typedef struct {
+	uint32_t STAT;
+	uint32_t DATA;
+} ADC_Channel_t;
+
+#define ADC_CHx_STAT_EOC_SHIFT                  0
+#define ADC_CHx_STAT_EOC_WIDTH                  1
+#define ADC_CHx_STAT_EOC_MASK                   (((1U << ADC_CHx_STAT_EOC_WIDTH) - 1U) << ADC_CHx_STAT_EOC_SHIFT)
+#define ADC_CHx_STAT_EOC_VALUE_NOT_COMPLETE     0U
+#define ADC_CHx_STAT_EOC_BITS_NOT_COMPLETE      (ADC_CHx_STAT_EOC_VALUE_NOT_COMPLETE << ADC_CHx_STAT_EOC_SHIFT)
+#define ADC_CHx_STAT_EOC_VALUE_COMPLETE         1U
+#define ADC_CHx_STAT_EOC_BITS_COMPLETE          (ADC_CHx_STAT_EOC_VALUE_COMPLETE << ADC_CHx_STAT_EOC_SHIFT)
+
+#define ADC_CHx_DATA_DATA_SHIFT                 0
+#define ADC_CHx_DATA_DATA_WIDTH                 12
+#define ADC_CHx_DATA_DATA_MASK                  (((1U << ADC_CHx_DATA_DATA_WIDTH) - 1U) << ADC_CHx_DATA_DATA_SHIFT)
+#define ADC_CHx_DATA_NUM_SHIFT                  12
+#define ADC_CHx_DATA_NUM_WIDTH                  4
+#define ADC_CHx_DATA_NUM_MASK                   (((1U << ADC_CHx_DATA_NUM_WIDTH) - 1U) << ADC_CHx_DATA_NUM_SHIFT)
 
 
 #endif

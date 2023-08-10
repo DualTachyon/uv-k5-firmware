@@ -102,6 +102,8 @@ IF = 0x000C
 = NOT_SET, 0
 = SET, 1
 
+CH0 = 0x0010
+
 EXTTRIG_SEL = 0x00B0
 
 CALIB_OFFSET = 0x00F0
@@ -115,4 +117,16 @@ CALIB_KD = 0x00F4
 > VALID, 16, 1
 = NO, 0
 = YES, 1
+
+[ADC_CHx]
+$ = ADC_Channel_t
+
+STAT = 0x0000
+> EOC, 0, 1
+= NOT_COMPLETE, 0
+= COMPLETE, 1
+
+DATA = 0x0004
+> DATA, 0, 12
+> NUM, 12, 4
 

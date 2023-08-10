@@ -125,3 +125,26 @@ void ADC_Configure(ADC_Config_t *pAdc)
 	}
 }
 
+void ADC_Start(void)
+{
+	SARADC_START = (SARADC_START & ~SARADC_START_START_MASK) | SARADC_START_START_BITS_ENABLE;
+}
+
+bool ADC_CheckEndOfConversion(ADC_CH_MASK Mask)
+{
+	volatile ADC_Channel_t *pChannels = (volatile ADC_Channel_t *)&SARADC_CH0;
+	uint8_t Channel = ADC_GetChannelNumber(Mask);
+
+	return (pChannels[Channel].STAT & ADC_CHx_STAT_EOC_MASK) >> ADC_CHx_STAT_EOC_SHIFT;
+}
+
+uint16_t ADC_GetValue(ADC_CH_MASK Mask)
+{
+	volatile ADC_Channel_t *pChannels = (volatile ADC_Channel_t *)&SARADC_CH0;
+	uint8_t Channel = ADC_GetChannelNumber(Mask);
+
+	SARADC_IF = 1 << Channel; // TODO: Or just use 'Mask'
+
+	return (pChannels[Channel].DATA & ADC_CHx_DATA_DATA_MASK) >> ADC_CHx_DATA_DATA_SHIFT;
+}
+

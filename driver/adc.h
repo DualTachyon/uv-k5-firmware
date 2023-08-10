@@ -50,6 +50,9 @@ void ADC_Enable(void);
 void ADC_SoftReset(void);
 uint32_t ADC_GetClockConfig(void);
 void ADC_Configure(ADC_Config_t *pAdc);
+void ADC_Start(void);
+bool ADC_CheckEndOfConversion(ADC_CH_MASK Mask);
+uint16_t ADC_GetValue(ADC_CH_MASK Mask);
 
 #endif
 

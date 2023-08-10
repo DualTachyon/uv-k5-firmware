@@ -17,9 +17,13 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <stdint.h>
+
 void BOARD_FLASH_Init(void);
 void BOARD_GPIO_Init(void);
 void BOARD_PORTCON_Init(void);
+void BOARD_ADC_Init(void);
+void BOARD_ADC_GetBatteryInfo(uint16_t *pCh4, uint16_t *pCh9);
 void BOARD_Init(void);
 
 #endif

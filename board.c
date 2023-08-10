@@ -310,6 +310,15 @@ void BOARD_ADC_Init(void)
 	ADC_SoftReset();
 }
 
+void BOARD_ADC_GetBatteryInfo(uint16_t *pCh4, uint16_t *pCh9)
+{
+	ADC_Start();
+
+	while (!ADC_CheckEndOfConversion(ADC_CH9));
+	*pCh4 = ADC_GetValue(ADC_CH4);
+	*pCh9 = ADC_GetValue(ADC_CH9);
+}
+
 void BOARD_Init(void)
 {
 	BOARD_PORTCON_Init();
