@@ -93,7 +93,13 @@ void Main(void)
 	uint8_t Test[8];
 	EEPROM_ReadBuffer(0x0EB0, Test, 8);
 
+    Keyboard_init();
+
 	while (1) {
+        UART_SendString("\r\nKey: ");
+        uint8_t key = PollKeyboard() + 0x40;
+        UART_Send(&key, 1);
+
 		SYSTEM_DelayMs(500);
 		FLASHLIGHT_TurnOff();
 		SYSTEM_DelayMs(500);

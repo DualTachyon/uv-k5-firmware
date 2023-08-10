@@ -8,9 +8,10 @@
 #include "gpio.h"
 #include "../bsp/dp32g030/gpio.h"
 
+#define KEY_NOKEY   24
 #define KEY_M       10
 #define KEY_UP      11
-#define KEY_DOWN    10
+#define KEY_DOWN    12
 #define KEY_EXIT    13
 #define KEY_0       0
 #define KEY_1       1
@@ -28,6 +29,8 @@
 #define KEY_FN2     22
 #define KEY_PPT     21
 
+
+void Keyboard_init();
 unsigned int PollKeyboard();
 
 

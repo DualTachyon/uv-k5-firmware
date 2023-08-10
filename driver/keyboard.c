@@ -3,25 +3,29 @@
 //
 
 #include "keyboard.h"
+#include "system.h"
 
-#define SLEEPTIME 100
+#define KEYBOARD_LVLWAIT_US 10
 
-void sleep(uint32_t time){
-    for (uint32_t i = 0; i < time; ++i) {
-        __asm__("nop");
-    }
+void Keyboard_init(){
+    GPIO_SetBit(&GPIOA->DIR, 10);
+    GPIO_SetBit(&GPIOA->DIR, 11);
+    GPIO_SetBit(&GPIOA->DIR, 12);
+    GPIO_SetBit(&GPIOA->DIR, 13);
+
+    GPIO_ClearBit(&GPIOA->DIR, 3);
+    GPIO_ClearBit(&GPIOA->DIR, 4);
+    GPIO_ClearBit(&GPIOA->DIR, 5);
+    GPIO_ClearBit(&GPIOA->DIR, 6);
 }
 
 unsigned int PollKeyboard(){
-
-
 
     GPIO_SetBit(&GPIOA->DATA, 10);
     GPIO_SetBit(&GPIOA->DATA, 11);
     GPIO_SetBit(&GPIOA->DATA, 12);
     GPIO_SetBit(&GPIOA->DATA, 13);
-
-    sleep(SLEEPTIME);
+    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
 
     //keys connected to gnd
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
@@ -34,7 +38,7 @@ unsigned int PollKeyboard(){
 
     // first row
     GPIO_ClearBit(&GPIOA->DATA, 10);
-    sleep(SLEEPTIME);
+    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
         return KEY_M;
     if(!GPIO_CheckBit(&GPIOA->DATA, 4))
@@ -48,7 +52,7 @@ unsigned int PollKeyboard(){
 
     // second row
     GPIO_ClearBit(&GPIOA->DATA, 11);
-    sleep(SLEEPTIME);
+    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
         return KEY_UP;
     if(!GPIO_CheckBit(&GPIOA->DATA, 4))
@@ -61,7 +65,7 @@ unsigned int PollKeyboard(){
 
     // third row
     GPIO_ClearBit(&GPIOA->DATA, 12);
-    sleep(SLEEPTIME);
+    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
         return KEY_DOWN;
     if(!GPIO_CheckBit(&GPIOA->DATA, 4))
@@ -74,7 +78,7 @@ unsigned int PollKeyboard(){
 
     // fourth row
     GPIO_ClearBit(&GPIOA->DATA, 13);
-    sleep(SLEEPTIME);
+    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
         return KEY_EXIT;
     if(!GPIO_CheckBit(&GPIOA->DATA, 4))
@@ -85,5 +89,5 @@ unsigned int PollKeyboard(){
         return KEY_F;
     GPIO_SetBit(&GPIOA->DATA, 13);
 
-    return 24;
+    return KEY_NOKEY;
 }
