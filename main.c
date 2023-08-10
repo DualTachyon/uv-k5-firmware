@@ -26,6 +26,7 @@
 #include "driver/flash.h"
 #include "driver/gpio.h"
 #include "driver/st7565.h"
+#include "driver/system.h"
 #include "driver/systick.h"
 #include "driver/uart.h"
 
@@ -41,6 +42,11 @@ static void FLASHLIGHT_Init(void)
 	GPIO_SetBit(&GPIOC->DATA, 11);
 	GPIO_SetBit(&GPIOC->DATA, 12);
 	GPIO_SetBit(&GPIOC->DATA, 13);
+}
+
+static void FLASHLIGHT_TurnOff(void)
+{
+	GPIO_ClearBit(&GPIOC->DATA, 3);
 }
 
 static void FLASHLIGHT_TurnOn(void)
@@ -87,6 +93,10 @@ void Main(void)
 	EEPROM_ReadBuffer(0x0EB0, Test, 8);
 
 	while (1) {
+		SYSTEM_DelayMs(500);
+		FLASHLIGHT_TurnOff();
+		SYSTEM_DelayMs(500);
+		FLASHLIGHT_TurnOn();
 	}
 }
 
