@@ -9,7 +9,7 @@
 #include "systick.h"
 #include "../bsp/dp32g030/gpio.h"
 
-#define KEY_NOKEY   24
+#define KEY_NOKEY   0xFF
 #define KEY_M       10
 #define KEY_UP      11
 #define KEY_DOWN    12
