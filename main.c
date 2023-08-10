@@ -47,17 +47,17 @@ static void FLASHLIGHT_Init(void)
 
 static void FLASHLIGHT_TurnOff(void)
 {
-	GPIO_ClearBit(&GPIOC->DATA, 3);
+	GPIO_ClearBit(&GPIOC->DATA, GPIOB_PIN_FLASHLIGHT);
 }
 
 static void FLASHLIGHT_TurnOn(void)
 {
-	GPIO_SetBit(&GPIOC->DATA, 3);
+	GPIO_SetBit(&GPIOC->DATA, GPIOB_PIN_FLASHLIGHT);
 }
 
 static void BACKLIGHT_TurnOn(void)
 {
-	GPIO_SetBit(&GPIOB->DATA, 6);
+	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 }
 
 void Main(void)
