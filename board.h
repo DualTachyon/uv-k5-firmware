@@ -25,6 +25,8 @@ void BOARD_PORTCON_Init(void);
 void BOARD_ADC_Init(void);
 void BOARD_ADC_GetBatteryInfo(uint16_t *pCh4, uint16_t *pCh9);
 void BOARD_Init(void);
+void BOARD_EEPROM_Init(void);
+void BOARD_EEPROM_LoadMoreSettings(void);
 
 #endif
 

@@ -32,6 +32,11 @@ OBJS += driver/uart.o
 
 # Main
 OBJS += board.o
+OBJS += dtmf.o
+OBJS += fm.o
+OBJS += frequencies.o
+OBJS += misc.o
+OBJS += settings.o
 OBJS += main.o
 
 TOP := $(shell pwd)

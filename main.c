@@ -30,6 +30,7 @@
 #include "driver/system.h"
 #include "driver/systick.h"
 #include "driver/uart.h"
+#include "misc.h"
 
 static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
 
@@ -85,6 +86,9 @@ void Main(void)
 	// TODO: EEPROM Init
 
 	BK4819_Init();
+	BOARD_ADC_GetBatteryInfo(&gADC_CH4_BootValue, &gADC_CH9);
+	BOARD_EEPROM_Init();
+	BOARD_EEPROM_LoadMoreSettings();
 
 	// Below this line is development/test area not conforming to the original firmware
 
