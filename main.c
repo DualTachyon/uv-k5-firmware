@@ -54,12 +54,6 @@ static void BACKLIGHT_TurnOn(void)
 	GPIO_SetBit(&GPIOB->DATA, 6);
 }
 
-void sleep_busy(uint32_t time){
-    for (uint32_t i = 0; i < time; ++i) {
-        __asm__("nop");
-    }
-}
-
 void Main(void)
 {
 	// Enable clock gating of blocks we need.
@@ -93,18 +87,10 @@ void Main(void)
 	uint8_t Test[8];
 	EEPROM_ReadBuffer(0x0EB0, Test, 8);
 
-    GPIO_SetBit(&GPIOA->DIR, 10);
-    GPIO_SetBit(&GPIOA->DIR, 11);
-    GPIO_SetBit(&GPIOA->DIR, 12);
-    GPIO_SetBit(&GPIOA->DIR, 13);
-
-    GPIO_ClearBit(&GPIOA->DIR, 3);
-    GPIO_ClearBit(&GPIOA->DIR, 4);
-    GPIO_ClearBit(&GPIOA->DIR, 5);
-    GPIO_ClearBit(&GPIOA->DIR, 6);
+    Keyboard_init();
 
 	while (1) {
-        sleep_busy(1000000);
+        SYSTICK_Delay(100000);
         UART_SendString("\r\nKey: ");
         uint8_t key = PollKeyboard() + 0x40;
         UART_Send(&key, 1);
