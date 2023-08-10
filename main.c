@@ -105,7 +105,7 @@ void Main(void)
     Keyboard_init();
 
 	while (1) {
-        UART_SendString("\r\nKey: ");
+        UART_Send("\r\nKey: ",7);
         uint8_t key = PollKeyboard() + 0x40;
         UART_Send(&key, 1);
 
