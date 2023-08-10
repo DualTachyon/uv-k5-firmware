@@ -16,6 +16,7 @@ OBJS += $(LINK_OVERLAY).o
 OBJS += $(BLOB_OVERLAY).o
 
 # Drivers
+OBJS += driver/adc.o
 OBJS += driver/crc.o
 OBJS += driver/eeprom.o
 OBJS += driver/flash.o

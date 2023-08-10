@@ -18,6 +18,9 @@
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
+#include "bsp/dp32g030/saradc.h"
+#include "bsp/dp32g030/syscon.h"
+#include "driver/adc.h"
 #include "driver/crc.h"
 #include "driver/flash.h"
 #include "driver/gpio.h"
@@ -282,11 +285,35 @@ void BOARD_PORTCON_Init(void)
 		;
 }
 
+void BOARD_ADC_Init(void)
+{
+	ADC_Config_t Config;
+
+	Config.CLK_SEL = SYSCON_CLK_SEL_W_SARADC_SMPL_VALUE_DIV2;
+	Config.CH_SEL = ADC_CH4 | ADC_CH9;
+	Config.AVG = SARADC_CFG_AVG_VALUE_8_SAMPLE;
+	Config.CONT = SARADC_CFG_CONT_VALUE_SINGLE;
+	Config.MEM_MODE = SARADC_CFG_MEM_MODE_VALUE_CHANNEL;
+	Config.SMPL_CLK = SARADC_CFG_SMPL_CLK_VALUE_INTERNAL;
+	Config.SMPL_WIN = SARADC_CFG_SMPL_WIN_VALUE_15_CYCLE;
+	Config.SMPL_SETUP = SARADC_CFG_SMPL_SETUP_VALUE_1_CYCLE;
+	Config.ADC_TRIG = SARADC_CFG_ADC_TRIG_VALUE_CPU;
+	Config.CALIB_KD_VALID = SARADC_CALIB_KD_VALID_VALUE_YES;
+	Config.CALIB_OFFSET_VALID = SARADC_CALIB_OFFSET_VALID_VALUE_YES;
+	Config.DMA_EN = SARADC_CFG_DMA_EN_VALUE_DISABLE;
+	Config.IE_CHx_EOC = SARADC_IE_CHx_EOC_VALUE_NONE;
+	Config.IE_FIFO_FULL = SARADC_IE_FIFO_FULL_VALUE_DISABLE;
+	Config.IE_FIFO_HFULL = SARADC_IE_FIFO_HFULL_VALUE_DISABLE;
+	ADC_Configure(&Config);
+	ADC_Enable();
+	ADC_SoftReset();
+}
+
 void BOARD_Init(void)
 {
 	BOARD_PORTCON_Init();
 	BOARD_GPIO_Init();
-	//ADC_Init();
+	BOARD_ADC_Init();
 	ST7565_Init();
 	//BK1080_Init(0, false);
 	CRC_Init();

@@ -17,11 +17,11 @@
 @ = 0x40000000, 0x800
 
 CLK_SEL = 0x0000
-> SYS_CLK_SEL, 0, 1
+> SYS, 0, 1
 = RCHF, 0
 = DIV_CLK, 1
 
-> DIV_CLK_SEL, 1, 3
+> DIV, 1, 3
 = 1, 0
 = 2, 1
 = 4, 2
@@ -29,12 +29,33 @@ CLK_SEL = 0x0000
 = 16, 4
 = 32, 5
 
-> SRC_CLK_SEL, 4, 3
+> SRC, 4, 3
 = RCHF, 0
 = RCLF, 1
 = XTAH, 2
 = XTAL, 3
 = PLL, 4
+
+> W_PLL, 7, 1
+= RCHF, 0
+= XTAH, 1
+
+# The documentation doesn't match the firmware!
+> R_SARADC_SMPL, 9, 2
+= DIV1, 0
+= DIV2, 1
+= DIV4, 2
+= DIV8, 3
+
+> W_SARADC_SMPL, 10, 2
+= DIV1, 0
+= DIV2, 1
+= DIV4, 2
+= DIV8, 3
+
+> R_PLL, 11, 1
+= RCHF, 0
+= XTAH, 1
 
 DIV_CLK_GATE = 0x0004
 > DIV_CLK_GATE, 1, 1
