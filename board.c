@@ -21,6 +21,7 @@
 #include "bsp/dp32g030/saradc.h"
 #include "bsp/dp32g030/syscon.h"
 #include "driver/adc.h"
+#include "driver/bk1080.h"
 #include "driver/crc.h"
 #include "driver/flash.h"
 #include "driver/gpio.h"
@@ -315,7 +316,7 @@ void BOARD_Init(void)
 	BOARD_GPIO_Init();
 	BOARD_ADC_Init();
 	ST7565_Init();
-	//BK1080_Init(0, false);
+	BK1080_Init(0, false);
 	CRC_Init();
 }
 
