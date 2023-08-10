@@ -100,7 +100,7 @@ void UART_SendString(const char *string){
         return;
     do {
         UART1->TDR = *string;
-        while ((UART1->IF & UART_IF_TXFIFO_FULL_MASK) != UART_IF_TXFIFO_FULL_NOT_SET) {
+        while ((UART1->IF & UART_IF_TXFIFO_FULL_MASK) != UART_IF_TXFIFO_FULL_BITS_NOT_SET) {
         }
         string++;
     } while (*string);

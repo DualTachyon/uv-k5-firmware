@@ -3,7 +3,6 @@
 //
 
 #include "keyboard.h"
-#include "system.h"
 
 #define KEYBOARD_LVLWAIT_US 10
 
@@ -25,7 +24,7 @@ unsigned int PollKeyboard(){
     GPIO_SetBit(&GPIOA->DATA, 11);
     GPIO_SetBit(&GPIOA->DATA, 12);
     GPIO_SetBit(&GPIOA->DATA, 13);
-    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
+    SYSTICK_DelayUs(KEYBOARD_LVLWAIT_US);
 
     //keys connected to gnd
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
@@ -38,7 +37,7 @@ unsigned int PollKeyboard(){
 
     // first row
     GPIO_ClearBit(&GPIOA->DATA, 10);
-    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
+    SYSTICK_DelayUs(KEYBOARD_LVLWAIT_US);
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
         return KEY_M;
     if(!GPIO_CheckBit(&GPIOA->DATA, 4))
@@ -52,7 +51,7 @@ unsigned int PollKeyboard(){
 
     // second row
     GPIO_ClearBit(&GPIOA->DATA, 11);
-    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
+    SYSTICK_DelayUs(KEYBOARD_LVLWAIT_US);
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
         return KEY_UP;
     if(!GPIO_CheckBit(&GPIOA->DATA, 4))
@@ -65,7 +64,7 @@ unsigned int PollKeyboard(){
 
     // third row
     GPIO_ClearBit(&GPIOA->DATA, 12);
-    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
+    SYSTICK_DelayUs(KEYBOARD_LVLWAIT_US);
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
         return KEY_DOWN;
     if(!GPIO_CheckBit(&GPIOA->DATA, 4))
@@ -78,7 +77,7 @@ unsigned int PollKeyboard(){
 
     // fourth row
     GPIO_ClearBit(&GPIOA->DATA, 13);
-    SYSTEM_DelayUs(KEYBOARD_LVLWAIT_US);
+    SYSTICK_DelayUs(KEYBOARD_LVLWAIT_US);
     if(!GPIO_CheckBit(&GPIOA->DATA, 3))
         return KEY_EXIT;
     if(!GPIO_CheckBit(&GPIOA->DATA, 4))

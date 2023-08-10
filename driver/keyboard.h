@@ -6,6 +6,7 @@
 #define UV_K5_FIRMWARE_KEYBOARD_H
 
 #include "gpio.h"
+#include "systick.h"
 #include "../bsp/dp32g030/gpio.h"
 
 #define KEY_NOKEY   24
