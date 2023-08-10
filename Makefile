@@ -26,6 +26,7 @@ OBJS += driver/st7565.o
 OBJS += driver/system.o
 OBJS += driver/systick.o
 OBJS += driver/uart.o
+OBJS += driver/keyboard.o
 
 # Main
 OBJS += board.o

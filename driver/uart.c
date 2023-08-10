@@ -94,3 +94,16 @@ void UART_Send(const void *pBuffer, uint32_t Size)
 	}
 }
 
+void UART_SendString(const char *string){
+
+    if(!*string)
+        return;
+    do {
+        UART1->TDR = *string;
+        while ((UART1->IF & UART_IF_TXFIFO_FULL_MASK) != UART_IF_TXFIFO_FULL_NOT_SET) {
+        }
+        string++;
+    } while (*string);
+
+}
+
