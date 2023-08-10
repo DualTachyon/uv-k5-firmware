@@ -22,6 +22,7 @@
 #include "bsp/dp32g030/syscon.h"
 #include "board.h"
 #include "driver/crc.h"
+#include "driver/bk4819.h"
 #include "driver/eeprom.h"
 #include "driver/flash.h"
 #include "driver/gpio.h"
@@ -78,6 +79,14 @@ void Main(void)
 
 	UART_Init();
 	UART_Send(Version, sizeof(Version));
+
+	// Not implementing authentic device checks
+
+	// TODO: EEPROM Init
+
+	BK4819_Init();
+
+	// Below this line is development/test area not conforming to the original firmware
 
 	// Show some signs of life
 	FLASHLIGHT_Init();
