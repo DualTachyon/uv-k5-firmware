@@ -30,6 +30,7 @@
 #include "driver/system.h"
 #include "driver/systick.h"
 #include "driver/uart.h"
+#include "driver/keyboard.h"
 
 static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
 
