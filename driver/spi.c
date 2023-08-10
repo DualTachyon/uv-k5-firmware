@@ -59,15 +59,15 @@ void SPI_WaitForUndocumentedTxFifoStatusBit(void)
 
 void SPI_Disable(volatile uint32_t *pCR)
 {
-	*pCR = (*pCR & ~SPI_CR_SPE_MASK) | SPI_CR_SPE_DISABLE;
+	*pCR = (*pCR & ~SPI_CR_SPE_MASK) | SPI_CR_SPE_BITS_DISABLE;
 }
 
 void SPI_Configure(volatile SPI_Port_t *pPort, SPI_Config_t *pConfig)
 {
 	if (pPort == SPI0) {
-		SYSCON_DEV_CLK_GATE = (SYSCON_DEV_CLK_GATE & ~SYSCON_DEV_CLK_GATE_SPI0_MASK) | SYSCON_DEV_CLK_GATE_SPI0_ENABLE;
+		SYSCON_DEV_CLK_GATE = (SYSCON_DEV_CLK_GATE & ~SYSCON_DEV_CLK_GATE_SPI0_MASK) | SYSCON_DEV_CLK_GATE_SPI0_BITS_ENABLE;
 	} else if (pPort == SPI1) {
-		SYSCON_DEV_CLK_GATE = (SYSCON_DEV_CLK_GATE & ~SYSCON_DEV_CLK_GATE_SPI1_MASK) | SYSCON_DEV_CLK_GATE_SPI1_ENABLE;
+		SYSCON_DEV_CLK_GATE = (SYSCON_DEV_CLK_GATE & ~SYSCON_DEV_CLK_GATE_SPI1_MASK) | SYSCON_DEV_CLK_GATE_SPI1_BITS_ENABLE;
 	}
 
 	SPI_Disable(&pPort->CR);
@@ -103,14 +103,14 @@ void SPI_Configure(volatile SPI_Port_t *pPort, SPI_Config_t *pConfig)
 void SPI_ToggleMasterMode(volatile uint32_t *pCR, bool bIsMaster)
 {
 	if (bIsMaster) {
-		*pCR = (*pCR & ~SPI_CR_MSR_SSN_MASK) | SPI_CR_MSR_SSN_ENABLE;
+		*pCR = (*pCR & ~SPI_CR_MSR_SSN_MASK) | SPI_CR_MSR_SSN_BITS_ENABLE;
 	} else {
-		*pCR = (*pCR & ~SPI_CR_MSR_SSN_MASK) | SPI_CR_MSR_SSN_DISABLE;
+		*pCR = (*pCR & ~SPI_CR_MSR_SSN_MASK) | SPI_CR_MSR_SSN_BITS_DISABLE;
 	}
 }
 
 void SPI_Enable(volatile uint32_t *pCR)
 {
-	*pCR = (*pCR & ~SPI_CR_SPE_MASK) | SPI_CR_SPE_ENABLE;
+	*pCR = (*pCR & ~SPI_CR_SPE_MASK) | SPI_CR_SPE_BITS_ENABLE;
 }
 
