@@ -1,4 +1,5 @@
-/* Copyright 2023 Dual Tachyon
+/* Copyright 2023 Manuel Jinger
+ * Copyright 2023 Dual Tachyon
  * https://github.com/DualTachyon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +13,37 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
 
-#ifndef DRIVER_UART_H
-#define DRIVER_UART_H
+#ifndef DRIVER_KEYBOARD_H
+#define DRIVER_KEYBOARD_H
 
-#include <stdint.h>
+enum KEY_Code_t {
+	KEY_0 = 0,
+	KEY_1 = 1,
+	KEY_2 = 2,
+	KEY_3 = 3,
+	KEY_4 = 4,
+	KEY_5 = 5,
+	KEY_6 = 6,
+	KEY_7 = 7,
+	KEY_8 = 8,
+	KEY_9 = 9,
+	KEY_MENU = 10,
+	KEY_UP = 11,
+	KEY_DOWN = 12,
+	KEY_EXIT = 13,
+	KEY_STAR = 14,
+	KEY_F = 15,
+	KEY_PTT = 21,
+	KEY_SIDE2 = 22,
+	KEY_SIDE1 = 23,
+	KEY_INVALID = 255,
+};
 
-extern uint8_t UART_DMA_Buffer[256];
+typedef enum KEY_Code_t KEY_Code_t;
 
-void UART_Init(void);
-void UART_Send(const void *pBuffer, uint32_t Size);
-void UART_Print(const char *pString);
+KEY_Code_t KEYBOARD_Poll(void);
 
 #endif
 

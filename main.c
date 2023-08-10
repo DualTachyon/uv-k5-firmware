@@ -26,6 +26,7 @@
 #include "driver/eeprom.h"
 #include "driver/flash.h"
 #include "driver/gpio.h"
+#include "driver/keyboard.h"
 #include "driver/st7565.h"
 #include "driver/system.h"
 #include "driver/systick.h"
@@ -59,6 +60,49 @@ static void FLASHLIGHT_TurnOn(void)
 static void BACKLIGHT_TurnOn(void)
 {
 	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
+}
+
+#if 0
+static void ProcessKey(void)
+{
+	KEY_Code_t Key;
+
+	Key = KEYBOARD_Poll();
+
+	switch (Key) {
+	case KEY_0: UART_Print("ZERO\r\n"); break;
+	case KEY_1: UART_Print("ONE\r\n"); break;
+	case KEY_2: UART_Print("TWO\r\n"); break;
+	case KEY_3: UART_Print("THREE\r\n"); break;
+	case KEY_4: UART_Print("FOUR\r\n"); break;
+	case KEY_5: UART_Print("FIVE\r\n"); break;
+	case KEY_6: UART_Print("SIX\r\n"); break;
+	case KEY_7: UART_Print("SEVEN\r\n"); break;
+	case KEY_8: UART_Print("EIGHT\r\n"); break;
+	case KEY_9: UART_Print("NINE\r\n"); break;
+	case KEY_MENU: UART_Print("MENU\r\n"); break;
+	case KEY_UP: UART_Print("UP\r\n"); break;
+	case KEY_DOWN: UART_Print("DOWN\r\n"); break;
+	case KEY_EXIT: UART_Print("EXIT\r\n"); break;
+	case KEY_STAR: UART_Print("STAR\r\n"); break;
+	case KEY_F: UART_Print("F\r\n"); break;
+	case KEY_PTT: UART_Print("PTT\r\n"); break;
+	case KEY_SIDE2: UART_Print("SIDE2\r\n"); break;
+	case KEY_SIDE1: UART_Print("SIDE1\r\n"); break;
+	case KEY_INVALID: break;
+	}
+}
+#endif
+
+static void Console(void)
+{
+	KEY_Code_t Key;
+
+	Key = KEYBOARD_Poll();
+	if (Key != KEY_INVALID) {
+		Key += 0x40;
+		UART_Send(&Key, 1);
+	}
 }
 
 void Main(void)
@@ -106,9 +150,14 @@ void Main(void)
 	EEPROM_ReadBuffer(0x0EB0, Test, 8);
 
 	while (1) {
-		SYSTEM_DelayMs(500);
+		Console();
+
+		SYSTEM_DelayMs(200);
 		FLASHLIGHT_TurnOff();
-		SYSTEM_DelayMs(500);
+
+		Console();
+
+		SYSTEM_DelayMs(200);
 		FLASHLIGHT_TurnOn();
 	}
 }

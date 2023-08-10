@@ -24,6 +24,7 @@ OBJS += driver/eeprom.o
 OBJS += driver/flash.o
 OBJS += driver/gpio.o
 OBJS += driver/i2c.o
+OBJS += driver/keyboard.o
 OBJS += driver/spi.o
 OBJS += driver/st7565.o
 OBJS += driver/system.o
