@@ -20,14 +20,14 @@
 #include <stdint.h>
 
 enum GPIOA_PINS {
-	GPIOA_I2C_SCL = 10,
-	GPIOA_I2C_SDA = 11,
+	GPIOA_PIN_I2C_SCL = 10,
+	GPIOA_PIN_I2C_SDA = 11,
 };
 
 enum GPIOC_PINS {
-	GPIOC_BK4819_0 = 0,
-	GPIOC_BK4819_1 = 1,
-	GPIOC_BK4819_2 = 2,
+	GPIOC_PIN_BK4819_0 = 0,
+	GPIOC_PIN_BK4819_1 = 1,
+	GPIOC_PIN_BK4819_2 = 2,
 };
 
 void GPIO_ClearBit(volatile uint32_t *pReg, uint8_t Bit);
