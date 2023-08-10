@@ -71,6 +71,7 @@ DEPS = $(OBJS:.o=.d)
 
 all: $(TARGET)
 	$(OBJCOPY) -O binary $< $<.bin
+	arm-none-eabi-size firmware
 
 $(OVERLAY).bin: $(OVERLAY)
 	$(OBJCOPY) -O binary $< $@
@@ -93,7 +94,6 @@ $(TARGET): $(OBJS)
 	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
 bsp/dp32g030/%.h: hardware/dp32g030/%.def
-	./gen-headers.py --hwdef $< --header $@
 
 %.o: %.c | $(BSP_HEADERS)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
