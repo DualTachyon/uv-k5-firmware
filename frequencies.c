@@ -26,6 +26,16 @@ const uint32_t LowerLimitFrequencyBandTable[7] = {
 	47000000,
 };
 
+const uint32_t MiddleFrequencyBandTable[7] = {
+	 6500000,
+	12200000,
+	15000000,
+	26000000,
+	37000000,
+	43500000,
+	55000000,
+};
+
 const uint32_t UpperLimitFrequencyBandTable[7] = {
 	 7600000,
 	13599990,
@@ -36,13 +46,76 @@ const uint32_t UpperLimitFrequencyBandTable[7] = {
 	60000000,
 };
 
-const uint32_t MiddleFrequencyBandTable[7] = {
-	 6500000,
-	12200000,
-	15000000,
-	26000000,
-	37000000,
-	43500000,
-	55000000,
+const uint32_t NoaaFrequencyTable[10] = {
+	16255000,
+	16240000,
+	16247500,
+	16242500,
+	16245000,
+	16250000,
+	16252500,
+	16152500,
+	16177500,
+	16327500,
 };
+
+const uint16_t StepFrequencyTable[6] = {
+	250,
+	500,
+	625,
+	1000,
+	1250,
+	2500
+};
+
+FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency)
+{
+	if ((Frequency - 5000000) < 2600001) {
+		return BAND1_50MHz;
+	}
+	if ((Frequency - 10800000) < 2799991) {
+		return BAND2_108MHz;
+	}
+	if ((Frequency - 13600000) < 3799991) {
+		return BAND3_136MHz;
+	}
+	if ((Frequency - 17400000) < 17599991) {
+		return BAND4_174MHz;
+	}
+	if ((Frequency - 35000000) < 4999991) {
+		return BAND5_350MHz;
+	}
+	if ((Frequency - 40000000) < 6999991) {
+		return BAND6_400MHz;
+	}
+	if ((Frequency - 47000000) < 13000001) {
+		return BAND7_470MHz;
+	}
+
+	// TODO: Double check the assembly
+	return BAND6_400MHz;
+}
+
+uint32_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, uint32_t LowerLimit, uint32_t Middle, uint32_t UpperLimit, uint32_t Frequency)
+{
+	if (Frequency <= LowerLimit) {
+		return TxpLow;
+	}
+	if (UpperLimit <= Frequency) {
+		return TxpHigh;
+	}
+	if (Frequency <= Middle) {
+		return TxpMid + ((TxpMid - TxpLow) * (Frequency - LowerLimit)) / (Middle - LowerLimit);
+	}
+
+	return TxpMid + ((TxpHigh - TxpMid) * (Frequency - Middle)) / (UpperLimit - Middle);
+}
+
+uint32_t FREQUENCY_FloorToStep(uint32_t Frequency, uint32_t Step, uint32_t Base)
+{
+	uint32_t Index;
+
+	Index = (Frequency - Base) / Step;
+	return Base + (Step * Index);
+}
 

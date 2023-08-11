@@ -51,3 +51,5 @@ uint8_t gEEPROM_1F8E;
 
 uint8_t gMR_ChannelParameters[207];
 
+uint8_t g_2000036F;
+

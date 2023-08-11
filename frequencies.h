@@ -19,9 +19,27 @@
 
 #include <stdint.h>
 
+enum FREQUENCY_Band_t {
+	BAND1_50MHz = 0,
+	BAND2_108MHz,
+	BAND3_136MHz,
+	BAND4_174MHz,
+	BAND5_350MHz,
+	BAND6_400MHz,
+	BAND7_470MHz,
+};
+
+typedef enum FREQUENCY_Band_t FREQUENCY_Band_t;
+
 extern const uint32_t LowerLimitFrequencyBandTable[7];
-extern const uint32_t UpperLimitFrequencyBandTable[7];
 extern const uint32_t MiddleFrequencyBandTable[7];
+extern const uint32_t UpperLimitFrequencyBandTable[7];
+extern const uint32_t NoaaFrequencyTable[10];
+extern const uint16_t StepFrequencyTable[6];
+
+FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency);
+uint32_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, uint32_t LowerLimit, uint32_t Middle, uint32_t UpperLimit, uint32_t Frequency);
+uint32_t FREQUENCY_FloorToStep(uint32_t Frequency, uint32_t Step, uint32_t Base);
 
 #endif
 

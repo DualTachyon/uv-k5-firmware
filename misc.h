@@ -55,5 +55,7 @@ extern uint8_t gEEPROM_1F8E;
 
 extern uint8_t gMR_ChannelParameters[207];
 
+extern uint8_t g_2000036F;
+
 #endif
 

@@ -19,6 +19,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "radio.h"
 
 typedef struct {
 	uint8_t EEPROM_0E80_0E83[2];
@@ -26,7 +27,7 @@ typedef struct {
 	uint8_t EEPROM_0E81_0E84[2];
 	uint8_t EEPROM_0E86;
 	uint8_t EEPROM_0E87;
-	uint8_t copy_EEPROM_0EAB;
+	uint8_t RX_CHANNEL;
 	uint8_t TX_CHANNEL;
 	uint8_t field7_0xa;
 	uint8_t field8_0xb;
@@ -101,7 +102,7 @@ typedef struct {
 	uint8_t field77_0x95;
 	uint8_t field78_0x96;
 	uint8_t field79_0x97;
-	//struct channel_settings_t RadioInfo[2];
+	RADIO_Info_t RadioInfo[2];
 } EEPROM_Config_t;
 
 extern EEPROM_Config_t gEeprom;

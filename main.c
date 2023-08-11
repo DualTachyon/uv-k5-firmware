@@ -32,6 +32,7 @@
 #include "driver/systick.h"
 #include "driver/uart.h"
 #include "misc.h"
+#include "radio.h"
 
 static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
 
@@ -133,6 +134,11 @@ void Main(void)
 	BOARD_ADC_GetBatteryInfo(&gADC_CH4_BootValue, &gADC_CH9);
 	BOARD_EEPROM_Init();
 	BOARD_EEPROM_LoadMoreSettings();
+
+	RADIO_ConfigureChannel(0, 2);
+	RADIO_ConfigureChannel(1, 2);
+
+	RADIO_ConfigureTX();
 
 	// Below this line is development/test area not conforming to the original firmware
 

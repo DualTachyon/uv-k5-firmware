@@ -37,6 +37,7 @@ OBJS += dtmf.o
 OBJS += fm.o
 OBJS += frequencies.o
 OBJS += misc.o
+OBJS += radio.o
 OBJS += settings.o
 OBJS += main.o
 
