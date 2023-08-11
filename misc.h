@@ -31,7 +31,7 @@ extern bool gSetting_350EN;
 extern bool gSetting_ScrambleEnable;
 extern uint8_t gSetting_F_LOCK;
 
-extern uint8_t gCustomPasswordKey[16];
+extern uint32_t gCustomPasswordKey[4];
 
 extern bool bIsCheckExistingPassword;
 

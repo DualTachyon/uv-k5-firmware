@@ -27,7 +27,7 @@ bool gSetting_350EN;
 bool gSetting_ScrambleEnable;
 uint8_t gSetting_F_LOCK;
 
-uint8_t gCustomPasswordKey[16];
+uint32_t gCustomPasswordKey[4];
 
 bool bIsCheckExistingPassword;
 
