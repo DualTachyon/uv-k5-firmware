@@ -2,6 +2,15 @@
 
 This currently works for me, but use at your own risk.
 
+
+# Building
+
+To build the firmware, you need to fetch the submodules and then run make:
+```
+git submodule update --init --recursive
+make
+```
+
 # License
 
 Copyright 2023 Dual Tachyon
