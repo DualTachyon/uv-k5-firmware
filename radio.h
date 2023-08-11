@@ -27,8 +27,8 @@ enum {
 };
 
 enum {
-	RADIO_CHANNEL_UP = 0x01,
-	RADIO_CHANNEL_DOWN = 0xFF,
+	RADIO_CHANNEL_UP = 0x01U,
+	RADIO_CHANNEL_DOWN = 0xFFU,
 };
 
 typedef struct {
@@ -81,6 +81,7 @@ void RADIO_ConfigureSquelchAndOutputPower(RADIO_Info_t *pInfo);
 void RADIO_ApplyDeviation(RADIO_Info_t *pInfo);
 void RADIO_ConfigureTX(void);
 void RADIO_ConfigureCrossTX(void);
+void RADIO_SetupRegisters(bool bSwitchToFunction0);
 
 #endif
 

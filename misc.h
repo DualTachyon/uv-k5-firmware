@@ -55,7 +55,15 @@ extern uint8_t gEEPROM_1F8E;
 
 extern uint8_t gMR_ChannelParameters[207];
 
+extern uint8_t g_2000036B;
 extern uint8_t g_2000036F;
+extern uint8_t g_20000381;
+
+extern bool gIsNoaaMode;
+extern bool gNoaaChannel;
+
+extern uint8_t gCodeType;
+extern uint8_t gCode;
 
 #endif
 
