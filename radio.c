@@ -15,7 +15,13 @@
  */
 
 #include <string.h>
+#include "bsp/dp32g030/gpio.h"
+#include "dcs.h"
+#include "driver/bk4819.h"
 #include "driver/eeprom.h"
+#include "driver/gpio.h"
+#include "driver/system.h"
+#include "fm.h"
 #include "frequencies.h"
 #include "misc.h"
 #include "radio.h"
@@ -217,38 +223,38 @@ void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg)
 
 		Tmp = Data[0];
 		switch (gEeprom.RadioInfo[RadioNum].DCS[0].CodeType) {
-		case 1: // CONTINUOUS TONE
+		case CODE_TYPE_CONTINUOUS_TONE:
 			if (Tmp >= 50) {
 				Tmp = 0;
 			}
 			break;
-		case 2: // DIGITAL
-		case 3: // REVERSE_DIGITAL
+		case CODE_TYPE_DIGITAL:
+		case CODE_TYPE_REVERSE_DIGITAL:
 			if (Tmp >= 104) {
 				Tmp = 0;
 			}
 			break;
 		default:
-			gEeprom.RadioInfo[RadioNum].DCS[0].CodeType = 0;
+			gEeprom.RadioInfo[RadioNum].DCS[0].CodeType = CODE_TYPE_OFF;
 			break;
 		}
 		gEeprom.RadioInfo[RadioNum].DCS[0].RX_TX_Code = Tmp;
 
 		Tmp = Data[1];
 		switch (gEeprom.RadioInfo[RadioNum].DCS[1].CodeType) {
-		case 1: // CONTINUOUS TONE
+		case CODE_TYPE_CONTINUOUS_TONE:
 			if (Tmp >= 50) {
 				Tmp = 0;
 			}
 			break;
-		case 2: // DIGITAL
-		case 3: // REVERSE_DIGITAL
+		case CODE_TYPE_DIGITAL:
+		case CODE_TYPE_REVERSE_DIGITAL:
 			if (Tmp >= 104) {
 				Tmp = 0;
 			}
 			break;
 		default:
-			gEeprom.RadioInfo[RadioNum].DCS[1].CodeType = 0;
+			gEeprom.RadioInfo[RadioNum].DCS[1].CodeType = CODE_TYPE_OFF;
 			break;
 		}
 		gEeprom.RadioInfo[RadioNum].DCS[1].RX_TX_Code = Tmp;
@@ -334,8 +340,8 @@ void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg)
 		gEeprom.RadioInfo[RadioNum]._0x0033 = true;
 		gEeprom.RadioInfo[RadioNum].SCRAMBLING_TYPE = 0;
 		gEeprom.RadioInfo[RadioNum].DTMF_DECODING_ENABLE = false;
-		gEeprom.RadioInfo[RadioNum].DCS[0].CodeType = 0;
-		gEeprom.RadioInfo[RadioNum].DCS[1].CodeType = 0;
+		gEeprom.RadioInfo[RadioNum].DCS[0].CodeType = CODE_TYPE_OFF;
+		gEeprom.RadioInfo[RadioNum].DCS[1].CodeType = CODE_TYPE_OFF;
 	} else {
 		gEeprom.RadioInfo[RadioNum]._0x0033 = false;
 	}
@@ -452,3 +458,117 @@ void RADIO_ConfigureCrossTX(void)
 	}
 }
 
+void RADIO_SetupRegisters(bool bSwitchToFunction0)
+{
+	uint8_t Bandwidth;
+	uint16_t Status;
+	uint16_t InterruptMask;
+	uint32_t Frequency;
+
+	GPIO_ClearBit(&GPIOC->DATA, 4);
+	g_2000036B = 0;
+	BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
+
+	Bandwidth = gRxRadioInfo->CHANNEL_BANDWIDTH;
+	if (Bandwidth != 0) { // != WIDE
+		Bandwidth = 1; // NARROW
+	}
+	BK4819_SetFilterBandwidth(Bandwidth);
+
+	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, false);
+	BK4819_SetupPowerAmplifier(0, 0);
+	BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
+
+	while (1) {
+		Status = BK4819_GetRegister(BK4819_REG_0C_CDCSS_CTCSS_STATUS_VOX_SQ_INTR_INDICATOR);
+		if ((Status & 1U) == 0) { // INTERRUPT REQUEST
+			break;
+		}
+		BK4819_WriteRegister(BK4819_REG_02, 0);
+		SYSTEM_DelayMs(1);
+	}
+	BK4819_WriteRegister(BK4819_REG_3F_INTERRUPT_ENABLE, 0);
+	BK4819_WriteRegister(BK4819_REG_7D_MIC_SENSITIVITY_TUNING, gEeprom.MIC_SENSITIVITY_TUNING | 0xE940);
+	if (gRxRadioInfo->CHANNEL_SAVE < 207 || gIsNoaaMode != false) {
+		Frequency = gRxRadioInfo->pNext->DCS[0].Frequency;
+	} else {
+		Frequency = NoaaFrequencyTable[gNoaaChannel];
+	}
+	BK4819_SetFrequency(Frequency);
+	BK4819_SetupSquelch(gRxRadioInfo->SQ0, gRxRadioInfo->SQ1, gRxRadioInfo->SQ2, gRxRadioInfo->SQ3, gRxRadioInfo->SQ4, gRxRadioInfo->SQ5);
+	BK4819_Configure_GPIO2_PIN30_GPIO3_PIN31(Frequency);
+	BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, true);
+	BK4819_WriteRegister(BK4819_REG_48_AF_RF_GAIN_DAC_GAIN, 0xB3A8);
+
+	// SQUELCH_LOST SQUELCH_FOUND
+	InterruptMask = 0x000C;
+
+	if (gRxRadioInfo->CHANNEL_SAVE < 207) {
+		if (gRxRadioInfo->_0x0033 != true) {
+			uint8_t CodeType;
+			uint8_t CodeWord;
+
+			CodeType = gCodeType;
+			CodeWord = gCode;
+			if (g_20000381 == 0) {
+				CodeType = gRxRadioInfo->pNext->DCS[0].CodeType;
+				CodeWord = gRxRadioInfo->pNext->DCS[0].RX_TX_Code;
+			}
+			switch (CodeType) {
+			case CODE_TYPE_DIGITAL:
+			case CODE_TYPE_REVERSE_DIGITAL:
+				BK4819_EnableCDCSS(DCS_GetGolayCodeWord(CodeType, CodeWord));
+				// SQUELCH_LOST SQUELCH_FOUND CDCSS_LOST CDCSS_FOUND CTCSS/CDCSS_TAIL_FOUND
+				InterruptMask = 0x070C;
+				break;
+			case CODE_TYPE_CONTINUOUS_TONE:
+				BK4819_EnableCTCSS(CTCSS_Options[CodeWord]);
+				BK4819_Set55HzTailDetection();
+				// SQUELCH_LOST SQUELCH_FOUND CTCSS_LOST CTCSS_FOUND CTCSS/CDCSS_TAIL_FOUND
+				InterruptMask = 0x04CC;
+				break;
+			default:
+				BK4819_EnableCTCSS(670);
+				BK4819_Set55HzTailDetection();
+				// SQUELCH_LOST SQUELCH_FOUND CTCSS/CDCSS_TAIL_FOUND
+				InterruptMask = 0x040C;
+				break;
+			}
+			if (gRxRadioInfo->SCRAMBLING_TYPE == 0 || gSetting_ScrambleEnable == false) {
+				BK4819_DisableScramble();
+			} else {
+				BK4819_EnableScramble(gRxRadioInfo->SCRAMBLING_TYPE - 1);
+			}
+		}
+	} else {
+		BK4819_EnableCTCSS(2625);
+		// SQUELCH_LOST SQUELCH_FOUND CTCSS_LOST CTCSS_FOUND
+		InterruptMask = 0x00CC;
+	}
+
+	if (gEeprom.VOX_SWITCH == true && gFmMute != true && gCrossTxRadioInfo->CHANNEL_SAVE < 207 && gCrossTxRadioInfo->_0x0033 != true) {
+		BK4819_EnableVox(gEeprom.VOX1_THRESHOLD, gEeprom.VOX0_THRESHOLD);
+		// VOX_LOST VOX_FOUND
+		InterruptMask |= 0x0030;
+	} else {
+		BK4819_DisableVox();
+	}
+	if ((gRxRadioInfo->_0x0033 == true) || ((gRxRadioInfo->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true)))) {
+		BK4819_DisableDTMF_SelCall();
+	} else {
+		BK4819_ConfigureDTMF_SelCall_and_UnknownRegister();
+		// DTMF/5TONE_FOUND
+		InterruptMask |= 0x0800;
+	}
+	BK4819_WriteRegister(BK4819_REG_3F_INTERRUPT_ENABLE, InterruptMask);
+
+	// TODO: below only writes values to unknown variables
+	// FUN_0000692c();
+
+	if (bSwitchToFunction0 == 1) {
+		// TODO
+#if 0
+		SetFunctionSelector(0);
+#endif
+	}
+}

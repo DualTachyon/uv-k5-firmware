@@ -31,7 +31,7 @@ extern bool gSetting_350EN;
 extern bool gSetting_ScrambleEnable;
 extern uint8_t gSetting_F_LOCK;
 
-extern uint8_t gCustomPasswordKey[16];
+extern uint32_t gCustomPasswordKey[4];
 
 extern bool bIsCheckExistingPassword;
 
@@ -55,7 +55,15 @@ extern uint8_t gEEPROM_1F8E;
 
 extern uint8_t gMR_ChannelParameters[207];
 
+extern uint8_t g_2000036B;
 extern uint8_t g_2000036F;
+extern uint8_t g_20000381;
+
+extern bool gIsNoaaMode;
+extern bool gNoaaChannel;
+
+extern uint8_t gCodeType;
+extern uint8_t gCode;
 
 #endif
 

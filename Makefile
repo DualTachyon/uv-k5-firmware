@@ -33,6 +33,7 @@ OBJS += driver/uart.o
 
 # Main
 OBJS += board.o
+OBJS += dcs.o
 OBJS += dtmf.o
 OBJS += fm.o
 OBJS += frequencies.o

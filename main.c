@@ -22,6 +22,7 @@
 #include "bsp/dp32g030/syscon.h"
 #include "board.h"
 #include "driver/crc.h"
+#include "driver/bk1080.h"
 #include "driver/bk4819.h"
 #include "driver/eeprom.h"
 #include "driver/flash.h"
@@ -137,8 +138,8 @@ void Main(void)
 
 	RADIO_ConfigureChannel(0, 2);
 	RADIO_ConfigureChannel(1, 2);
-
 	RADIO_ConfigureTX();
+	RADIO_SetupRegisters(true);
 
 	// Below this line is development/test area not conforming to the original firmware
 

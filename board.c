@@ -752,9 +752,7 @@ void BOARD_EEPROM_Init(void)
 	EEPROM_ReadBuffer(0x0F30, gCustomPasswordKey, 16);
 
 	for (i = 0; i < 4; i++) {
-		const uint32_t *pKey = (const uint32_t *)gCustomPasswordKey;
-
-		if (pKey[i] != 0xFFFFFFFFU) {
+		if (gCustomPasswordKey[i] != 0xFFFFFFFFU) {
 			bIsCheckExistingPassword = true;
 			return;
 		}

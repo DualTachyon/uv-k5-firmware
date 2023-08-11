@@ -18,6 +18,7 @@
 #include "settings.h"
 
 uint16_t gFM_Channels[20];
+bool gFmMute;
 
 bool FM_CheckValidChannel(uint8_t Channel)
 {

@@ -19,6 +19,7 @@
 
 enum BK4819_REGISTER_t {
 	BK4819_REG_00                                                                 = 0x00U,
+	BK4819_REG_02                                                                 = 0x02U,
 	BK4819_REG_06                                                                 = 0x06U,
 	BK4819_REG_07_CTC_FREQUENCY_CDCSS_BAUD_RATE                                   = 0x07U,
 	BK4819_REG_08_CDCSS_CALL_SYMBOL_NUMBER_AND_COEFFICIENT                        = 0x08U,
@@ -35,6 +36,7 @@ enum BK4819_REGISTER_t {
 	BK4819_REG_19                                                                 = 0x19U,
 	BK4819_REG_1F                                                                 = 0x1FU,
 	BK4819_REG_20                                                                 = 0x20U,
+	BK4819_REG_21                                                                 = 0x21U,
 	BK4819_REG_24_DTMF_SELCALL_CONFIG                                             = 0x24U,
 	BK4819_REG_28_EXPANDER_CONFIG                                                 = 0x28U,
 	BK4819_REG_29_COMPRESS_CONFIG                                                 = 0x29U,
@@ -44,7 +46,7 @@ enum BK4819_REGISTER_t {
 	BK4819_REG_32_FREQUENCY_SCAN                                                  = 0x32U,
 	BK4819_REG_33                                                                 = 0x33U,
 	BK4819_REG_36_POWER_AMPLIFIER_BIAS_AND_GAIN                                   = 0x36U,
-	BK4819_REG_37_VOLTATE_LDO_AND_MISC_ENABLE                                     = 0x37U,
+	BK4819_REG_37_VOLTAGE_LDO_AND_MISC_ENABLE                                     = 0x37U,
 	BK4819_REG_38_FREQUENCY_LOW                                                   = 0x38U,
 	BK4819_REG_39_FREQUENCY_HIGH                                                  = 0x39U,
 	BK4819_REG_3A_RSSI_THRESHOLD_FOR_SQ1_SQ0                                      = 0x3AU,
@@ -54,6 +56,7 @@ enum BK4819_REGISTER_t {
 	BK4819_REG_3F_INTERRUPT_ENABLE                                                = 0x3FU,
 	BK4819_REG_43_RF_AFT_LPF2_FILTER_BANDWIDTH                                    = 0x43U,
 	BK4819_REG_46_VOICE_AMPLITUDE_THRESHOLD_VOX1                                  = 0x46U,
+	BK4819_REG_47_AF_OUTPUT_CONFIG                                                = 0x47U,
 	BK4819_REG_48_AF_RF_GAIN_DAC_GAIN                                             = 0x48U,
 	BK4819_REG_49                                                                 = 0x49U,
 	BK4819_REG_4D_GLITCH_THR_SQ0                                                  = 0x4DU,
@@ -76,6 +79,7 @@ enum BK4819_REGISTER_t {
 	BK4819_REG_70_TONE1_CONFIG                                                    = 0x70U,
 	BK4819_REG_71_TONE1_SCRAMBLE_FREQ_CONTROL_WORD                                = 0x71U,
 	BK4819_REG_72_TONE2_FSK_FREQUENCY_CONTROL_WORD                                = 0x72U,
+	BK4819_REG_78_SQUELCH_RSSI_THRESHOLD                                          = 0x78U,
 	BK4819_REG_79_VOX1_DETECTION_INTERVAL_TIME_VOICE_AMPLITUDE_THRESHOLD_VOX0     = 0x79U,
 	BK4819_REG_7A_VOX0_DETECTION_DELAY                                            = 0x7AU,
 	BK4819_REG_7B                                                                 = 0x7BU,
@@ -85,6 +89,18 @@ enum BK4819_REGISTER_t {
 };
 
 typedef enum BK4819_REGISTER_t BK4819_REGISTER_t;
+
+enum BK4819_GPIO_PIN_t {
+	BK4819_GPIO6_PIN2 = 0,
+	BK4819_GPIO5_PIN1 = 1,
+	BK4819_GPIO4_PIN32 = 2,
+	BK4819_GPIO3_PIN31 = 3,
+	BK4819_GPIO2_PIN30 = 4,
+	BK4819_GPIO1_PIN29 = 5,
+	BK4819_GPIO0_PIN28 = 6,
+};
+
+typedef enum BK4819_GPIO_PIN_t BK4819_GPIO_PIN_t;
 
 #endif
 
