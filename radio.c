@@ -106,9 +106,9 @@ void RADIO_InitInfo(RADIO_Info_t *pInfo, uint8_t ChannelSave, uint8_t Band, uint
 	pInfo->OUTPUT_POWER = 2;
 	pInfo->DCS[0].Frequency = Frequency;
 	pInfo->DCS[1].Frequency = Frequency;
-	pInfo->pNext = pInfo;
+	pInfo->pDCS_Current = &pInfo->DCS[0];
 	pInfo->FREQUENCY_OF_DEVIATION = 1000000;
-	pInfo->pDCS = &pInfo->DCS[1];
+	pInfo->pDCS_Reverse = &pInfo->DCS[1];
 	RADIO_ConfigureSquelchAndOutputPower(pInfo);
 }
 
@@ -122,6 +122,7 @@ void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg)
 	uint16_t Base;
 	uint8_t Data[8];
 	uint8_t Tmp;
+	uint32_t Frequency;
 
 	pRadio = &gEeprom.RadioInfo[RadioNum];
 
@@ -292,15 +293,13 @@ void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg)
 		gEeprom.RadioInfo[RadioNum].FREQUENCY_OF_DEVIATION = Info.Offset;
 	}
 
-	uint32_t Frequency;
-
-	// TODO: Double check this block, Ghidra has some issues
-	Frequency = gLowerLimitFrequencyBandTable[Band];
-	if (Frequency <= pRadio->DCS[0].Frequency && (pRadio->DCS[0].Frequency <= gUpperLimitFrequencyBandTable[Band])) {
-		Frequency = pRadio->DCS[0].Frequency;
-		if (ChNum >= 200) {
-			Frequency = FREQUENCY_FloorToStep(pRadio->DCS[0].Frequency, gEeprom.RadioInfo[RadioNum].StepFrequency, gLowerLimitFrequencyBandTable[Band]);
-		}
+	Frequency = pRadio->DCS[0].Frequency;
+	if (Frequency < gLowerLimitFrequencyBandTable[Band]) {
+		pRadio->DCS[0].Frequency = gLowerLimitFrequencyBandTable[Band];
+	} else if (Frequency > gUpperLimitFrequencyBandTable[Band]) {
+		pRadio->DCS[0].Frequency = gUpperLimitFrequencyBandTable[Band];
+	} else if (ChNum >= 200) {
+		pRadio->DCS[0].Frequency = FREQUENCY_FloorToStep(pRadio->DCS[0].Frequency, gEeprom.RadioInfo[RadioNum].StepFrequency, gLowerLimitFrequencyBandTable[Band]);
 	}
 	pRadio->DCS[0].Frequency = Frequency;
 
@@ -318,21 +317,18 @@ void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg)
 		EEPROM_ReadBuffer(0x0F58 + (ChNum * 0x10), gEeprom.RadioInfo[RadioNum].Name + 8, 2);
 	}
 
-	// TODO: Double check this block, Ghidra has some issues
-	/*
 	if (gEeprom.RadioInfo[RadioNum].FrequencyReverse == true) {
-		gEeprom.RadioInfo[RadioNum].pDCS = &pRadio->DCS[0];
-		gEeprom.RadioInfo[RadioNum].pNext = &gEeprom.RadioInfo[RadioNum];
+		gEeprom.RadioInfo[RadioNum].pDCS_Current = &gEeprom.RadioInfo[RadioNum].DCS[0];
+		gEeprom.RadioInfo[RadioNum].pDCS_Reverse = &gEeprom.RadioInfo[RadioNum].DCS[1];
 	} else {
-		gEeprom.RadioInfo[RadioNum].pNext = pRadio;
-		gEeprom.RadioInfo[RadioNum].pDCS = gEeprom.RadioInfo[RadioNum].;
+		gEeprom.RadioInfo[RadioNum].pDCS_Current = &gEeprom.RadioInfo[RadioNum].DCS[1];
+		gEeprom.RadioInfo[RadioNum].pDCS_Reverse = &gEeprom.RadioInfo[RadioNum].DCS[0];
 	}
-	*/
 
 	if (gSetting_350EN == false) {
-		RADIO_Info_t *pTmp = gEeprom.RadioInfo[RadioNum].pNext;
-		if (pTmp->DCS[0].Frequency - 35000000 < 4999991) {
-			pTmp->DCS[0].Frequency = 41001250;
+		DCS_Info_t *pDCS = gEeprom.RadioInfo[RadioNum].pDCS_Current;
+		if (pDCS->Frequency - 35000000 < 4999991) {
+			pDCS->Frequency = 41001250;
 		}
 	}
 
@@ -355,7 +351,7 @@ void RADIO_ConfigureSquelchAndOutputPower(RADIO_Info_t *pInfo)
 	uint16_t Base;
 	FREQUENCY_Band_t Band;
 
-	Band = FREQUENCY_GetBand(pInfo->pNext->DCS[0].Frequency);
+	Band = FREQUENCY_GetBand(pInfo->pDCS_Current->Frequency);
 	if (Band < BAND4_174MHz) {
 		Base = 0x1E60;
 	} else {
@@ -385,7 +381,7 @@ void RADIO_ConfigureSquelchAndOutputPower(RADIO_Info_t *pInfo)
 		}
 	}
 
-	Band = FREQUENCY_GetBand(pInfo->pDCS->Frequency);
+	Band = FREQUENCY_GetBand(pInfo->pDCS_Reverse->Frequency);
 	EEPROM_ReadBuffer(0x1ED0 + (Band * 0x10) + (pInfo->OUTPUT_POWER * 3), Txp, 3);
 	pInfo->TXP_CalculatedSetting =
 		FREQUENCY_CalculateOutputPower(
@@ -395,7 +391,7 @@ void RADIO_ConfigureSquelchAndOutputPower(RADIO_Info_t *pInfo)
 				LowerLimitFrequencyBandTable[Band],
 				MiddleFrequencyBandTable[Band],
 				UpperLimitFrequencyBandTable[Band],
-				pInfo->pDCS->Frequency);
+				pInfo->pDCS_Reverse->Frequency);
 }
 
 void RADIO_ApplyDeviation(RADIO_Info_t *pInfo)
@@ -490,7 +486,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	BK4819_WriteRegister(BK4819_REG_3F_INTERRUPT_ENABLE, 0);
 	BK4819_WriteRegister(BK4819_REG_7D_MIC_SENSITIVITY_TUNING, gEeprom.MIC_SENSITIVITY_TUNING | 0xE940);
 	if (gRxRadioInfo->CHANNEL_SAVE < 207 || gIsNoaaMode != false) {
-		Frequency = gRxRadioInfo->pNext->DCS[0].Frequency;
+		Frequency = gRxRadioInfo->pDCS_Current->Frequency;
 	} else {
 		Frequency = NoaaFrequencyTable[gNoaaChannel];
 	}
@@ -511,8 +507,8 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			CodeType = gCodeType;
 			CodeWord = gCode;
 			if (g_20000381 == 0) {
-				CodeType = gRxRadioInfo->pNext->DCS[0].CodeType;
-				CodeWord = gRxRadioInfo->pNext->DCS[0].RX_TX_Code;
+				CodeType = gRxRadioInfo->pDCS_Current->CodeType;
+				CodeWord = gRxRadioInfo->pDCS_Current->RX_TX_Code;
 			}
 			switch (CodeType) {
 			case CODE_TYPE_DIGITAL:

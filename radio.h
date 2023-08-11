@@ -40,8 +40,8 @@ typedef struct {
 
 typedef struct RADIO_Info_t {
 	DCS_Info_t DCS[2];
-	struct RADIO_Info_t *pNext;
-	DCS_Info_t *pDCS;
+	DCS_Info_t *pDCS_Current;
+	DCS_Info_t *pDCS_Reverse;
 	uint32_t FREQUENCY_OF_DEVIATION;
 	uint16_t StepFrequency;
 	uint8_t CHANNEL_SAVE;
