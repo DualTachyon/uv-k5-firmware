@@ -516,18 +516,18 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			switch (CodeType) {
 			case CODE_TYPE_DIGITAL:
 			case CODE_TYPE_REVERSE_DIGITAL:
-				BK4819_EnableCDCSS(DCS_GetGolayCodeWord(CodeType, CodeWord));
+				BK4819_SetCDCSSCodeWord(DCS_GetGolayCodeWord(CodeType, CodeWord));
 				// SQUELCH_LOST SQUELCH_FOUND CDCSS_LOST CDCSS_FOUND CTCSS/CDCSS_TAIL_FOUND
 				InterruptMask = 0x070C;
 				break;
 			case CODE_TYPE_CONTINUOUS_TONE:
-				BK4819_EnableCTCSS(CTCSS_Options[CodeWord]);
+				BK4819_SetCTCSSBaudRate(CTCSS_Options[CodeWord]);
 				BK4819_Set55HzTailDetection();
 				// SQUELCH_LOST SQUELCH_FOUND CTCSS_LOST CTCSS_FOUND CTCSS/CDCSS_TAIL_FOUND
 				InterruptMask = 0x04CC;
 				break;
 			default:
-				BK4819_EnableCTCSS(670);
+				BK4819_SetCTCSSBaudRate(670);
 				BK4819_Set55HzTailDetection();
 				// SQUELCH_LOST SQUELCH_FOUND CTCSS/CDCSS_TAIL_FOUND
 				InterruptMask = 0x040C;
@@ -540,7 +540,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			}
 		}
 	} else {
-		BK4819_EnableCTCSS(2625);
+		BK4819_SetCTCSSBaudRate(2625);
 		// SQUELCH_LOST SQUELCH_FOUND CTCSS_LOST CTCSS_FOUND
 		InterruptMask = 0x00CC;
 	}

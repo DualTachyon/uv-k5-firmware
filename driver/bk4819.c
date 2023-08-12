@@ -200,7 +200,7 @@ void BK4819_ToggleGpioOut(BK4819_GPIO_PIN_t Pin, bool bSet)
 	BK4819_WriteRegister(BK4819_REG_33, gBK4819_GpioOutState);
 }
 
-void BK4819_EnableCDCSS(uint32_t CodeWord)
+void BK4819_SetCDCSSCodeWord(uint32_t CodeWord)
 {
 	// Enable CDCSS
 	// Transmit positive CDCSS code
@@ -230,7 +230,7 @@ void BK4819_EnableCDCSS(uint32_t CodeWord)
 	BK4819_WriteRegister(BK4819_REG_08, 0x8000 | ((CodeWord >> 12) & 0xFFF));
 }
 
-void BK4819_EnableCTCSS(uint32_t BaudRate)
+void BK4819_SetCTCSSBaudRate(uint32_t BaudRate)
 {
 	uint16_t Config;
 
