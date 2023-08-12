@@ -67,7 +67,7 @@ void overlay_FLASH_MaskLock(void)
 
 void overlay_FLASH_SetMaskSel(FLASH_MASK_SELECTION Mask)
 {
-	FLASH_MASK = (FLASH_MASK & ~FLASH_MASK_SEL_MASK) | (Mask & FLASH_MASK_SEL_MASK);
+	FLASH_MASK = (FLASH_MASK & ~FLASH_MASK_SEL_MASK) | ((Mask << FLASH_MASK_SEL_SHIFT) & FLASH_MASK_SEL_MASK);
 }
 
 void overlay_FLASH_MaskUnlock(void)
@@ -115,7 +115,7 @@ uint32_t overlay_FLASH_ReadByAPB(uint32_t Offset)
 
 void overlay_FLASH_SetArea(FLASH_AREA Area)
 {
-	FLASH_CFG = (FLASH_CFG & ~FLASH_CFG_NVR_SEL_MASK) | (Area & FLASH_CFG_NVR_SEL_MASK);
+	FLASH_CFG = (FLASH_CFG & ~FLASH_CFG_NVR_SEL_MASK) | ((Area << FLASH_CFG_NVR_SEL_SHIFT) & FLASH_CFG_NVR_SEL_MASK);
 }
 
 void overlay_FLASH_SetReadMode(FLASH_READ_MODE Mode)
@@ -141,8 +141,7 @@ void overlay_FLASH_WakeFromDeepSleep(void)
 
 void overlay_FLASH_SetMode(FLASH_MODE Mode)
 {
-	FLASH_CFG = (FLASH_CFG & ~FLASH_CFG_MODE_MASK) | (Mode & FLASH_CFG_MODE_MASK);
-	return;
+	FLASH_CFG = (FLASH_CFG & ~FLASH_CFG_MODE_MASK) | ((Mode << FLASH_CFG_MODE_SHIFT) & FLASH_CFG_MODE_MASK);
 }
 
 void overlay_FLASH_SetProgramTime(void)
