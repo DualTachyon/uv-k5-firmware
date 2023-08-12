@@ -40,11 +40,6 @@ uint8_t gEEPROM_1EC8_0[8];
 uint8_t gEEPROM_1EC8_1[8];
 uint8_t gEEPROM_1EC8_2[8];
 
-uint16_t gBatteryCalibration[6];
-uint16_t gADC_CH4_BootValue;
-uint16_t gADC_CH4[4];
-uint16_t gADC_CH9;
-
 uint16_t gEEPROM_1F8A;
 uint16_t gEEPROM_1F8C;
 uint8_t gEEPROM_1F8E;

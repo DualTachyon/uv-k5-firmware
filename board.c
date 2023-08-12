@@ -16,6 +16,7 @@
  */
 
 #include <string.h>
+#include "battery.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
