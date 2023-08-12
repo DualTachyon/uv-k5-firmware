@@ -17,9 +17,9 @@
 @ = 0x40000800, 0x800
 
 SRC_CFG = 0x0010
-> XTAH_EN, 2, 1
-= DISABLE, 0
-= ENABLE, 1
+> RCHF_SEL, 1, 1
+= 48MHZ, 0
+= 24MHZ, 1
 
 > RCHF_EN, 0, 1
 = DISABLE, 0
