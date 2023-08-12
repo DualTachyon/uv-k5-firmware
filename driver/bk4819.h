@@ -32,6 +32,13 @@ enum BK4819_AF_Type_t {
 
 typedef enum BK4819_AF_Type_t BK4819_AF_Type_t;
 
+enum BK4819_FilterBandwidth_t {
+	BK4819_FILTER_BW_WIDE   = 0U,
+	BK4819_FILTER_BW_NARROW = 1U,
+};
+
+typedef enum BK4819_FilterBandwidth_t BK4819_FilterBandwidth_t;
+
 void BK4819_Init(void);
 uint16_t BK4819_GetRegister(BK4819_REGISTER_t Register);
 void BK4819_WriteRegister(BK4819_REGISTER_t Register, uint16_t Data);
@@ -46,7 +53,7 @@ void BK4819_SetCDCSSCodeWord(uint32_t CodeWord);
 void BK4819_SetCTCSSBaudRate(uint32_t BaudRate);
 void BK4819_Set55HzTailDetection(void);
 void BK4819_EnableVox(uint16_t Vox1Threshold, uint16_t Vox0Threshold);
-void BK4819_SetFilterBandwidth(uint8_t Bandwidth);
+void BK4819_SetFilterBandwidth(BK4819_FilterBandwidth_t Bandwidth);
 void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency);
 void BK4819_SetFrequency(uint32_t Frequency);
 void BK4819_SetupSquelch(

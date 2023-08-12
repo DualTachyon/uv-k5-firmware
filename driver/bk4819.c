@@ -278,11 +278,11 @@ void BK4819_EnableVox(uint16_t Vox1Threshold, uint16_t Vox0Threshold)
 	BK4819_WriteRegister(BK4819_REG_31, Value | 4);
 }
 
-void BK4819_SetFilterBandwidth(uint8_t Bandwidth)
+void BK4819_SetFilterBandwidth(BK4819_FilterBandwidth_t Bandwidth)
 {
-	if (Bandwidth == 0) {
+	if (Bandwidth == BK4819_FILTER_BW_WIDE) {
 		BK4819_WriteRegister(BK4819_REG_43, 0x3028);
-	} else if (Bandwidth == 1) {
+	} else if (Bandwidth == BK4819_FILTER_BW_NARROW) {
 		BK4819_WriteRegister(BK4819_REG_43, 0x4048);
 	}
 }
