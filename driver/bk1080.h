@@ -23,6 +23,7 @@
 
 void BK1080_Init(uint16_t Frequency, bool bDoScan);
 void BK1080_WriteRegister(BK1080_REGISTER_t Register, uint16_t Value);
+void BK1080_Mute(bool Mute);
 
 #endif
 
