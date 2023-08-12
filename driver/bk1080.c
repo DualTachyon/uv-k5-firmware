@@ -48,8 +48,8 @@ void BK1080_Init(uint16_t Channel, bool bDoScan)
 				BK1080_WriteRegister(i, BK1080_RegisterTable[i]);
 			}
 			SYSTEM_DelayMs(250);
-			BK1080_WriteRegister(BK1080_REG_25_INTERNAL, 0xA83C);
-			BK1080_WriteRegister(BK1080_REG_25_INTERNAL, 0xA8BC);
+			BK1080_WriteRegister(BK1080_REG_19_INTERNAL, 0xA83C);
+			BK1080_WriteRegister(BK1080_REG_19_INTERNAL, 0xA8BC);
 			SYSTEM_DelayMs(60);
 			gIsInitBK1080 = true;
 		} else {
