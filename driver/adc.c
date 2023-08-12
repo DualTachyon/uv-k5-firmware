@@ -77,7 +77,6 @@ uint32_t ADC_GetClockConfig(void)
 	return Value;
 }
 
-
 void ADC_Configure(ADC_Config_t *pAdc)
 {
 	SYSCON_DEV_CLK_GATE = (SYSCON_DEV_CLK_GATE & ~SYSCON_DEV_CLK_GATE_SARADC_MASK) | SYSCON_DEV_CLK_GATE_SARADC_BITS_ENABLE;
