@@ -313,13 +313,14 @@ void BK4819_SetFrequency(uint32_t Frequency)
 	BK4819_WriteRegister(BK4819_REG_39, (Frequency >> 16) & 0xFFFF);
 }
 
-void BK4819_SetupSquelch(uint8_t SQ0, uint8_t SQ1, uint8_t SQ2, uint8_t SQ3, uint8_t SQ4, uint8_t SQ5)
+void BK4819_SetupSquelch(uint8_t SquelchOpenRSSIThresh, uint8_t SquelchCloseRSSIThresh, uint8_t SquelchOpenNoiseThresh, uint8_t SquelchCloseNoiseThresh, uint8_t SquelchCloseGlitchThresh, uint8_t SquelchOpenGlitchThresh)
 {
 	BK4819_WriteRegister(BK4819_REG_70, 0);
-	BK4819_WriteRegister(BK4819_REG_4D, 0xA000 | SQ4);
-	BK4819_WriteRegister(BK4819_REG_4E, 0x6F00 | SQ5);
-	BK4819_WriteRegister(BK4819_REG_4F, (SQ3 << 8) | SQ2);
-	BK4819_WriteRegister(BK4819_REG_78, (SQ0 << 8) | SQ1);
+	BK4819_WriteRegister(BK4819_REG_4D, 0xA000 | SquelchCloseGlitchThresh);
+	// 0x6f = 0110 1111 meaning the default sql delays from the datasheet are used (101 and 111)
+	BK4819_WriteRegister(BK4819_REG_4E, 0x6F00 | SquelchOpenGlitchThresh);
+	BK4819_WriteRegister(BK4819_REG_4F, (SquelchCloseNoiseThresh << 8) | SquelchOpenNoiseThresh);
+	BK4819_WriteRegister(BK4819_REG_78, (SquelchOpenRSSIThresh << 8) | SquelchCloseRSSIThresh);
 	BK4819_SetAF(BK4819_AF_MUTE);
 	BK4819_RX_TurnOn();
 }
