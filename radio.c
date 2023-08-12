@@ -359,25 +359,25 @@ void RADIO_ConfigureSquelchAndOutputPower(RADIO_Info_t *pInfo)
 	}
 
 	if (gEeprom.SQUELCH_LEVEL == 0) {
-		pInfo->SQ0 = 0x00;
-		pInfo->SQ2 = 0x7F;
-		pInfo->SQ4 = 0xFF;
-		pInfo->SQ1 = 0x00;
-		pInfo->SQ3 = 0x7F;
-		pInfo->SQ5 = 0xFF;
+		pInfo->SquelchOpenRSSIThresh = 0x00;
+		pInfo->SquelchOpenNoiseThresh = 0x7F;
+		pInfo->SquelchCloseGlitchThresh = 0xFF;
+		pInfo->SquelchCloseRSSIThresh = 0x00;
+		pInfo->SquelchCloseNoiseThresh = 0x7F;
+		pInfo->SquelchOpenGlitchThresh = 0xFF;
 	} else {
 		Base += gEeprom.SQUELCH_LEVEL;
-		EEPROM_ReadBuffer(Base + 0x00, &pInfo->SQ0, 1);
-		EEPROM_ReadBuffer(Base + 0x10, &pInfo->SQ1, 1);
-		EEPROM_ReadBuffer(Base + 0x20, &pInfo->SQ2, 1);
-		EEPROM_ReadBuffer(Base + 0x30, &pInfo->SQ3, 1);
-		EEPROM_ReadBuffer(Base + 0x40, &pInfo->SQ4, 1);
-		EEPROM_ReadBuffer(Base + 0x50, &pInfo->SQ5, 1);
-		if (pInfo->SQ2 >= 0x80) {
-			pInfo->SQ2 = 0x7F;
+		EEPROM_ReadBuffer(Base + 0x00, &pInfo->SquelchOpenRSSIThresh, 1);
+		EEPROM_ReadBuffer(Base + 0x10, &pInfo->SquelchCloseRSSIThresh, 1);
+		EEPROM_ReadBuffer(Base + 0x20, &pInfo->SquelchOpenNoiseThresh, 1);
+		EEPROM_ReadBuffer(Base + 0x30, &pInfo->SquelchCloseNoiseThresh, 1);
+		EEPROM_ReadBuffer(Base + 0x40, &pInfo->SquelchCloseGlitchThresh, 1);
+		EEPROM_ReadBuffer(Base + 0x50, &pInfo->SquelchOpenGlitchThresh, 1);
+		if (pInfo->SquelchOpenNoiseThresh >= 0x80) {
+			pInfo->SquelchOpenNoiseThresh = 0x7F;
 		}
-		if (pInfo->SQ3 >= 0x80) {
-			pInfo->SQ3 = 0x7F;
+		if (pInfo->SquelchCloseNoiseThresh >= 0x80) {
+			pInfo->SquelchCloseNoiseThresh = 0x7F;
 		}
 	}
 
@@ -491,7 +491,10 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 		Frequency = NoaaFrequencyTable[gNoaaChannel];
 	}
 	BK4819_SetFrequency(Frequency);
-	BK4819_SetupSquelch(gRxRadioInfo->SQ0, gRxRadioInfo->SQ1, gRxRadioInfo->SQ2, gRxRadioInfo->SQ3, gRxRadioInfo->SQ4, gRxRadioInfo->SQ5);
+	BK4819_SetupSquelch(
+			gRxRadioInfo->SquelchOpenRSSIThresh, gRxRadioInfo->SquelchCloseRSSIThresh,
+			gRxRadioInfo->SquelchOpenNoiseThresh, gRxRadioInfo->SquelchCloseNoiseThresh,
+			gRxRadioInfo->SquelchCloseGlitchThresh, gRxRadioInfo->SquelchOpenGlitchThresh);
 	BK4819_PickRXFilterPathBasedOnFrequency(Frequency);
 	BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, true);
 	BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
