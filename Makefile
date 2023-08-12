@@ -50,6 +50,7 @@ AS = arm-none-eabi-as
 CC = arm-none-eabi-gcc
 LD = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
+SIZE = arm-none-eabi-size
 
 ASFLAGS = -mcpu=cortex-m0
 CFLAGS = -O2 -Wall -Werror -mcpu=cortex-m0 -fno-builtin -MMD
@@ -76,7 +77,7 @@ DEPS = $(OBJS:.o=.d)
 
 all: $(TARGET)
 	$(OBJCOPY) -O binary $< $<.bin
-	arm-none-eabi-size firmware
+	$(SIZE) $<
 
 $(OVERLAY).bin: $(OVERLAY)
 	$(OBJCOPY) -O binary $< $@
