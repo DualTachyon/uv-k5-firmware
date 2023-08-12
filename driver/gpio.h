@@ -24,13 +24,16 @@ enum GPIOA_PINS {
 	GPIOA_PIN_KEYBOARD_1 = 4,
 	GPIOA_PIN_KEYBOARD_2 = 5,
 	GPIOA_PIN_KEYBOARD_3 = 6,
-	GPIOA_PIN_KEYBOARD_4 = 10,
-	GPIOA_PIN_KEYBOARD_5 = 11,
-	GPIOA_PIN_KEYBOARD_6 = 12,
-	GPIOA_PIN_KEYBOARD_7 = 13,
+	GPIOA_PIN_KEYBOARD_4 = 10, // Shared with I2C!
+	GPIOA_PIN_KEYBOARD_5 = 11, // Shared with I2C!
+	GPIOA_PIN_KEYBOARD_6 = 12, // Shared with voice chip!
+	GPIOA_PIN_KEYBOARD_7 = 13, // Shared with voice chip!
 
-	GPIOA_PIN_I2C_SCL = 10,
-	GPIOA_PIN_I2C_SDA = 11,
+	GPIOA_PIN_I2C_SCL = 10, // Shared with keyboard!
+	GPIOA_PIN_I2C_SDA = 11, // Shared with keyboard!
+
+	GPIOA_PIN_VOICE_0 = 12, // Shared with keyboard!
+	GPIOA_PIN_VOICE_1 = 13, // Shared with keyboard!
 };
 
 enum GPIOB_PINS {
