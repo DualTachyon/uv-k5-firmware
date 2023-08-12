@@ -791,7 +791,7 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 	gEeprom.MIC_SENSITIVITY_TUNING = Mic;
 
 	struct {
-		uint16_t BK4819_XtalFreqLow;
+		int16_t BK4819_XtalFreqLow;
 		uint16_t EEPROM_1F8A;
 		uint16_t EEPROM_1F8C;
 		uint8_t EEPROM_1F8E;
