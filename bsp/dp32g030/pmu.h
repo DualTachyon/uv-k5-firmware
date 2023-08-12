@@ -22,35 +22,43 @@
 #endif
 
 /* -------- PMU -------- */
-#define PMU_BASE_ADDR                       0x40000800U
-#define PMU_BASE_SIZE                       0x00000800U
+#define PMU_BASE_ADDR                      0x40000800U
+#define PMU_BASE_SIZE                      0x00000800U
 
-#define PMU_SRC_CFG_ADDR                    (PMU_BASE_ADDR + 0x0010U)
-#define PMU_SRC_CFG                         (*(volatile uint32_t *)PMU_SRC_CFG_ADDR)
-#define PMU_SRC_CFG_RTC_CLK_SEL_SHIFT       4
-#define PMU_SRC_CFG_RTC_CLK_SEL_WIDTH       1
-#define PMU_SRC_CFG_RTC_CLK_SEL_MASK        (((1U << PMU_SRC_CFG_RTC_CLK_SEL_WIDTH) - 1U) << PMU_SRC_CFG_RTC_CLK_SEL_SHIFT)
-#define PMU_SRC_CFG_RTC_CLK_SEL_VALUE_RCLF  0U
-#define PMU_SRC_CFG_RTC_CLK_SEL_BITS_RCLF   (PMU_SRC_CFG_RTC_CLK_SEL_VALUE_RCLF << PMU_SRC_CFG_RTC_CLK_SEL_SHIFT)
-#define PMU_SRC_CFG_RTC_CLK_SEL_VALUE_XTAL  1U
-#define PMU_SRC_CFG_RTC_CLK_SEL_BITS_XTAL   (PMU_SRC_CFG_RTC_CLK_SEL_VALUE_XTAL << PMU_SRC_CFG_RTC_CLK_SEL_SHIFT)
+#define PMU_SRC_CFG_ADDR                   (PMU_BASE_ADDR + 0x0010U)
+#define PMU_SRC_CFG                        (*(volatile uint32_t *)PMU_SRC_CFG_ADDR)
+#define PMU_SRC_CFG_RCHF_EN_SHIFT          0
+#define PMU_SRC_CFG_RCHF_EN_WIDTH          1
+#define PMU_SRC_CFG_RCHF_EN_MASK           (((1U << PMU_SRC_CFG_RCHF_EN_WIDTH) - 1U) << PMU_SRC_CFG_RCHF_EN_SHIFT)
+#define PMU_SRC_CFG_RCHF_EN_VALUE_DISABLE  0U
+#define PMU_SRC_CFG_RCHF_EN_BITS_DISABLE   (PMU_SRC_CFG_RCHF_EN_VALUE_DISABLE << PMU_SRC_CFG_RCHF_EN_SHIFT)
+#define PMU_SRC_CFG_RCHF_EN_VALUE_ENABLE   1U
+#define PMU_SRC_CFG_RCHF_EN_BITS_ENABLE    (PMU_SRC_CFG_RCHF_EN_VALUE_ENABLE << PMU_SRC_CFG_RCHF_EN_SHIFT)
 
-#define PMU_TRIM_POW0_ADDR                  (PMU_BASE_ADDR + 0x0020U)
-#define PMU_TRIM_POW0                       (*(volatile uint32_t *)PMU_TRIM_POW0_ADDR)
-#define PMU_TRIM_POW1_ADDR                  (PMU_BASE_ADDR + 0x0024U)
-#define PMU_TRIM_POW1                       (*(volatile uint32_t *)PMU_TRIM_POW1_ADDR)
-#define PMU_TRIM_POW2_ADDR                  (PMU_BASE_ADDR + 0x0028U)
-#define PMU_TRIM_POW2                       (*(volatile uint32_t *)PMU_TRIM_POW2_ADDR)
-#define PMU_TRIM_POW3_ADDR                  (PMU_BASE_ADDR + 0x002CU)
-#define PMU_TRIM_POW3                       (*(volatile uint32_t *)PMU_TRIM_POW3_ADDR)
-#define PMU_TRIM_RCHF_ADDR                  (PMU_BASE_ADDR + 0x0030U)
-#define PMU_TRIM_RCHF                       (*(volatile uint32_t *)PMU_TRIM_RCHF_ADDR)
-#define PMU_TRIM_RCLF_ADDR                  (PMU_BASE_ADDR + 0x0034U)
-#define PMU_TRIM_RCLF                       (*(volatile uint32_t *)PMU_TRIM_RCLF_ADDR)
-#define PMU_TRIM_OPA_ADDR                   (PMU_BASE_ADDR + 0x0038U)
-#define PMU_TRIM_OPA                        (*(volatile uint32_t *)PMU_TRIM_OPA_ADDR)
-#define PMU_TRIM_PLL_ADDR                   (PMU_BASE_ADDR + 0x003CU)
-#define PMU_TRIM_PLL                        (*(volatile uint32_t *)PMU_TRIM_PLL_ADDR)
+#define PMU_SRC_CFG_XTAH_EN_SHIFT          2
+#define PMU_SRC_CFG_XTAH_EN_WIDTH          1
+#define PMU_SRC_CFG_XTAH_EN_MASK           (((1U << PMU_SRC_CFG_XTAH_EN_WIDTH) - 1U) << PMU_SRC_CFG_XTAH_EN_SHIFT)
+#define PMU_SRC_CFG_XTAH_EN_VALUE_DISABLE  0U
+#define PMU_SRC_CFG_XTAH_EN_BITS_DISABLE   (PMU_SRC_CFG_XTAH_EN_VALUE_DISABLE << PMU_SRC_CFG_XTAH_EN_SHIFT)
+#define PMU_SRC_CFG_XTAH_EN_VALUE_ENABLE   1U
+#define PMU_SRC_CFG_XTAH_EN_BITS_ENABLE    (PMU_SRC_CFG_XTAH_EN_VALUE_ENABLE << PMU_SRC_CFG_XTAH_EN_SHIFT)
+
+#define PMU_TRIM_POW0_ADDR                 (PMU_BASE_ADDR + 0x0020U)
+#define PMU_TRIM_POW0                      (*(volatile uint32_t *)PMU_TRIM_POW0_ADDR)
+#define PMU_TRIM_POW1_ADDR                 (PMU_BASE_ADDR + 0x0024U)
+#define PMU_TRIM_POW1                      (*(volatile uint32_t *)PMU_TRIM_POW1_ADDR)
+#define PMU_TRIM_POW2_ADDR                 (PMU_BASE_ADDR + 0x0028U)
+#define PMU_TRIM_POW2                      (*(volatile uint32_t *)PMU_TRIM_POW2_ADDR)
+#define PMU_TRIM_POW3_ADDR                 (PMU_BASE_ADDR + 0x002CU)
+#define PMU_TRIM_POW3                      (*(volatile uint32_t *)PMU_TRIM_POW3_ADDR)
+#define PMU_TRIM_RCHF_ADDR                 (PMU_BASE_ADDR + 0x0030U)
+#define PMU_TRIM_RCHF                      (*(volatile uint32_t *)PMU_TRIM_RCHF_ADDR)
+#define PMU_TRIM_RCLF_ADDR                 (PMU_BASE_ADDR + 0x0034U)
+#define PMU_TRIM_RCLF                      (*(volatile uint32_t *)PMU_TRIM_RCLF_ADDR)
+#define PMU_TRIM_OPA_ADDR                  (PMU_BASE_ADDR + 0x0038U)
+#define PMU_TRIM_OPA                       (*(volatile uint32_t *)PMU_TRIM_OPA_ADDR)
+#define PMU_TRIM_PLL_ADDR                  (PMU_BASE_ADDR + 0x003CU)
+#define PMU_TRIM_PLL                       (*(volatile uint32_t *)PMU_TRIM_PLL_ADDR)
 
 
 #endif
