@@ -21,6 +21,17 @@
 #include <stdint.h>
 #include "driver/bk4819-regs.h"
 
+enum BK4819_AF_Type_t {
+	BK4819_AF_MUTE = 0U,
+	BK4819_AF_OPEN = 1U,
+	BK4819_AF_ALAM = 2U,
+	BK4819_AF_BEEP = 3U,
+	BK4819_AF_CTCO = 6U,
+	BK4819_AF_FSKO = 8U,
+};
+
+typedef enum BK4819_AF_Type_t BK4819_AF_Type_t;
+
 void BK4819_Init(void);
 uint16_t BK4819_GetRegister(BK4819_REGISTER_t Register);
 void BK4819_WriteRegister(BK4819_REGISTER_t Register, uint16_t Data);
@@ -39,7 +50,7 @@ void BK4819_SetFilterBandwidth(uint8_t Bandwidth);
 void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency);
 void BK4819_SetFrequency(uint32_t Frequency);
 void BK4819_SetupSquelch(uint8_t SQ0, uint8_t SQ1, uint8_t SQ2, uint8_t SQ3, uint8_t SQ4, uint8_t SQ5);
-void BK4819_SetAF(uint8_t AF);
+void BK4819_SetAF(BK4819_AF_Type_t AF);
 void BK4819_RX_TurnOn(void);
 void BK4819_PickRXFilterPathBasedOnFrequency(uint32_t Frequency);
 void BK4819_DisableScramble(void);
@@ -47,6 +58,11 @@ void BK4819_EnableScramble(uint8_t Type);
 void BK4819_DisableVox(void);
 void BK4819_DisableDTMF_SelCall(void);
 void BK4819_ConfigureDTMF_SelCall_and_UnknownRegister(void);
+void BK4819_PlayTone(uint16_t Frequency, bool bTuningGainSwitch);
+void BK4819_EnterTxMute(void);
+void BK4819_ExitTxMute(void);
+void BK4819_Sleep(void);
+void BK4819_TurnsOffTones_TurnsOnRX(void);
 
 #endif
 

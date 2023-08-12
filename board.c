@@ -820,6 +820,6 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 		gEeprom.EEPROM_1F8F = 8;
 	}
 
-	BK4819_WriteRegister(BK4819_REG_3B_XTAL_FREQ_LOW, gEeprom.BK4819_XTAL_FREQ_LOW + 22656);
+	BK4819_WriteRegister(BK4819_REG_3B, gEeprom.BK4819_XTAL_FREQ_LOW + 22656);
 }
 
