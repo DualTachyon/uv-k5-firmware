@@ -48,8 +48,8 @@ void BK1080_Init(uint16_t Channel, bool bDoScan)
 				BK1080_WriteRegister(i, BK1080_RegisterTable[i]);
 			}
 			SYSTEM_DelayMs(250);
-			BK1080_WriteRegister(BK1080_REG_25_INTERNAL, 0xA83C);
-			BK1080_WriteRegister(BK1080_REG_25_INTERNAL, 0xA8BC);
+			BK1080_WriteRegister(BK1080_REG_19_INTERNAL, 0xA83C);
+			BK1080_WriteRegister(BK1080_REG_19_INTERNAL, 0xA8BC);
 			SYSTEM_DelayMs(60);
 			gIsInitBK1080 = true;
 		} else {
@@ -72,5 +72,14 @@ void BK1080_WriteRegister(BK1080_REGISTER_t Register, uint16_t Value)
 	I2C_Write(Register << 1);
 	I2C_WriteBuffer(&Value, sizeof(Value));
 	I2C_Stop();
+}
+
+void BK1080_Mute(bool Mute)
+{
+	if (Mute) {
+		BK1080_WriteRegister(BK1080_REG_02_POWER_CONFIGURATION, 0x4201);
+	} else {
+		BK1080_WriteRegister(BK1080_REG_02_POWER_CONFIGURATION, 0x0201);
+	}
 }
 

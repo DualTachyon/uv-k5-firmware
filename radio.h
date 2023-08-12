@@ -78,7 +78,7 @@ uint8_t RADIO_FindNextChannel(uint8_t ChNum, uint8_t Direction, bool bCheckScanL
 void RADIO_InitInfo(RADIO_Info_t *pInfo, uint8_t ChannelSave, uint8_t ChIndex, uint32_t Frequency);
 void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg);
 void RADIO_ConfigureSquelchAndOutputPower(RADIO_Info_t *pInfo);
-void RADIO_ApplyDeviation(RADIO_Info_t *pInfo);
+void RADIO_ApplyOffset(RADIO_Info_t *pInfo);
 void RADIO_ConfigureTX(void);
 void RADIO_ConfigureCrossTX(void);
 void RADIO_SetupRegisters(bool bSwitchToFunction0);

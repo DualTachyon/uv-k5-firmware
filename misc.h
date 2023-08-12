@@ -44,11 +44,6 @@ extern uint8_t gEEPROM_1EC8_0[8];
 extern uint8_t gEEPROM_1EC8_1[8];
 extern uint8_t gEEPROM_1EC8_2[8];
 
-extern uint16_t gBatteryCalibration[6];
-extern uint16_t gADC_CH4_BootValue;
-extern uint16_t gADC_CH4[4];
-extern uint16_t gADC_CH9;
-
 extern uint16_t gEEPROM_1F8A;
 extern uint16_t gEEPROM_1F8C;
 extern uint8_t gEEPROM_1F8E;

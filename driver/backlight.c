@@ -14,18 +14,18 @@
  *     limitations under the License.
  */
 
-#ifndef BK1080_REGS_H
-#define BK1080_REGS_H
+#include "backlight.h"
+#include "bsp/dp32g030/gpio.h"
+#include "driver/gpio.h"
+#include "settings.h"
 
-enum BK1080_REGISTER_t {
-	BK1080_REG_00                       = 0x00U,
-	BK1080_REG_02_POWER_CONFIGURATION   = 0x02U,
-	BK1080_REG_03_CHANNEL               = 0x03U,
-	BK1080_REG_05_SYSTEM_CONFIGURATION2 = 0x03U,
-	BK1080_REG_19_INTERNAL              = 0x19U,
-};
+uint8_t gBacklightCountdown;
 
-typedef enum BK1080_REGISTER_t BK1080_REGISTER_t;
-
-#endif
+void BACKLIGHT_TurnOn(void)
+{
+	if (gEeprom.BACKLIGHT) {
+		GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
+		gBacklightCountdown = 1 + (gEeprom.BACKLIGHT * 2);
+	}
+}
 

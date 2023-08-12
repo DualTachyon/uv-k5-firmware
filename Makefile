@@ -17,6 +17,7 @@ OBJS += $(BLOB_OVERLAY).o
 
 # Drivers
 OBJS += driver/adc.o
+OBJS += driver/backlight.o
 OBJS += driver/bk1080.o
 OBJS += driver/bk4819.o
 OBJS += driver/crc.o
@@ -32,6 +33,7 @@ OBJS += driver/systick.o
 OBJS += driver/uart.o
 
 # Main
+OBJS += battery.o
 OBJS += board.o
 OBJS += dcs.o
 OBJS += dtmf.o

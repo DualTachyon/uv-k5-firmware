@@ -16,6 +16,7 @@
  */
 
 #include <string.h>
+#include "battery.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
@@ -791,7 +792,7 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 	gEeprom.MIC_SENSITIVITY_TUNING = Mic;
 
 	struct {
-		uint16_t BK4819_XtalFreqLow;
+		int16_t BK4819_XtalFreqLow;
 		uint16_t EEPROM_1F8A;
 		uint16_t EEPROM_1F8C;
 		uint8_t EEPROM_1F8E;
@@ -820,6 +821,6 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 		gEeprom.EEPROM_1F8F = 8;
 	}
 
-	BK4819_WriteRegister(BK4819_REG_3B_XTAL_FREQ_LOW, gEeprom.BK4819_XTAL_FREQ_LOW + 22656);
+	BK4819_WriteRegister(BK4819_REG_3B, gEeprom.BK4819_XTAL_FREQ_LOW + 22656);
 }
 

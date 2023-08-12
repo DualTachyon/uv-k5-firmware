@@ -17,13 +17,15 @@
 #include <stdbool.h>
 #include "ARMCM0.h"
 
+#include "battery.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
 #include "bsp/dp32g030/syscon.h"
 #include "board.h"
-#include "driver/crc.h"
+#include "driver/backlight.h"
 #include "driver/bk1080.h"
 #include "driver/bk4819.h"
+#include "driver/crc.h"
 #include "driver/eeprom.h"
 #include "driver/flash.h"
 #include "driver/gpio.h"
@@ -57,11 +59,6 @@ static void FLASHLIGHT_TurnOff(void)
 static void FLASHLIGHT_TurnOn(void)
 {
 	GPIO_SetBit(&GPIOC->DATA, GPIOB_PIN_FLASHLIGHT);
-}
-
-static void BACKLIGHT_TurnOn(void)
-{
-	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 }
 
 #if 0
@@ -132,7 +129,7 @@ void Main(void)
 	// TODO: EEPROM Init
 
 	BK4819_Init();
-	BOARD_ADC_GetBatteryInfo(&gADC_CH4_BootValue, &gADC_CH9);
+	BOARD_ADC_GetBatteryInfo(&gBatteryBootVoltage, &gBatteryCurrent);
 	BOARD_EEPROM_Init();
 	BOARD_EEPROM_LoadMoreSettings();
 
