@@ -309,7 +309,7 @@ void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg)
 		Frequency = FREQUENCY_FloorToStep(gEeprom.RadioInfo[RadioNum].FREQUENCY_OF_DEVIATION, gEeprom.RadioInfo[RadioNum].StepFrequency, 0);
 		gEeprom.RadioInfo[RadioNum].FREQUENCY_OF_DEVIATION = Frequency;
 	}
-	RADIO_ApplyDeviation(pRadio);
+	RADIO_ApplyOffset(pRadio);
 	memset(gEeprom.RadioInfo[RadioNum].Name, 0, sizeof(gEeprom.RadioInfo[RadioNum].Name));
 	if (ChNum < 200) {
 		// 16 bytes allocated but only 12 used
@@ -394,7 +394,7 @@ void RADIO_ConfigureSquelchAndOutputPower(RADIO_Info_t *pInfo)
 				pInfo->pDCS_Reverse->Frequency);
 }
 
-void RADIO_ApplyDeviation(RADIO_Info_t *pInfo)
+void RADIO_ApplyOffset(RADIO_Info_t *pInfo)
 {
 	uint32_t Frequency;
 
@@ -492,7 +492,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	}
 	BK4819_SetFrequency(Frequency);
 	BK4819_SetupSquelch(gRxRadioInfo->SQ0, gRxRadioInfo->SQ1, gRxRadioInfo->SQ2, gRxRadioInfo->SQ3, gRxRadioInfo->SQ4, gRxRadioInfo->SQ5);
-	BK4819_Configure_GPIO2_PIN30_GPIO3_PIN31(Frequency);
+	BK4819_PickRXFilterPathBasedOnFrequency(Frequency);
 	BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, true);
 	BK4819_WriteRegister(BK4819_REG_48_AF_RF_GAIN_DAC_GAIN, 0xB3A8);
 

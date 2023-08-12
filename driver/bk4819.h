@@ -41,7 +41,7 @@ void BK4819_SetFrequency(uint32_t Frequency);
 void BK4819_SetupSquelch(uint8_t SQ0, uint8_t SQ1, uint8_t SQ2, uint8_t SQ3, uint8_t SQ4, uint8_t SQ5);
 void BK4819_SetAF(uint8_t AF);
 void BK4819_RX_TurnOn(void);
-void BK4819_Configure_GPIO2_PIN30_GPIO3_PIN31(uint32_t Frequency);
+void BK4819_PickRXFilterPathBasedOnFrequency(uint32_t Frequency);
 void BK4819_DisableScramble(void);
 void BK4819_EnableScramble(uint8_t Type);
 void BK4819_DisableVox(void);
