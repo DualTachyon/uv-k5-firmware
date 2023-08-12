@@ -33,6 +33,7 @@ OBJS += driver/systick.o
 OBJS += driver/uart.o
 
 # Main
+OBJS += audio.o
 OBJS += battery.o
 OBJS += board.o
 OBJS += dcs.o
