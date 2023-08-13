@@ -96,7 +96,7 @@ void NUMBER_Append(uint8_t Digit)
 {
 	if (gNumberOffset == 0) {
 		memset(gNumberForPrintf, 10, sizeof(gNumberOffset));
-	} else if (gNumberOffset >= sizeof(gNumberOffset)) {
+	} else if (gNumberOffset >= sizeof(gNumberForPrintf)) {
 		return;
 	}
 	gNumberForPrintf[gNumberOffset++] = Digit;
