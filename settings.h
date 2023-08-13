@@ -21,6 +21,11 @@
 #include <stdint.h>
 #include "radio.h"
 
+enum {
+	POWER_ON_DISPLAY_MODE_FULL_SCREEN = 0U,
+	POWER_ON_DISPLAY_MODE_VOLTAGE     = 2U,
+};
+
 typedef struct {
 	uint8_t EEPROM_0E80_0E83[2];
 	uint8_t EEPROM_0E82_0E85[2];

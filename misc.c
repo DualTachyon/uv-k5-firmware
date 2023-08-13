@@ -65,6 +65,7 @@ uint8_t gSystickCountdown4;
 uint8_t gSystickCountdown3;
 uint8_t g_20000377;
 uint8_t gSystickCountdown2;
+uint8_t g_2000037E;
 
 uint8_t gCopyOfCodeType;
 

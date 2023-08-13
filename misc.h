@@ -69,6 +69,7 @@ extern uint8_t gSystickCountdown4;
 extern uint8_t gSystickCountdown3;
 extern uint8_t g_20000377;
 extern uint8_t gSystickCountdown2;
+extern uint8_t g_2000037E;
 
 extern uint8_t gCopyOfCodeType;
 

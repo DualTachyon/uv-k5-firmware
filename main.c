@@ -34,6 +34,8 @@
 #include "driver/system.h"
 #include "driver/systick.h"
 #include "driver/uart.h"
+#include "functions.h"
+#include "gui.h"
 #include "misc.h"
 #include "radio.h"
 
@@ -106,6 +108,8 @@ static void Console(void)
 
 void Main(void)
 {
+	uint8_t i;
+
 	// Enable clock gating of blocks we need.
 	SYSCON_DEV_CLK_GATE = 0
 		| SYSCON_DEV_CLK_GATE_GPIOA_BITS_ENABLE
@@ -138,20 +142,26 @@ void Main(void)
 	RADIO_ConfigureTX();
 	RADIO_SetupRegisters(true);
 
+	for (i = 0; i < 4; i++) {
+		BOARD_ADC_GetBatteryInfo(&gBatteryVoltages[i], &gBatteryCurrent);
+	}
+
+	BATTERY_GetReadings(false);
+	if (!gChargingWithTypeC && !gBatteryDisplayLevel) {
+		FUNCTION_Select(FUNCTION_5);
+		GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
+		g_2000037E = 1;
+	} else {
+		GUI_Welcome();
+		BACKLIGHT_TurnOn();
+		SYSTEM_DelayMs(1000);
+	}
+
 	// Below this line is development/test area not conforming to the original firmware
 
 	// Show some signs of life
 	FLASHLIGHT_Init();
 	FLASHLIGHT_TurnOn();
-	BACKLIGHT_TurnOn();
-
-	static const uint8_t TestBitmap0[8] = { 0x80, 0x80, 0x80, 0x80, 0x08, 0x08, 0x08, 0x08 };
-	static const uint8_t TestBitmap1[8] = { 0x10, 0x10, 0x10, 0x10, 0x01, 0x01, 0x01, 0x01 };
-	ST7565_DrawLine(16, 1, 8, TestBitmap0, false);
-	ST7565_DrawLine(24, 3, 8, TestBitmap1, false);
-
-	uint8_t Test[8];
-	EEPROM_ReadBuffer(0x0EB0, Test, 8);
 
 	while (1) {
 		Console();
