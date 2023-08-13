@@ -21,7 +21,6 @@ bool gAskForConfirmation;
 bool gAskToSave;
 bool gAskToDelete;
 
-
 void GUI_Welcome(void)
 {
 	char WelcomeString0[16];
@@ -59,8 +58,8 @@ void GUI_PrintString(const char *pString, uint8_t Start, uint8_t End, uint8_t Li
 		Start += (((End - Start) - (Length * Width)) + 1) / 2;
 	}
 	for (i = 0; i < Length; i++) {
-		if (pString[i] - ' ' < 0x5F) {
-			uint8_t Index = pString[i] - ' ';
+		if ((pString[i] - ' ') < 0x5F) {
+			const uint8_t Index = pString[i] - ' ';
 			memcpy(gFrameBuffer[Line + 0] + (i * Width) + Start, &gBigFont[Index][0], 8);
 			memcpy(gFrameBuffer[Line + 1] + (i * Width) + Start, &gBigFont[Index][8], 8);
 		}
@@ -146,7 +145,7 @@ void GUI_LockScreen(void)
 
 	memset(gStatusLine, 0, sizeof(gStatusLine));
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
-	strcat(String, "LOCK");
+	strcpy(String, "LOCK");
 	GUI_PrintString(String, 0, 127, 1, 10, true);
 	for (i = 0; i < 6; i++) {
 		if (gNumberForPrintf[i] == 10) {
