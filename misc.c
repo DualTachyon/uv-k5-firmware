@@ -88,6 +88,8 @@ uint8_t gCode;
 uint8_t gNumberOffset;
 uint8_t gNumberForPrintf[8];
 
+uint8_t gSystickFlag8;
+uint8_t g_20000356;
 uint16_t g_200003B6;
 
 //

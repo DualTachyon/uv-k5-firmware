@@ -91,6 +91,8 @@ extern uint8_t gCode;
 extern uint8_t gNumberOffset;
 extern uint8_t gNumberForPrintf[8];
 
+extern uint8_t gSystickFlag8;
+extern uint8_t g_20000356;
 extern uint16_t g_200003B6;
 
 // --------

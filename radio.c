@@ -571,3 +571,35 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 #endif
 	}
 }
+
+void RADIO_ConfigureNOAA(void)
+{
+	uint8_t ChanAB;
+
+	g_2000036F = 1;
+	if (gEeprom.NOAA_AUTO_SCAN) {
+		if (gEeprom.DUAL_WATCH != 0) {
+			if (gEeprom.EEPROM_0E80_0E83[0] < 207) {
+				if (gEeprom.EEPROM_0E80_0E83[1] < 207) {
+					gIsNoaaMode = false;
+					return;
+				}
+				ChanAB = 1;
+			} else {
+				ChanAB = 0;
+			}
+			if (gIsNoaaMode == false) {
+				gNoaaChannel = gEeprom.RadioInfo[ChanAB].CHANNEL_SAVE - 207;
+			}
+			gIsNoaaMode = true;
+			return;
+		}
+		if (gInfoCHAN_A->CHANNEL_SAVE >= 206) {
+			gIsNoaaMode = true;
+			gNoaaChannel = gInfoCHAN_A->CHANNEL_SAVE - 207;
+			g_20000356 = 0x32;
+			gSystickFlag8 = 0;
+		}
+	}
+}
+

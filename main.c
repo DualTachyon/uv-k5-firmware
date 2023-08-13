@@ -184,6 +184,7 @@ void Main(void)
 			AUDIO_SetVoiceID(1, VOICE_ID_ENG_FREQUENCY_MODE);
 		}
 		AUDIO_PlaySingleVoice(0);
+		RADIO_ConfigureNOAA();
 	}
 
 	// Below this line is development/test area not conforming to the original firmware

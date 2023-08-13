@@ -87,6 +87,7 @@ void RADIO_ApplyOffset(RADIO_Info_t *pInfo);
 void RADIO_ConfigureTX(void);
 void RADIO_ConfigureCrossTX(void);
 void RADIO_SetupRegisters(bool bSwitchToFunction0);
+void RADIO_ConfigureNOAA(void);
 
 #endif
 
