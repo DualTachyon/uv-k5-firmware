@@ -28,7 +28,7 @@
 #include "settings.h"
 
 RADIO_Info_t *gTxRadioInfo;
-RADIO_Info_t *gRxRadioInfo;
+RADIO_Info_t *gInfoCHAN_A;
 RADIO_Info_t *gCrossTxRadioInfo;
 
 bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t RadioNum)
@@ -442,13 +442,13 @@ void RADIO_ConfigureTX(void)
 		}
 	}
 
-	gRxRadioInfo = &gEeprom.RadioInfo[gEeprom.RX_CHANNEL];
+	gInfoCHAN_A = &gEeprom.RadioInfo[gEeprom.RX_CHANNEL];
 	RADIO_ConfigureCrossTX();
 }
 
 void RADIO_ConfigureCrossTX(void)
 {
-	gCrossTxRadioInfo = gRxRadioInfo;
+	gCrossTxRadioInfo = gInfoCHAN_A;
 	if (gEeprom.CROSS_BAND_RX_TX != 0) { // != OFF
 		gCrossTxRadioInfo = &gEeprom.RadioInfo[gEeprom.TX_CHANNEL];
 	}
@@ -465,7 +465,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	g_2000036B = 0;
 	BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
 
-	Bandwidth = gRxRadioInfo->CHANNEL_BANDWIDTH;
+	Bandwidth = gInfoCHAN_A->CHANNEL_BANDWIDTH;
 	if (Bandwidth != 0) { // != WIDE
 		Bandwidth = 1; // NARROW
 	}
@@ -485,16 +485,16 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	}
 	BK4819_WriteRegister(BK4819_REG_3F, 0);
 	BK4819_WriteRegister(BK4819_REG_7D, gEeprom.MIC_SENSITIVITY_TUNING | 0xE940);
-	if (gRxRadioInfo->CHANNEL_SAVE < 207 || gIsNoaaMode != false) {
-		Frequency = gRxRadioInfo->pDCS_Current->Frequency;
+	if (gInfoCHAN_A->CHANNEL_SAVE < 207 || gIsNoaaMode != false) {
+		Frequency = gInfoCHAN_A->pDCS_Current->Frequency;
 	} else {
 		Frequency = NoaaFrequencyTable[gNoaaChannel];
 	}
 	BK4819_SetFrequency(Frequency);
 	BK4819_SetupSquelch(
-			gRxRadioInfo->SquelchOpenRSSIThresh, gRxRadioInfo->SquelchCloseRSSIThresh,
-			gRxRadioInfo->SquelchOpenNoiseThresh, gRxRadioInfo->SquelchCloseNoiseThresh,
-			gRxRadioInfo->SquelchCloseGlitchThresh, gRxRadioInfo->SquelchOpenGlitchThresh);
+			gInfoCHAN_A->SquelchOpenRSSIThresh, gInfoCHAN_A->SquelchCloseRSSIThresh,
+			gInfoCHAN_A->SquelchOpenNoiseThresh, gInfoCHAN_A->SquelchCloseNoiseThresh,
+			gInfoCHAN_A->SquelchCloseGlitchThresh, gInfoCHAN_A->SquelchOpenGlitchThresh);
 	BK4819_PickRXFilterPathBasedOnFrequency(Frequency);
 	BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, true);
 	BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
@@ -502,16 +502,16 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	// SQUELCH_LOST SQUELCH_FOUND
 	InterruptMask = 0x000C;
 
-	if (gRxRadioInfo->CHANNEL_SAVE < 207) {
-		if (gRxRadioInfo->_0x0033 != true) {
+	if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
+		if (gInfoCHAN_A->_0x0033 != true) {
 			uint8_t CodeType;
 			uint8_t CodeWord;
 
 			CodeType = gCodeType;
 			CodeWord = gCode;
 			if (g_20000381 == 0) {
-				CodeType = gRxRadioInfo->pDCS_Current->CodeType;
-				CodeWord = gRxRadioInfo->pDCS_Current->RX_TX_Code;
+				CodeType = gInfoCHAN_A->pDCS_Current->CodeType;
+				CodeWord = gInfoCHAN_A->pDCS_Current->RX_TX_Code;
 			}
 			switch (CodeType) {
 			case CODE_TYPE_DIGITAL:
@@ -533,10 +533,10 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 				InterruptMask = 0x040C;
 				break;
 			}
-			if (gRxRadioInfo->SCRAMBLING_TYPE == 0 || gSetting_ScrambleEnable == false) {
+			if (gInfoCHAN_A->SCRAMBLING_TYPE == 0 || gSetting_ScrambleEnable == false) {
 				BK4819_DisableScramble();
 			} else {
-				BK4819_EnableScramble(gRxRadioInfo->SCRAMBLING_TYPE - 1);
+				BK4819_EnableScramble(gInfoCHAN_A->SCRAMBLING_TYPE - 1);
 			}
 		}
 	} else {
@@ -552,7 +552,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	} else {
 		BK4819_DisableVox();
 	}
-	if ((gRxRadioInfo->_0x0033 == true) || ((gRxRadioInfo->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true)))) {
+	if ((gInfoCHAN_A->_0x0033 == true) || ((gInfoCHAN_A->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true)))) {
 		BK4819_DisableDTMF_SelCall();
 	} else {
 		BK4819_ConfigureDTMF_SelCall_and_UnknownRegister();

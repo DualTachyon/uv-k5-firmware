@@ -24,13 +24,13 @@ uint8_t gCurrentFunction;
 
 void FUNCTION_Init(void)
 {
-	if (gRxRadioInfo->CHANNEL_SAVE < 207) {
+	if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
 		gCopyOfCodeType = gCodeType;
 		if (g_20000381 == 0) {
-			if (gRxRadioInfo->_0x0033 == true) {
+			if (gInfoCHAN_A->_0x0033 == true) {
 				gCopyOfCodeType = 0;
 			} else {
-				gCopyOfCodeType = gRxRadioInfo->pDCS_Current->CodeType;
+				gCopyOfCodeType = gInfoCHAN_A->pDCS_Current->CodeType;
 			}
 		}
 	} else {

@@ -53,6 +53,8 @@ extern uint8_t gMR_ChannelParameters[207];
 extern uint8_t g_2000036B;
 extern uint8_t g_2000036F;
 extern uint8_t g_20000381;
+extern uint8_t g_2000036E;
+extern uint8_t gF_LOCK;
 
 extern uint8_t g_200003AA;
 extern uint8_t g_2000042F;
@@ -70,6 +72,11 @@ extern uint8_t gSystickCountdown3;
 extern uint8_t g_20000377;
 extern uint8_t gSystickCountdown2;
 extern uint8_t g_2000037E;
+extern uint8_t g_2000044C;
+
+extern bool gMaybeVsync;
+extern uint8_t gDebounceCounter;
+extern bool gUpdateDisplay;
 
 extern uint8_t gCopyOfCodeType;
 
@@ -81,7 +88,15 @@ extern bool gNoaaChannel;
 extern uint8_t gCodeType;
 extern uint8_t gCode;
 
+extern uint8_t gNumberOffset;
+extern uint8_t gNumberForPrintf[8];
+
 extern uint16_t g_200003B6;
+
+// --------
+
+void NUMBER_Append(uint8_t Digit);
+void NUMBER_Get(uint8_t *pDigits, uint32_t *pInteger);
 
 #endif
 

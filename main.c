@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include "ARMCM0.h"
 
+#include "audio.h"
 #include "battery.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
@@ -36,8 +37,10 @@
 #include "driver/uart.h"
 #include "functions.h"
 #include "gui.h"
+#include "helper.h"
 #include "misc.h"
 #include "radio.h"
+#include "settings.h"
 
 static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
 
@@ -152,9 +155,35 @@ void Main(void)
 		GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 		g_2000037E = 1;
 	} else {
+		uint8_t KeyType;
+		uint8_t Channel;
+
 		GUI_Welcome();
 		BACKLIGHT_TurnOn();
 		SYSTEM_DelayMs(1000);
+		g_2000044C = 0x33;
+
+		HELPER_GetKey();
+		KeyType = HELPER_GetKey();
+		if (gEeprom.POWER_ON_PASSWORD < 1000000) {
+			g_2000036E = 1;
+			GUI_PasswordScreen();
+			g_2000036E = 0;
+		}
+
+		HELPER_CheckBootKey(KeyType);
+
+		GPIO_ClearBit(&GPIOA->DATA, 12);
+		g_2000036F = 1;
+		AUDIO_SetVoiceID(0, VOICE_ID_ENG_WELCOME);
+		Channel = gEeprom.EEPROM_0E80_0E83[gEeprom.TX_CHANNEL] + 1;
+		if (Channel < 201) {
+			AUDIO_SetVoiceID(1, VOICE_ID_ENG_CHANNEL_MODE);
+			AUDIO_SetDigitVoice(2, Channel);
+		} else if ((Channel - 201) < 7) {
+			AUDIO_SetVoiceID(1, VOICE_ID_ENG_FREQUENCY_MODE);
+		}
+		AUDIO_PlaySingleVoice(0);
 	}
 
 	// Below this line is development/test area not conforming to the original firmware

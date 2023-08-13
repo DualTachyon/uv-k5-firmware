@@ -33,6 +33,7 @@ OBJS += driver/systick.o
 OBJS += driver/uart.o
 
 # Main
+OBJS += aircopy.o
 OBJS += audio.o
 OBJS += battery.o
 OBJS += board.o
@@ -43,6 +44,7 @@ OBJS += font.o
 OBJS += frequencies.o
 OBJS += functions.o
 OBJS += gui.o
+OBJS += helper.o
 OBJS += misc.o
 OBJS += radio.o
 OBJS += settings.o

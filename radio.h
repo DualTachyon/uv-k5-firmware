@@ -31,6 +31,11 @@ enum {
 	RADIO_CHANNEL_DOWN = 0xFFU,
 };
 
+enum {
+	BANDWIDTH_WIDE = 0U,
+	BANDWIDTH_NARROW = 1U,
+};
+
 typedef struct {
 	uint32_t Frequency;
 	uint8_t CodeType;
@@ -70,7 +75,7 @@ typedef struct RADIO_Info_t {
 } RADIO_Info_t;
 
 extern RADIO_Info_t *gTxRadioInfo;
-extern RADIO_Info_t *gRxRadioInfo;
+extern RADIO_Info_t *gInfoCHAN_A;
 extern RADIO_Info_t *gCrossTxRadioInfo;
 
 bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t RadioNum);

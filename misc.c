@@ -14,6 +14,7 @@
  *     limitations under the License.
  */
 
+#include <string.h>
 #include "misc.h"
 
 const uint32_t *gUpperLimitFrequencyBandTable;
@@ -49,6 +50,8 @@ uint8_t gMR_ChannelParameters[207];
 uint8_t g_2000036B;
 uint8_t g_2000036F;
 uint8_t g_20000381;
+uint8_t g_2000036E;
+uint8_t gF_LOCK;
 
 uint8_t g_200003AA;
 uint8_t g_2000042F;
@@ -66,6 +69,11 @@ uint8_t gSystickCountdown3;
 uint8_t g_20000377;
 uint8_t gSystickCountdown2;
 uint8_t g_2000037E;
+uint8_t g_2000044C;
+
+bool gMaybeVsync;
+uint8_t gDebounceCounter;
+bool gUpdateDisplay;
 
 uint8_t gCopyOfCodeType;
 
@@ -77,5 +85,38 @@ bool gNoaaChannel;
 uint8_t gCodeType;
 uint8_t gCode;
 
+uint8_t gNumberOffset;
+uint8_t gNumberForPrintf[8];
+
 uint16_t g_200003B6;
+
+//
+
+void NUMBER_Append(uint8_t Digit)
+{
+	if (gNumberOffset == 0) {
+		memset(gNumberForPrintf, 10, sizeof(gNumberOffset));
+	} else if (gNumberOffset >= sizeof(gNumberOffset)) {
+		return;
+	}
+	gNumberForPrintf[gNumberOffset++] = Digit;
+}
+
+void NUMBER_Get(uint8_t *pDigits, uint32_t *pInteger)
+{
+	uint32_t Value;
+	uint32_t Multiplier;
+	uint8_t i;
+
+	Multiplier = 10000000;
+	Value = 0;
+	for (i = 0; i < 8; i++) {
+		if (pDigits[i] > 9) {
+			break;
+		}
+		Value += pDigits[i] * Multiplier;
+		Multiplier /= 10U;
+	}
+	*pInteger = Value;
+}
 
