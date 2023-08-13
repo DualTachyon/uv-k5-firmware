@@ -27,6 +27,7 @@ enum BK4819_AF_Type_t {
 	BK4819_AF_ALAM = 2U,
 	BK4819_AF_BEEP = 3U,
 	BK4819_AF_CTCO = 6U,
+	BK4819_AF_7    = 7U,
 	BK4819_AF_FSKO = 8U,
 };
 
@@ -74,6 +75,9 @@ void BK4819_EnterTxMute(void);
 void BK4819_ExitTxMute(void);
 void BK4819_Sleep(void);
 void BK4819_TurnsOffTones_TurnsOnRX(void);
+void BK4819_SetupAircopy(void);
+void BK4819_ResetFSK(void);
+void BK4819_Idle(void);
 
 #endif
 

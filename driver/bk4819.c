@@ -18,6 +18,7 @@
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
 #include "driver/gpio.h"
+#include "driver/system.h"
 #include "driver/systick.h"
 
 uint16_t gBK4819_GpioOutState;
@@ -471,5 +472,27 @@ void BK4819_TurnsOffTones_TurnsOnRX(void)
 			| BK4819_REG_30_ENABLE_PLL_VCO
 			| BK4819_REG_30_ENABLE_RX_DSP
 			);
+}
+
+void BK4819_SetupAircopy(void)
+{
+	BK4819_WriteRegister(BK4819_REG_70, 0x00E0);
+	BK4819_WriteRegister(BK4819_REG_72, 0x3065);
+	BK4819_WriteRegister(BK4819_REG_58, 0x00C1);
+	BK4819_WriteRegister(BK4819_REG_5C, 0x5665);
+	BK4819_WriteRegister(BK4819_REG_5D, 0x4700);
+}
+
+void BK4819_ResetFSK(void)
+{
+	BK4819_WriteRegister(BK4819_REG_3F, 0x0000);
+	BK4819_WriteRegister(BK4819_REG_59, 0x0068);
+	SYSTEM_DelayMs(30);
+	BK4819_Idle();
+}
+
+void BK4819_Idle(void)
+{
+	BK4819_WriteRegister(BK4819_REG_30, 0x0000);
 }
 
