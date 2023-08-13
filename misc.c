@@ -95,7 +95,7 @@ uint16_t g_200003B6;
 void NUMBER_Append(uint8_t Digit)
 {
 	if (gNumberOffset == 0) {
-		memset(gNumberForPrintf, 10, sizeof(gNumberOffset));
+		memset(gNumberForPrintf, 10, sizeof(gNumberForPrintf));
 	} else if (gNumberOffset >= sizeof(gNumberForPrintf)) {
 		return;
 	}
