@@ -54,11 +54,33 @@ extern uint8_t g_2000036B;
 extern uint8_t g_2000036F;
 extern uint8_t g_20000381;
 
+extern uint8_t g_200003AA;
+extern uint8_t g_2000042F;
+extern uint8_t g_200003AE;
+extern uint8_t g_200003AB;
+extern uint8_t g_200003AD;
+extern uint8_t g_200003AF;
+extern uint8_t g_200003B0;
+extern uint8_t g_20000342;
+extern uint8_t gSystickFlag10;
+extern uint8_t g_20000375;
+extern uint8_t g_20000376;
+extern uint8_t gSystickCountdown4;
+extern uint8_t gSystickCountdown3;
+extern uint8_t g_20000377;
+extern uint8_t gSystickCountdown2;
+
+extern uint8_t gCopyOfCodeType;
+
+extern uint8_t g_20000D0C[16];
+
 extern bool gIsNoaaMode;
 extern bool gNoaaChannel;
 
 extern uint8_t gCodeType;
 extern uint8_t gCode;
+
+extern uint16_t g_200003B6;
 
 #endif
 

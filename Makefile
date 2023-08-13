@@ -40,6 +40,7 @@ OBJS += dcs.o
 OBJS += dtmf.o
 OBJS += fm.o
 OBJS += frequencies.o
+OBJS += functions.o
 OBJS += misc.o
 OBJS += radio.o
 OBJS += settings.o
