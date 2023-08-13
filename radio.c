@@ -424,12 +424,12 @@ void RADIO_ConfigureTX(void)
 {
 	if (gEeprom.CROSS_BAND_RX_TX == 2) { // == CHAN B
 		gEeprom.TX_CHANNEL = 1;
-	} else if (gEeprom.CROSS_BAND_RX_TX == 1) { // != CHAN A
+	} else if (gEeprom.CROSS_BAND_RX_TX == 1) { // == CHAN A
 		gEeprom.TX_CHANNEL = 0;
 	} else if (gEeprom.DUAL_WATCH == 2) { // == CHAN B
-		gEeprom.TX_CHANNEL = 0;
-	} else if (gEeprom.DUAL_WATCH == 1) { // == CHAN A
 		gEeprom.TX_CHANNEL = 1;
+	} else if (gEeprom.DUAL_WATCH == 1) { // == CHAN A
+		gEeprom.TX_CHANNEL = 0;
 	}
 
 	gTxRadioInfo = &gEeprom.RadioInfo[gEeprom.TX_CHANNEL];
