@@ -53,8 +53,8 @@ static const uint8_t VoiceClipLengthEnglish[76] = {
 uint8_t gVoiceID[8];
 uint8_t gVoiceReadIndex;
 uint8_t gVoiceWriteIndex;
-uint8_t gCountdownToPlayNextVoice;
-bool gFlagPlayQueuedVoice;
+volatile uint16_t gCountdownToPlayNextVoice;
+volatile bool gFlagPlayQueuedVoice;
 
 void AUDIO_PlayBeep(BEEP_Type_t Beep)
 {

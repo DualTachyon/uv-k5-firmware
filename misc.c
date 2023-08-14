@@ -48,11 +48,13 @@ uint8_t gEEPROM_1F8E;
 
 uint8_t gMR_ChannelParameters[207];
 
-uint16_t g_2000032E;
-uint16_t g_2000033A;
-uint16_t g_2000033E = 1000;
-uint8_t g_20000342;
-uint8_t g_20000356;
+uint8_t g_2000032D;
+volatile uint16_t g_2000032E;
+volatile uint16_t g_2000033A;
+volatile uint16_t g_2000033E = 1000;
+volatile uint16_t g_20000342;
+volatile uint16_t g_2000034C;
+volatile uint16_t g_20000356;
 uint8_t g_2000036B;
 uint8_t g_2000036D;
 uint8_t g_2000036E;
@@ -66,7 +68,7 @@ uint8_t g_20000377;
 uint8_t g_20000378;
 uint8_t g_20000379;
 uint8_t g_2000037E;
-uint8_t g_20000381;
+volatile uint8_t g_20000381;
 uint8_t g_20000383;
 uint16_t g_2000038E;
 uint8_t g_200003A9;
@@ -98,7 +100,7 @@ uint8_t g_20000D0C[16];
 
 bool gIs_A_Scan;
 bool gIsNoaaMode;
-bool gMaybeVsync;
+volatile bool gMaybeVsync;
 bool gNoaaChannel;
 bool gUpdateDisplay;
 uint8_t gA_Scan_Channel;
@@ -111,15 +113,21 @@ uint8_t gScanChannel;
 uint32_t gScanFrequency;
 uint8_t gScanState;
 uint8_t gShowChPrefix;
-uint8_t gSystickCountdown2;
-uint8_t gSystickCountdown3;
-uint8_t gSystickCountdown4;
-uint8_t gSystickFlag0;
-uint8_t gSystickFlag10;
-uint8_t gSystickFlag5;
-uint8_t gSystickFlag6;
-uint8_t gSystickFlag7;
-uint8_t gSystickFlag8;
+volatile uint16_t gSystickCountdown2;
+volatile uint8_t gSystickCountdown3;
+volatile uint8_t gSystickCountdown4;
+volatile uint16_t gSystickCountdown11;
+volatile bool gSystickFlag0;
+volatile bool gSystickFlag1;
+volatile bool gSystickFlag5;
+volatile bool gSystickFlag6;
+volatile bool gSystickFlag7;
+volatile bool gSystickFlag8;
+volatile bool gSystickFlag9;
+volatile bool gSystickFlag10;
+volatile bool gSystickFlag11;
+
+volatile uint16_t ScanPauseDelayIn10msec;
 
 // --------
 

@@ -48,7 +48,9 @@ OBJS += gui.o
 OBJS += helper.o
 OBJS += misc.o
 OBJS += radio.o
+OBJS += scheduler.o
 OBJS += settings.o
+
 OBJS += main.o
 
 TOP := $(shell pwd)

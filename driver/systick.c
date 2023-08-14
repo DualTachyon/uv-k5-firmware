@@ -52,8 +52,3 @@ void SYSTICK_DelayUs(uint32_t Delay)
 	} while (i < Delay * gTickMultiplier);
 }
 
-void SystickHandler(void)
-{
-	gMaybeVsync = 1;
-}
-

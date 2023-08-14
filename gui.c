@@ -34,8 +34,8 @@
 
 GUI_DisplayType_t gScreenToDisplay;
 uint8_t g_200003C6;
-uint8_t g_20000380;
-uint8_t g_20000390;
+volatile uint8_t g_20000380;
+volatile uint8_t g_20000390;
 uint8_t g_200003BA;
 uint8_t g_200003BB;
 uint8_t gWasFKeyPressed;

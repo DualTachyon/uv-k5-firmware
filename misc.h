@@ -51,11 +51,13 @@ extern uint8_t gEEPROM_1F8E;
 
 extern uint8_t gMR_ChannelParameters[207];
 
-extern uint16_t g_2000032E;
-extern uint16_t g_2000033A;
-extern uint16_t g_2000033E;
-extern uint8_t g_20000342;
-extern uint8_t g_20000356;
+extern uint8_t g_2000032D;
+extern volatile uint16_t g_2000032E;
+extern volatile uint16_t g_2000033A;
+extern volatile uint16_t g_2000033E;
+extern volatile uint16_t g_20000342;
+extern volatile uint16_t g_2000034C;
+extern volatile uint16_t g_20000356;
 extern uint8_t g_2000036B;
 extern uint8_t g_2000036D;
 extern uint8_t g_2000036E;
@@ -69,7 +71,7 @@ extern uint8_t g_20000377;
 extern uint8_t g_20000378;
 extern uint8_t g_20000379;
 extern uint8_t g_2000037E;
-extern uint8_t g_20000381;
+extern volatile uint8_t g_20000381;
 extern uint8_t g_20000383;
 extern uint16_t g_2000038E;
 extern uint8_t g_200003A9;
@@ -101,7 +103,7 @@ extern uint8_t g_20000D0C[16];
 
 extern bool gIs_A_Scan;
 extern bool gIsNoaaMode;
-extern bool gMaybeVsync;
+extern volatile bool gMaybeVsync;
 extern bool gNoaaChannel;
 extern bool gUpdateDisplay;
 extern uint8_t gA_Scan_Channel;
@@ -114,15 +116,21 @@ extern uint8_t gScanChannel;
 extern uint32_t gScanFrequency;
 extern uint8_t gScanState;
 extern uint8_t gShowChPrefix;
-extern uint8_t gSystickCountdown2;
-extern uint8_t gSystickCountdown3;
-extern uint8_t gSystickCountdown4;
-extern uint8_t gSystickFlag0;
-extern uint8_t gSystickFlag10;
-extern uint8_t gSystickFlag5;
-extern uint8_t gSystickFlag6;
-extern uint8_t gSystickFlag7;
-extern uint8_t gSystickFlag8;
+extern volatile uint16_t gSystickCountdown2;
+extern volatile uint8_t gSystickCountdown3;
+extern volatile uint8_t gSystickCountdown4;
+extern volatile uint16_t gSystickCountdown11;
+extern volatile bool gSystickFlag0;
+extern volatile bool gSystickFlag1;
+extern volatile bool gSystickFlag5;
+extern volatile bool gSystickFlag6;
+extern volatile bool gSystickFlag7;
+extern volatile bool gSystickFlag8;
+extern volatile bool gSystickFlag9;
+extern volatile bool gSystickFlag10;
+extern volatile bool gSystickFlag11;
+
+extern volatile uint16_t ScanPauseDelayIn10msec;
 
 // --------
 

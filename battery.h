@@ -32,7 +32,7 @@ extern bool gChargingWithTypeC;
 extern bool gLowBattery;
 extern bool gLowBatteryBlink;
 
-extern uint16_t gBatterySave;
+extern volatile uint16_t gBatterySave;
 
 void BATTERY_GetReadings(bool bDisplayBatteryLevel);
 
