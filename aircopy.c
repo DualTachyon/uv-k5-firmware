@@ -17,4 +17,7 @@
 #include "aircopy.h"
 
 AIRCOPY_State_t gAircopyState;
+uint16_t gAirCopyBlockNumber;
+uint16_t gErrorsDuringAirCopy;
+uint8_t gAirCopyIsSendMode;
 

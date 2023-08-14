@@ -35,6 +35,7 @@
 #include "driver/system.h"
 #include "driver/systick.h"
 #include "driver/uart.h"
+#include "external/printf/printf.h"
 #include "functions.h"
 #include "gui.h"
 #include "helper.h"
@@ -107,6 +108,11 @@ static void Console(void)
 		Key += 0x40;
 		UART_Send(&Key, 1);
 	}
+}
+
+void _putchar(char c)
+{
+	UART_Send((uint8_t *)&c, 1);
 }
 
 void Main(void)
@@ -193,7 +199,10 @@ void Main(void)
 	FLASHLIGHT_Init();
 	FLASHLIGHT_TurnOn();
 
+	uint32_t Test = 0;
+
 	while (1) {
+		printf("printf test %d\r\n", Test++);
 		Console();
 
 		SYSTEM_DelayMs(200);

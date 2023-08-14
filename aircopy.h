@@ -17,6 +17,8 @@
 #ifndef AIRCOPY_H
 #define AIRCOPY_H
 
+#include <stdint.h>
+
 enum AIRCOPY_State_t {
 	AIRCOPY_READY		= 0U,
 	AIRCOPY_TRANSFER	= 1U,
@@ -26,6 +28,9 @@ enum AIRCOPY_State_t {
 typedef enum AIRCOPY_State_t AIRCOPY_State_t;
 
 extern AIRCOPY_State_t gAircopyState;
+extern uint16_t gAirCopyBlockNumber;
+extern uint16_t gErrorsDuringAirCopy;
+extern uint8_t gAirCopyIsSendMode;
 
 #endif
 
