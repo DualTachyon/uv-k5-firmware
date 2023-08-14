@@ -1,3 +1,6 @@
 [submodule "external/CMSIS_5"]
 	path = external/CMSIS_5
 	url = https://github.com/ARM-software/CMSIS_5
+[submodule "external/printf"]
+	path = external/printf
+	url = https://github.com/mpaland/printf

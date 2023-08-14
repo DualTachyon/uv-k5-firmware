@@ -14,6 +14,7 @@ OBJS += init.o
 OBJS += overlay.o
 OBJS += $(LINK_OVERLAY).o
 OBJS += $(BLOB_OVERLAY).o
+OBJS += external/printf/printf.o
 
 # Drivers
 OBJS += driver/adc.o
@@ -60,6 +61,7 @@ SIZE = arm-none-eabi-size
 
 ASFLAGS = -mcpu=cortex-m0
 CFLAGS = -O2 -Wall -Werror -mcpu=cortex-m0 -fno-builtin -MMD
+CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
 
 OVERLAY_CFLAGS = $(CFLAGS) -fno-inline -fno-toplevel-reorder
