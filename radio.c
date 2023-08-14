@@ -629,8 +629,8 @@ void RADIO_PrepareTransmit(void)
 	BK4819_SetupPowerAmplifier(gCrossTxRadioInfo->TXP_CalculatedSetting, gCrossTxRadioInfo->pDCS_Reverse->Frequency);
 	SYSTEM_DelayMs(10);
 
-	if (gCrossTxRadioInfo->pDCS_Reverse->CodeType != 1) {
-		if ((gCrossTxRadioInfo->pDCS_Reverse->CodeType != 2) && (gCrossTxRadioInfo->pDCS_Reverse->CodeType != 3)) {
+	if (gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_CONTINUOUS_TONE) {
+		if ((gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_DIGITAL) && (gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_REVERSE_DIGITAL)) {
 			BK4819_ExitSubAu();
 			return;
 		}
