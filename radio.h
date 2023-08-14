@@ -95,5 +95,10 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0);
 void RADIO_ConfigureNOAA(void);
 void RADIO_PrepareTransmit(void);
 
+void RADIO_SomethingElse(uint8_t Arg);
+void RADIO_SomethingWithTransmit(void);
+void RADIO_EnableCxCSS(void);
+void RADIO_Something(void);
+
 #endif
 
