@@ -38,7 +38,6 @@ uint8_t g_20000380;
 uint8_t g_20000390;
 uint8_t g_200003BA;
 uint8_t g_200003BB;
-uint8_t g_20000367;
 uint8_t gWasFKeyPressed;
 
 bool gAskForConfirmation;
@@ -569,8 +568,8 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gF_LOCK = 0;
 			gAskToSave = false;
 			gAskToDelete = false;
-			if (g_20000367 == 1) {
-				g_20000367 = 0;
+			if (gWasFKeyPressed == 1) {
+				gWasFKeyPressed = 0;
 				g_2000036F = 1;
 			}
 		}

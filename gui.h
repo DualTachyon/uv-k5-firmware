@@ -37,7 +37,7 @@ extern uint8_t g_20000380;
 extern uint8_t g_20000390;
 extern uint8_t g_200003BA;
 extern uint8_t g_200003BB;
-extern uint8_t g_20000367;
+extern uint8_t gWasFKeyPressed;
 
 extern bool gAskForConfirmation;
 extern bool gAskToSave;
