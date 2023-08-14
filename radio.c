@@ -553,10 +553,10 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	} else {
 		BK4819_DisableVox();
 	}
-	if ((gInfoCHAN_A->_0x0033 == true) || ((gInfoCHAN_A->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true)))) {
-		BK4819_DisableDTMF_SelCall();
+	if ((gInfoCHAN_A->_0x0033 == true) || (gInfoCHAN_A->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true))) {
+		BK4819_DisableDTMF();
 	} else {
-		BK4819_ConfigureDTMF_SelCall_and_UnknownRegister();
+		BK4819_EnableDTMF();
 		// DTMF/5TONE_FOUND
 		InterruptMask |= 0x0800;
 	}

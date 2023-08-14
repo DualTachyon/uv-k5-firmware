@@ -87,7 +87,6 @@ bool gIs_A_Scan;
 bool gIsNoaaMode;
 bool gMaybeVsync;
 bool gNoaaChannel;
-bool gThisCanEnable_BK4819_Rxon;
 bool gUpdateDisplay;
 uint8_t gA_Scan_Channel;
 uint8_t gCode;

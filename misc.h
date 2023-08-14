@@ -90,7 +90,6 @@ extern bool gIs_A_Scan;
 extern bool gIsNoaaMode;
 extern bool gMaybeVsync;
 extern bool gNoaaChannel;
-extern bool gThisCanEnable_BK4819_Rxon;
 extern bool gUpdateDisplay;
 extern uint8_t gA_Scan_Channel;
 extern uint8_t gCode;
