@@ -47,54 +47,72 @@ uint8_t gEEPROM_1F8E;
 
 uint8_t gMR_ChannelParameters[207];
 
-uint8_t g_2000036B;
-uint8_t g_2000036F;
-uint8_t g_20000381;
-uint8_t g_2000036E;
-uint8_t gF_LOCK;
-
-uint8_t g_200003AA;
-uint8_t g_2000042F;
-uint8_t g_200003AE;
-uint8_t g_200003AB;
-uint8_t g_200003AD;
-uint8_t g_200003AF;
-uint8_t g_200003B0;
+uint16_t g_2000032E;
 uint8_t g_20000342;
-uint8_t gSystickFlag10;
+uint8_t g_20000356;
+uint8_t g_2000036B;
+uint8_t g_2000036E;
+uint8_t g_2000036F;
+uint8_t g_20000370;
 uint8_t g_20000375;
 uint8_t g_20000376;
-uint8_t gSystickCountdown4;
-uint8_t gSystickCountdown3;
 uint8_t g_20000377;
-uint8_t gSystickCountdown2;
+uint8_t g_20000378;
+uint8_t g_20000379;
 uint8_t g_2000037E;
+uint8_t g_20000381;
+uint16_t g_2000038E;
+uint8_t g_200003A9;
+uint8_t g_200003AA;
+uint8_t g_200003AB;
+uint8_t g_200003AD;
+uint8_t g_200003AE;
+uint8_t g_200003AF;
+uint8_t g_200003B0;
+uint16_t g_200003B6;
+uint8_t g_200003BC;
+uint8_t g_200003BE;
+uint8_t g_20000400;
+uint8_t g_2000042F;
 uint8_t g_2000044C;
-
-bool gMaybeVsync;
-uint8_t gDebounceCounter;
-bool gUpdateDisplay;
-
-uint8_t gCopyOfCodeType;
-
+uint8_t g_20000458;
+uint8_t g_2000045A;
+uint8_t g_2000045B;
+uint8_t g_2000045C;
+uint8_t g_20000461;
+uint8_t g_20000464;
 uint8_t g_20000D0C[16];
 
+bool gIs_A_Scan;
 bool gIsNoaaMode;
+bool gMaybeVsync;
 bool gNoaaChannel;
-
-uint8_t gCodeType;
+bool gThisCanEnable_BK4819_Rxon;
+bool gUpdateDisplay;
+uint8_t gA_Scan_Channel;
 uint8_t gCode;
-
+uint8_t gCodeType;
+uint8_t gCopyOfCodeType;
+uint8_t gDebounceCounter;
+uint8_t gDTMF_AUTO_RESET_TIME;
+uint8_t gF_LOCK;
+char gNumberForPrintf[8];
 uint8_t gNumberOffset;
-uint8_t gNumberForPrintf[8];
-
+uint8_t gScanChannel;
+uint32_t gScanFrequency;
+uint8_t gScanState;
+uint8_t gShowChPrefix;
+uint8_t gSystickCountdown2;
+uint8_t gSystickCountdown3;
+uint8_t gSystickCountdown4;
+uint8_t gSystickFlag10;
+uint8_t gSystickFlag5;
+uint8_t gSystickFlag6;
 uint8_t gSystickFlag8;
-uint8_t g_20000356;
-uint16_t g_200003B6;
 
-//
+// --------
 
-void NUMBER_Append(uint8_t Digit)
+void NUMBER_Append(char Digit)
 {
 	if (gNumberOffset == 0) {
 		memset(gNumberForPrintf, 10, sizeof(gNumberForPrintf));
@@ -104,7 +122,7 @@ void NUMBER_Append(uint8_t Digit)
 	gNumberForPrintf[gNumberOffset++] = Digit;
 }
 
-void NUMBER_Get(uint8_t *pDigits, uint32_t *pInteger)
+void NUMBER_Get(char *pDigits, uint32_t *pInteger)
 {
 	uint32_t Value;
 	uint32_t Multiplier;
@@ -120,5 +138,17 @@ void NUMBER_Get(uint8_t *pDigits, uint32_t *pInteger)
 		Multiplier /= 10U;
 	}
 	*pInteger = Value;
+}
+
+void NUMBER_ToDigits(uint32_t Value, char *pDigits)
+{
+	uint8_t i;
+
+	for (i = 0; i < 8; i++) {
+		uint32_t Result = Value / 10U;
+
+		pDigits[7 - i] = Value - (Result * 10U);
+		Value = Result;
+	}
 }
 

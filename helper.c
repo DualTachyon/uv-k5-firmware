@@ -60,6 +60,10 @@ uint8_t HELPER_GetKey(void)
 void HELPER_CheckBootKey(uint8_t KeyType)
 {
 	if (KeyType == 1) {
+#if 0
+		gMenuCursor = MENU_350TX;
+		gSubMenuSelection = (uint)gSetting_350TX;
+#endif
 		GUI_SelectNextDisplay(DISPLAY_MENU);
 		g_2000044C = 0x39;
 		gF_LOCK = 1;
@@ -83,7 +87,9 @@ void HELPER_CheckBootKey(uint8_t KeyType)
 		BK4819_SetupAircopy();
 		BK4819_ResetFSK();
 		gAircopyState = AIRCOPY_READY;
+		GUI_SelectNextDisplay(DISPLAY_AIRCOPY);
 	} else {
+		GUI_SelectNextDisplay(DISPLAY_MAIN);
 	}
 }
 

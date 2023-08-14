@@ -23,6 +23,7 @@
 #include "driver/system.h"
 #include "fm.h"
 #include "frequencies.h"
+#include "functions.h"
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
@@ -561,14 +562,10 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	}
 	BK4819_WriteRegister(BK4819_REG_3F, InterruptMask);
 
-	// TODO: below only writes values to unknown variables
-	// FUN_0000692c();
+	FUNCTION_Init();
 
 	if (bSwitchToFunction0 == 1) {
-		// TODO
-#if 0
-		SetFunctionSelector(0);
-#endif
+		FUNCTION_Select(FUNCTION_0);
 	}
 }
 

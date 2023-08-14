@@ -15,10 +15,15 @@
  */
 
 #include <string.h>
+#include "battery.h"
+#include "driver/bk4819.h"
 #include "dcs.h"
+#include "fm.h"
 #include "functions.h"
+#include "gui.h"
 #include "misc.h"
 #include "radio.h"
+#include "settings.h"
 
 uint8_t gCurrentFunction;
 
@@ -56,5 +61,64 @@ void FUNCTION_Init(void)
 
 void FUNCTION_Select(uint8_t Function)
 {
+	uint8_t PreviousFunction;
+	bool bWasFunction5;
+
+	PreviousFunction = gCurrentFunction;
+	bWasFunction5 = (gCurrentFunction == FUNCTION_5);
+	gCurrentFunction = Function;
+
+	if (bWasFunction5) {
+		if (Function != FUNCTION_5) {
+			// TODO
+		}
+	}
+
+	if (Function == FUNCTION_0) {
+		if (g_200003BE != 0) {
+			// TODO
+		}
+		if (PreviousFunction == FUNCTION_1) {
+			g_20000378 = 0;
+			g_20000379 = 0;
+		} else if (PreviousFunction != 0x04) {
+			g_2000032E = 1000;
+			gSystickFlag5 = 0;
+			return;
+		}
+		if (gFmMute == true) {
+			g_2000038E = 500;
+		}
+		if (g_200003BC != 1 && g_200003BC != 2) {
+			g_2000032E = 1000;
+			gSystickFlag5 = 0;
+			return;
+		}
+		g_2000032E = 1000;
+		gSystickFlag5 = 0;
+		gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
+		return;
+	}
+
+	if (Function == FUNCTION_2 || Function == FUNCTION_3 || Function == FUNCTION_4) {
+		g_2000032E = 1000;
+		gSystickFlag5 = 0;
+		g_2000038E = 0;
+		return;
+	}
+
+	if (Function == FUNCTION_5) {
+		gBatterySave = gEeprom.BATTERY_SAVE * 10;
+		gThisCanEnable_BK4819_Rxon = 1;
+		BK4819_DisableVox();
+		BK4819_Sleep();
+		BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
+		gSystickFlag6 = 0;
+		g_2000036F = 1;
+		GUI_SelectNextDisplay(DISPLAY_MAIN);
+		return;
+	}
+
+	// TODO
 }
 

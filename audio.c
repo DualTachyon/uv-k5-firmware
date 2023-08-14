@@ -143,11 +143,9 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	if (gFmMute == true) {
 		BK1080_Mute(false);
 	}
-#if 0
 	if (gCurrentFunction == FUNCTION_5 && gThisCanEnable_BK4819_Rxon) {
 		BK4819_Sleep();
 	}
-#endif
 }
 
 void AUDIO_PlayVoice(uint8_t VoiceID)

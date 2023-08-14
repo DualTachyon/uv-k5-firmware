@@ -31,6 +31,8 @@ extern uint8_t gBatteryDisplayLevel;
 extern bool gChargingWithTypeC;
 extern bool gMaybeLowBatteryWarning;
 
+extern uint16_t gBatterySave;
+
 void BATTERY_GetReadings(bool bDisplayBatteryLevel);
 
 #endif

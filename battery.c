@@ -16,6 +16,7 @@
 
 #include "battery.h"
 #include "driver/backlight.h"
+#include "gui.h"
 #include "misc.h"
 
 uint16_t gBatteryCalibration[6];
@@ -28,6 +29,8 @@ uint8_t gBatteryDisplayLevel;
 
 bool gChargingWithTypeC;
 bool gMaybeLowBatteryWarning;
+
+uint16_t gBatterySave;
 
 void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 {
@@ -56,11 +59,9 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 
 	gBatteryVoltageAverage = (Voltage * 760) / gBatteryCalibration[3];
 
-#if 0
-	if ((gScreenToDisplay == MENU) && (gMenuCursor == MENU_VOL)) {
-		DAT_20000370 = 1;
+	if ((gScreenToDisplay == DISPLAY_MENU) && 1 /* (gMenuCursor == MENU_VOL) */) {
+		g_20000370 = 1;
 	}
-#endif
 	if (gBatteryCurrent < 501) {
 		if (gChargingWithTypeC) {
 			g_2000036F = 1;
@@ -80,14 +81,10 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 		} else {
 			gMaybeLowBatteryWarning = 0;
 			if (bDisplayBatteryLevel) {
-#if 0
 				GUI_DisplayBatteryLevel(gBatteryDisplayLevel);
-#endif
 			}
 		}
-#if 0
-		//DAT_20000400 = 0;
-#endif
+		g_20000400 = 0;
 	}
 }
 
