@@ -35,7 +35,7 @@ SECTIONS
 	_sidata = .;
 
 	/* Data sections go into RAM */
-	.data : AT ( _sidata )
+	.data :
 	{
 		. = ALIGN(4);
 		_sdata = .;        /* Global symbol at data start */
@@ -44,7 +44,8 @@ SECTIONS
 
 		. = ALIGN(4);
 		_edata = .;        /* Global symbol at data end   */
-	} >RAM
+	} >RAM AT> FLASH
+	_sidata_end__ = .;
 
 	/* Uninitialized data */
 	. = ALIGN(4);

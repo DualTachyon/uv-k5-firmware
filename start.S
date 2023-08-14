@@ -246,6 +246,7 @@ HandlerReset:
 	bl	OVERLAY_Install
 	bl	BOARD_FLASH_Init
 	bl	BSS_Init
+	bl	DATA_Init
 	bl	Main
 	b 	.
 

@@ -1,5 +1,7 @@
 /* Copyright 2023 Dual Tachyon
  * https://github.com/DualTachyon
+ * Copyright 2023 Manuel Jedinger
+ * https://github.com/manujedi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +20,10 @@
 
 extern uint8_t __bss_start__[];
 extern uint8_t __bss_end__[];
+extern uint8_t _sidata[];
+extern uint8_t _sdata[];
+extern uint8_t _sidata_end__[];
+extern uint8_t _edata[];
 
 void BSS_Init(void)
 {
@@ -30,6 +36,15 @@ void BSS_Init(void)
 
 void DATA_Init(void)
 {
-	// TODO
+    volatile uint8_t *pDataRam;
+    volatile uint8_t *pDataFlash;
+    pDataRam = _sdata;
+    pDataFlash = _sidata;
+
+    while (pDataRam < _sidata_end__){
+        *pDataRam = *pDataFlash;
+        pDataRam++;
+        pDataFlash++;
+    }
 }
 
