@@ -18,6 +18,7 @@
 #include "aircopy.h"
 #include "audio.h"
 #include "battery.h"
+#include "bitmaps.h"
 #include "dcs.h"
 #include "driver/eeprom.h"
 #include "driver/keyboard.h"
@@ -38,16 +39,11 @@ uint8_t g_20000390;
 uint8_t g_200003BA;
 uint8_t g_200003BB;
 uint8_t g_20000367;
+uint8_t gWasFKeyPressed;
 
 bool gAskForConfirmation;
 bool gAskToSave;
 bool gAskToDelete;
-
-static const uint8_t Bitmap_BatteryLevel1[18] = { 0x00, 0x3E, 0x22, 0x7F, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x63 };
-static const uint8_t Bitmap_BatteryLevel2[18] = { 0x00, 0x3E, 0x22, 0x7F, 0x41, 0x5D, 0x5D, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x63 };
-static const uint8_t Bitmap_BatteryLevel3[18] = { 0x00, 0x3E, 0x22, 0x7F, 0x41, 0x5D, 0x5D, 0x41, 0x5D, 0x5D, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x63 };
-static const uint8_t Bitmap_BatteryLevel4[18] = { 0x00, 0x3E, 0x22, 0x7F, 0x41, 0x5D, 0x5D, 0x41, 0x5D, 0x5D, 0x41, 0x5D, 0x5D, 0x41, 0x41, 0x41, 0x41, 0x63 };
-static const uint8_t Bitmap_BatteryLevel5[18] = { 0x00, 0x3E, 0x22, 0x7F, 0x41, 0x5D, 0x5D, 0x41, 0x5D, 0x5D, 0x41, 0x5D, 0x5D, 0x41, 0x5D, 0x5D, 0x41, 0x63 };
 
 void GUI_DisplayBatteryLevel(uint8_t BatteryLevel)
 {
@@ -61,19 +57,19 @@ void GUI_DisplayBatteryLevel(uint8_t BatteryLevel)
 			bClearMode = 1;
 			break;
 		case 1:
-			pBitmap = Bitmap_BatteryLevel1;
+			pBitmap = BITMAP_BatteryLevel1;
 			break;
 		case 2:
-			pBitmap = Bitmap_BatteryLevel2;
+			pBitmap = BITMAP_BatteryLevel2;
 			break;
 		case 3:
-			pBitmap = Bitmap_BatteryLevel3;
+			pBitmap = BITMAP_BatteryLevel3;
 			break;
 		case 4:
-			pBitmap = Bitmap_BatteryLevel4;
+			pBitmap = BITMAP_BatteryLevel4;
 			break;
 		default:
-			pBitmap = Bitmap_BatteryLevel5;
+			pBitmap = BITMAP_BatteryLevel5;
 			break;
 		}
 		ST7565_DrawLine(110, 0, 18, pBitmap, bClearMode);
@@ -218,6 +214,60 @@ void GUI_LockScreen(void)
 	ST7565_BlitFullScreen();
 }
 
+void GUI_DisplayStatusLine(void)
+{
+	memset(gStatusLine, 0, sizeof(gStatusLine));
+	if (gCurrentFunction == FUNCTION_POWER_SAVE) {
+		memcpy(gStatusLine, BITMAP_PowerSave, sizeof(BITMAP_PowerSave));
+	}
+	if (gBatteryDisplayLevel < 2) {
+		if (gLowBatteryBlink == 1) {
+			memcpy(gStatusLine + 110, BITMAP_BatteryLevel1, sizeof(BITMAP_BatteryLevel1));
+		}
+	} else {
+		if (gBatteryDisplayLevel == 2) {
+			memcpy(gStatusLine + 110, BITMAP_BatteryLevel2, sizeof(BITMAP_BatteryLevel2));
+		} else if (gBatteryDisplayLevel == 3) {
+			memcpy(gStatusLine + 110, BITMAP_BatteryLevel3, sizeof(BITMAP_BatteryLevel3));
+		} else if (gBatteryDisplayLevel == 4) {
+			memcpy(gStatusLine + 110, BITMAP_BatteryLevel4, sizeof(BITMAP_BatteryLevel4));
+		} else {
+			memcpy(gStatusLine + 110, BITMAP_BatteryLevel5, sizeof(BITMAP_BatteryLevel5));
+		}
+	}
+	if (gChargingWithTypeC) {
+		memcpy(gStatusLine + 100, BITMAP_USB_C, sizeof(BITMAP_USB_C));
+	}
+	if (gEeprom.KEY_LOCK) {
+		memcpy(gStatusLine + 90, BITMAP_KeyLock, sizeof(BITMAP_KeyLock));
+	} else if (gWasFKeyPressed == 1) {
+		memcpy(gStatusLine + 90, BITMAP_F_Key, sizeof(BITMAP_F_Key));
+	}
+
+	if (gEeprom.VOX_SWITCH) {
+		memcpy(gStatusLine + 71, BITMAP_VOX, sizeof(BITMAP_VOX));
+	}
+	if (gEeprom.CROSS_BAND_RX_TX != 0) {
+		memcpy(gStatusLine + 58, BITMAP_WX, sizeof(BITMAP_WX));
+	}
+	if (gEeprom.DUAL_WATCH != 0) {
+		memcpy(gStatusLine + 45, BITMAP_TDR, sizeof(BITMAP_TDR));
+	}
+	if (gEeprom.KEYPAD_TONE != 0) {
+		memcpy(gStatusLine + 34, BITMAP_KEYPAD_TONE, sizeof(BITMAP_KEYPAD_TONE));
+	}
+	if (gSetting_KILLED) {
+		memset(gStatusLine + 21, 0xFF, 10);
+	}
+	else if (gFmMute) {
+		memcpy(gStatusLine + 21, BITMAP_FM_Mute, sizeof(BITMAP_FM_Mute));
+	}
+	if (gIsNoaaMode) {
+		memcpy(gStatusLine + 7, BITMAP_NOAA, sizeof(BITMAP_NOAA));
+	}
+	ST7565_BlitStatusLine();
+}
+
 //
 
 static void GenerateChannelString(char *pString, uint8_t Channel)
@@ -319,7 +369,7 @@ static void DisplayMain(void)
 	uint8_t i;
 
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
-	if (gEeprom.KEY_LOCK == true && g_200003A9) {
+	if (gEeprom.KEY_LOCK && g_200003A9) {
 		GUI_PrintString("Long Press #", 0, 127, 1, 8, true);
 		GUI_PrintString("To Unlock", 0, 127, 3, 8, true);
 		ST7565_BlitFullScreen();

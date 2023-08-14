@@ -15,6 +15,7 @@
  */
 
 #include <stdbool.h>
+#include <string.h>
 #include "ARMCM0.h"
 
 #include "audio.h"
@@ -35,6 +36,7 @@
 #include "driver/system.h"
 #include "driver/systick.h"
 #include "driver/uart.h"
+#include "dtmf.h"
 #include "external/printf/printf.h"
 #include "functions.h"
 #include "gui.h"
@@ -139,7 +141,9 @@ void Main(void)
 
 	// Not implementing authentic device checks
 
-	// TODO: EEPROM Init
+	memset(&gEeprom, 0, sizeof(gEeprom));
+	memset(gDTMF_String, '-', sizeof(gDTMF_String));
+	gDTMF_String[14] = 0;
 
 	BK4819_Init();
 	BOARD_ADC_GetBatteryInfo(&gBatteryBootVoltage, &gBatteryCurrent);
@@ -157,7 +161,7 @@ void Main(void)
 
 	BATTERY_GetReadings(false);
 	if (!gChargingWithTypeC && !gBatteryDisplayLevel) {
-		FUNCTION_Select(FUNCTION_5);
+		FUNCTION_Select(FUNCTION_POWER_SAVE);
 		GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 		g_2000037E = 1;
 	} else {

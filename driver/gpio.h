@@ -53,6 +53,8 @@ enum GPIOC_PINS {
 	GPIOC_PIN_BK4819_SCN = 0,
 	GPIOC_PIN_BK4819_SCL = 1,
 	GPIOC_PIN_BK4819_SDA = 2,
+
+	GPIOC_PIN_AUDIO_PATH = 4,
 };
 
 void GPIO_ClearBit(volatile uint32_t *pReg, uint8_t Bit);

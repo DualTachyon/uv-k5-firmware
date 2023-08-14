@@ -83,7 +83,7 @@ typedef struct {
 	uint8_t ANI_DTMF_ID[8];
 	uint8_t KILL_CODE[8];
 	uint8_t REVIVE_CODE[8];
-	uint8_t DTMF_UP_CODE[16];
+	char DTMF_UP_CODE[16];
 	uint8_t field57_0x6c;
 	uint8_t field58_0x6d;
 	char DTMF_DOWN_CODE[16];

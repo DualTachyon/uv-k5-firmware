@@ -29,7 +29,8 @@ extern uint16_t gBatteryVoltageAverage;
 extern uint8_t gBatteryDisplayLevel;
 
 extern bool gChargingWithTypeC;
-extern bool gMaybeLowBatteryWarning;
+extern bool gLowBattery;
+extern bool gLowBatteryBlink;
 
 extern uint16_t gBatterySave;
 

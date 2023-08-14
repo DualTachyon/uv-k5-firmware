@@ -80,12 +80,12 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 
 	ToneConfig = BK4819_GetRegister(BK4819_REG_71);
 
-	GPIO_ClearBit(&GPIOC->DATA, 4);
-#if 0
-	if (gCurrentFunction == FUNCTION_5 && gThisCanEnable_BK4819_Rxon) {
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+
+	if (gCurrentFunction == FUNCTION_POWER_SAVE && gThisCanEnable_BK4819_Rxon) {
 		BK4819_RX_TurnOn();
 	}
-#endif
+
 	if (gFmMute == true) {
 		BK1080_Mute(true);
 	}
@@ -104,7 +104,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	}
 	BK4819_PlayTone(ToneFrequency, true);
 	SYSTEM_DelayMs(2);
-	GPIO_SetBit(&GPIOC->DATA, 4);
+	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	SYSTEM_DelayMs(60);
 
 	switch (Beep) {
@@ -138,12 +138,12 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	SYSTEM_DelayMs(5);
 	BK4819_WriteRegister(BK4819_REG_71, ToneConfig);
 	if (g_2000036B == 1) {
-		GPIO_SetBit(&GPIOC->DATA, 4);
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	}
 	if (gFmMute == true) {
 		BK1080_Mute(false);
 	}
-	if (gCurrentFunction == FUNCTION_5 && gThisCanEnable_BK4819_Rxon) {
+	if (gCurrentFunction == FUNCTION_POWER_SAVE && gThisCanEnable_BK4819_Rxon) {
 		BK4819_Sleep();
 	}
 }
@@ -198,7 +198,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 		if (gFmMute) {
 			BK1080_Mute(gFmMute);
 		}
-		GPIO_SetBit(&GPIOC->DATA, 4);
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 		g_200003B6 = 2000;
 		SYSTEM_DelayMs(5);
 		AUDIO_PlayVoice(VoiceID);
@@ -218,7 +218,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 				BK1080_Mute(false);
 			}
 			if (g_2000036B == 0) {
-				GPIO_ClearBit(&GPIOC->DATA, 4);
+				GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			}
 			gVoiceWriteIndex = 0;
 			gVoiceReadIndex = 0;
