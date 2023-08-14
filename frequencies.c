@@ -15,6 +15,8 @@
  */
 
 #include "frequencies.h"
+#include "misc.h"
+#include "settings.h"
 
 const uint32_t LowerLimitFrequencyBandTable[7] = {
 	 5000000,
@@ -117,5 +119,75 @@ uint32_t FREQUENCY_FloorToStep(uint32_t Frequency, uint32_t Step, uint32_t Base)
 
 	Index = (Frequency - Base) / Step;
 	return Base + (Step * Index);
+}
+
+int FREQUENCY_Check(RADIO_Info_t *pInfo)
+{
+	uint32_t Frequency;
+
+	if (pInfo->CHANNEL_SAVE >= 207) {
+		return -1;
+	}
+	Frequency = pInfo->pDCS_Reverse->Frequency;
+	if (gSetting_F_LOCK == F_LOCK_FCC) {
+		if ((Frequency + 14400000) < 399991) {
+			return 0;
+		}
+		if (2999990 < (Frequency - 42000000)) {
+			return -1;
+		}
+		return 0;
+	}
+
+	if (gSetting_F_LOCK == F_LOCK_CE) {
+		if ((Frequency - 14400000) < 199991) {
+			return 0;
+		}
+	}
+
+	if (gSetting_F_LOCK != F_LOCK_GB) {
+		if (gSetting_F_LOCK != F_LOCK_430) {
+			if (gSetting_F_LOCK == F_LOCK_438) {
+				if ((Frequency - 13600000) < 3799991) {
+					return 0;
+				}
+				if ((Frequency - 40000000) < 3799991) {
+					return 0;
+				}
+				return -1;
+			}
+			if ((Frequency - 13600000) < 3799991) {
+				return 0;
+			}
+			if (((Frequency - 35000000) < 4999991 && gSetting_350TX && gSetting_350EN)) {
+				return 0;
+			}
+			if ((Frequency - 40000000) < 6999991) {
+				return 0;
+			}
+			if ((Frequency - 17400000) < 17599991 && gSetting_200TX) {
+				return 0;
+			}
+			if ((Frequency - 47000000) < 13000001 && gSetting_500TX) {
+				return 0;
+			}
+			return -1;
+		}
+		if ((Frequency - 13600000) < 3799991) {
+			return 0;
+		}
+		if (2999990 < (Frequency - 40000000)) {
+			return -1;
+		}
+	}
+	if ((Frequency - 14400000) < 399991) {
+		return 0;
+	}
+
+	if (999990 < (Frequency - 43000000)) {
+		return -1;
+	}
+
+	return 0;
 }
 

@@ -15,6 +15,8 @@
  */
 
 #include <string.h>
+#include "audio.h"
+#include "battery.h"
 #include "bsp/dp32g030/gpio.h"
 #include "dcs.h"
 #include "driver/bk4819.h"
@@ -644,5 +646,111 @@ void RADIO_PrepareTransmit(void)
 	}
 
 	BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pDCS_Reverse->RX_TX_Code + 1]);
+}
+
+void RADIO_SomethingElse(uint8_t Arg)
+{
+	if (Arg == 0) {
+		g_20000371[0] = 0;
+		g_20000371[1] = 0;
+		g_20000373 = 0;
+	} else {
+		if (Arg == 6) {
+			g_20000371[0] = 6;
+			g_20000371[1] = 3;
+		} else {
+			uint8_t Channel;
+
+			Channel = gEeprom.RX_CHANNEL;
+			if (gEeprom.CROSS_BAND_RX_TX != 0) {
+				Channel = gEeprom.TX_CHANNEL;
+			}
+			g_20000371[Channel] = Arg;
+		}
+		g_20000373 = 5;
+	}
+	gUpdateDisplay = true;
+}
+
+void RADIO_SomethingWithTransmit(void)
+{
+	if (gEeprom.DUAL_WATCH != 0) {
+		g_2000033A = 360;
+		gSystickFlag7 = 0;
+		if (g_2000041F == 0) {
+			gEeprom.RX_CHANNEL = gEeprom.TX_CHANNEL;
+			gInfoCHAN_A = gEeprom.RadioInfo + gEeprom.TX_CHANNEL;
+		}
+		g_2000041F = 1;
+	}
+	RADIO_ConfigureCrossTX();
+	if (g_20000383 == 0 || g_20000383 == 3 || (g_20000383 == 1 && gEeprom.ALARM_MODE == 1)) {
+		uint8_t Value;
+
+		if (!FREQUENCY_Check(gCrossTxRadioInfo)) {
+			if (gCrossTxRadioInfo->BUSY_CHANNEL_LOCK == true && gCurrentFunction == FUNCTION_4) {
+				Value = 1;
+			} else if (gBatteryDisplayLevel == 0) {
+				Value = 2;
+			} else {
+				// TODO: Fix this goto, a bit painful to disentangle
+				if (gBatteryDisplayLevel != 6) {
+					goto LAB_00007c20;
+				}
+				Value = 6;
+			}
+		} else {
+			Value = 3;
+		}
+		RADIO_SomethingElse(Value);
+		g_20000383 = 0;
+		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
+	} else {
+LAB_00007c20:
+		if (g_200003BE == 1) {
+			if (g_20000438 == 2) {
+				g_200003BD = 1;
+				g_200003BC = 0;
+				g_200003C3 = 6;
+			}
+			else {
+				g_200003BC = 1;
+				g_200003BD = 0;
+			}
+		}
+		FUNCTION_Select(FUNCTION_TRANSMIT);
+		if (g_20000383 == 0) {
+			g_2000033E = gEeprom.TX_TIMEOUT_TIMER * 120;
+		} else {
+			g_2000033E = 0;
+		}
+		gSystickFlag0 = 0;
+		g_200003FD = 0;
+		g_2000036D = 0;
+	}
+	g_200003BE = 0;
+}
+
+void RADIO_EnableCxCSS(void)
+{
+	switch (gCrossTxRadioInfo->pDCS_Reverse->CodeType) {
+	case CODE_TYPE_DIGITAL:
+	case CODE_TYPE_REVERSE_DIGITAL:
+		BK4819_EnableCDCSS();
+		break;
+	default:
+		BK4819_EnableCTCSS();
+		break;
+	}
+
+	SYSTEM_DelayMs(200);
+}
+
+void RADIO_Something(void)
+{
+	RADIO_SomethingWithTransmit();
+	SYSTEM_DelayMs(200);
+	RADIO_EnableCxCSS();
+	RADIO_SetupRegisters(true);
 }
 

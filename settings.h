@@ -26,6 +26,15 @@ enum {
 	POWER_ON_DISPLAY_MODE_VOLTAGE     = 2U,
 };
 
+enum {
+	F_LOCK_OFF = 0U,
+	F_LOCK_FCC = 1U,
+	F_LOCK_CE  = 2U,
+	F_LOCK_GB  = 3U,
+	F_LOCK_430 = 4U,
+	F_LOCK_438 = 5U,
+};
+
 typedef struct {
 	uint8_t EEPROM_0E80_0E83[2];
 	uint8_t EEPROM_0E82_0E85[2];

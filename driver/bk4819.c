@@ -693,3 +693,36 @@ void BK4819_TransmitTone(bool bLocalLoopback, uint32_t Frequency)
 	BK4819_ExitTxMute();
 }
 
+void BK4819_GenTail(uint8_t Tail)
+{
+	switch(Tail) {
+	case 0: // CTC134
+		BK4819_WriteRegister(BK4819_REG_52, 0x828F);
+		break;
+	case 1: // CTC120
+		BK4819_WriteRegister(BK4819_REG_52, 0xA28F);
+		break;
+	case 2: // CTC180
+		BK4819_WriteRegister(BK4819_REG_52, 0xC28F);
+		break;
+	case 3: // CTC240
+		BK4819_WriteRegister(BK4819_REG_52, 0xE28F);
+		break;
+	case 4: // CTC55
+		BK4819_WriteRegister(BK4819_REG_07, 0x046f);
+		break;
+	}
+}
+
+void BK4819_EnableCDCSS(void)
+{
+	BK4819_GenTail(0); // CTC134
+	BK4819_WriteRegister(BK4819_REG_51, 0x804A);
+}
+
+void BK4819_EnableCTCSS(void)
+{
+	BK4819_GenTail(4); // CTC55
+	BK4819_WriteRegister(BK4819_REG_51, 0x904A);
+}
+

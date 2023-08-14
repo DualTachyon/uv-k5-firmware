@@ -87,13 +87,12 @@ void FUNCTION_Select(uint8_t Function)
 
 	if (Function == FUNCTION_0) {
 		if (g_200003BE != 0) {
-			// TODO
-			//FUN_00002014();
+			RADIO_Something();
 		}
 		if (PreviousFunction == FUNCTION_TRANSMIT) {
 			g_20000378 = 0;
 			g_20000379 = 0;
-		} else if (PreviousFunction != 0x04) {
+		} else if (PreviousFunction != FUNCTION_TRANSMIT) {
 			g_2000032E = 1000;
 			gSystickFlag5 = 0;
 			return;
@@ -236,3 +235,4 @@ Skip:
 	gSystickFlag5 = 0;
 	g_2000038E = 0;
 }
+
