@@ -148,7 +148,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	}
 }
 
-void AUDIO_PlayVoice(uint8_t VoiceID)
+void AUDIO_PlayVoice(VOICE_ID_t VoiceID)
 {
 	uint8_t i;
 
