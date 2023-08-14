@@ -42,6 +42,7 @@
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
+#include "modules/spectrum.c"
 
 static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
 
@@ -202,16 +203,7 @@ void Main(void)
 	uint32_t Test = 0;
 
 	while (1) {
-		printf("printf test %d\r\n", Test++);
-		Console();
-
-		SYSTEM_DelayMs(200);
-		FLASHLIGHT_TurnOff();
-
-		Console();
-
-		SYSTEM_DelayMs(200);
-		FLASHLIGHT_TurnOn();
+        Handle();
 	}
 }
 

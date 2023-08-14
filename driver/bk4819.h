@@ -57,6 +57,7 @@ void BK4819_EnableVox(uint16_t Vox1Threshold, uint16_t Vox0Threshold);
 void BK4819_SetFilterBandwidth(BK4819_FilterBandwidth_t Bandwidth);
 void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency);
 void BK4819_SetFrequency(uint32_t Frequency);
+uint32_t BK4819_GetFrequency();
 void BK4819_SetupSquelch(
 		uint8_t SquelchOpenRSSIThresh, uint8_t SquelchCloseRSSIThresh,
 		uint8_t SquelchOpenNoiseThresh, uint8_t SquelchCloseNoiseThresh,
