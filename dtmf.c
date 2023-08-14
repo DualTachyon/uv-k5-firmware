@@ -17,6 +17,8 @@
 #include <ctype.h>
 #include "dtmf.h"
 
+char gDTMF_String[15];
+
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 {
 	uint8_t i;

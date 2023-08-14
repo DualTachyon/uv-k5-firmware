@@ -32,6 +32,10 @@ RADIO_Info_t *gTxRadioInfo;
 RADIO_Info_t *gInfoCHAN_A;
 RADIO_Info_t *gCrossTxRadioInfo;
 
+DCS_CodeType_t gCodeType;
+DCS_CodeType_t gCopyOfCodeType;
+uint8_t gCode;
+
 bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t RadioNum)
 {
 	uint8_t ChParam;
@@ -462,7 +466,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	uint16_t InterruptMask;
 	uint32_t Frequency;
 
-	GPIO_ClearBit(&GPIOC->DATA, 4);
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	g_2000036B = 0;
 	BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
 
@@ -553,10 +557,10 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	} else {
 		BK4819_DisableVox();
 	}
-	if ((gInfoCHAN_A->_0x0033 == true) || ((gInfoCHAN_A->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true)))) {
-		BK4819_DisableDTMF_SelCall();
+	if ((gInfoCHAN_A->_0x0033 == true) || (gInfoCHAN_A->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true))) {
+		BK4819_DisableDTMF();
 	} else {
-		BK4819_ConfigureDTMF_SelCall_and_UnknownRegister();
+		BK4819_EnableDTMF();
 		// DTMF/5TONE_FOUND
 		InterruptMask |= 0x0800;
 	}
@@ -598,5 +602,47 @@ void RADIO_ConfigureNOAA(void)
 			gSystickFlag8 = 0;
 		}
 	}
+}
+
+void RADIO_PrepareTransmit(void)
+{
+	BK4819_FilterBandwidth_t Bandwidth;
+
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+
+	g_2000036B = 0;
+
+	BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
+	Bandwidth = gCrossTxRadioInfo->CHANNEL_BANDWIDTH;
+	if (Bandwidth != BK4819_FILTER_BW_WIDE) {
+		Bandwidth = BK4819_FILTER_BW_NARROW;
+	}
+	BK4819_SetFilterBandwidth(Bandwidth);
+	BK4819_SetFrequency(gCrossTxRadioInfo->pDCS_Reverse->Frequency);
+	BK4819_PrepareTransmit();
+	SYSTEM_DelayMs(10);
+
+	BK4819_PickRXFilterPathBasedOnFrequency(gCrossTxRadioInfo->pDCS_Reverse->Frequency);
+	BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, true);
+	SYSTEM_DelayMs(5);
+
+	BK4819_SetupPowerAmplifier(gCrossTxRadioInfo->TXP_CalculatedSetting, gCrossTxRadioInfo->pDCS_Reverse->Frequency);
+	SYSTEM_DelayMs(10);
+
+	if (gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_CONTINUOUS_TONE) {
+		if ((gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_DIGITAL) && (gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_REVERSE_DIGITAL)) {
+			BK4819_ExitSubAu();
+			return;
+		}
+		BK4819_SetCDCSSCodeWord(
+			DCS_GetGolayCodeWord(
+				gCrossTxRadioInfo->pDCS_Reverse->CodeType,
+				gCrossTxRadioInfo->pDCS_Reverse->RX_TX_Code
+				)
+			);
+		return;
+	}
+
+	BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pDCS_Reverse->RX_TX_Code + 1]);
 }
 

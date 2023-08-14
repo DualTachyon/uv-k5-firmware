@@ -20,6 +20,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+extern char gDTMF_String[15];
+
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size);
 
 #endif

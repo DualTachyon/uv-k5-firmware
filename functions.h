@@ -21,11 +21,11 @@
 
 enum {
 	FUNCTION_0 = 0U,
-	FUNCTION_1 = 1U,
+	FUNCTION_TRANSMIT = 1U,
 	FUNCTION_2 = 2U,
 	FUNCTION_3 = 3U,
 	FUNCTION_4 = 4U,
-	FUNCTION_5 = 5U,
+	FUNCTION_POWER_SAVE = 5U,
 };
 
 extern uint8_t gCurrentFunction;

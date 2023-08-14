@@ -40,6 +40,8 @@ enum BK4819_FilterBandwidth_t {
 
 typedef enum BK4819_FilterBandwidth_t BK4819_FilterBandwidth_t;
 
+extern bool gThisCanEnable_BK4819_Rxon;
+
 void BK4819_Init(void);
 uint16_t BK4819_GetRegister(BK4819_REGISTER_t Register);
 void BK4819_WriteRegister(BK4819_REGISTER_t Register, uint16_t Data);
@@ -69,8 +71,8 @@ void BK4819_PickRXFilterPathBasedOnFrequency(uint32_t Frequency);
 void BK4819_DisableScramble(void);
 void BK4819_EnableScramble(uint8_t Type);
 void BK4819_DisableVox(void);
-void BK4819_DisableDTMF_SelCall(void);
-void BK4819_ConfigureDTMF_SelCall_and_UnknownRegister(void);
+void BK4819_DisableDTMF(void);
+void BK4819_EnableDTMF(void);
 void BK4819_PlayTone(uint16_t Frequency, bool bTuningGainSwitch);
 void BK4819_EnterTxMute(void);
 void BK4819_ExitTxMute(void);
@@ -79,6 +81,21 @@ void BK4819_TurnsOffTones_TurnsOnRX(void);
 void BK4819_SetupAircopy(void);
 void BK4819_ResetFSK(void);
 void BK4819_Idle(void);
+void BK4819_ExitBypass(void);
+void BK4819_PrepareTransmit(void);
+void BK4819_TxOn_Beep(void);
+void BK4819_ExitSubAu(void);
+
+void BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable(void);
+
+void BK4819_EnterDTMF_TX(bool bLocalLoopback);
+void BK4819_ExitDTMF_TX(bool bKeep);
+void BK4819_EnableTXLink(void);
+
+void BK4819_PlayDTMF(char Code);
+void BK4819_PlayDTMFString(char *pString, bool bDelayFirst, uint16_t FirstCodePersistTime, uint16_t HashCodePersistTime, uint16_t CodePersistTime, uint16_t CodeInternalTime);
+
+void BK4819_TransmitTone(bool bLocalLoopback, uint32_t Frequency);
 
 #endif
 

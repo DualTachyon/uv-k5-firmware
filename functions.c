@@ -16,8 +16,14 @@
 
 #include <string.h>
 #include "battery.h"
-#include "driver/bk4819.h"
+#include "bsp/dp32g030/gpio.h"
 #include "dcs.h"
+#include "driver/bk1080.h"
+#include "driver/bk4819.h"
+#include "driver/gpio.h"
+#include "driver/system.h"
+#include "dtmf.h"
+#include "external/printf/printf.h"
 #include "fm.h"
 #include "functions.h"
 #include "gui.h"
@@ -33,7 +39,7 @@ void FUNCTION_Init(void)
 		gCopyOfCodeType = gCodeType;
 		if (g_20000381 == 0) {
 			if (gInfoCHAN_A->_0x0033 == true) {
-				gCopyOfCodeType = 0;
+				gCopyOfCodeType = CODE_TYPE_OFF;
 			} else {
 				gCopyOfCodeType = gInfoCHAN_A->pDCS_Current->CodeType;
 			}
@@ -62,23 +68,29 @@ void FUNCTION_Init(void)
 void FUNCTION_Select(uint8_t Function)
 {
 	uint8_t PreviousFunction;
-	bool bWasFunction5;
+	bool bWasPowerSave;
+	char *pString;
+	char String[16]; // Can be overflown with the right EEPROM values
+	uint16_t Delay;
 
 	PreviousFunction = gCurrentFunction;
-	bWasFunction5 = (gCurrentFunction == FUNCTION_5);
+	bWasPowerSave = (PreviousFunction == FUNCTION_POWER_SAVE);
 	gCurrentFunction = Function;
 
-	if (bWasFunction5) {
-		if (Function != FUNCTION_5) {
-			// TODO
+	if (bWasPowerSave) {
+		if (Function != FUNCTION_POWER_SAVE) {
+			BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable();
+			gThisCanEnable_BK4819_Rxon = 0;
+			GUI_DisplayStatusLine();
 		}
 	}
 
 	if (Function == FUNCTION_0) {
 		if (g_200003BE != 0) {
 			// TODO
+			//FUN_00002014();
 		}
-		if (PreviousFunction == FUNCTION_1) {
+		if (PreviousFunction == FUNCTION_TRANSMIT) {
 			g_20000378 = 0;
 			g_20000379 = 0;
 		} else if (PreviousFunction != 0x04) {
@@ -107,7 +119,7 @@ void FUNCTION_Select(uint8_t Function)
 		return;
 	}
 
-	if (Function == FUNCTION_5) {
+	if (Function == FUNCTION_POWER_SAVE) {
 		gBatterySave = gEeprom.BATTERY_SAVE * 10;
 		gThisCanEnable_BK4819_Rxon = 1;
 		BK4819_DisableVox();
@@ -119,6 +131,108 @@ void FUNCTION_Select(uint8_t Function)
 		return;
 	}
 
-	// TODO
-}
+	if (Function != FUNCTION_TRANSMIT) {
+		return;
+	}
 
+	if (gFmMute == true) {
+		BK1080_Init(0, false);
+	}
+
+	if (g_20000383 == 1 && gEeprom.ALARM_MODE != 1) {
+		g_20000383 = 2;
+		GUI_DisplayScreen();
+		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+		SYSTEM_DelayMs(20);
+		BK4819_PlayTone(500, 0);
+		SYSTEM_DelayMs(2);
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+		g_2000036B = 1;
+		SYSTEM_DelayMs(60);
+		BK4819_ExitTxMute();
+		g_2000032E = 1000;
+		gSystickFlag5 = 0;
+		g_2000038E = 0;
+		g_20000420 = 0;
+		return;
+	}
+
+	GUI_DisplayScreen();
+	RADIO_PrepareTransmit();
+	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, true);
+
+	if (g_200003BE == 1) {
+		if (g_20000438 == 2) {
+			pString = gDTMF_String;
+		} else {
+			sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, gEeprom.ANI_DTMF_ID);
+			pString = String;
+		}
+	} else if (g_200003BE == 2) {
+		pString = "AB";
+	} else {
+		if (g_200003BE == 3) {
+			sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
+			pString = String;
+		}
+		if (g_200003BC != 0 || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 1 && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 3)) {
+			g_200003BE = 0;
+			goto Skip;
+		}
+		pString = gEeprom.DTMF_UP_CODE;
+	}
+	g_200003BE = 0;
+	Delay = gEeprom.DTMF_PRELOAD_TIME;
+	if (gEeprom.DTMF_SIDE_TONE == true) {
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+		g_2000036B = 1;
+		Delay = gEeprom.DTMF_PRELOAD_TIME;
+		if (gEeprom.DTMF_PRELOAD_TIME < 60) {
+			Delay = 60;
+		}
+	}
+	SYSTEM_DelayMs(Delay);
+
+	BK4819_EnterDTMF_TX(gEeprom.DTMF_SIDE_TONE);
+
+	BK4819_PlayDTMFString(
+		pString,
+		1,
+		gEeprom.DTMF_FIRST_CODE_PERSIST_TIME,
+		gEeprom.DTMF_HASH_CODE_PERSIST_TIME,
+		gEeprom.DTMF_CODE_PERSIST_TIME,
+		gEeprom.DTMF_CODE_INTERVAL_TIME);
+
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+
+	g_2000036B = 0;
+	BK4819_ExitDTMF_TX(false);
+
+Skip:
+	if (g_20000383 != '\0') {
+		if (g_20000383 == 3) {
+			BK4819_TransmitTone(true, 1750);
+		} else {
+			BK4819_TransmitTone(true, 500);
+		}
+		SYSTEM_DelayMs(2);
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+		g_20000420 = 0;
+		g_2000038E = 0;
+		g_2000036B = 1;
+		gSystickFlag5 = 0;
+		g_2000032E = 1000;
+		return;
+	}
+	if ((gCrossTxRadioInfo->SCRAMBLING_TYPE != 0) && (gSetting_ScrambleEnable != false)) {
+		BK4819_EnableScramble(gCrossTxRadioInfo->SCRAMBLING_TYPE - 1U);
+		g_2000032E = 1000;
+		gSystickFlag5 = 0;
+		g_2000038E = 0;
+		return;
+	}
+	BK4819_DisableScramble();
+	g_2000032E = 1000;
+	gSystickFlag5 = 0;
+	g_2000038E = 0;
+}

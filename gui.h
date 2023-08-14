@@ -37,7 +37,7 @@ extern uint8_t g_20000380;
 extern uint8_t g_20000390;
 extern uint8_t g_200003BA;
 extern uint8_t g_200003BB;
-extern uint8_t g_20000367;
+extern uint8_t gWasFKeyPressed;
 
 extern bool gAskForConfirmation;
 extern bool gAskToSave;
@@ -48,6 +48,8 @@ void GUI_Welcome(void);
 void GUI_PrintString(const char *pString, uint8_t Start, uint8_t End, uint8_t Line, int Width, bool bCentered);
 void GUI_PasswordScreen(void);
 void GUI_LockScreen(void);
+void GUI_DisplayStatusLine(void);
+
 void GUI_DisplayFrequency(const char *pDigits, uint8_t X, uint8_t Y, bool bDisplayLeadingZero, bool Flag1);
 void GUI_DisplaySmallDigits(uint8_t Size, const char *pString, uint8_t x, uint8_t y);
 

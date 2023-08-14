@@ -19,6 +19,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "dcs.h"
 
 enum {
 	MR_CH_SCANLIST1 = (1U << 7),
@@ -38,7 +39,7 @@ enum {
 
 typedef struct {
 	uint32_t Frequency;
-	uint8_t CodeType;
+	DCS_CodeType_t CodeType;
 	uint8_t RX_TX_Code;
 	uint8_t Padding[2];
 } DCS_Info_t;
@@ -78,6 +79,10 @@ extern RADIO_Info_t *gTxRadioInfo;
 extern RADIO_Info_t *gInfoCHAN_A;
 extern RADIO_Info_t *gCrossTxRadioInfo;
 
+extern DCS_CodeType_t gCodeType;
+extern DCS_CodeType_t gCopyOfCodeType;
+extern uint8_t gCode;
+
 bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t RadioNum);
 uint8_t RADIO_FindNextChannel(uint8_t ChNum, uint8_t Direction, bool bCheckScanList, uint8_t RadioNum);
 void RADIO_InitInfo(RADIO_Info_t *pInfo, uint8_t ChannelSave, uint8_t ChIndex, uint32_t Frequency);
@@ -88,6 +93,7 @@ void RADIO_ConfigureTX(void);
 void RADIO_ConfigureCrossTX(void);
 void RADIO_SetupRegisters(bool bSwitchToFunction0);
 void RADIO_ConfigureNOAA(void);
+void RADIO_PrepareTransmit(void);
 
 #endif
 

@@ -14,196 +14,271 @@
  *     limitations under the License.
  */
 
-#include <stdbool.h>
-#include "ARMCM0.h"
-
 #include "audio.h"
-#include "battery.h"
 #include "bsp/dp32g030/gpio.h"
-#include "bsp/dp32g030/portcon.h"
-#include "bsp/dp32g030/syscon.h"
-#include "board.h"
-#include "driver/backlight.h"
 #include "driver/bk1080.h"
 #include "driver/bk4819.h"
-#include "driver/crc.h"
-#include "driver/eeprom.h"
-#include "driver/flash.h"
 #include "driver/gpio.h"
-#include "driver/keyboard.h"
-#include "driver/st7565.h"
 #include "driver/system.h"
 #include "driver/systick.h"
-#include "driver/uart.h"
-#include "external/printf/printf.h"
+#include "fm.h"
 #include "functions.h"
-#include "gui.h"
-#include "helper.h"
 #include "misc.h"
-#include "radio.h"
 #include "settings.h"
-#include "modules/spectrum.c"
 
-static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
+static const uint8_t VoiceClipLengthChinese[58] = {
+	0x32, 0x32, 0x32, 0x37, 0x37, 0x32, 0x32, 0x32,
+	0x32, 0x37, 0x37, 0x32, 0x64, 0x64, 0x64, 0x64,
+	0x64, 0x69, 0x64, 0x69, 0x5A, 0x5F, 0x5F, 0x64,
+	0x64, 0x69, 0x64, 0x64, 0x69, 0x69, 0x69, 0x64,
+	0x64, 0x6E, 0x69, 0x5F, 0x64, 0x64, 0x64, 0x69,
+	0x69, 0x69, 0x64, 0x69, 0x64, 0x64, 0x55, 0x5F,
+	0x5A, 0x4B, 0x4B, 0x46, 0x46, 0x69, 0x64, 0x6E,
+	0x5A, 0x64,
+};
 
-static void FLASHLIGHT_Init(void)
+static const uint8_t VoiceClipLengthEnglish[76] = {
+	0x50, 0x32, 0x2D, 0x2D, 0x2D, 0x37, 0x37, 0x37,
+	0x32, 0x32, 0x3C, 0x37, 0x46, 0x46, 0x4B, 0x82,
+	0x82, 0x6E, 0x82, 0x46, 0x96, 0x64, 0x46, 0x6E,
+	0x78, 0x6E, 0x87, 0x64, 0x96, 0x96, 0x46, 0x9B,
+	0x91, 0x82, 0x82, 0x73, 0x78, 0x64, 0x82, 0x6E,
+	0x78, 0x82, 0x87, 0x6E, 0x55, 0x78, 0x64, 0x69,
+	0x9B, 0x5A, 0x50, 0x3C, 0x32, 0x55, 0x64, 0x64,
+	0x50, 0x46, 0x46, 0x46, 0x4B, 0x4B, 0x50, 0x50,
+	0x55, 0x4B, 0x4B, 0x32, 0x32, 0x32, 0x32, 0x37,
+	0x41, 0x32, 0x3C, 0x37,
+};
+
+uint8_t gVoiceID[8];
+uint8_t gVoiceReadIndex;
+uint8_t gVoiceWriteIndex;
+uint8_t gCountdownToPlayNextVoice;
+bool gFlagPlayQueuedVoice;
+
+void AUDIO_PlayBeep(BEEP_Type_t Beep)
 {
-	PORTCON_PORTC_IE = PORTCON_PORTC_IE_C5_BITS_ENABLE;
-	PORTCON_PORTC_PU = PORTCON_PORTC_PU_C5_BITS_ENABLE;
-	GPIOC->DIR |= GPIO_DIR_3_BITS_OUTPUT;
+	uint16_t ToneConfig;
+	uint16_t ToneFrequency;
+	uint16_t Duration;
 
-	GPIO_SetBit(&GPIOC->DATA, 10);
-	GPIO_SetBit(&GPIOC->DATA, 11);
-	GPIO_SetBit(&GPIOC->DATA, 12);
-	GPIO_SetBit(&GPIOC->DATA, 13);
-}
-
-static void FLASHLIGHT_TurnOff(void)
-{
-	GPIO_ClearBit(&GPIOC->DATA, GPIOB_PIN_FLASHLIGHT);
-}
-
-static void FLASHLIGHT_TurnOn(void)
-{
-	GPIO_SetBit(&GPIOC->DATA, GPIOB_PIN_FLASHLIGHT);
-}
+	if (Beep != BEEP_500HZ_60MS_DOUBLE_BEEP && Beep != BEEP_440HZ_500MS && !gEeprom.BEEP_CONTROL) {
+		return;
+	}
 
 #if 0
-static void ProcessKey(void)
-{
-	KEY_Code_t Key;
-
-	Key = KEYBOARD_Poll();
-
-	switch (Key) {
-	case KEY_0: UART_Print("ZERO\r\n"); break;
-	case KEY_1: UART_Print("ONE\r\n"); break;
-	case KEY_2: UART_Print("TWO\r\n"); break;
-	case KEY_3: UART_Print("THREE\r\n"); break;
-	case KEY_4: UART_Print("FOUR\r\n"); break;
-	case KEY_5: UART_Print("FIVE\r\n"); break;
-	case KEY_6: UART_Print("SIX\r\n"); break;
-	case KEY_7: UART_Print("SEVEN\r\n"); break;
-	case KEY_8: UART_Print("EIGHT\r\n"); break;
-	case KEY_9: UART_Print("NINE\r\n"); break;
-	case KEY_MENU: UART_Print("MENU\r\n"); break;
-	case KEY_UP: UART_Print("UP\r\n"); break;
-	case KEY_DOWN: UART_Print("DOWN\r\n"); break;
-	case KEY_EXIT: UART_Print("EXIT\r\n"); break;
-	case KEY_STAR: UART_Print("STAR\r\n"); break;
-	case KEY_F: UART_Print("F\r\n"); break;
-	case KEY_PTT: UART_Print("PTT\r\n"); break;
-	case KEY_SIDE2: UART_Print("SIDE2\r\n"); break;
-	case KEY_SIDE1: UART_Print("SIDE1\r\n"); break;
-	case KEY_INVALID: break;
+	if (gScreenToDisplay == DISPLAY_AIRCOPY) {
+		return;
 	}
-}
+	if (gCurrentFunction == FUNCTION_4) {
+		return;
+	}
+	if (gCurrentFunction == FUNCTION_2) {
+		return;
+	}
 #endif
 
-static void Console(void)
-{
-	KEY_Code_t Key;
+	ToneConfig = BK4819_GetRegister(BK4819_REG_71);
 
-	Key = KEYBOARD_Poll();
-	if (Key != KEY_INVALID) {
-		Key += 0x40;
-		UART_Send(&Key, 1);
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+
+	if (gCurrentFunction == FUNCTION_POWER_SAVE && gThisCanEnable_BK4819_Rxon) {
+		BK4819_RX_TurnOn();
+	}
+
+	if (gFmMute == true) {
+		BK1080_Mute(true);
+	}
+	SYSTEM_DelayMs(20);
+	switch (Beep) {
+	case BEEP_1KHZ_60MS_OPTIONAL:
+		ToneFrequency = 1000;
+		break;
+	case BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL:
+	case BEEP_500HZ_60MS_DOUBLE_BEEP:
+		ToneFrequency = 500;
+		break;
+	default:
+		ToneFrequency = 440;
+		break;
+	}
+	BK4819_PlayTone(ToneFrequency, true);
+	SYSTEM_DelayMs(2);
+	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+	SYSTEM_DelayMs(60);
+
+	switch (Beep) {
+	case BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL:
+	case BEEP_500HZ_60MS_DOUBLE_BEEP:
+		BK4819_ExitTxMute();
+		SYSTEM_DelayMs(60);
+		BK4819_EnterTxMute();
+		SYSTEM_DelayMs(20);
+		// Fallthrough
+	case BEEP_1KHZ_60MS_OPTIONAL:
+		BK4819_ExitTxMute();
+		Duration = 60;
+		break;
+	case BEEP_440HZ_500MS:
+	default:
+		BK4819_ExitTxMute();
+		Duration = 500;
+		break;
+	}
+
+	SYSTEM_DelayMs(Duration);
+	BK4819_EnterTxMute();
+	SYSTEM_DelayMs(20);
+	GPIO_ClearBit(&GPIOC->DATA,4);
+#if 0
+	g_200003B6 = 0x50;
+#endif
+	SYSTEM_DelayMs(5);
+	BK4819_TurnsOffTones_TurnsOnRX();
+	SYSTEM_DelayMs(5);
+	BK4819_WriteRegister(BK4819_REG_71, ToneConfig);
+	if (g_2000036B == 1) {
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+	}
+	if (gFmMute == true) {
+		BK1080_Mute(false);
+	}
+	if (gCurrentFunction == FUNCTION_POWER_SAVE && gThisCanEnable_BK4819_Rxon) {
+		BK4819_Sleep();
 	}
 }
 
-void _putchar(char c)
-{
-	UART_Send((uint8_t *)&c, 1);
-}
-
-void Main(void)
+void AUDIO_PlayVoice(uint8_t VoiceID)
 {
 	uint8_t i;
 
-	// Enable clock gating of blocks we need.
-	SYSCON_DEV_CLK_GATE = 0
-		| SYSCON_DEV_CLK_GATE_GPIOA_BITS_ENABLE
-		| SYSCON_DEV_CLK_GATE_GPIOB_BITS_ENABLE
-		| SYSCON_DEV_CLK_GATE_GPIOC_BITS_ENABLE
-		| SYSCON_DEV_CLK_GATE_UART1_BITS_ENABLE
-		| SYSCON_DEV_CLK_GATE_SPI0_BITS_ENABLE
-		| SYSCON_DEV_CLK_GATE_SARADC_BITS_ENABLE
-		| SYSCON_DEV_CLK_GATE_CRC_BITS_ENABLE
-		| SYSCON_DEV_CLK_GATE_AES_BITS_ENABLE
-		;
-
-	SYSTICK_Init();
-	BOARD_Init();
-
-	UART_Init();
-	UART_Send(Version, sizeof(Version));
-
-	// Not implementing authentic device checks
-
-	// TODO: EEPROM Init
-
-	BK4819_Init();
-	BOARD_ADC_GetBatteryInfo(&gBatteryBootVoltage, &gBatteryCurrent);
-	BOARD_EEPROM_Init();
-	BOARD_EEPROM_LoadMoreSettings();
-
-	RADIO_ConfigureChannel(0, 2);
-	RADIO_ConfigureChannel(1, 2);
-	RADIO_ConfigureTX();
-	RADIO_SetupRegisters(true);
-
-	for (i = 0; i < 4; i++) {
-		BOARD_ADC_GetBatteryInfo(&gBatteryVoltages[i], &gBatteryCurrent);
+	GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_VOICE_0);
+	SYSTEM_DelayMs(7);
+	GPIO_ClearBit(&GPIOA->DATA, GPIOA_PIN_VOICE_0);
+	for (i = 0; i < 8; i++) {
+		if ((VoiceID & 0x80U) == 0) {
+			GPIO_ClearBit(&GPIOA->DATA, GPIOA_PIN_VOICE_1);
+		} else {
+			GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_VOICE_1);
+		}
+		SYSTICK_DelayUs(1200);
+		GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_VOICE_0);
+		SYSTICK_DelayUs(1200);
+		GPIO_ClearBit(&GPIOA->DATA, GPIOA_PIN_VOICE_0);
+		VoiceID <<= 1;
 	}
+}
 
-	BATTERY_GetReadings(false);
-	if (!gChargingWithTypeC && !gBatteryDisplayLevel) {
-		FUNCTION_Select(FUNCTION_5);
-		GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
-		g_2000037E = 1;
-	} else {
-		uint8_t KeyType;
-		uint8_t Channel;
+void AUDIO_PlaySingleVoice(bool bFlag)
+{
+	VOICE_ID_t VoiceID;
+	uint8_t Delay;
 
-		GUI_Welcome();
-		BACKLIGHT_TurnOn();
-		SYSTEM_DelayMs(1000);
-		g_2000044C = 0x33;
-
-		HELPER_GetKey();
-		KeyType = HELPER_GetKey();
-		if (gEeprom.POWER_ON_PASSWORD < 1000000) {
-			g_2000036E = 1;
-			GUI_PasswordScreen();
-			g_2000036E = 0;
+	VoiceID = gVoiceID[0];
+	if (gEeprom.KEYPAD_TONE && gVoiceWriteIndex) {
+		if (gEeprom.KEYPAD_TONE == 1) {
+			// Chinese
+			if (VoiceID >= sizeof(VoiceClipLengthChinese)) {
+				goto Bailout;
+			}
+			Delay = VoiceClipLengthChinese[VoiceID];
+			VoiceID += 0x10;
+		} else {
+			// English
+			if (VoiceID >= sizeof(VoiceClipLengthEnglish)) {
+				goto Bailout;
+			}
+			Delay = VoiceClipLengthEnglish[VoiceID];
+			VoiceID += 0x60;
 		}
 
-		HELPER_CheckBootKey(KeyType);
-
-		GPIO_ClearBit(&GPIOA->DATA, 12);
-		g_2000036F = 1;
-		AUDIO_SetVoiceID(0, VOICE_ID_ENG_WELCOME);
-		Channel = gEeprom.EEPROM_0E80_0E83[gEeprom.TX_CHANNEL] + 1;
-		if (Channel < 201) {
-			AUDIO_SetVoiceID(1, VOICE_ID_ENG_CHANNEL_MODE);
-			AUDIO_SetDigitVoice(2, Channel);
-		} else if ((Channel - 201) < 7) {
-			AUDIO_SetVoiceID(1, VOICE_ID_ENG_FREQUENCY_MODE);
+		if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
+			BK4819_SetAF(BK4819_AF_MUTE);
 		}
-		AUDIO_PlaySingleVoice(0);
-		RADIO_ConfigureNOAA();
+		if (gFmMute) {
+			BK1080_Mute(gFmMute);
+		}
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+		g_200003B6 = 2000;
+		SYSTEM_DelayMs(5);
+		AUDIO_PlayVoice(VoiceID);
+		if (gVoiceWriteIndex == 1) {
+			Delay += 3;
+		}
+		if (bFlag) {
+			SYSTEM_DelayMs(Delay * 10);
+			if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
+				if (gInfoCHAN_A->_0x0033 == true) {
+					BK4819_SetAF(BK4819_AF_7);
+				} else {
+					BK4819_SetAF(BK4819_AF_OPEN);
+				}
+			}
+			if (gFmMute == true) {
+				BK1080_Mute(false);
+			}
+			if (g_2000036B == 0) {
+				GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+			}
+			gVoiceWriteIndex = 0;
+			gVoiceReadIndex = 0;
+			g_200003B6 = 0x50;
+			return;
+		}
+		gVoiceReadIndex = 1;
+		gCountdownToPlayNextVoice = Delay;
+		gFlagPlayQueuedVoice = false;
+		return;
 	}
 
-	// Below this line is development/test area not conforming to the original firmware
+Bailout:
+	gVoiceReadIndex = 0;
+	gVoiceWriteIndex = 0;
+}
 
-	// Show some signs of life
-	FLASHLIGHT_Init();
-	FLASHLIGHT_TurnOn();
-
-	uint32_t Test = 0;
-
-	while (1) {
-        Handle();
+void AUDIO_SetVoiceID(uint8_t Index, VOICE_ID_t VoiceID)
+{
+	if (Index >= 8) {
+		return;
 	}
+	if (Index == 0) {
+		gVoiceWriteIndex = 0;
+		gVoiceReadIndex = 0;
+	}
+
+	gVoiceID[Index] = VoiceID;
+	gVoiceWriteIndex++;
+}
+
+uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint32_t Value)
+{
+	uint16_t Remainder;
+	uint8_t Result;
+	uint8_t Count;
+
+	if (Index == 0) {
+		gVoiceWriteIndex = 0;
+		gVoiceReadIndex = 0;
+	}
+
+	Count = 0;
+	Result = Value / 1000;
+	Remainder = Value % 1000;
+	if (Remainder >= 100) {
+		Result = Remainder / 100;
+		gVoiceID[gVoiceWriteIndex++] = Result;
+		Count++;
+		Remainder -= Result * 100;
+	}
+	if (Remainder >= 10) {
+		Result = Remainder / 10;
+		gVoiceID[gVoiceWriteIndex++] = Result;
+		Count += 1;
+		Remainder -= Result * 10;
+	}
+
+	gVoiceID[gVoiceWriteIndex++] = Remainder;
+
+	return Count + 1;
 }
 

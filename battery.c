@@ -28,7 +28,8 @@ uint16_t gBatteryVoltageAverage;
 uint8_t gBatteryDisplayLevel;
 
 bool gChargingWithTypeC;
-bool gMaybeLowBatteryWarning;
+bool gLowBattery;
+bool gLowBatteryBlink;
 
 uint16_t gBatterySave;
 
@@ -77,9 +78,9 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 
 	if (PreviousBatteryLevel != gBatteryDisplayLevel) {
 		if (gBatteryDisplayLevel < 2) {
-			gMaybeLowBatteryWarning = 1;
+			gLowBattery = true;
 		} else {
-			gMaybeLowBatteryWarning = 0;
+			gLowBattery = false;
 			if (bDisplayBatteryLevel) {
 				GUI_DisplayBatteryLevel(gBatteryDisplayLevel);
 			}
