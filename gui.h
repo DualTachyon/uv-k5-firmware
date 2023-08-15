@@ -43,6 +43,10 @@ extern bool gAskForConfirmation;
 extern bool gAskToSave;
 extern bool gAskToDelete;
 
+extern uint8_t gMenuCursor;
+extern uint8_t gMenuScrollDirection;
+extern uint32_t gSubMenuSelection;
+
 void GUI_DisplayBatteryLevel(uint8_t BatteryLevel);
 void GUI_Welcome(void);
 void GUI_PrintString(const char *pString, uint8_t Start, uint8_t End, uint8_t Line, int Width, bool bCentered);

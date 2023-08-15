@@ -74,16 +74,17 @@ extern uint8_t g_20000383;
 extern uint16_t g_2000038E;
 extern uint8_t g_200003A9;
 extern uint8_t g_200003AA;
-extern uint8_t g_200003AB;
-extern uint8_t g_200003AD;
-extern uint8_t g_200003AE;
-extern uint8_t g_200003AF;
+extern bool g_CDCSS_Lost;
+extern bool g_CTCSS_Lost;
+extern bool g_CxCSS_TAIL_Found;
+extern bool g_VOX_Lost;
 extern uint8_t g_200003B0;
 extern uint16_t g_200003B6;
 extern uint8_t g_200003BC;
 extern uint8_t g_200003BD;
 extern uint8_t g_200003BE;
 extern uint8_t g_200003C3;
+extern volatile uint16_t g_200003E4;
 extern uint8_t g_200003FD;
 extern uint8_t g_20000400;
 extern uint8_t g_20000410;
@@ -105,6 +106,7 @@ extern uint8_t g_2000045B;
 extern uint8_t g_2000045C;
 extern uint8_t g_20000461;
 extern uint8_t g_20000464;
+extern uint8_t gFSKWriteIndex;
 extern uint8_t g_20000474;
 extern uint8_t g_20000D0C[16];
 
@@ -140,6 +142,10 @@ extern volatile bool gSystickFlag10;
 extern volatile bool gSystickFlag11;
 
 extern volatile uint16_t ScanPauseDelayIn10msec;
+
+extern uint16_t gFM_FrequencyDeviation;
+
+extern uint16_t gCurrentRSSI;
 
 // --------
 
