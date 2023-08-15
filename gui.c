@@ -580,3 +580,48 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 	}
 }
 
+void GUI_RenderRSSI(uint8_t RssiLevel, uint8_t VFO)
+{
+	uint8_t *pLine;
+	uint8_t Line;
+	bool bIsClearMode;
+
+	if (gCurrentFunction == FUNCTION_TRANSMIT || gScreenToDisplay != DISPLAY_MAIN) {
+		return;
+	}
+
+	if (VFO == 0) {
+		pLine = gFrameBuffer[2];
+		Line = 3;
+	} else {
+		pLine = gFrameBuffer[6];
+		Line = 7;
+	}
+
+	memset(pLine, 0, 23);
+	if (RssiLevel == 0) {
+		pLine = NULL;
+		bIsClearMode = true;
+	} else {
+		memcpy(pLine, BITMAP_Antenna,5);
+		memcpy(pLine + 5,BITMAP_AntennaLevel1, sizeof(BITMAP_AntennaLevel1));
+		if (RssiLevel >= 2) {
+			memcpy(pLine + 8, BITMAP_AntennaLevel2, sizeof(BITMAP_AntennaLevel2));
+		}
+		if (RssiLevel >= 3) {
+			memcpy(pLine + 11, BITMAP_AntennaLevel3, sizeof(BITMAP_AntennaLevel3));
+		}
+		if (RssiLevel >= 4) {
+			memcpy(pLine + 14, BITMAP_AntennaLevel4, sizeof(BITMAP_AntennaLevel4));
+		}
+		if (RssiLevel >= 5) {
+			memcpy(pLine + 17, BITMAP_AntennaLevel5, sizeof(BITMAP_AntennaLevel5));
+		}
+		if (RssiLevel >= 6) {
+			memcpy(pLine + 20, BITMAP_AntennaLevel6, sizeof(BITMAP_AntennaLevel6));
+		}
+		bIsClearMode = false;
+	}
+	ST7565_DrawLine(0, Line, 23 , pLine, bIsClearMode);
+}
+
