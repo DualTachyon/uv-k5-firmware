@@ -21,23 +21,23 @@
 #include "misc.h"
 #include "settings.h"
 
-static uint32_t gGlobalSysTickCounter;
+static volatile uint32_t gGlobalSysTickCounter;
 
 void SystickHandler(void)
 {
-	gGlobalSysTickCounter += 1;
-	gMaybeVsync = 1;
+	gGlobalSysTickCounter++;
+	gNextTimeslice = true;
 	if ((gGlobalSysTickCounter % 50) == 0) {
-		g_2000032E = 1;
+		g_2000032E = true;
 		if (g_2000033E != 0) {
 			g_2000033E--;
 			if (g_2000033E == 0) {
-				gSystickFlag0 = 1;
+				gSystickFlag0 = true;
 			}
 		}
 	}
 	if ((gGlobalSysTickCounter & 3) == 0) {
-		gSystickFlag1 = 1;
+		gSystickFlag1 = true;
 	}
 	if (gSystickCountdown2 != 0) {
 		gSystickCountdown2--;
@@ -51,13 +51,13 @@ void SystickHandler(void)
 	if (gCurrentFunction == FUNCTION_0 && g_2000032E != 0) {
 		g_2000032E--;
 		if (g_2000032E == 0) {
-			gSystickFlag5 = 1;
+			gSystickFlag5 = true;
 		}
 	}
 	if (gCurrentFunction == FUNCTION_POWER_SAVE && gBatterySave != 0) {
 		gBatterySave--;
 		if (gBatterySave == 0) {
-			gSystickFlag6 = 1;
+			gBatterySaveCountdownExpired = true;
 		}
 	}
 	if (g_20000380 == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != 0) {
@@ -66,7 +66,7 @@ void SystickHandler(void)
 				if (g_2000033A != 0) {
 					g_2000033A--;
 					if (g_2000033A == 0) {
-						gSystickFlag7 = 1;
+						gSystickFlag7 = true;
 					}
 				}
 			}
@@ -79,7 +79,7 @@ void SystickHandler(void)
 				if (g_20000356 != 0) {
 					g_20000356--;
 					if (g_20000356 == 0) {
-						gSystickFlag8 = 1;
+						gSystickFlag8 = true;
 					}
 				}
 			}
@@ -91,7 +91,7 @@ void SystickHandler(void)
 			if (ScanPauseDelayIn10msec != 0) {
 				ScanPauseDelayIn10msec--;
 				if (ScanPauseDelayIn10msec == 0) {
-					gSystickFlag9 = 1;
+					gSystickFlag9 = true;
 				}
 			}
 		}
@@ -100,7 +100,7 @@ void SystickHandler(void)
 	if (g_20000342 != 0) {
 		g_20000342--;
 		if (g_20000342 == 0) {
-			gSystickFlag10 = 1;
+			gSystickFlag10 = true;
 		}
 	}
 
@@ -116,7 +116,7 @@ void SystickHandler(void)
 			if (g_2000034C != 0) {
 				g_2000034C--;
 				if (g_2000034C == 0) {
-					gSystickFlag11 = 1;
+					gSystickFlag11 = true;
 				}
 			}
 		}

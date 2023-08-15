@@ -100,7 +100,7 @@ uint8_t g_20000D0C[16];
 
 bool gIs_A_Scan;
 bool gIsNoaaMode;
-volatile bool gMaybeVsync;
+volatile bool gNextTimeslice;
 bool gNoaaChannel;
 bool gUpdateDisplay;
 uint8_t gA_Scan_Channel;
@@ -120,7 +120,7 @@ volatile uint16_t gSystickCountdown11;
 volatile bool gSystickFlag0;
 volatile bool gSystickFlag1;
 volatile bool gSystickFlag5;
-volatile bool gSystickFlag6;
+volatile bool gBatterySaveCountdownExpired;
 volatile bool gSystickFlag7;
 volatile bool gSystickFlag8;
 volatile bool gSystickFlag9;

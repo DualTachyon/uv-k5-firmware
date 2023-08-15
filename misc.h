@@ -103,7 +103,7 @@ extern uint8_t g_20000D0C[16];
 
 extern bool gIs_A_Scan;
 extern bool gIsNoaaMode;
-extern volatile bool gMaybeVsync;
+extern volatile bool gNextTimeslice;
 extern bool gNoaaChannel;
 extern bool gUpdateDisplay;
 extern uint8_t gA_Scan_Channel;
@@ -123,7 +123,7 @@ extern volatile uint16_t gSystickCountdown11;
 extern volatile bool gSystickFlag0;
 extern volatile bool gSystickFlag1;
 extern volatile bool gSystickFlag5;
-extern volatile bool gSystickFlag6;
+extern volatile bool gBatterySaveCountdownExpired;
 extern volatile bool gSystickFlag7;
 extern volatile bool gSystickFlag8;
 extern volatile bool gSystickFlag9;

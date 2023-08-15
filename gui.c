@@ -130,6 +130,7 @@ void GUI_PasswordScreen(void)
 	while (1) {
 		while (!gNextTimeslice) {
 		}
+		// TODO: Original code doesn't do the below, but is needed for proper key debounce.
 		gNextTimeslice = false;
 		Key = KEYBOARD_Poll();
 		if (gKeyReading0 == Key) {
