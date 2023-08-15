@@ -182,14 +182,14 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 				goto Bailout;
 			}
 			Delay = VoiceClipLengthChinese[VoiceID];
-			VoiceID += 0x10;
+			VoiceID += VOICE_ID_CHI_BASE;
 		} else {
 			// English
 			if (VoiceID >= sizeof(VoiceClipLengthEnglish)) {
 				goto Bailout;
 			}
 			Delay = VoiceClipLengthEnglish[VoiceID];
-			VoiceID += 0x60;
+			VoiceID += VOICE_ID_ENG_BASE;
 		}
 
 		if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {

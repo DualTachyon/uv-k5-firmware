@@ -185,13 +185,13 @@ void Main(void)
 
 		GPIO_ClearBit(&GPIOA->DATA, 12);
 		g_2000036F = 1;
-		AUDIO_SetVoiceID(0, VOICE_ID_ENG_WELCOME);
+		AUDIO_SetVoiceID(0, VOICE_ID_WELCOME);
 		Channel = gEeprom.EEPROM_0E80_0E83[gEeprom.TX_CHANNEL] + 1;
 		if (Channel < 201) {
-			AUDIO_SetVoiceID(1, VOICE_ID_ENG_CHANNEL_MODE);
+			AUDIO_SetVoiceID(1, VOICE_ID_CHANNEL_MODE);
 			AUDIO_SetDigitVoice(2, Channel);
 		} else if ((Channel - 201) < 7) {
-			AUDIO_SetVoiceID(1, VOICE_ID_ENG_FREQUENCY_MODE);
+			AUDIO_SetVoiceID(1, VOICE_ID_FREQUENCY_MODE);
 		}
 		AUDIO_PlaySingleVoice(0);
 		RADIO_ConfigureNOAA();
