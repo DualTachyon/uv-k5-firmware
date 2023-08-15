@@ -56,5 +56,8 @@ void GUI_DisplaySmallDigits(uint8_t Size, const char *pString, uint8_t x, uint8_
 void GUI_DisplayScreen(void);
 void GUI_SelectNextDisplay(GUI_DisplayType_t Display);
 
+void GUI_RenderRSSI(uint8_t RssiLevel, uint8_t VFO);
+void GUI_DisplayRSSI(uint16_t RSSI);
+
 #endif
 

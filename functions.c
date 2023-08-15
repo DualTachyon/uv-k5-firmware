@@ -31,7 +31,7 @@
 #include "radio.h"
 #include "settings.h"
 
-uint8_t gCurrentFunction;
+FUNCTION_Type_t gCurrentFunction;
 
 void FUNCTION_Init(void)
 {
@@ -65,9 +65,9 @@ void FUNCTION_Init(void)
 	gSystickCountdown2 = 0;
 }
 
-void FUNCTION_Select(uint8_t Function)
+void FUNCTION_Select(FUNCTION_Type_t Function)
 {
-	uint8_t PreviousFunction;
+	FUNCTION_Type_t PreviousFunction;
 	bool bWasPowerSave;
 	char *pString;
 	char String[16]; // Can be overflown with the right EEPROM values
@@ -90,8 +90,8 @@ void FUNCTION_Select(uint8_t Function)
 			RADIO_Something();
 		}
 		if (PreviousFunction == FUNCTION_TRANSMIT) {
-			g_20000378 = 0;
-			g_20000379 = 0;
+			gVFO_RSSI_Level[0] = 0;
+			gVFO_RSSI_Level[1] = 0;
 		} else if (PreviousFunction != FUNCTION_TRANSMIT) {
 			g_2000032E = 1000;
 			gSystickFlag5 = 0;
@@ -124,7 +124,7 @@ void FUNCTION_Select(uint8_t Function)
 		BK4819_DisableVox();
 		BK4819_Sleep();
 		BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
-		gSystickFlag6 = 0;
+		gBatterySaveCountdownExpired = false;
 		g_2000036F = 1;
 		GUI_SelectNextDisplay(DISPLAY_MAIN);
 		return;

@@ -37,6 +37,7 @@ OBJS += driver/uart.o
 OBJS += aircopy.o
 OBJS += audio.o
 OBJS += battery.o
+OBJS += bitmaps.o
 OBJS += board.o
 OBJS += dcs.o
 OBJS += dtmf.o
