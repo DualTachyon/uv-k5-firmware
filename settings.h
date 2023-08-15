@@ -111,8 +111,8 @@ typedef struct {
 	bool PERMIT_REMOTE_KILL;
 	int16_t BK4819_XTAL_FREQ_LOW;
 	bool NOAA_AUTO_SCAN;
-	uint8_t EEPROM_1F8E;
-	uint8_t EEPROM_1F8F;
+	uint8_t VOLUME_GAIN;
+	uint8_t DAC_GAIN;
 	uint8_t field77_0x95;
 	uint8_t field78_0x96;
 	uint8_t field79_0x97;

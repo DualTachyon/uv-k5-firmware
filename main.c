@@ -208,7 +208,10 @@ void Main(void)
 		uint16_t RSSI = BK4819_GetRSSI();
 		if (RSSI >= 0x100) {
 			if (!Open) {
-				BK4819_WriteRegister(BK4819_REG_48, (gEeprom.EEPROM_1F8E * 0x10) | 0xB000 | gEeprom.EEPROM_1F8F);
+				BK4819_WriteRegister(BK4819_REG_48, 0
+						| (gEeprom.VOLUME_GAIN << 4)
+						| gEeprom.DAC_GAIN
+						);
 				BK4819_SetAF(BK4819_AF_OPEN);
 				Open = true;
 			}

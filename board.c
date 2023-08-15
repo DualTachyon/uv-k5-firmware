@@ -771,9 +771,9 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 	memcpy(gEEPROM_1EC0_2, gEEPROM_1EC0_0, 8);
 	memcpy(gEEPROM_1EC0_3, gEEPROM_1EC0_0, 8);
 
-	EEPROM_ReadBuffer(0x1EC8, gEEPROM_1EC8_0, 8);
-	memcpy(gEEPROM_1EC8_1, gEEPROM_1EC8_0, 8);
-	memcpy(gEEPROM_1EC8_2, gEEPROM_1EC8_0, 8);
+	EEPROM_ReadBuffer(0x1EC8, gEEPROM_RSSI_CALIB[0], 8);
+	memcpy(gEEPROM_RSSI_CALIB[1], gEEPROM_RSSI_CALIB[0], 8);
+	memcpy(gEEPROM_RSSI_CALIB[2], gEEPROM_RSSI_CALIB[0], 8);
 
 	EEPROM_ReadBuffer(0x1F40, gBatteryCalibration,  12);
 	if (gBatteryCalibration[0] >= 5000) {
@@ -795,8 +795,8 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 		int16_t BK4819_XtalFreqLow;
 		uint16_t EEPROM_1F8A;
 		uint16_t EEPROM_1F8C;
-		uint8_t EEPROM_1F8E;
-		uint8_t EEPROM_1F8F;
+		uint8_t VOLUME_GAIN;
+		uint8_t DAC_GAIN;
 	} Misc;
 
 	EEPROM_ReadBuffer(0x1F88, &Misc, 8);
@@ -809,16 +809,16 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 	gEEPROM_1F8A = Misc.EEPROM_1F8A & 0x01FF;
 	gEEPROM_1F8C = Misc.EEPROM_1F8C & 0x01FF;
 
-	if (Misc.EEPROM_1F8E < 64)  {
-		gEeprom.EEPROM_1F8E = Misc.EEPROM_1F8E;
+	if (Misc.VOLUME_GAIN < 64)  {
+		gEeprom.VOLUME_GAIN = Misc.VOLUME_GAIN;
 	} else {
-		gEeprom.EEPROM_1F8E = 58;
+		gEeprom.VOLUME_GAIN = 58;
 	}
 
-	if (Misc.EEPROM_1F8F < 16) {
-		gEeprom.EEPROM_1F8F = Misc.EEPROM_1F8F;
+	if (Misc.DAC_GAIN < 16) {
+		gEeprom.DAC_GAIN = Misc.DAC_GAIN;
 	} else {
-		gEeprom.EEPROM_1F8F = 8;
+		gEeprom.DAC_GAIN = 8;
 	}
 
 	BK4819_WriteRegister(BK4819_REG_3B, gEeprom.BK4819_XTAL_FREQ_LOW + 22656);

@@ -41,13 +41,10 @@ extern uint8_t gEEPROM_1EC0_1[8];
 extern uint8_t gEEPROM_1EC0_2[8];
 extern uint8_t gEEPROM_1EC0_3[8];
 
-extern uint8_t gEEPROM_1EC8_0[8];
-extern uint8_t gEEPROM_1EC8_1[8];
-extern uint8_t gEEPROM_1EC8_2[8];
+extern uint8_t gEEPROM_RSSI_CALIB[3][4];
 
 extern uint16_t gEEPROM_1F8A;
 extern uint16_t gEEPROM_1F8C;
-extern uint8_t gEEPROM_1F8E;
 
 extern uint8_t gMR_ChannelParameters[207];
 
