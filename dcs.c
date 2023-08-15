@@ -76,8 +76,7 @@ uint32_t DCS_CalculateGolay(uint32_t CodeWord)
 	return CodeWord | ((Word & 0x0FFE) << 12);
 }
 
-uint32_t DCS_GetGolayCodeWord(uint8_t CodeType, uint8_t Option)
-
+uint32_t DCS_GetGolayCodeWord(DCS_CodeType_t CodeType, uint8_t Option)
 {
 	uint32_t Code;
 
