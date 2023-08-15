@@ -1,6 +1,8 @@
 #ifndef BITMAP_H
 #define BITMAP_H
 
+#include <stdint.h>
+
 extern const uint8_t BITMAP_PowerSave[8];
 
 extern const uint8_t BITMAP_BatteryLevel1[18];
