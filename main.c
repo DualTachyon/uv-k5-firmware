@@ -99,7 +99,6 @@ static void ProcessKey(void)
 	case KEY_INVALID: break;
 	}
 }
-#endif
 
 static void Console(void)
 {
@@ -111,6 +110,7 @@ static void Console(void)
 		UART_Send(&Key, 1);
 	}
 }
+#endif
 
 void _putchar(char c)
 {
@@ -201,21 +201,28 @@ void Main(void)
 
 	// Show some signs of life
 	FLASHLIGHT_Init();
-	FLASHLIGHT_TurnOn();
 
-	uint32_t Test = 0;
-
+	bool Open = false;
+	uint8_t Flag = false;
 	while (1) {
-		printf("printf test %d\r\n", Test++);
-		Console();
-
+		uint16_t RSSI = BK4819_GetRSSI();
+		if (RSSI >= 0x100) {
+			if (!Open) {
+				BK4819_WriteRegister(BK4819_REG_48, (gEeprom.EEPROM_1F8E * 0x10) | 0xB000 | gEeprom.EEPROM_1F8F);
+				BK4819_SetAF(BK4819_AF_OPEN);
+				Open = true;
+			}
+		} else {
+			Open = false;
+			BK4819_SetAF(BK4819_AF_MUTE);
+		}
 		SYSTEM_DelayMs(200);
-		FLASHLIGHT_TurnOff();
-
-		Console();
-
-		SYSTEM_DelayMs(200);
-		FLASHLIGHT_TurnOn();
+		if (Flag) {
+			FLASHLIGHT_TurnOn();
+		} else {
+			FLASHLIGHT_TurnOff();
+		}
+		Flag = !Flag;
 	}
 }
 
