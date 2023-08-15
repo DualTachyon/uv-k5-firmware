@@ -726,3 +726,8 @@ void BK4819_EnableCTCSS(void)
 	BK4819_WriteRegister(BK4819_REG_51, 0x904A);
 }
 
+uint16_t BK4819_GetRSSI(void)
+{
+	return BK4819_GetRegister(BK4819_REG_67) & 0x01FF;
+}
+

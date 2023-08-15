@@ -100,5 +100,7 @@ void BK4819_GenTail(uint8_t Tail);
 void BK4819_EnableCDCSS(void);
 void BK4819_EnableCTCSS(void);
 
+uint16_t BK4819_GetRSSI(void);
+
 #endif
 
