@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 
-enum {
+enum FUNCTION_Type_t {
 	FUNCTION_0 = 0U,
 	FUNCTION_TRANSMIT = 1U,
 	FUNCTION_2 = 2U,
@@ -28,10 +28,12 @@ enum {
 	FUNCTION_POWER_SAVE = 5U,
 };
 
-extern uint8_t gCurrentFunction;
+typedef enum FUNCTION_Type_t FUNCTION_Type_t;
+
+extern FUNCTION_Type_t gCurrentFunction;
 
 void FUNCTION_Init(void);
-void FUNCTION_Select(uint8_t Function);
+void FUNCTION_Select(FUNCTION_Type_t Function);
 
 #endif
 
