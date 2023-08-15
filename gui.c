@@ -625,3 +625,25 @@ void GUI_RenderRSSI(uint8_t RssiLevel, uint8_t VFO)
 	ST7565_DrawLine(0, Line, 23 , pLine, bIsClearMode);
 }
 
+void GUI_DisplayRSSI(uint16_t RSSI)
+{
+	uint8_t Level;
+
+	if (RSSI >= gEEPROM_RSSI_CALIB[gInfoCHAN_A->Band][3]) {
+		Level = 6;
+	} else if (RSSI >= gEEPROM_RSSI_CALIB[gInfoCHAN_A->Band][2]) {
+		Level = 4;
+	} else if (RSSI >= gEEPROM_RSSI_CALIB[gInfoCHAN_A->Band][1]) {
+		Level = 2;
+	} else if (RSSI >= gEEPROM_RSSI_CALIB[gInfoCHAN_A->Band][0]) {
+		Level = 1;
+	} else {
+		Level = 0;
+	}
+
+	if (gVFO_RSSI_Level[gEeprom.RX_CHANNEL] != Level) {
+		gVFO_RSSI_Level[gEeprom.RX_CHANNEL] = Level;
+		GUI_RenderRSSI(Level, gEeprom.RX_CHANNEL);
+	}
+}
+
