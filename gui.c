@@ -128,8 +128,9 @@ void GUI_PasswordScreen(void)
 	memset(gNumberForPrintf, 10, sizeof(gNumberForPrintf));
 
 	while (1) {
-		while (!gMaybeVsync) {
+		while (!gNextTimeslice) {
 		}
+		gNextTimeslice = false;
 		Key = KEYBOARD_Poll();
 		if (gKeyReading0 == Key) {
 			gDebounceCounter++;

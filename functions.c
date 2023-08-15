@@ -124,7 +124,7 @@ void FUNCTION_Select(uint8_t Function)
 		BK4819_DisableVox();
 		BK4819_Sleep();
 		BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
-		gSystickFlag6 = 0;
+		gBatterySaveCountdownExpired = false;
 		g_2000036F = 1;
 		GUI_SelectNextDisplay(DISPLAY_MAIN);
 		return;

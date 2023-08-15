@@ -308,10 +308,10 @@ void AUDIO_PlayQueuedVoice(void)
 			}
 		}
 		gVoiceReadIndex++;
-		if (gVoiceReadIndex == gVoiceWriteIndex) {
-			Delay += 3;
-		}
 		if (!Skip) {
+			if (gVoiceReadIndex == gVoiceWriteIndex) {
+				Delay += 3;
+			}
 			AUDIO_PlayVoice(VoiceID);
 			gCountdownToPlayNextVoice = Delay;
 			gFlagPlayQueuedVoice = false;
