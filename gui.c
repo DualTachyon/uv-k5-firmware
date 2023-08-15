@@ -44,6 +44,10 @@ bool gAskForConfirmation;
 bool gAskToSave;
 bool gAskToDelete;
 
+uint8_t gMenuCursor;
+uint8_t gMenuScrollDirection;
+uint32_t gSubMenuSelection;
+
 void GUI_DisplayBatteryLevel(uint8_t BatteryLevel)
 {
 	const uint8_t *pBitmap;

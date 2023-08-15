@@ -50,10 +50,10 @@ void FUNCTION_Init(void)
 	g_200003AA = 0;
 	g_2000042F = 0;
 	memset(g_20000D0C, 0, sizeof(g_20000D0C));
-	g_200003AE = 0;
-	g_200003AB = 0;
-	g_200003AD = 0;
-	g_200003AF = 0;
+	g_CxCSS_TAIL_Found = false;
+	g_CDCSS_Lost = false;
+	g_CTCSS_Lost = false;
+	g_VOX_Lost = false;
 	g_200003B0 = 0;
 	g_20000342 = 0;
 	gSystickFlag10 = 0;
