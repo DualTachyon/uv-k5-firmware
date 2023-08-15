@@ -48,8 +48,8 @@ void FUNCTION_Init(void)
 		gCopyOfCodeType = CODE_TYPE_CONTINUOUS_TONE;
 	}
 	g_200003AA = 0;
-	g_2000042F = 0;
-	memset(g_20000D0C, 0, sizeof(g_20000D0C));
+	gDTMF_WriteIndex = 0;
+	memset(gDTMF_Received, 0, sizeof(gDTMF_Received));
 	g_CxCSS_TAIL_Found = false;
 	g_CDCSS_Lost = false;
 	g_CTCSS_Lost = false;
