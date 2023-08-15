@@ -1,8 +1,8 @@
 *.o
 *.d
-firmware
-firmware.bin
+# firmware
+#firmware.bin
 link-overlay.S
-sram-overlay
-sram-overlay.bin
+# sram-overlay
+# sram-overlay.bin
 
