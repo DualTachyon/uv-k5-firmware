@@ -282,3 +282,59 @@ uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint32_t Value)
 	return Count + 1;
 }
 
+void AUDIO_PlayQueuedVoice(void)
+{
+	uint8_t VoiceID;
+	uint8_t Delay;
+	bool Skip;
+
+	Skip = false;
+	gVoiceReadIndex = gVoiceReadIndex;
+	if (gVoiceReadIndex != gVoiceWriteIndex && gEeprom.KEYPAD_TONE != 0) {
+		VoiceID = gVoiceID[gVoiceReadIndex];
+		if (gEeprom.KEYPAD_TONE == 1) {
+			if (VoiceID < 58) {
+				Delay = VoiceClipLengthChinese[VoiceID];
+				VoiceID += VOICE_ID_CHI_BASE;
+			} else {
+				Skip = true;
+			}
+		} else {
+			if (VoiceID < 76) {
+				Delay = VoiceClipLengthEnglish[VoiceID];
+				VoiceID += VOICE_ID_ENG_BASE;
+			} else {
+				Skip = true;
+			}
+		}
+		gVoiceReadIndex++;
+		if (gVoiceReadIndex == gVoiceWriteIndex) {
+			Delay += 3;
+		}
+		if (!Skip) {
+			AUDIO_PlayVoice(VoiceID);
+			gCountdownToPlayNextVoice = Delay;
+			gFlagPlayQueuedVoice = false;
+			g_200003B6 = 2000;
+			return;
+		}
+	}
+
+	if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
+		if (gInfoCHAN_A->_0x0033 == true) {
+			BK4819_SetAF(BK4819_AF_7);
+		} else {
+			BK4819_SetAF(BK4819_AF_OPEN);
+		}
+	}
+	if (gFmMute == true) {
+		BK1080_Mute(false);
+	}
+	if (g_2000036B == 0) {
+		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+	}
+	g_200003B6 = 0x50;
+	gVoiceWriteIndex = 0;
+	gVoiceReadIndex = 0;
+}
+

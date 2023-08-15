@@ -126,6 +126,7 @@ void AUDIO_PlayVoice(VOICE_ID_t VoiceID);
 void AUDIO_PlaySingleVoice(bool bFlag);
 void AUDIO_SetVoiceID(uint8_t Index, VOICE_ID_t VoiceID);
 uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint32_t Value);
+void AUDIO_PlayQueuedVoice(void);
 
 #endif
 
