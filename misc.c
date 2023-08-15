@@ -94,7 +94,7 @@ uint8_t g_20000420;
 uint8_t g_20000427;
 uint8_t g_2000042C;
 uint8_t g_2000042D;
-uint8_t g_2000042F;
+uint8_t gDTMF_WriteIndex;
 uint8_t g_20000438;
 uint8_t g_2000044C;
 uint8_t g_20000458;
@@ -104,7 +104,7 @@ uint8_t g_2000045C;
 uint8_t g_20000461;
 uint8_t g_20000464;
 uint8_t g_20000474;
-uint8_t g_20000D0C[16];
+char gDTMF_Received[16];
 
 bool gIs_A_Scan;
 bool gIsNoaaMode;

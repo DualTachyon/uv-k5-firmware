@@ -97,7 +97,7 @@ extern uint8_t g_20000420;
 extern uint8_t g_20000427;
 extern uint8_t g_2000042C;
 extern uint8_t g_2000042D;
-extern uint8_t g_2000042F;
+extern uint8_t gDTMF_WriteIndex;
 extern uint8_t g_20000438;
 extern uint8_t g_2000044C;
 extern uint8_t g_20000458;
@@ -108,7 +108,7 @@ extern uint8_t g_20000461;
 extern uint8_t g_20000464;
 extern uint8_t gFSKWriteIndex;
 extern uint8_t g_20000474;
-extern uint8_t g_20000D0C[16];
+extern char gDTMF_Received[16];
 
 extern bool gIs_A_Scan;
 extern bool gIsNoaaMode;
