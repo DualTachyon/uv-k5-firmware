@@ -22,7 +22,8 @@
 #include "driver/bk1080-regs.h"
 
 void BK1080_Init(uint16_t Frequency, bool bDoScan);
-void BK1080_WriteRegister(BK1080_REGISTER_t Register, uint16_t Value);
+uint16_t BK1080_ReadRegister(BK1080_Register_t Register);
+void BK1080_WriteRegister(BK1080_Register_t Register, uint16_t Value);
 void BK1080_Mute(bool Mute);
 void BK1080_SetFrequency(uint16_t Frequency);
 

@@ -720,9 +720,9 @@ LAB_00007c20:
 		}
 		FUNCTION_Select(FUNCTION_TRANSMIT);
 		if (g_20000383 == 0) {
-			g_2000033E = gEeprom.TX_TIMEOUT_TIMER * 120;
+			gTxTimerCountdown = gEeprom.TX_TIMEOUT_TIMER * 120;
 		} else {
-			g_2000033E = 0;
+			gTxTimerCountdown = 0;
 		}
 		gSystickFlag0 = 0;
 		g_200003FD = 0;

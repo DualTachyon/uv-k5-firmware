@@ -34,8 +34,8 @@
 
 GUI_DisplayType_t gScreenToDisplay;
 uint8_t g_200003C6;
-volatile uint8_t g_20000380;
-volatile uint8_t g_20000390;
+volatile uint8_t gCurrentStep;
+volatile int8_t g_20000390;
 uint8_t g_200003BA;
 uint8_t g_200003BB;
 uint8_t gWasFKeyPressed;
@@ -562,7 +562,7 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gNumberOffset = 0;
 			g_200003C6 = 0;
 			g_20000381 = 0;
-			g_20000380 = 0;
+			gCurrentStep = 0;
 			g_20000390 = 0;
 			gAskForConfirmation = 0;
 			g_200003BA = 0;
