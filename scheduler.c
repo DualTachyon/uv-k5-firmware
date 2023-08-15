@@ -28,7 +28,7 @@ void SystickHandler(void)
 	gGlobalSysTickCounter++;
 	gNextTimeslice = true;
 	if ((gGlobalSysTickCounter % 50) == 0) {
-		g_2000032E = true;
+		g_2000032D = true;
 		if (g_2000033E != 0) {
 			g_2000033E--;
 			if (g_2000033E == 0) {
