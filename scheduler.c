@@ -28,16 +28,16 @@ void SystickHandler(void)
 	gGlobalSysTickCounter++;
 	gNextTimeslice = true;
 	if ((gGlobalSysTickCounter % 50) == 0) {
-		g_2000032D = true;
-		if (g_2000033E != 0) {
-			g_2000033E--;
-			if (g_2000033E == 0) {
+		gNextTimeslice500ms = true;
+		if (gTxTimerCountdown != 0) {
+			gTxTimerCountdown--;
+			if (gTxTimerCountdown == 0) {
 				gSystickFlag0 = true;
 			}
 		}
 	}
 	if ((gGlobalSysTickCounter & 3) == 0) {
-		gSystickFlag1 = true;
+		gNextTimeslice40ms = true;
 	}
 	if (gSystickCountdown2 != 0) {
 		gSystickCountdown2--;

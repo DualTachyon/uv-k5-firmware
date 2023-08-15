@@ -45,10 +45,10 @@ uint16_t gEEPROM_1F8C;
 
 uint8_t gMR_ChannelParameters[207];
 
-uint8_t g_2000032D;
+volatile bool gNextTimeslice500ms;
 volatile uint16_t g_2000032E;
 volatile uint16_t g_2000033A;
-volatile uint16_t g_2000033E = 1000;
+volatile uint16_t gTxTimerCountdown = 1000;
 volatile uint16_t g_20000342;
 volatile uint16_t g_2000034C;
 volatile uint16_t g_20000356;
@@ -127,7 +127,7 @@ volatile uint8_t gSystickCountdown3;
 volatile uint8_t gSystickCountdown4;
 volatile uint16_t gSystickCountdown11;
 volatile bool gSystickFlag0;
-volatile bool gSystickFlag1;
+volatile bool gNextTimeslice40ms;
 volatile bool gSystickFlag5;
 volatile bool gBatterySaveCountdownExpired;
 volatile bool gSystickFlag7;
