@@ -1,0 +1,41 @@
+on: 
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: arm-none-eabi-gcc
+      uses: carlosperate/arm-none-eabi-gcc-action@v1
+      with:
+        release: 'latest'
+
+    - name: GCC Version
+      run: arm-none-eabi-gcc --version
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Submodules
+      run: git submodule update --init --recursive --depth 1
+      
+    - name: Configure CMake
+      run: cmake .
+      
+    - name: Make
+      run: make
+
+    - name: size
+      run: arm-none-eabi-size firmware.elf
+
+    - uses: actions/upload-artifact@v3
+      with:
+          name: firmware-binary
+          path: ./firmware.bin
+
+    - uses: actions/upload-artifact@v3
+      with:
+          name: firmware-elf
+          path: ./firmware.elf
+          
