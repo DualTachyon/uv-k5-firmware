@@ -21,7 +21,8 @@
 #include "driver/system.h"
 #include "driver/systick.h"
 
-uint16_t gBK4819_GpioOutState;
+static uint16_t gBK4819_GpioOutState;
+
 bool gThisCanEnable_BK4819_Rxon;
 
 void BK4819_Init(void)

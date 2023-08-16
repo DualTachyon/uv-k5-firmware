@@ -23,6 +23,8 @@
 
 static volatile uint32_t gGlobalSysTickCounter;
 
+void SystickHandler(void);
+
 void SystickHandler(void)
 {
 	gGlobalSysTickCounter++;

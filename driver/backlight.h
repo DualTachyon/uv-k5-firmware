@@ -17,6 +17,10 @@
 #ifndef DRIVER_BACKLIGHT_H
 #define DRIVER_BACKLIGHT_H
 
+#include <stdint.h>
+
+extern uint8_t gBacklightCountdown;
+
 void BACKLIGHT_TurnOn(void);
 
 #endif

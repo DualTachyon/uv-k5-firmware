@@ -27,6 +27,8 @@ extern uint8_t overlay_data_end[];
 
 extern const uint8_t sram_overlay_bin[];
 
+void OVERLAY_Install(void);
+
 void OVERLAY_Install(void)
 {
 	uint8_t *pStart;

@@ -25,6 +25,9 @@ extern uint8_t _sdata[];
 extern uint8_t _sidata_end__[];
 extern uint8_t _edata[];
 
+void BSS_Init(void);
+void DATA_Init(void);
+
 void BSS_Init(void)
 {
 	uint8_t *pBss;
