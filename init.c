@@ -20,10 +20,14 @@
 
 extern uint8_t __bss_start__[];
 extern uint8_t __bss_end__[];
-extern uint8_t _sidata[];
+
+extern uint8_t _data_flash[];
 extern uint8_t _sdata[];
-extern uint8_t _sidata_end__[];
 extern uint8_t _edata[];
+
+extern uint8_t _sram_overlay_flash[];
+extern uint8_t _sram_overlay_start_ram[];
+extern uint8_t _sram_overlay_end_ram[];
 
 void BSS_Init(void);
 void DATA_Init(void);
@@ -42,12 +46,25 @@ void DATA_Init(void)
     volatile uint8_t *pDataRam;
     volatile uint8_t *pDataFlash;
     pDataRam = _sdata;
-    pDataFlash = _sidata;
+    pDataFlash = _data_flash;
 
-    while (pDataRam < _sidata_end__){
+    while (pDataRam < _edata){
         *pDataRam = *pDataFlash;
         pDataRam++;
         pDataFlash++;
     }
 }
 
+void SRAM_overlay_Init(void)
+{
+    volatile uint8_t *pDataRam;
+    volatile uint8_t *pDataFlash;
+    pDataRam = _sram_overlay_start_ram;
+    pDataFlash = _sram_overlay_flash;
+
+    while (pDataRam < _sram_overlay_end_ram){
+        *pDataRam = *pDataFlash;
+        pDataRam++;
+        pDataFlash++;
+    }
+}

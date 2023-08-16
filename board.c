@@ -38,7 +38,7 @@
 #include "settings.h"
 #include "sram-overlay.h"
 
-void BOARD_FLASH_Init(void)
+__attribute__ ((section (".sram_overlay"))) void BOARD_FLASH_Init(void)
 {
 	FLASH_Init(FLASH_READ_MODE_1_CYCLE);
 	FLASH_ConfigureTrimValues();

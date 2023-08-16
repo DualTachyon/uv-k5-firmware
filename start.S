@@ -243,7 +243,7 @@ HandlerGPIOC:
 HandlerReset:
 	ldr	r0, =0x20003FF0
 	mov	sp, r0
-	bl	OVERLAY_Install
+	bl	SRAM_overlay_Init
 	bl	BOARD_FLASH_Init
 	bl	BSS_Init
 	bl	DATA_Init

@@ -1,3 +1,21 @@
+/* Copyright 2023 Manuel Jedinger
+ * https://github.com/manujedi
+ * Copyright 2023 Dual Tachyon
+ * https://github.com/DualTachyon
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+
 ENTRY(HandlerReset)
 
 _estack = 0x20004000;    /* end of 16K RAM */
@@ -31,8 +49,6 @@ SECTIONS
 		_etext = .;        /* global symbols at end   */
 	} >FLASH
 
-	/* Used by startup code */
-	_sidata = .;
 
 	/* Data sections go into RAM */
 	.data :
@@ -45,7 +61,20 @@ SECTIONS
 		. = ALIGN(4);
 		_edata = .;        /* Global symbol at data end   */
 	} >RAM AT> FLASH
-	_sidata_end__ = .;
+	 _data_flash = LOADADDR(.data);
+
+    /* sram sections go into RAM */
+    .sram_overlay :
+    {
+        . = ALIGN(4);
+        _sram_overlay_start_ram = .;        /* Global symbol at sram_overlay start */
+        *(.sram_overlay)           /* .sram_overlay sections              */
+        *(.sram_overlay*)          /* .sram_overlay* sections             */
+
+        . = ALIGN(4);
+        _sram_overlay_end_ram = .;        /* Global symbol at sram_overlay end   */
+    } >RAM AT> FLASH
+    _sram_overlay_flash = LOADADDR(.sram_overlay);
 
 	/* Uninitialized data */
 	. = ALIGN(4);

@@ -24,7 +24,7 @@ void SYSTEM_DelayMs(uint32_t Delay)
 	SYSTICK_DelayUs(Delay * 1000);
 }
 
-void SYSTEM_ConfigureClocks(void)
+__attribute__ ((section (".sram_overlay"))) void SYSTEM_ConfigureClocks(void)
 {
 	// Set source clock from external crystal
 	PMU_SRC_CFG = (PMU_SRC_CFG & ~(PMU_SRC_CFG_RCHF_SEL_MASK | PMU_SRC_CFG_RCHF_EN_MASK))
