@@ -37,13 +37,13 @@ void overlay_FLASH_Lock(void);
 void overlay_FLASH_Unlock(void);
 uint32_t overlay_FLASH_ReadByAHB(uint32_t Offset);
 uint32_t overlay_FLASH_ReadByAPB(uint32_t Offset);
-void overlay_FLASH_Set_NVR_SEL(FLASH_AREA Area);
+void overlay_FLASH_SetArea(FLASH_AREA Area);
 void overlay_FLASH_SetReadMode(FLASH_READ_MODE Mode);
 void overlay_FLASH_SetEraseTime(void);
 void overlay_FLASH_WakeFromDeepSleep(void);
 void overlay_FLASH_SetMode(FLASH_MODE Mode);
 void overlay_FLASH_SetProgramTime(void);
-void overlay_SystemReset(void);
+void overlay_SystemReset(void) __attribute__((noreturn));
 uint32_t overlay_FLASH_ReadNvrWord(uint32_t Offset);
 void overlay_FLASH_ConfigureTrimValues(void);
 

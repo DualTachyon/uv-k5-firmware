@@ -7,7 +7,7 @@ This currently works for me, but use at your own risk.
 
 To build the firmware, you need to fetch the submodules and then run make:
 ```
-git submodule update --init --recursive
+git submodule update --init --recursive --depth=1
 make
 ```
 
