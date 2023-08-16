@@ -15,6 +15,8 @@
 
 cmake_minimum_required(VERSION 3.25)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 # specify cross compilers and tools
 set(CMAKE_C_COMPILER arm-none-eabi-gcc)
 set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
