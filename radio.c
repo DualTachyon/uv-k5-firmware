@@ -38,31 +38,31 @@ DCS_CodeType_t gCodeType;
 DCS_CodeType_t gCopyOfCodeType;
 uint8_t gCode;
 
-bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t VFO)
+bool RADIO_CheckValidChannel(uint8_t Channel, bool bCheckScanList, uint8_t VFO)
 {
-	uint8_t ChParam;
+	uint8_t Params;
 	uint8_t PriorityCh1;
 	uint8_t PriorityCh2;
 
-	if (ChNum >= 200) {
+	if (Channel >= 200) {
 		return false;
 	}
 
 	// Check channel is valid
-	ChParam = gMR_ChannelParameters[ChNum];
-	if ((ChParam & MR_CH_BAND_MASK) > BAND7_470MHz) {
+	Params = gMR_ChannelParameters[Channel];
+	if ((Params & MR_CH_BAND_MASK) > BAND7_470MHz) {
 		return false;
 	}
 	
 	if (bCheckScanList) {
 		if (VFO == 0) {
-			if ((ChParam & MR_CH_SCANLIST1) == 0) {
+			if ((Params & MR_CH_SCANLIST1) == 0) {
 				return false;
 			}
 			PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[0];
 			PriorityCh2 = gEeprom.SCANLIST_PRIORITY_CH2[0];
 		} else if (VFO == 1) {
-			if ((ChParam & MR_CH_SCANLIST2) == 0) {
+			if ((Params & MR_CH_SCANLIST2) == 0) {
 				return false;
 			}
 			PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[1];
@@ -70,10 +70,10 @@ bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t VFO)
 		} else {
 			return true;
 		}
-		if (PriorityCh1 == ChNum) {
+		if (PriorityCh1 == Channel) {
 			return false;
 		}
-		if (PriorityCh2 == ChNum) {
+		if (PriorityCh2 == Channel) {
 			return false;
 		}
 	}
@@ -81,20 +81,20 @@ bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t VFO)
 	return true;
 }
 
-uint8_t RADIO_FindNextChannel(uint8_t ChNum, uint8_t Direction, bool bCheckScanList, uint8_t VFO)
+uint8_t RADIO_FindNextChannel(uint8_t Channel, uint8_t Direction, bool bCheckScanList, uint8_t VFO)
 {
 	uint8_t i;
 
 	for (i = 0; i < 200; i++) {
-		if (ChNum == 0xFF) {
-			ChNum = 199;
-		} else if (ChNum >= 200) {
-			ChNum = 0;
+		if (Channel == 0xFF) {
+			Channel = 199;
+		} else if (Channel >= 200) {
+			Channel = 0;
 		}
-		if (RADIO_CheckValidChannel(ChNum, bCheckScanList, VFO)) {
-			return ChNum;
+		if (RADIO_CheckValidChannel(Channel, bCheckScanList, VFO)) {
+			return Channel;
 		}
-		ChNum += Direction;
+		Channel += Direction;
 	}
 
 	return 0xFF;
