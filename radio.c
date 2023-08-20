@@ -146,11 +146,11 @@ void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg)
 	if (ChNum < 217) {
 		if (ChNum >= 207) {
 			RADIO_InitInfo(pRadio, gEeprom.EEPROM_0E80_0E83[RadioNum], 2, NoaaFrequencyTable[ChNum - 207]);
-			if (gEeprom.CROSS_BAND_RX_TX == 0) {
+			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 				return;
 			}
 			g_2000036F = 1;
-			gEeprom.CROSS_BAND_RX_TX = 0;
+			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 			return;
 		}
 		if (ChNum < 200) {
@@ -429,19 +429,19 @@ void RADIO_ApplyOffset(RADIO_Info_t *pInfo)
 
 void RADIO_ConfigureTX(void)
 {
-	if (gEeprom.CROSS_BAND_RX_TX == 2) { // == CHAN B
+	if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_CHAN_B) {
 		gEeprom.TX_CHANNEL = 1;
-	} else if (gEeprom.CROSS_BAND_RX_TX == 1) { // == CHAN A
+	} else if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_CHAN_A) {
 		gEeprom.TX_CHANNEL = 0;
-	} else if (gEeprom.DUAL_WATCH == 2) { // == CHAN B
+	} else if (gEeprom.DUAL_WATCH == DUAL_WATCH_CHAN_B) {
 		gEeprom.TX_CHANNEL = 1;
-	} else if (gEeprom.DUAL_WATCH == 1) { // == CHAN A
+	} else if (gEeprom.DUAL_WATCH == DUAL_WATCH_CHAN_A) {
 		gEeprom.TX_CHANNEL = 0;
 	}
 
 	gTxRadioInfo = &gEeprom.RadioInfo[gEeprom.TX_CHANNEL];
 	gEeprom.RX_CHANNEL = gEeprom.TX_CHANNEL;
-	if (gEeprom.CROSS_BAND_RX_TX != 0) { // != OFF
+	if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
 		if (gEeprom.TX_CHANNEL == 0) {
 			gEeprom.RX_CHANNEL = 1;
 		} else {
@@ -456,7 +456,7 @@ void RADIO_ConfigureTX(void)
 void RADIO_ConfigureCrossTX(void)
 {
 	gCrossTxRadioInfo = gInfoCHAN_A;
-	if (gEeprom.CROSS_BAND_RX_TX != 0) { // != OFF
+	if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
 		gCrossTxRadioInfo = &gEeprom.RadioInfo[gEeprom.TX_CHANNEL];
 	}
 }
@@ -581,7 +581,7 @@ void RADIO_ConfigureNOAA(void)
 
 	g_2000036F = 1;
 	if (gEeprom.NOAA_AUTO_SCAN) {
-		if (gEeprom.DUAL_WATCH != 0) {
+		if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 			if (gEeprom.EEPROM_0E80_0E83[0] < 207) {
 				if (gEeprom.EEPROM_0E80_0E83[1] < 207) {
 					gIsNoaaMode = false;
@@ -662,7 +662,7 @@ void RADIO_SomethingElse(uint8_t Arg)
 			uint8_t Channel;
 
 			Channel = gEeprom.RX_CHANNEL;
-			if (gEeprom.CROSS_BAND_RX_TX != 0) {
+			if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
 				Channel = gEeprom.TX_CHANNEL;
 			}
 			g_20000371[Channel] = Arg;
@@ -674,7 +674,7 @@ void RADIO_SomethingElse(uint8_t Arg)
 
 void RADIO_SomethingWithTransmit(void)
 {
-	if (gEeprom.DUAL_WATCH != 0) {
+	if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		g_2000033A = 360;
 		gSystickFlag7 = 0;
 		if (g_2000041F == 0) {

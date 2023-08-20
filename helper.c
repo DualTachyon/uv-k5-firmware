@@ -69,10 +69,10 @@ void HELPER_CheckBootKey(uint8_t KeyType)
 		g_2000044C = 0x39;
 		gF_LOCK = 1;
 	} else if (KeyType == 2) {
-		gEeprom.DUAL_WATCH = 0;
+		gEeprom.DUAL_WATCH = DUAL_WATCH_OFF;
 		gEeprom.BATTERY_SAVE = 0;
 		gEeprom.VOX_SWITCH = false;
-		gEeprom.CROSS_BAND_RX_TX = 0;
+		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 		gEeprom.AUTO_KEYPAD_LOCK = false;
 		gEeprom.KEY_1_SHORT_PRESS_ACTION = 0;
 		gEeprom.KEY_1_LONG_PRESS_ACTION = 0;

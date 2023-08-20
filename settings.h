@@ -35,6 +35,24 @@ enum {
 	F_LOCK_438 = 5U,
 };
 
+enum {
+	SCAN_RESUME_TO = 0U,
+	SCAN_RESUME_CO = 1U,
+	SCAN_RESUME_SE = 2U,
+};
+
+enum {
+	CROSS_BAND_OFF = 0U,
+	CROSS_BAND_CHAN_A = 1U,
+	CROSS_BAND_CHAN_B = 2U,
+};
+
+enum {
+	DUAL_WATCH_OFF = 0U,
+	DUAL_WATCH_CHAN_A = 1U,
+	DUAL_WATCH_CHAN_B = 2U,
+};
+
 typedef struct {
 	uint8_t EEPROM_0E80_0E83[2];
 	uint8_t EEPROM_0E82_0E85[2];

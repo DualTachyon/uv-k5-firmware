@@ -398,7 +398,7 @@ void BOARD_EEPROM_Init(void)
 	if (Data[2] < 3) {
 		gEeprom.CROSS_BAND_RX_TX = Data[2];
 	} else {
-		gEeprom.CROSS_BAND_RX_TX = 0;
+		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 	}
 	if (Data[3] < 5) {
 		gEeprom.BATTERY_SAVE = Data[3];
@@ -408,7 +408,7 @@ void BOARD_EEPROM_Init(void)
 	if (Data[4] < 3) {
 		gEeprom.DUAL_WATCH = Data[4];
 	} else {
-		gEeprom.DUAL_WATCH = 1;
+		gEeprom.DUAL_WATCH = DUAL_WATCH_CHAN_A;
 	}
 	if (Data[5] < 6) {
 		gEeprom.BACKLIGHT = Data[5];

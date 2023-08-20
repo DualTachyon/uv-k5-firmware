@@ -252,10 +252,10 @@ void GUI_DisplayStatusLine(void)
 	if (gEeprom.VOX_SWITCH) {
 		memcpy(gStatusLine + 71, BITMAP_VOX, sizeof(BITMAP_VOX));
 	}
-	if (gEeprom.CROSS_BAND_RX_TX != 0) {
+	if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
 		memcpy(gStatusLine + 58, BITMAP_WX, sizeof(BITMAP_WX));
 	}
-	if (gEeprom.DUAL_WATCH != 0) {
+	if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		memcpy(gStatusLine + 45, BITMAP_TDR, sizeof(BITMAP_TDR));
 	}
 	if (gEeprom.KEYPAD_TONE != 0) {
