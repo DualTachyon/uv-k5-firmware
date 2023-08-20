@@ -121,7 +121,7 @@ uint32_t FREQUENCY_FloorToStep(uint32_t Frequency, uint32_t Step, uint32_t Base)
 	return Base + (Step * Index);
 }
 
-int FREQUENCY_Check(RADIO_Info_t *pInfo)
+int FREQUENCY_Check(VFO_Info_t *pInfo)
 {
 	uint32_t Frequency;
 
