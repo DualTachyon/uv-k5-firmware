@@ -23,6 +23,7 @@
 extern char gDTMF_String[15];
 
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size);
+bool DTMF_GetContact(uint8_t Index, char *pContact);
 
 #endif
 

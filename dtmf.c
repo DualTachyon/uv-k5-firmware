@@ -15,6 +15,7 @@
  */
 
 #include <ctype.h>
+#include "driver/eeprom.h"
 #include "dtmf.h"
 
 char gDTMF_String[15];
@@ -40,3 +41,12 @@ bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 	return true;
 }
 
+bool DTMF_GetContact(uint8_t Index, char *pContact)
+{
+         EEPROM_ReadBuffer(0x1C00 + (Index * 0x10), pContact, 16);
+         if ((pContact[0] - ' ') >= 0x5F) {
+                  return false;
+         }
+
+         return true;
+}
