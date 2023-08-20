@@ -107,9 +107,9 @@ typedef struct {
 	uint8_t MIC_SENSITIVITY;
 	uint8_t MIC_SENSITIVITY_TUNING;
 	uint8_t CHAN_1_CALL;
-	uint8_t ANI_DTMF_ID[8];
-	uint8_t KILL_CODE[8];
-	uint8_t REVIVE_CODE[8];
+	char ANI_DTMF_ID[8];
+	char KILL_CODE[8];
+	char REVIVE_CODE[8];
 	char DTMF_UP_CODE[16];
 	uint8_t field57_0x6c;
 	uint8_t field58_0x6d;
