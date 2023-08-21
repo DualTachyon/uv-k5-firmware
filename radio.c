@@ -110,7 +110,7 @@ void RADIO_InitInfo(VFO_Info_t *pInfo, uint8_t ChannelSave, uint8_t Band, uint32
 	pInfo->StepFrequency = 2500;
 	pInfo->CHANNEL_SAVE = ChannelSave;
 	pInfo->FrequencyReverse = false;
-	pInfo->OUTPUT_POWER = 2;
+	pInfo->OUTPUT_POWER = OUTPUT_POWER_HIGH;
 	pInfo->DCS[0].Frequency = Frequency;
 	pInfo->DCS[1].Frequency = Frequency;
 	pInfo->pDCS_Current = &pInfo->DCS[0];
@@ -311,7 +311,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	pRadio->DCS[0].Frequency = Frequency;
 
 	if (Frequency - 10800000 < 2799991) {
-		gEeprom.VfoInfo[VFO].FREQUENCY_DEVIATION_SETTING = 0;
+		gEeprom.VfoInfo[VFO].FREQUENCY_DEVIATION_SETTING = FREQUENCY_DEVIATION_OFF;
 	} else if (ChNum >= 200) {
 		Frequency = FREQUENCY_FloorToStep(gEeprom.VfoInfo[VFO].FREQUENCY_OF_DEVIATION, gEeprom.VfoInfo[VFO].StepFrequency, 0);
 		gEeprom.VfoInfo[VFO].FREQUENCY_OF_DEVIATION = Frequency;
@@ -407,12 +407,12 @@ void RADIO_ApplyOffset(VFO_Info_t *pInfo)
 
 	Frequency = pInfo->DCS[0].Frequency;
 	switch (pInfo->FREQUENCY_DEVIATION_SETTING) {
-	case 0:
+	case FREQUENCY_DEVIATION_OFF:
 		break;
-	case 1:
+	case FREQUENCY_DEVIATION_ADD:
 		Frequency += pInfo->FREQUENCY_OF_DEVIATION;
 		break;
-	case 2:
+	case FREQUENCY_DEVIATION_SUB:
 		Frequency -= pInfo->FREQUENCY_OF_DEVIATION;
 		break;
 	}

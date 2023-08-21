@@ -174,8 +174,8 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 	uint8_t Delay;
 
 	VoiceID = gVoiceID[0];
-	if (gEeprom.KEYPAD_TONE && gVoiceWriteIndex) {
-		if (gEeprom.KEYPAD_TONE == 1) {
+	if (gEeprom.VOICE_PROMPT != VOICE_PROMPT_OFF && gVoiceWriteIndex) {
+		if (gEeprom.VOICE_PROMPT == VOICE_PROMPT_CHINESE) {
 			// Chinese
 			if (VoiceID >= sizeof(VoiceClipLengthChinese)) {
 				goto Bailout;
@@ -289,9 +289,9 @@ void AUDIO_PlayQueuedVoice(void)
 
 	Skip = false;
 	gVoiceReadIndex = gVoiceReadIndex;
-	if (gVoiceReadIndex != gVoiceWriteIndex && gEeprom.KEYPAD_TONE != 0) {
+	if (gVoiceReadIndex != gVoiceWriteIndex && gEeprom.VOICE_PROMPT != VOICE_PROMPT_OFF) {
 		VoiceID = gVoiceID[gVoiceReadIndex];
-		if (gEeprom.KEYPAD_TONE == 1) {
+		if (gEeprom.VOICE_PROMPT == VOICE_PROMPT_CHINESE) {
 			if (VoiceID < 58) {
 				Delay = VoiceClipLengthChinese[VoiceID];
 				VoiceID += VOICE_ID_CHI_BASE;

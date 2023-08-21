@@ -547,9 +547,9 @@ void BOARD_EEPROM_Init(void)
 	// 0EA0..0EA7
 	EEPROM_ReadBuffer(0x0EA0, Data, 8);
 	if (Data[0] < 3) {
-		gEeprom.KEYPAD_TONE = Data[0];
+		gEeprom.VOICE_PROMPT = Data[0];
 	} else {
-		gEeprom.KEYPAD_TONE = 1;
+		gEeprom.VOICE_PROMPT = VOICE_PROMPT_CHINESE;
 	}
 
 	// 0EA8..0EAF

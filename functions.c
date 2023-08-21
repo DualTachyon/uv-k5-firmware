@@ -138,7 +138,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		BK1080_Init(0, false);
 	}
 
-	if (g_20000383 == 1 && gEeprom.ALARM_MODE != 1) {
+	if (g_20000383 == 1 && gEeprom.ALARM_MODE != ALARM_MODE_TONE) {
 		g_20000383 = 2;
 		GUI_DisplayScreen();
 		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);

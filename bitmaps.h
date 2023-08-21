@@ -20,7 +20,7 @@ extern const uint8_t BITMAP_VOX[18];
 
 extern const uint8_t BITMAP_WX[12];
 extern const uint8_t BITMAP_TDR[12];
-extern const uint8_t BITMAP_KEYPAD_TONE[9];
+extern const uint8_t BITMAP_VoicePrompt[9];
 
 extern const uint8_t BITMAP_FM_Mute[12];
 extern const uint8_t BITMAP_NOAA[12];

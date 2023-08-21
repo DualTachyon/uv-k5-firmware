@@ -21,10 +21,12 @@
 #include <stdint.h>
 #include "radio.h"
 
-enum {
+enum POWER_OnDisplayMode_t {
 	POWER_ON_DISPLAY_MODE_FULL_SCREEN = 0U,
 	POWER_ON_DISPLAY_MODE_VOLTAGE     = 2U,
 };
+
+typedef enum POWER_OnDisplayMode_t POWER_OnDisplayMode_t;
 
 enum {
 	F_LOCK_OFF = 0U,
@@ -53,6 +55,33 @@ enum {
 	DUAL_WATCH_CHAN_B = 2U,
 };
 
+enum {
+	FREQUENCY_DEVIATION_OFF = 0U,
+	FREQUENCY_DEVIATION_ADD = 1U,
+	FREQUENCY_DEVIATION_SUB = 2U,
+};
+
+enum {
+	OUTPUT_POWER_LOW = 0U,
+	OUTPUT_POWER_MID = 1U,
+	OUTPUT_POWER_HIGH = 2U,
+};
+
+enum VOICE_Prompt_t {
+	VOICE_PROMPT_OFF = 0U,
+	VOICE_PROMPT_CHINESE = 1U,
+	VOICE_PROMPT_ENGLISH = 2U,
+};
+
+typedef enum VOICE_Prompt_t VOICE_Prompt_t;
+
+enum ALARM_Mode_t {
+	ALARM_MODE_SITE = 0U,
+	ALARM_MODE_TONE = 1U,
+};
+
+typedef enum ALARM_Mode_t ALARM_Mode_t;
+
 typedef struct {
 	uint8_t EEPROM_0E80_0E83[2];
 	uint8_t EEPROM_0E82_0E85[2];
@@ -69,7 +98,7 @@ typedef struct {
 	bool KEY_LOCK;
 	bool VOX_SWITCH;
 	uint8_t VOX_LEVEL;
-	uint8_t KEYPAD_TONE;
+	VOICE_Prompt_t VOICE_PROMPT;
 	bool BEEP_CONTROL;
 	uint8_t CHANNEL_DISPLAY_MODE;
 	bool TAIL_NOTE_ELIMINATION;
@@ -96,8 +125,8 @@ typedef struct {
 	uint16_t FM_LowerLimit;
 	uint16_t FM_UpperLimit;
 	bool AUTO_KEYPAD_LOCK;
-	uint8_t ALARM_MODE;
-	uint8_t POWER_ON_DISPLAY_MODE;
+	ALARM_Mode_t ALARM_MODE;
+	POWER_OnDisplayMode_t POWER_ON_DISPLAY_MODE;
 	uint8_t ROGER;
 	uint8_t REPEATER_TAIL_TONE_ELIMINATION;
 	uint8_t KEY_1_SHORT_PRESS_ACTION;
