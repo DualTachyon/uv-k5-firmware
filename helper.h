@@ -18,9 +18,10 @@
 #define HELPER_H
 
 #include <stdint.h>
+#include "driver/keyboard.h"
 
-extern uint8_t gKeyReading0;
-extern uint8_t gKeyReading1;
+extern KEY_Code_t gKeyReading0;
+extern KEY_Code_t gKeyReading1;
 extern uint8_t g_2000042A;
 
 uint8_t HELPER_GetKey(void);

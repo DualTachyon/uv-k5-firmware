@@ -26,8 +26,8 @@
 #include "radio.h"
 #include "settings.h"
 
-uint8_t gKeyReading0;
-uint8_t gKeyReading1;
+KEY_Code_t gKeyReading0;
+KEY_Code_t gKeyReading1;
 uint8_t g_2000042A;
 
 uint8_t HELPER_GetKey(void)
