@@ -23,7 +23,7 @@ void BOARD_FLASH_Init(void);
 void BOARD_GPIO_Init(void);
 void BOARD_PORTCON_Init(void);
 void BOARD_ADC_Init(void);
-void BOARD_ADC_GetBatteryInfo(uint16_t *pCh4, uint16_t *pCh9);
+void BOARD_ADC_GetBatteryInfo(uint16_t *pVoltage, uint16_t *pCurrent);
 void BOARD_Init(void);
 void BOARD_EEPROM_Init(void);
 void BOARD_EEPROM_LoadMoreSettings(void);
