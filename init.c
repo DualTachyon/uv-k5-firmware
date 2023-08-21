@@ -44,10 +44,8 @@ void DATA_Init(void)
     pDataRam = _sdata;
     pDataFlash = _sidata;
 
-    while (pDataRam < _sidata_end__){
-        *pDataRam = *pDataFlash;
-        pDataRam++;
-        pDataFlash++;
+    while (pDataRam < _sidata_end__) {
+        *pDataRam++ = *pDataFlash++;
     }
 }
 
