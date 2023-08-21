@@ -23,6 +23,7 @@
 #include "driver/systick.h"
 #include "fm.h"
 #include "functions.h"
+#include "gui.h"
 #include "misc.h"
 #include "settings.h"
 
@@ -66,7 +67,6 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 		return;
 	}
 
-#if 0
 	if (gScreenToDisplay == DISPLAY_AIRCOPY) {
 		return;
 	}
@@ -76,7 +76,6 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	if (gCurrentFunction == FUNCTION_2) {
 		return;
 	}
-#endif
 
 	ToneConfig = BK4819_GetRegister(BK4819_REG_71);
 
