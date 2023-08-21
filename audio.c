@@ -208,8 +208,8 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 		if (bFlag) {
 			SYSTEM_DelayMs(Delay * 10);
 			if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
-				if (gInfoCHAN_A->_0x0033 == true) {
-					BK4819_SetAF(BK4819_AF_7);
+				if (gInfoCHAN_A->IsAM == true) {
+					BK4819_SetAF(BK4819_AF_AM);
 				} else {
 					BK4819_SetAF(BK4819_AF_OPEN);
 				}
@@ -321,8 +321,8 @@ void AUDIO_PlayQueuedVoice(void)
 	}
 
 	if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
-		if (gInfoCHAN_A->_0x0033 == true) {
-			BK4819_SetAF(BK4819_AF_7);
+		if (gInfoCHAN_A->IsAM == true) {
+			BK4819_SetAF(BK4819_AF_AM);
 		} else {
 			BK4819_SetAF(BK4819_AF_OPEN);
 		}

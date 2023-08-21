@@ -71,7 +71,7 @@ typedef struct VFO_Info_t {
 	uint8_t DTMF_PTT_ID_TX_MODE;
 	uint8_t BUSY_CHANNEL_LOCK;
 	uint8_t AM_CHANNEL_MODE;
-	bool _0x0033;
+	bool IsAM;
 	char Name[16];
 } VFO_Info_t;
 

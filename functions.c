@@ -38,7 +38,7 @@ void FUNCTION_Init(void)
 	if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
 		gCopyOfCodeType = gCodeType;
 		if (g_20000381 == 0) {
-			if (gInfoCHAN_A->_0x0033 == true) {
+			if (gInfoCHAN_A->IsAM == true) {
 				gCopyOfCodeType = CODE_TYPE_OFF;
 			} else {
 				gCopyOfCodeType = gInfoCHAN_A->pDCS_Current->CodeType;

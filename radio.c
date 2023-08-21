@@ -340,13 +340,13 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	}
 
 	if (gEeprom.VfoInfo[VFO].Band == BAND2_108MHz && gEeprom.VfoInfo[VFO].AM_CHANNEL_MODE == true) {
-		gEeprom.VfoInfo[VFO]._0x0033 = true;
+		gEeprom.VfoInfo[VFO].IsAM = true;
 		gEeprom.VfoInfo[VFO].SCRAMBLING_TYPE = 0;
 		gEeprom.VfoInfo[VFO].DTMF_DECODING_ENABLE = false;
 		gEeprom.VfoInfo[VFO].DCS[0].CodeType = CODE_TYPE_OFF;
 		gEeprom.VfoInfo[VFO].DCS[1].CodeType = CODE_TYPE_OFF;
 	} else {
-		gEeprom.VfoInfo[VFO]._0x0033 = false;
+		gEeprom.VfoInfo[VFO].IsAM = false;
 	}
 
 	RADIO_ConfigureSquelchAndOutputPower(pRadio);
@@ -510,7 +510,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	InterruptMask = 0x000C;
 
 	if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
-		if (gInfoCHAN_A->_0x0033 != true) {
+		if (gInfoCHAN_A->IsAM != true) {
 			uint8_t CodeType;
 			uint8_t CodeWord;
 
@@ -552,14 +552,14 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 		InterruptMask = 0x00CC;
 	}
 
-	if (gEeprom.VOX_SWITCH == true && gFmMute != true && gCrossTxRadioInfo->CHANNEL_SAVE < 207 && gCrossTxRadioInfo->_0x0033 != true) {
+	if (gEeprom.VOX_SWITCH == true && gFmMute != true && gCrossTxRadioInfo->CHANNEL_SAVE < 207 && gCrossTxRadioInfo->IsAM != true) {
 		BK4819_EnableVox(gEeprom.VOX1_THRESHOLD, gEeprom.VOX0_THRESHOLD);
 		// VOX_LOST VOX_FOUND
 		InterruptMask |= 0x0030;
 	} else {
 		BK4819_DisableVox();
 	}
-	if ((gInfoCHAN_A->_0x0033 == true) || (gInfoCHAN_A->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true))) {
+	if ((gInfoCHAN_A->IsAM == true) || (gInfoCHAN_A->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true))) {
 		BK4819_DisableDTMF();
 	} else {
 		BK4819_EnableDTMF();
