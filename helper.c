@@ -61,12 +61,10 @@ uint8_t HELPER_GetKey(void)
 void HELPER_CheckBootKey(uint8_t KeyType)
 {
 	if (KeyType == 1) {
-#if 0
 		gMenuCursor = MENU_350TX;
-		gSubMenuSelection = (uint)gSetting_350TX;
-#endif
+		gSubMenuSelection = gSetting_350TX;
 		GUI_SelectNextDisplay(DISPLAY_MENU);
-		g_2000044C = 0x39;
+		gMenuListCount = 57;
 		gF_LOCK = 1;
 	} else if (KeyType == 2) {
 		gEeprom.DUAL_WATCH = DUAL_WATCH_OFF;

@@ -171,7 +171,7 @@ void Main(void)
 		GUI_Welcome();
 		BACKLIGHT_TurnOn();
 		SYSTEM_DelayMs(1000);
-		g_2000044C = 0x33;
+		gMenuListCount = 51;
 
 		HELPER_GetKey();
 		KeyType = HELPER_GetKey();
