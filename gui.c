@@ -556,7 +556,7 @@ static void DisplayFM(void)
 				sprintf(String, "MR(CH%02d)", gEeprom.FM_CurrentChannel + 1);
 			}
 		} else {
-			if (gIs_A_Scan == '\0') {
+			if (gIs_A_Scan == false) {
 				strcpy(String, "M-SCAN");
 			} else {
 				sprintf(String, "A-SCAN(%d)", gA_Scan_Channel + 1);
