@@ -22,6 +22,8 @@
 
 KEY_Code_t KEYBOARD_Poll(void)
 {
+	KEY_Code_t Key = KEY_INVALID;
+
 	GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_4);
 	GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_5);
 	GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_6);
@@ -31,10 +33,12 @@ KEY_Code_t KEYBOARD_Poll(void)
 
 	// Keys connected to gnd
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_0)) {
-		return KEY_SIDE1;
+		Key = KEY_SIDE1;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_1)) {
-		return KEY_SIDE2;
+		Key = KEY_SIDE2;
+		goto Bye;
 	}
 	// Original doesn't do PTT
 
@@ -43,16 +47,20 @@ KEY_Code_t KEYBOARD_Poll(void)
 	SYSTICK_DelayUs(1);
 
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_0)) {
-		return KEY_MENU;
+		Key = KEY_MENU;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_1)) {
-		return KEY_1;
+		Key = KEY_1;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_2)) {
-		return KEY_4;
+		Key = KEY_4;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_3)) {
-		return KEY_7;
+		Key = KEY_7;
+		goto Bye;
 	}
 
 	// Second row
@@ -63,16 +71,20 @@ KEY_Code_t KEYBOARD_Poll(void)
 	SYSTICK_DelayUs(1);
 
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_0)) {
-		return KEY_UP;
+		Key = KEY_UP;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_1)) {
-		return KEY_2;
+		Key = KEY_2;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_2)) {
-		return KEY_5;
+		Key = KEY_5;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_3)) {
-		return KEY_8;
+		Key = KEY_8;
+		goto Bye;
 	}
 
 	// Third row
@@ -89,16 +101,20 @@ KEY_Code_t KEYBOARD_Poll(void)
 	SYSTICK_DelayUs(1);
 
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_0)) {
-		return KEY_DOWN;
+		Key = KEY_DOWN;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_1)) {
-		return KEY_3;
+		Key = KEY_3;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_2)) {
-		return KEY_6;
+		Key = KEY_6;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_3)) {
-		return KEY_9;
+		Key = KEY_9;
+		goto Bye;
 	}
 
 	// Fourth row
@@ -109,23 +125,28 @@ KEY_Code_t KEYBOARD_Poll(void)
 	SYSTICK_DelayUs(1);
 
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_0)) {
-		return KEY_EXIT;
+		Key = KEY_EXIT;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_1)) {
-		return KEY_STAR;
+		Key = KEY_STAR;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_2)) {
-		return KEY_0;
+		Key = KEY_0;
+		goto Bye;
 	}
 	if (!GPIO_CheckBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_3)) {
-		return KEY_F;
+		Key = KEY_F;
+		goto Bye;
 	}
 
+Bye:
 	GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_4);
 	GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_5);
 	GPIO_ClearBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_6);
 	GPIO_SetBit(&GPIOA->DATA, GPIOA_PIN_KEYBOARD_7);
 
-	return KEY_INVALID;
+	return Key;
 }
 
