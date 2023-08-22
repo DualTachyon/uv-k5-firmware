@@ -430,14 +430,14 @@ void BOARD_EEPROM_Init(void)
 	// 0E80..0E87
 	EEPROM_ReadBuffer(0x0E80, Data, 8);
 	if (Data[0] < 0xd9) {
-		gEeprom.EEPROM_0E80_0E83[0] = Data[0];
+		gEeprom.VfoChannel[0] = Data[0];
 	} else {
-		gEeprom.EEPROM_0E80_0E83[0] = 0xcd;
+		gEeprom.VfoChannel[0] = 205;
 	}
 	if (Data[3] < 0xd9) {
-		gEeprom.EEPROM_0E80_0E83[1] = Data[3];
+		gEeprom.VfoChannel[1] = Data[3];
 	} else {
-		gEeprom.EEPROM_0E80_0E83[1] = 0xcd;
+		gEeprom.VfoChannel[1] = 205;
 	}
 	if (Data[1] < 200) {
 		gEeprom.EEPROM_0E81_0E84[0] = Data[1];
@@ -452,22 +452,22 @@ void BOARD_EEPROM_Init(void)
 	if (Data[2] - 200 < 7) {
 		gEeprom.EEPROM_0E82_0E85[0] = Data[2];
 	} else {
-		gEeprom.EEPROM_0E82_0E85[0] = 0xcd;
+		gEeprom.EEPROM_0E82_0E85[0] = 205;
 	}
 	if (Data[5] - 200 < 7) {
 		gEeprom.EEPROM_0E82_0E85[1] = Data[5];
 	} else {
-		gEeprom.EEPROM_0E82_0E85[1] = 0xcd;
+		gEeprom.EEPROM_0E82_0E85[1] = 205;
 	}
-	if (Data[6] - 0xcf < 10) {
+	if (Data[6] - 207 < 10) {
 		gEeprom.EEPROM_0E86 = Data[6];
 	} else {
-		gEeprom.EEPROM_0E86 = 0xcf;
+		gEeprom.EEPROM_0E86 = 207;
 	}
-	if (Data[7] - 0xcf < 10) {
+	if (Data[7] - 207 < 10) {
 		gEeprom.EEPROM_0E87 = Data[7];
 	} else {
-		gEeprom.EEPROM_0E87 = 0xcf;
+		gEeprom.EEPROM_0E87 = 207;
 	}
 
 	// 0E88..0E8F
@@ -743,8 +743,8 @@ void BOARD_EEPROM_Init(void)
 	}
 
 	if (gEeprom.VFO_OPEN == false) {
-		gEeprom.EEPROM_0E80_0E83[0] = gEeprom.EEPROM_0E81_0E84[0];
-		gEeprom.EEPROM_0E80_0E83[1] = gEeprom.EEPROM_0E81_0E84[1];
+		gEeprom.VfoChannel[0] = gEeprom.EEPROM_0E81_0E84[0];
+		gEeprom.VfoChannel[1] = gEeprom.EEPROM_0E81_0E84[1];
 	}
 
 	// 0D60..0E27

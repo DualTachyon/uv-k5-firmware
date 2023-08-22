@@ -83,7 +83,7 @@ enum ALARM_Mode_t {
 typedef enum ALARM_Mode_t ALARM_Mode_t;
 
 typedef struct {
-	uint8_t EEPROM_0E80_0E83[2];
+	uint8_t VfoChannel[2];
 	uint8_t EEPROM_0E82_0E85[2];
 	uint8_t EEPROM_0E81_0E84[2];
 	uint8_t EEPROM_0E86;

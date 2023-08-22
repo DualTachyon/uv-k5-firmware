@@ -137,15 +137,15 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		if (gEeprom.EEPROM_0E82_0E85[VFO] == 204) {
 			gEeprom.EEPROM_0E82_0E85[VFO] = 205;
 		}
-		if (gEeprom.EEPROM_0E80_0E83[VFO] == 204) {
-			gEeprom.EEPROM_0E80_0E83[VFO] = 205;
+		if (gEeprom.VfoChannel[VFO] == 204) {
+			gEeprom.VfoChannel[VFO] = 205;
 		}
 	}
 
-	ChNum = gEeprom.EEPROM_0E80_0E83[VFO];
+	ChNum = gEeprom.VfoChannel[VFO];
 	if (ChNum < 217) {
 		if (ChNum >= 207) {
-			RADIO_InitInfo(pRadio, gEeprom.EEPROM_0E80_0E83[VFO], 2, NoaaFrequencyTable[ChNum - 207]);
+			RADIO_InitInfo(pRadio, gEeprom.VfoChannel[VFO], 2, NoaaFrequencyTable[ChNum - 207]);
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 				return;
 			}
@@ -157,9 +157,9 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			ChNum = RADIO_FindNextChannel(ChNum, RADIO_CHANNEL_UP, false, VFO);
 			if (ChNum == 0xFF) {
 				ChNum = gEeprom.EEPROM_0E82_0E85[VFO];
-				gEeprom.EEPROM_0E80_0E83[VFO] = gEeprom.EEPROM_0E82_0E85[VFO];
+				gEeprom.VfoChannel[VFO] = gEeprom.EEPROM_0E82_0E85[VFO];
 			} else {
-				gEeprom.EEPROM_0E80_0E83[VFO] = ChNum;
+				gEeprom.VfoChannel[VFO] = ChNum;
 				gEeprom.EEPROM_0E81_0E84[VFO] = ChNum;
 			}
 		}
@@ -173,7 +173,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 
 		if (ChNum < 200) {
 			ChNum = gEeprom.EEPROM_0E82_0E85[VFO];
-			gEeprom.EEPROM_0E80_0E83[VFO] = gEeprom.EEPROM_0E82_0E85[VFO];
+			gEeprom.VfoChannel[VFO] = gEeprom.EEPROM_0E82_0E85[VFO];
 		}
 		Index = ChNum - 200;
 		RADIO_InitInfo(pRadio, ChNum, Index, gLowerLimitFrequencyBandTable[Index]);
@@ -582,8 +582,8 @@ void RADIO_ConfigureNOAA(void)
 	g_2000036F = 1;
 	if (gEeprom.NOAA_AUTO_SCAN) {
 		if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
-			if (gEeprom.EEPROM_0E80_0E83[0] < 207) {
-				if (gEeprom.EEPROM_0E80_0E83[1] < 207) {
+			if (gEeprom.VfoChannel[0] < 207) {
+				if (gEeprom.VfoChannel[1] < 207) {
 					gIsNoaaMode = false;
 					return;
 				}
