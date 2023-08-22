@@ -528,7 +528,7 @@ static void DisplayFM(void)
 {
 	uint8_t i;
 	char String[16];
-						        
+
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 	memset(String, 0, sizeof(String));
 	strcpy(String, "FM");
