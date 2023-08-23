@@ -38,7 +38,7 @@ void FUNCTION_Init(void)
 	if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
 		gCopyOfCodeType = gCodeType;
 		if (g_20000381 == 0) {
-			if (gInfoCHAN_A->_0x0033 == true) {
+			if (gInfoCHAN_A->IsAM == true) {
 				gCopyOfCodeType = CODE_TYPE_OFF;
 			} else {
 				gCopyOfCodeType = gInfoCHAN_A->pDCS_Current->CodeType;
@@ -56,7 +56,7 @@ void FUNCTION_Init(void)
 	g_VOX_Lost = false;
 	g_200003B0 = 0;
 	g_20000342 = 0;
-	gSystickFlag10 = 0;
+	gSystickFlag10 = false;
 	g_20000375 = 0;
 	g_20000376 = 0;
 	gSystickCountdown4 = 0;
@@ -80,7 +80,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	if (bWasPowerSave) {
 		if (Function != FUNCTION_POWER_SAVE) {
 			BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable();
-			gThisCanEnable_BK4819_Rxon = 0;
+			gThisCanEnable_BK4819_Rxon = false;
 			GUI_DisplayStatusLine();
 		}
 	}
@@ -94,7 +94,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 			gVFO_RSSI_Level[1] = 0;
 		} else if (PreviousFunction != FUNCTION_TRANSMIT) {
 			g_2000032E = 1000;
-			gSystickFlag5 = 0;
+			gSystickFlag5 = false;
 			return;
 		}
 		if (gFmMute == true) {
@@ -102,25 +102,25 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		}
 		if (g_200003BC != 1 && g_200003BC != 2) {
 			g_2000032E = 1000;
-			gSystickFlag5 = 0;
+			gSystickFlag5 = false;
 			return;
 		}
 		g_2000032E = 1000;
-		gSystickFlag5 = 0;
+		gSystickFlag5 = false;
 		gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
 		return;
 	}
 
 	if (Function == FUNCTION_2 || Function == FUNCTION_3 || Function == FUNCTION_4) {
 		g_2000032E = 1000;
-		gSystickFlag5 = 0;
+		gSystickFlag5 = false;
 		g_2000038E = 0;
 		return;
 	}
 
 	if (Function == FUNCTION_POWER_SAVE) {
 		gBatterySave = gEeprom.BATTERY_SAVE * 10;
-		gThisCanEnable_BK4819_Rxon = 1;
+		gThisCanEnable_BK4819_Rxon = true;
 		BK4819_DisableVox();
 		BK4819_Sleep();
 		BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
@@ -138,7 +138,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		BK1080_Init(0, false);
 	}
 
-	if (g_20000383 == 1 && gEeprom.ALARM_MODE != 1) {
+	if (g_20000383 == 1 && gEeprom.ALARM_MODE != ALARM_MODE_TONE) {
 		g_20000383 = 2;
 		GUI_DisplayScreen();
 		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
@@ -150,7 +150,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		SYSTEM_DelayMs(60);
 		BK4819_ExitTxMute();
 		g_2000032E = 1000;
-		gSystickFlag5 = 0;
+		gSystickFlag5 = false;
 		g_2000038E = 0;
 		g_20000420 = 0;
 		return;
@@ -208,7 +208,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	BK4819_ExitDTMF_TX(false);
 
 Skip:
-	if (g_20000383 != '\0') {
+	if (g_20000383 != 0) {
 		if (g_20000383 == 3) {
 			BK4819_TransmitTone(true, 1750);
 		} else {
@@ -219,20 +219,20 @@ Skip:
 		g_20000420 = 0;
 		g_2000038E = 0;
 		g_2000036B = 1;
-		gSystickFlag5 = 0;
+		gSystickFlag5 = false;
 		g_2000032E = 1000;
 		return;
 	}
-	if ((gCrossTxRadioInfo->SCRAMBLING_TYPE != 0) && (gSetting_ScrambleEnable != false)) {
+	if (gCrossTxRadioInfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable != false) {
 		BK4819_EnableScramble(gCrossTxRadioInfo->SCRAMBLING_TYPE - 1U);
 		g_2000032E = 1000;
-		gSystickFlag5 = 0;
+		gSystickFlag5 = false;
 		g_2000038E = 0;
 		return;
 	}
 	BK4819_DisableScramble();
 	g_2000032E = 1000;
-	gSystickFlag5 = 0;
+	gSystickFlag5 = false;
 	g_2000038E = 0;
 }
 

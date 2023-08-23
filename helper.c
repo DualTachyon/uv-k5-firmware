@@ -26,8 +26,8 @@
 #include "radio.h"
 #include "settings.h"
 
-uint8_t gKeyReading0;
-uint8_t gKeyReading1;
+KEY_Code_t gKeyReading0;
+KEY_Code_t gKeyReading1;
 uint8_t g_2000042A;
 
 uint8_t HELPER_GetKey(void)
@@ -61,18 +61,16 @@ uint8_t HELPER_GetKey(void)
 void HELPER_CheckBootKey(uint8_t KeyType)
 {
 	if (KeyType == 1) {
-#if 0
 		gMenuCursor = MENU_350TX;
-		gSubMenuSelection = (uint)gSetting_350TX;
-#endif
+		gSubMenuSelection = gSetting_350TX;
 		GUI_SelectNextDisplay(DISPLAY_MENU);
-		g_2000044C = 0x39;
+		gMenuListCount = 57;
 		gF_LOCK = 1;
 	} else if (KeyType == 2) {
-		gEeprom.DUAL_WATCH = 0;
+		gEeprom.DUAL_WATCH = DUAL_WATCH_OFF;
 		gEeprom.BATTERY_SAVE = 0;
 		gEeprom.VOX_SWITCH = false;
-		gEeprom.CROSS_BAND_RX_TX = 0;
+		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 		gEeprom.AUTO_KEYPAD_LOCK = false;
 		gEeprom.KEY_1_SHORT_PRESS_ACTION = 0;
 		gEeprom.KEY_1_LONG_PRESS_ACTION = 0;

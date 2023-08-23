@@ -44,7 +44,7 @@ typedef struct {
 	uint8_t Padding[2];
 } DCS_Info_t;
 
-typedef struct RADIO_Info_t {
+typedef struct VFO_Info_t {
 	DCS_Info_t DCS[2];
 	DCS_Info_t *pDCS_Current;
 	DCS_Info_t *pDCS_Reverse;
@@ -71,13 +71,13 @@ typedef struct RADIO_Info_t {
 	uint8_t DTMF_PTT_ID_TX_MODE;
 	uint8_t BUSY_CHANNEL_LOCK;
 	uint8_t AM_CHANNEL_MODE;
-	bool _0x0033;
+	bool IsAM;
 	char Name[16];
-} RADIO_Info_t;
+} VFO_Info_t;
 
-extern RADIO_Info_t *gTxRadioInfo;
-extern RADIO_Info_t *gInfoCHAN_A;
-extern RADIO_Info_t *gCrossTxRadioInfo;
+extern VFO_Info_t *gTxRadioInfo;
+extern VFO_Info_t *gInfoCHAN_A;
+extern VFO_Info_t *gCrossTxRadioInfo;
 
 extern DCS_CodeType_t gCodeType;
 extern DCS_CodeType_t gCopyOfCodeType;
@@ -85,10 +85,10 @@ extern uint8_t gCode;
 
 bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t RadioNum);
 uint8_t RADIO_FindNextChannel(uint8_t ChNum, uint8_t Direction, bool bCheckScanList, uint8_t RadioNum);
-void RADIO_InitInfo(RADIO_Info_t *pInfo, uint8_t ChannelSave, uint8_t ChIndex, uint32_t Frequency);
+void RADIO_InitInfo(VFO_Info_t *pInfo, uint8_t ChannelSave, uint8_t ChIndex, uint32_t Frequency);
 void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg);
-void RADIO_ConfigureSquelchAndOutputPower(RADIO_Info_t *pInfo);
-void RADIO_ApplyOffset(RADIO_Info_t *pInfo);
+void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo);
+void RADIO_ApplyOffset(VFO_Info_t *pInfo);
 void RADIO_ConfigureTX(void);
 void RADIO_ConfigureCrossTX(void);
 void RADIO_SetupRegisters(bool bSwitchToFunction0);

@@ -23,6 +23,7 @@
 #include "driver/systick.h"
 #include "fm.h"
 #include "functions.h"
+#include "gui.h"
 #include "misc.h"
 #include "settings.h"
 
@@ -66,7 +67,6 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 		return;
 	}
 
-#if 0
 	if (gScreenToDisplay == DISPLAY_AIRCOPY) {
 		return;
 	}
@@ -76,7 +76,6 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	if (gCurrentFunction == FUNCTION_2) {
 		return;
 	}
-#endif
 
 	ToneConfig = BK4819_GetRegister(BK4819_REG_71);
 
@@ -130,9 +129,9 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	BK4819_EnterTxMute();
 	SYSTEM_DelayMs(20);
 	GPIO_ClearBit(&GPIOC->DATA,4);
-#if 0
-	g_200003B6 = 0x50;
-#endif
+
+	g_200003B6 = 80;
+
 	SYSTEM_DelayMs(5);
 	BK4819_TurnsOffTones_TurnsOnRX();
 	SYSTEM_DelayMs(5);
@@ -175,8 +174,8 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 	uint8_t Delay;
 
 	VoiceID = gVoiceID[0];
-	if (gEeprom.KEYPAD_TONE && gVoiceWriteIndex) {
-		if (gEeprom.KEYPAD_TONE == 1) {
+	if (gEeprom.VOICE_PROMPT != VOICE_PROMPT_OFF && gVoiceWriteIndex) {
+		if (gEeprom.VOICE_PROMPT == VOICE_PROMPT_CHINESE) {
 			// Chinese
 			if (VoiceID >= sizeof(VoiceClipLengthChinese)) {
 				goto Bailout;
@@ -208,8 +207,8 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 		if (bFlag) {
 			SYSTEM_DelayMs(Delay * 10);
 			if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
-				if (gInfoCHAN_A->_0x0033 == true) {
-					BK4819_SetAF(BK4819_AF_7);
+				if (gInfoCHAN_A->IsAM == true) {
+					BK4819_SetAF(BK4819_AF_AM);
 				} else {
 					BK4819_SetAF(BK4819_AF_OPEN);
 				}
@@ -222,7 +221,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 			}
 			gVoiceWriteIndex = 0;
 			gVoiceReadIndex = 0;
-			g_200003B6 = 0x50;
+			g_200003B6 = 80;
 			return;
 		}
 		gVoiceReadIndex = 1;
@@ -290,9 +289,9 @@ void AUDIO_PlayQueuedVoice(void)
 
 	Skip = false;
 	gVoiceReadIndex = gVoiceReadIndex;
-	if (gVoiceReadIndex != gVoiceWriteIndex && gEeprom.KEYPAD_TONE != 0) {
+	if (gVoiceReadIndex != gVoiceWriteIndex && gEeprom.VOICE_PROMPT != VOICE_PROMPT_OFF) {
 		VoiceID = gVoiceID[gVoiceReadIndex];
-		if (gEeprom.KEYPAD_TONE == 1) {
+		if (gEeprom.VOICE_PROMPT == VOICE_PROMPT_CHINESE) {
 			if (VoiceID < 58) {
 				Delay = VoiceClipLengthChinese[VoiceID];
 				VoiceID += VOICE_ID_CHI_BASE;
@@ -321,8 +320,8 @@ void AUDIO_PlayQueuedVoice(void)
 	}
 
 	if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
-		if (gInfoCHAN_A->_0x0033 == true) {
-			BK4819_SetAF(BK4819_AF_7);
+		if (gInfoCHAN_A->IsAM == true) {
+			BK4819_SetAF(BK4819_AF_AM);
 		} else {
 			BK4819_SetAF(BK4819_AF_OPEN);
 		}
@@ -333,7 +332,7 @@ void AUDIO_PlayQueuedVoice(void)
 	if (g_2000036B == 0) {
 		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	}
-	g_200003B6 = 0x50;
+	g_200003B6 = 80;
 	gVoiceWriteIndex = 0;
 	gVoiceReadIndex = 0;
 }

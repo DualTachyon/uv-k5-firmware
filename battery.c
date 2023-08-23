@@ -60,7 +60,7 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 
 	gBatteryVoltageAverage = (Voltage * 760) / gBatteryCalibration[3];
 
-	if ((gScreenToDisplay == DISPLAY_MENU) && 1 /* (gMenuCursor == MENU_VOL) */) {
+	if ((gScreenToDisplay == DISPLAY_MENU) && gMenuCursor == MENU_VOL) {
 		g_20000370 = 1;
 	}
 	if (gBatteryCurrent < 501) {

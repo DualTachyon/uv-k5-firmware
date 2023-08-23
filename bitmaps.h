@@ -20,7 +20,7 @@ extern const uint8_t BITMAP_VOX[18];
 
 extern const uint8_t BITMAP_WX[12];
 extern const uint8_t BITMAP_TDR[12];
-extern const uint8_t BITMAP_KEYPAD_TONE[9];
+extern const uint8_t BITMAP_VoicePrompt[9];
 
 extern const uint8_t BITMAP_FM_Mute[12];
 extern const uint8_t BITMAP_NOAA[12];
@@ -32,6 +32,36 @@ extern const uint8_t BITMAP_AntennaLevel3[3];
 extern const uint8_t BITMAP_AntennaLevel4[3];
 extern const uint8_t BITMAP_AntennaLevel5[3];
 extern const uint8_t BITMAP_AntennaLevel6[3];
+
+extern const uint8_t BITMAP_CurrentIndicator[8];
+
+extern const uint8_t BITMAP_VFO_Default[8];
+extern const uint8_t BITMAP_VFO_NotDefault[8];
+
+extern const uint8_t BITMAP_TX[16];
+extern const uint8_t BITMAP_RX[16];
+
+extern const uint8_t BITMAP_M[8];
+extern const uint8_t BITMAP_F[8];
+
+extern const uint8_t BITMAP_ReverseMode[8];
+
+extern const uint8_t BITMAP_NarrowBand[8];
+
+extern const uint8_t BITMAP_DTMF[24];
+extern const uint8_t BITMAP_Scramble[18];
+
+extern const uint8_t BITMAP_Add[8];
+extern const uint8_t BITMAP_Sub[8];
+
+extern const uint8_t BITMAP_PowerHigh[8];
+extern const uint8_t BITMAP_PowerMid[8];
+extern const uint8_t BITMAP_PowerLow[8];
+
+extern const uint8_t BITMAP_AM[12];
+
+extern const uint8_t BITMAP_CT[12];
+extern const uint8_t BITMAP_DCS[18];
 
 #endif
 

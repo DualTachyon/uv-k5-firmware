@@ -171,7 +171,7 @@ void Main(void)
 		GUI_Welcome();
 		BACKLIGHT_TurnOn();
 		SYSTEM_DelayMs(1000);
-		g_2000044C = 0x33;
+		gMenuListCount = 51;
 
 		HELPER_GetKey();
 		KeyType = HELPER_GetKey();
@@ -186,7 +186,7 @@ void Main(void)
 		GPIO_ClearBit(&GPIOA->DATA, 12);
 		g_2000036F = 1;
 		AUDIO_SetVoiceID(0, VOICE_ID_WELCOME);
-		Channel = gEeprom.EEPROM_0E80_0E83[gEeprom.TX_CHANNEL] + 1;
+		Channel = gEeprom.VfoChannel[gEeprom.TX_CHANNEL] + 1;
 		if (Channel < 201) {
 			AUDIO_SetVoiceID(1, VOICE_ID_CHANNEL_MODE);
 			AUDIO_SetDigitVoice(2, Channel);
