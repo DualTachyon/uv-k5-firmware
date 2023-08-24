@@ -63,5 +63,7 @@ extern const uint8_t BITMAP_AM[12];
 extern const uint8_t BITMAP_CT[12];
 extern const uint8_t BITMAP_DCS[18];
 
+extern const uint8_t BITMAP_ScanList[6];
+
 #endif
 
