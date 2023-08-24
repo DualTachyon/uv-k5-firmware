@@ -510,7 +510,7 @@ static void DisplayMain(void)
 	uint8_t i;
 
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
-	if (gEeprom.KEY_LOCK && g_200003A9) {
+	if (gEeprom.KEY_LOCK && gKeypadLocked) {
 		GUI_PrintString("Long Press #", 0, 127, 1, 8, true);
 		GUI_PrintString("To Unlock", 0, 127, 3, 8, true);
 		ST7565_BlitFullScreen();
