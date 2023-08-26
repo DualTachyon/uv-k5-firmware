@@ -798,3 +798,9 @@ void BK4819_Disable(void)
 	BK4819_WriteRegister(BK4819_REG_30, 0);
 }
 
+void BK4819_StopScan(void)
+{
+        BK4819_DisableFrequencyScan();
+        BK4819_Disable();
+}
+

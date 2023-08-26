@@ -118,5 +118,7 @@ void BK4819_SetScanFrequency(int32_t Frequency);
 
 void BK4819_Disable(void);
 
+void BK4819_StopScan(void);
+
 #endif
 
