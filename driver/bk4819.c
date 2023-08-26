@@ -804,3 +804,13 @@ void BK4819_StopScan(void)
         BK4819_Disable();
 }
 
+uint8_t BK4819_GetDTMF_5TONE_Code(void)
+{
+        return (BK4819_GetRegister(BK4819_REG_0B) >> 8) & 0x0F;
+}
+
+uint8_t BK4819_CheckCDCSSCodeReceived(void)
+{
+        return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
+}
+
