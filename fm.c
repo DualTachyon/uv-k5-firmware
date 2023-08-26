@@ -14,7 +14,11 @@
  *     limitations under the License.
  */
 
+#include "bsp/dp32g030/gpio.h"
+#include "driver/bk1080.h"
+#include "driver/gpio.h"
 #include "fm.h"
+#include "misc.h"
 #include "settings.h"
 
 uint16_t gFM_Channels[20];
@@ -64,5 +68,16 @@ int FM_ConfigureChannelState(void)
 	}
 
 	return 0;
+}
+
+void FM_TurnOff(void)
+{
+	gFmMute = false;
+	g_20000390 = 0;
+	g_2000038E = 0;
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+	g_2000036B = 0;
+	BK1080_Init(0, false);
+	g_2000036F = 1;
 }
 
