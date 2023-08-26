@@ -27,6 +27,7 @@ bool DTMF_GetContact(uint8_t Index, char *pContact);
 bool DTMF_FindContact(const char *pContact, char *pResult);
 char DTMF_GetCharacter(uint8_t Code);
 bool DTMF_CompareMessage(const char *pDTMF, const char *pTemplate, uint8_t Size, bool bFlag);
+bool DTMF_IsGroupCall(const uint8_t *pDTMF, uint32_t Size);
 
 #endif
 

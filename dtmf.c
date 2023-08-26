@@ -118,3 +118,19 @@ bool DTMF_CompareMessage(const char *pDTMF, const char *pTemplate, uint8_t Size,
 	return true;
 }
 
+bool DTMF_IsGroupCall(const uint8_t *pDTMF, uint32_t Size)
+{
+	uint32_t i;
+
+	for (i = 0; i < Size; i++) {
+		if (pDTMF[i] == gEeprom.DTMF_GROUP_CALL_CODE) {
+			break;
+		}
+	}
+	if (i != Size) {
+		return true;
+	}
+
+	return false;
+}
+
