@@ -125,5 +125,7 @@ uint8_t BK4819_GetDTMF_5TONE_Code(void);
 uint8_t BK4819_CheckCDCSSCodeReceived(void);
 uint8_t BK4819_GetCTCSSPhaseShift(void);
 
+void BK4819_SendFSKData(uint16_t *pData);
+
 #endif
 

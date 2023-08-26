@@ -15,9 +15,38 @@
  */
 
 #include "aircopy.h"
+#include "driver/bk4819.h"
+#include "driver/crc.h"
+#include "driver/eeprom.h"
+#include "misc.h"
+#include "radio.h"
+
+static const uint16_t Obfuscation[8] = { 0x6C16, 0xE614, 0x912E, 0x400D, 0x3521, 0x40D5, 0x0313, 0x80E9 };
 
 AIRCOPY_State_t gAircopyState;
 uint16_t gAirCopyBlockNumber;
 uint16_t gErrorsDuringAirCopy;
 uint8_t gAirCopyIsSendMode;
+
+uint16_t g_FSK_Buffer[36];
+
+void AIRCOPY_SendMessage(void)
+{
+	uint8_t i;
+
+	g_FSK_Buffer[1] = (gAirCopyBlockNumber & 0x3FF) << 6;
+	EEPROM_ReadBuffer(g_FSK_Buffer[1], &g_FSK_Buffer[2], 64);
+	g_FSK_Buffer[34] = CRC_Calculate(&g_FSK_Buffer[1], 2 + 64);
+	for (i = 0; i < 34; i++) {
+		g_FSK_Buffer[i + 1] ^= Obfuscation[i % 8];
+	}
+	if (++gAirCopyBlockNumber >= 0x78) {
+		gAircopyState = AIRCOPY_COMPLETE;
+	}
+	RADIO_PrepareTransmit();
+	BK4819_SendFSKData(g_FSK_Buffer);
+	BK4819_SetupPowerAmplifier(0, 0);
+	BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
+	gAircopySendCountdown = 0x1e;
+}
 

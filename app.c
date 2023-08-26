@@ -1178,7 +1178,7 @@ void APP_TimeSlice10ms(void)
 		if (gAircopySendCountdown != 0) {
 			gAircopySendCountdown--;
 			if (gAircopySendCountdown == 0) {
-				//FSK_SendMessage();
+				AIRCOPY_SendMessage();
 				GUI_DisplayScreen();
 			}
 		}

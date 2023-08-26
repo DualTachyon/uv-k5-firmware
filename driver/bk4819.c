@@ -819,3 +819,37 @@ uint8_t BK4819_GetCTCSSPhaseShift(void)
         return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
 }
 
+void BK4819_SendFSKData(uint16_t *pData)
+{
+	uint8_t i;
+	uint8_t Timeout;
+
+	Timeout = 200;
+
+	SYSTEM_DelayMs(20);
+
+	BK4819_WriteRegister(BK4819_REG_3F, BK4819_REG_3F_FSK_TX_FINISHED);
+	BK4819_WriteRegister(BK4819_REG_59, 0x8068);
+	BK4819_WriteRegister(BK4819_REG_59, 0x0068);
+
+	for (i = 0; i < 36; i++) {
+		BK4819_WriteRegister(BK4819_REG_5F, pData[i]);
+	}
+
+	SYSTEM_DelayMs(20);
+
+	BK4819_WriteRegister(BK4819_REG_59,0x2868);
+
+	while (Timeout) {
+		if (BK4819_GetRegister(BK4819_REG_0C) & 1U) {
+			break;
+		}
+		SYSTEM_DelayMs(5);
+		Timeout--;
+	}
+
+	BK4819_WriteRegister(BK4819_REG_02, 0);
+	SYSTEM_DelayMs(20);
+	BK4819_ResetFSK();
+}
+
