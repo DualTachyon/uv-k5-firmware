@@ -176,7 +176,7 @@ uint8_t g_200003BA;
 uint8_t g_200003BB;
 uint8_t gWasFKeyPressed;
 
-bool gAskForConfirmation;
+uint8_t gAskForConfirmation;
 bool gAskToSave;
 bool gAskToDelete;
 
@@ -1177,9 +1177,8 @@ static void DisplayMenu(void)
 		GUI_PrintString("MHz", 50, 127, 4, 8, true);
 	}
 
-	if ((gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH || gMenuCursor == MENU_DEL_CH) && gAskForConfirmation != false) {
-		// TODO: Double check gAskForConfirmation
-		if (gAskForConfirmation == true) {
+	if ((gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH || gMenuCursor == MENU_DEL_CH) && gAskForConfirmation) {
+		if (gAskForConfirmation == 1) {
 			strcpy(String, "SURE?");
 		} else {
 			strcpy(String, "WAIT!");

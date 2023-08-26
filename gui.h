@@ -99,7 +99,7 @@ extern uint8_t g_200003BA;
 extern uint8_t g_200003BB;
 extern uint8_t gWasFKeyPressed;
 
-extern bool gAskForConfirmation;
+extern uint8_t gAskForConfirmation;
 extern bool gAskToSave;
 extern bool gAskToDelete;
 
