@@ -1387,6 +1387,11 @@ static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHel
 			gFlagSaveFM = false;
 		}
 		if (g_200003A7 != 0) {
+			SETTINGS_SaveChannel(
+				gTxRadioInfo->CHANNEL_SAVE,
+				gEeprom.TX_CHANNEL,
+				gTxRadioInfo,
+				g_200003A7);
 			g_200003A7 = 0;
 			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, 1);
 			RADIO_SetupRegisters(true);

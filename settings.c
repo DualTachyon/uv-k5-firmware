@@ -166,3 +166,85 @@ void SETTINGS_SaveSettings(void)
 	EEPROM_WriteBuffer(0x0F40, State);
 }
 
+void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, uint8_t Mode)
+{
+	UART_LogSend("schn\r\n", 6);
+
+	if (Channel < 207) {
+		uint16_t OffsetMR;
+		uint16_t OffsetVFO;
+
+		OffsetMR = 0x0000 + (Channel * 16);
+		OffsetVFO = OffsetMR;
+		if (Channel >= 200) {
+			if (VFO == 0) {
+				OffsetVFO = 0x0C80 + ((Channel - 200) * 32);
+			} else {
+				OffsetVFO = 0x0C90 + ((Channel - 200) * 32);
+			}
+		}
+		// Mode 2 == Delete
+		if (Mode == 2 || Channel >= 200) {
+			uint32_t State32[2];
+			uint8_t State8[8];
+
+			State32[0] = pVFO->DCS[0].Frequency;
+			State32[1] = pVFO->FREQUENCY_OF_DEVIATION;
+
+			EEPROM_WriteBuffer(OffsetVFO + 0, State32);
+
+			State8[0] = pVFO->DCS[0].RX_TX_Code;
+			State8[1] = pVFO->DCS[1].RX_TX_Code;
+			State8[2] = (pVFO->DCS[1].CodeType << 4) | pVFO->DCS[0].CodeType;
+			State8[3] = (pVFO->AM_CHANNEL_MODE << 4) | pVFO->FREQUENCY_DEVIATION_SETTING;
+			State8[4] = 0
+				| (pVFO->BUSY_CHANNEL_LOCK << 4)
+				| (pVFO->OUTPUT_POWER << 2)
+				| (pVFO->CHANNEL_BANDWIDTH << 1)
+				| (pVFO->FrequencyReverse << 0)
+				;
+			State8[5] = (pVFO->DTMF_PTT_ID_TX_MODE << 1) | pVFO->DTMF_DECODING_ENABLE;
+			State8[6] = pVFO->STEP_SETTING;
+			State8[7] = pVFO->SCRAMBLING_TYPE;
+
+			EEPROM_WriteBuffer(OffsetVFO + 8, State8);
+
+			SETTINGS_UpdateChannel(Channel, pVFO, true);
+
+			if (Channel < 200) {
+				memset(&State32, 0xFF, sizeof(State32));
+				EEPROM_WriteBuffer(OffsetMR + 0x0F50, State32);
+				EEPROM_WriteBuffer(OffsetMR + 0x0F58, State32);
+			}
+		}
+	}
+}
+
+void SETTINGS_UpdateChannel(uint8_t Channel, const VFO_Info_t *pVFO, bool bUpdate)
+{
+	UART_LogSend("svalid\r\n",8);
+
+	if (Channel < 207) {
+		uint8_t State[8];
+		uint16_t Offset;
+		uint8_t Params;
+
+		Offset = 0x0D60 + (Channel & ~7U);
+		EEPROM_ReadBuffer(Offset, State, sizeof(State));
+		if (bUpdate) {
+			Params = 0
+				| (pVFO->SCANLIST1_PARTICIPATION << 7)
+				| (pVFO->SCANLIST2_PARTICIPATION << 6)
+				| (pVFO->Band << 0);
+			if (State[Channel & 7U] == Params) {
+				return;
+			}
+		} else {
+			Params = 0xFF;
+		}
+		State[Channel & 7U] = Params;
+		EEPROM_WriteBuffer(Offset, State);
+		gMR_ChannelParameters[Channel] = Params;
+	}
+}
+
