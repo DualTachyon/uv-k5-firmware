@@ -25,6 +25,7 @@ extern char gDTMF_String[15];
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size);
 bool DTMF_GetContact(uint8_t Index, char *pContact);
 bool DTMF_FindContact(const char *pContact, char *pResult);
+char DTMF_GetCharacter(uint8_t Code);
 
 #endif
 
