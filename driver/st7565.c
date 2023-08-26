@@ -31,7 +31,7 @@ void ST7565_DrawLine(uint8_t Column, uint8_t Line, uint16_t Size, const uint8_t 
 
 	SPI_ToggleMasterMode(&SPI0->CR, false);
 	ST7565_SelectColumnAndLine(Column + 4U, Line);
-	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_0);
+	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
 
 	if (bIsClearMode == false) {
 		for (i = 0; i < Size; i++) {
@@ -61,7 +61,7 @@ void ST7565_BlitFullScreen(void)
 
 	for (Line = 0; Line < 7; Line++) {
 		ST7565_SelectColumnAndLine(4U, Line + 1U);
-		GPIO_SetBit(&GPIOB->DATA, 9U);
+		GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
 		for (Column = 0; Column < 128; Column++) {
 			while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) != SPI_FIFOST_TFF_BITS_NOT_FULL) {
 			}
@@ -81,7 +81,7 @@ void ST7565_BlitStatusLine(void)
 	SPI_ToggleMasterMode(&SPI0->CR, false);
 	ST7565_WriteByte(0x40);
 	ST7565_SelectColumnAndLine(4, 0);
-	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_0);
+	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
 
 	for (i = 0; i < 0x80; i++) {
 		while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) != SPI_FIFOST_TFF_BITS_NOT_FULL) {
@@ -99,7 +99,7 @@ void ST7565_FillScreen(uint8_t Value)
 	SPI_ToggleMasterMode(&SPI0->CR, false);
 	for (i = 0; i < 8; i++) {
 		ST7565_SelectColumnAndLine(0, i);
-		GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_0);
+		GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
 		for (j = 0; j < 132; j++) {
 			while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) != SPI_FIFOST_TFF_BITS_NOT_FULL) {
 			}
@@ -143,17 +143,17 @@ void ST7565_Init(void)
 
 void ST7565_Configure_GPIO_B11(void)
 {
-	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_1);
+	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_RES);
 	SYSTEM_DelayMs(1);
-	GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_ST7565_1);
+	GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_ST7565_RES);
 	SYSTEM_DelayMs(20);
-	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_1);
+	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_RES);
 	SYSTEM_DelayMs(120);
 }
 
 void ST7565_SelectColumnAndLine(uint8_t Column, uint8_t Line)
 {
-	GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_ST7565_0);
+	GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
 	while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) != SPI_FIFOST_TFF_BITS_NOT_FULL) {
 	}
 	SPI0->WDR = Line + 0xB0;
@@ -168,7 +168,7 @@ void ST7565_SelectColumnAndLine(uint8_t Column, uint8_t Line)
 
 void ST7565_WriteByte(uint8_t Value)
 {
-	GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_ST7565_0);
+	GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
 	while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) != SPI_FIFOST_TFF_BITS_NOT_FULL) {
 	}
 	SPI0->WDR = Value;

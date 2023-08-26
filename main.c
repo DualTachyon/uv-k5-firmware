@@ -56,11 +56,6 @@ static void FLASHLIGHT_Init(void)
 	PORTCON_PORTC_IE = PORTCON_PORTC_IE_C5_BITS_ENABLE;
 	PORTCON_PORTC_PU = PORTCON_PORTC_PU_C5_BITS_ENABLE;
 	GPIOC->DIR |= GPIO_DIR_3_BITS_OUTPUT;
-
-	GPIO_SetBit(&GPIOC->DATA, 10);
-	GPIO_SetBit(&GPIOC->DATA, 11);
-	GPIO_SetBit(&GPIOC->DATA, 12);
-	GPIO_SetBit(&GPIOC->DATA, 13);
 }
 
 static void FLASHLIGHT_TurnOff(void)
@@ -145,7 +140,7 @@ void Main(void)
 
 		HELPER_CheckBootKey(KeyType);
 
-		GPIO_ClearBit(&GPIOA->DATA, 12);
+		GPIO_ClearBit(&GPIOA->DATA, GPIOA_PIN_VOICE_0);
 		g_2000036F = 1;
 		AUDIO_SetVoiceID(0, VOICE_ID_WELCOME);
 		Channel = gEeprom.VfoChannel[gEeprom.TX_CHANNEL] + 1;

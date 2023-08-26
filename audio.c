@@ -128,7 +128,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	SYSTEM_DelayMs(Duration);
 	BK4819_EnterTxMute();
 	SYSTEM_DelayMs(20);
-	GPIO_ClearBit(&GPIOC->DATA,4);
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 
 	g_200003B6 = 80;
 
