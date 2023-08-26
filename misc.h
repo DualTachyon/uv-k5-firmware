@@ -121,7 +121,7 @@ extern bool gIsNoaaMode;
 extern volatile bool gNextTimeslice;
 extern uint8_t gNoaaChannel;
 extern bool gUpdateDisplay;
-extern bool gIsFmRadioEnabled;
+extern uint8_t gFmRadioCountdown;
 extern uint8_t gA_Scan_Channel;
 extern uint8_t gDebounceCounter;
 extern uint8_t gDTMF_AUTO_RESET_TIME;

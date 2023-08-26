@@ -12,7 +12,7 @@ void APP_Update(void)
 	if (g_2000037E == 1) {
 		return;
 	}
-	if (gIsFmRadioEnabled) {
+	if (gFmRadioCountdown) {
 		return;
 	}
 }

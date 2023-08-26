@@ -117,7 +117,7 @@ bool gIsNoaaMode;
 volatile bool gNextTimeslice;
 uint8_t gNoaaChannel;
 bool gUpdateDisplay;
-bool gIsFmRadioEnabled;
+uint8_t gFmRadioCountdown;
 uint8_t gA_Scan_Channel;
 uint8_t gDebounceCounter;
 uint8_t gDTMF_AUTO_RESET_TIME;
