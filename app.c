@@ -1381,6 +1381,7 @@ static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHel
 			gFlagSaveSettings = false;
 		}
 		if (gFlagSaveFM) {
+			SETTINGS_SaveFM();
 			gFlagSaveFM = false;
 		}
 		if (g_200003A7 != 0) {

@@ -14,11 +14,13 @@
  *     limitations under the License.
  */
 
+#include <stdbool.h>
 #include "bsp/dp32g030/dma.h"
 #include "bsp/dp32g030/syscon.h"
 #include "bsp/dp32g030/uart.h"
 #include "driver/uart.h"
 
+static bool UART_IsLogEnabled;
 uint8_t UART_DMA_Buffer[256];
 
 void UART_Init(void)
@@ -91,6 +93,13 @@ void UART_Send(const void *pBuffer, uint32_t Size)
 		UART1->TDR = pData[i];
 		while ((UART1->IF & UART_IF_TXFIFO_FULL_MASK) != UART_IF_TXFIFO_FULL_BITS_NOT_SET) {
 		}
+	}
+}
+
+void UART_LogSend(const void *pBuffer, uint32_t Size)
+{
+	if (UART_IsLogEnabled) {
+		UART_Send(pBuffer, Size);
 	}
 }
 
