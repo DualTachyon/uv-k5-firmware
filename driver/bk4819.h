@@ -40,6 +40,14 @@ enum BK4819_FilterBandwidth_t {
 
 typedef enum BK4819_FilterBandwidth_t BK4819_FilterBandwidth_t;
 
+enum BK4819_CssScanResult_t {
+	BK4819_CSS_RESULT_NOT_FOUND = 0U,
+	BK4819_CSS_RESULT_CTCSS = 1U,
+	BK4819_CSS_RESULT_CDCSS = 2U,
+};
+
+typedef enum BK4819_CssScanResult_t BK4819_CssScanResult_t;
+
 extern bool gThisCanEnable_BK4819_Rxon;
 
 void BK4819_Init(void);
@@ -101,6 +109,14 @@ void BK4819_EnableCDCSS(void);
 void BK4819_EnableCTCSS(void);
 
 uint16_t BK4819_GetRSSI(void);
+
+bool BK4819_GetFrequencyScanResult(int32_t *pFrequency);
+BK4819_CssScanResult_t BK4819_GetCxCSSScanResult(int32_t *pCdcssFreq, uint16_t *pCtcssFreq);
+void BK4819_DisableFrequencyScan(void);
+void BK4819_EnableFrequencyScan(void);
+void BK4819_SetScanFrequency(int32_t Frequency);
+
+void BK4819_Disable(void);
 
 #endif
 

@@ -732,3 +732,69 @@ uint16_t BK4819_GetRSSI(void)
 	return BK4819_GetRegister(BK4819_REG_67) & 0x01FF;
 }
 
+bool BK4819_GetFrequencyScanResult(int32_t *pFrequency)
+{
+	uint16_t High, Low;
+	bool Finished;
+
+	High = BK4819_GetRegister(BK4819_REG_0D);
+	Finished = (High & 0x8000) == 0;
+	if (Finished) {
+		Low = BK4819_GetRegister(BK4819_REG_0E);
+		*pFrequency = ((High & 0x7FF) << 16) | Low;
+	}
+
+	return Finished;
+}
+
+BK4819_CssScanResult_t BK4819_GetCxCSSScanResult(int32_t *pCdcssFreq, uint16_t *pCtcssFreq)
+{
+	uint16_t High, Low;
+
+	High = BK4819_GetRegister(BK4819_REG_69);
+	if ((High & 0x8000) == 0) {
+		Low = BK4819_GetRegister(BK4819_REG_6A);
+		*pCdcssFreq = ((High & 0xFFF) << 12) | (Low & 0xFFF);
+		return BK4819_CSS_RESULT_CDCSS;
+	}
+
+	Low = BK4819_GetRegister(BK4819_REG_68);
+	if ((Low & 0x8000) == 0) {
+		*pCtcssFreq = (Low & 0x1FFF) * 4843 / 10000;
+		return BK4819_CSS_RESULT_CTCSS;
+	}
+
+	return BK4819_CSS_RESULT_NOT_FOUND;
+}
+
+void BK4819_DisableFrequencyScan(void)
+{
+	BK4819_WriteRegister(BK4819_REG_32, 0x0244);
+}
+
+void BK4819_EnableFrequencyScan(void)
+{
+	BK4819_WriteRegister(BK4819_REG_32, 0x0245);
+}
+
+void BK4819_SetScanFrequency(int32_t Frequency)
+{
+	BK4819_SetFrequency(Frequency);
+	BK4819_WriteRegister(BK4819_REG_51, 0
+		| BK4819_REG_51_DISABLE_CxCSS
+		| BK4819_REG_51_GPIO6_PIN2_NORMAL
+		| BK4819_REG_51_TX_CDCSS_POSITIVE
+		| BK4819_REG_51_MODE_CDCSS
+		| BK4819_REG_51_CDCSS_23_BIT
+		| BK4819_REG_51_1050HZ_NO_DETECTION
+		| BK4819_REG_51_AUTO_CDCSS_BW_DISABLE
+		| BK4819_REG_51_AUTO_CTCSS_BW_DISABLE
+		);
+	BK4819_RX_TurnOn();
+}
+
+void BK4819_Disable(void)
+{
+	BK4819_WriteRegister(BK4819_REG_30, 0);
+}
+
