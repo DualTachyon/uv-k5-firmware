@@ -463,7 +463,7 @@ void RADIO_ConfigureCrossTX(void)
 
 void RADIO_SetupRegisters(bool bSwitchToFunction0)
 {
-	uint8_t Bandwidth;
+	BK4819_FilterBandwidth_t Bandwidth;
 	uint16_t Status;
 	uint16_t InterruptMask;
 	uint32_t Frequency;
@@ -473,8 +473,8 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
 
 	Bandwidth = gInfoCHAN_A->CHANNEL_BANDWIDTH;
-	if (Bandwidth != 0) { // != WIDE
-		Bandwidth = 1; // NARROW
+	if (Bandwidth != BK4819_FILTER_BW_WIDE) {
+		Bandwidth = BK4819_FILTER_BW_NARROW;
 	}
 	BK4819_SetFilterBandwidth(Bandwidth);
 
