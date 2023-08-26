@@ -313,7 +313,7 @@ void GUI_PasswordScreen(void)
 						break;
 					}
 				}
-				//DAT_2000042c = 0;
+				gKeyBeingHeld = false;
 			}
 		} else {
 			gDebounceCounter = 0;
@@ -1213,7 +1213,6 @@ static void DisplayMenu(void)
 
 			NUMBER_ToDigits((uint8_t)gSubMenuSelection, String);
 			Offset = (gMenuCursor == MENU_D_LIST) ? 2 : 3;
-			// TODO: Double check r1
 			GUI_DisplaySmallDigits(Offset, String + (8 - Offset), 105, 0);
 	}
 
