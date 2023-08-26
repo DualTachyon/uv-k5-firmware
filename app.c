@@ -1375,6 +1375,7 @@ static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHel
 	}
 	if (bKeyPressed == false) {
 		if (g_200003A5 != 0) {
+			SETTINGS_SaveVfoIndices();
 			g_200003A5 = 0;
 		}
 		if (gFlagSaveSettings) {

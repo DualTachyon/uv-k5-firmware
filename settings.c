@@ -33,13 +33,33 @@ void SETTINGS_SaveFM(void)
 	} State;
 
 	UART_LogSend("sFm\r\n", 5);
+
 	memset(&State, 0xFF, sizeof(State));
 	State.Channel = gEeprom.FM_CurrentChannel;
 	State.Frequency = gEeprom.FM_CurrentFrequency;
 	State.IsChannelSelected = gEeprom.FM_IsChannelSelected;
+
 	EEPROM_WriteBuffer(0x0E88, &State);
 	for (i = 0; i < 5; i++) {
 		EEPROM_WriteBuffer(0x0E40 + (i * 8), &gFM_Channels[i * 4]);
 	}
+}
+
+void SETTINGS_SaveVfoIndices(void)
+{
+	uint8_t State[8];
+
+	UART_LogSend("sidx\r\n", 6);
+
+	State[0] = gEeprom.VfoChannel[0];
+	State[1] = gEeprom.EEPROM_0E81_0E84[0];
+	State[2] = gEeprom.EEPROM_0E82_0E85[0];
+	State[3] = gEeprom.VfoChannel[1];
+	State[4] = gEeprom.EEPROM_0E81_0E84[1];
+	State[5] = gEeprom.EEPROM_0E82_0E85[1];
+	State[6] = gEeprom.EEPROM_0E86;
+	State[7] = gEeprom.EEPROM_0E87;
+
+	EEPROM_WriteBuffer(0x0E80, State);
 }
 
