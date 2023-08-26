@@ -506,8 +506,10 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, true);
 	BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
 
-	// SQUELCH_LOST SQUELCH_FOUND
-	InterruptMask = 0x000C;
+	InterruptMask = 0
+		| BK4819_REG_3F_SQUELCH_FOUND
+		| BK4819_REG_3F_SQUELCH_LOST
+		;
 
 	if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
 		if (gInfoCHAN_A->IsAM != true) {
@@ -524,20 +526,33 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			case CODE_TYPE_DIGITAL:
 			case CODE_TYPE_REVERSE_DIGITAL:
 				BK4819_SetCDCSSCodeWord(DCS_GetGolayCodeWord(CodeType, CodeWord));
-				// SQUELCH_LOST SQUELCH_FOUND CDCSS_LOST CDCSS_FOUND CTCSS/CDCSS_TAIL_FOUND
-				InterruptMask = 0x070C;
+				InterruptMask = 0
+					| BK4819_REG_3F_CxCSS_TAIL
+					| BK4819_REG_3F_CDCSS_FOUND
+					| BK4819_REG_3F_CDCSS_LOST
+					| BK4819_REG_3F_SQUELCH_FOUND
+					| BK4819_REG_3F_SQUELCH_LOST
+					;
 				break;
 			case CODE_TYPE_CONTINUOUS_TONE:
 				BK4819_SetCTCSSBaudRate(CTCSS_Options[CodeWord]);
 				BK4819_Set55HzTailDetection();
-				// SQUELCH_LOST SQUELCH_FOUND CTCSS_LOST CTCSS_FOUND CTCSS/CDCSS_TAIL_FOUND
-				InterruptMask = 0x04CC;
+				InterruptMask = 0
+					| BK4819_REG_3F_CxCSS_TAIL
+					| BK4819_REG_3F_CTCSS_FOUND
+					| BK4819_REG_3F_CTCSS_LOST
+					| BK4819_REG_3F_SQUELCH_FOUND
+					| BK4819_REG_3F_SQUELCH_LOST
+					;
 				break;
 			default:
 				BK4819_SetCTCSSBaudRate(670);
 				BK4819_Set55HzTailDetection();
-				// SQUELCH_LOST SQUELCH_FOUND CTCSS/CDCSS_TAIL_FOUND
-				InterruptMask = 0x040C;
+				InterruptMask = 0
+					| BK4819_REG_3F_CxCSS_TAIL
+					| BK4819_REG_3F_SQUELCH_FOUND
+					| BK4819_REG_3F_SQUELCH_LOST
+					;
 				break;
 			}
 			if (gInfoCHAN_A->SCRAMBLING_TYPE == 0 || gSetting_ScrambleEnable == false) {
@@ -548,14 +563,20 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 		}
 	} else {
 		BK4819_SetCTCSSBaudRate(2625);
-		// SQUELCH_LOST SQUELCH_FOUND CTCSS_LOST CTCSS_FOUND
-		InterruptMask = 0x00CC;
+		InterruptMask = 0
+			| BK4819_REG_3F_CTCSS_FOUND
+			| BK4819_REG_3F_CTCSS_LOST
+			| BK4819_REG_3F_SQUELCH_FOUND
+			| BK4819_REG_3F_SQUELCH_LOST
+			;
 	}
 
 	if (gEeprom.VOX_SWITCH == true && gFmMute != true && gCrossTxRadioInfo->CHANNEL_SAVE < 207 && gCrossTxRadioInfo->IsAM != true) {
 		BK4819_EnableVox(gEeprom.VOX1_THRESHOLD, gEeprom.VOX0_THRESHOLD);
-		// VOX_LOST VOX_FOUND
-		InterruptMask |= 0x0030;
+		InterruptMask |= 0
+			| BK4819_REG_3F_VOX_FOUND
+			| BK4819_REG_3F_VOX_LOST
+			;
 	} else {
 		BK4819_DisableVox();
 	}
@@ -563,8 +584,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 		BK4819_DisableDTMF();
 	} else {
 		BK4819_EnableDTMF();
-		// DTMF/5TONE_FOUND
-		InterruptMask |= 0x0800;
+		InterruptMask |= BK4819_REG_3F_DTMF_5TONE_FOUND;
 	}
 	BK4819_WriteRegister(BK4819_REG_3F, InterruptMask);
 
