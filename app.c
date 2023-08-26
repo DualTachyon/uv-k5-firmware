@@ -580,6 +580,47 @@ void APP_Update(void)
 
 void APP_TimeSlice10ms(void)
 {
+	gFlashLightBlinkCounter++;
+#if 0
+	if (UART_CheckForCommand()) {
+		disableIRQinterrupts();
+		ProcessUartCommand();
+		enableIRQinterrupts();
+	}
+#endif
+	if (g_2000037E == 1) {
+		return;
+	}
+
+	if (gCurrentFunction != FUNCTION_POWER_SAVE || gThisCanEnable_BK4819_Rxon == false) {
+		//AIRCOPY_Receive();
+	}
+	if (gCurrentFunction != FUNCTION_TRANSMIT) {
+		if (g_2000036F == 1) {
+			GUI_DisplayStatusLine();
+			g_2000036F = 0;
+		}
+		if (gUpdateDisplay) {
+			GUI_DisplayScreen();
+			gUpdateDisplay = false;
+		}
+	}
+
+	// Skipping authentic device checks
+
+	if (gFmRadioCountdown != 0) {
+		return;
+	}
+
+	if (gFlashLightState == FLASHLIGHT_BLINK && (gFlashLightBlinkCounter & 15U) == 0) {
+		GPIO_FlipBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
+	}
+	if (g_200003B6 != 0) {
+		g_200003B6--;
+	}
+	if (g_200003B8 != 0) {
+		g_200003B8--;
+	}
 }
 
 void APP_TimeSlice500ms(void)
