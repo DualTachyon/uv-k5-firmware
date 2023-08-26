@@ -79,7 +79,7 @@ void BOARD_GPIO_Init(void)
 		| GPIO_DIR_5_MASK
 		);
 
-	GPIO_SetBit(&GPIOB->DATA, 15);
+	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_BK1080);
 }
 
 void BOARD_PORTCON_Init(void)
