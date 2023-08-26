@@ -22,6 +22,7 @@
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
+#include "sram-overlay.h"
 
 static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHeld);
 void FUN_000069f8(FUNCTION_Type_t Function);
@@ -1208,7 +1209,7 @@ void APP_TimeSlice500ms(void)
 		if ((gBatteryCurrent < 0x1f5) && (gBatteryCurrentVoltage <= gBatteryCalibration[3])) {
 			return;
 		}
-		//Command_05DD_RebootChip();
+		overlay_FLASH_RebootToBootloader();
 		return;
 	}
 
