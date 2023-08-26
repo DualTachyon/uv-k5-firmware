@@ -1266,10 +1266,10 @@ static void DisplayScanner(void)
 
 	if (gScanState < 2 || g_2000045C != 1) {
 		sprintf(String, "CTC:******");
-	} else if (g_2000045A == 1) {
-		sprintf(String, "CTC:%.1fHz", CTCSS_Options[g_2000045B + 1] * 0.1);
+	} else if (g_CxCSS_Type == 1) {
+		sprintf(String, "CTC:%.1fHz", CTCSS_Options[g_CxCSS_Index] * 0.1);
 	} else {
-		sprintf(String, "DCS:D%03oN", DCS_Options[g_2000045B]);
+		sprintf(String, "DCS:D%03oN", DCS_Options[g_CxCSS_Index]);
 	}
 	GUI_PrintString(String, 2, 127, 3, 8, 0);
 	memset(String, 0, sizeof(String));
