@@ -56,6 +56,8 @@ enum GPIOC_PINS {
 	GPIOC_PIN_FLASHLIGHT = 3,
 
 	GPIOC_PIN_AUDIO_PATH = 4,
+
+	GPIOC_PIN_PTT = 5,
 };
 
 void GPIO_ClearBit(volatile uint32_t *pReg, uint8_t Bit);
