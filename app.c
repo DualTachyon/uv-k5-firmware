@@ -13,6 +13,7 @@
 #include "driver/st7565.h"
 #include "driver/system.h"
 #include "dtmf.h"
+#include "external/printf/printf.h"
 #include "fm.h"
 #include "frequencies.h"
 #include "functions.h"
@@ -62,6 +63,117 @@ static void FUN_00005144(void)
 	FUNCTION_Select(FUNCTION_3);
 }
 
+void FUN_00007fd0(void)
+{
+	char String[20];
+	uint8_t Offset;
+
+	if (!g_200003AA) {
+		return;
+	}
+
+	g_200003AA = 0;
+
+	if (gCurrentStep || g_20000381) {
+		return;
+	}
+
+	if (!gInfoCHAN_A->DTMF_DECODING_ENABLE && !gSetting_KILLED) {
+		return;
+	}
+
+	if (8 < gDTMF_WriteIndex) {
+		Offset = gDTMF_WriteIndex - 9;
+		sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, gEeprom.KILL_CODE);
+		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, true)) {
+			if (gEeprom.PERMIT_REMOTE_KILL) {
+				gSetting_KILLED = true;
+				//SETTINGS_SaveSettings();
+				g_200003BE = 2;
+				if (gFmMute == true) {
+					FM_TurnOff();
+					GUI_SelectNextDisplay(DISPLAY_MAIN);
+				}
+			} else {
+				g_200003BE = 0;
+			}
+			g_200003BC = 0;
+			gUpdateDisplay = true;
+			g_2000036F = true;
+			return;
+		} else {
+			sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, gEeprom.REVIVE_CODE);
+			if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, true)) {
+				gSetting_KILLED = false;
+				//SETTINGS_SaveSettings();
+				g_200003BE = 2;
+				g_200003BC = 0;
+				gUpdateDisplay = true;
+				g_2000036F = true;
+				return;
+			}
+		}
+	}
+
+	if (1 < gDTMF_WriteIndex) {
+		if (DTMF_CompareMessage(gDTMF_Received + gDTMF_WriteIndex - 2, "AB", 2, true)) {
+			g_CalloutAndDTMF_State = 1;
+			gUpdateDisplay = true;
+			return;
+		}
+	}
+	if (g_200003BC == 1 && g_20000438 == 0 && 8 < gDTMF_WriteIndex) {
+		Offset = gDTMF_WriteIndex - 9;
+		sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
+		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, false)) {
+			g_CalloutAndDTMF_State = 2;
+			gUpdateDisplay = true;
+		}
+	}
+	if (gSetting_KILLED == true) {
+		return;
+	}
+	if (g_200003BC != 0) {
+		return;
+	}
+	if (gDTMF_WriteIndex < 7) {
+		return;
+	}
+	Offset = gDTMF_WriteIndex - 7;
+	sprintf(String, "%s%c", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE);
+	g_20000439 = false;
+	if (!DTMF_CompareMessage(gDTMF_Received + Offset, String, 4, true)) {
+		return;
+	}
+	g_200003BC = 2;
+	memcpy(gDTMF_Contact1, gDTMF_Received + Offset, 3);
+	memcpy(gDTMF_Contact0, gDTMF_Received + Offset + 4, 3);
+
+	gUpdateDisplay = true;
+
+	switch (gEeprom.DTMF_DECODE_RESPONSE) {
+	case 3:
+		g_200003C1 = true;
+		g_200003C4 = 20;
+		// Fallthrough
+	case 2:
+		g_200003BE = 3;
+		break;
+	case 1:
+		g_200003C1 = true;
+		g_200003C4 = 20;
+		break;
+	default:
+		g_200003C1 = false;
+		g_200003BE = 0;
+		break;
+	}
+
+	if (g_20000439) {
+		g_200003BE = 0;
+	}
+}
+
 void FUN_000051e8(void)
 {
 	bool bFlag;
@@ -90,7 +202,7 @@ void FUN_000051e8(void)
 			return;
 		}
 	}
-	//FUN_00007fd0();
+	FUN_00007fd0();
 	if (gCurrentStep == 0 && g_20000381 == 0) {
 		if (gInfoCHAN_A->DTMF_DECODING_ENABLE == true || gSetting_KILLED == true) {
 			if (g_200003BC == 0) {
@@ -104,6 +216,146 @@ void FUN_000051e8(void)
 		}
 	}
 	FUN_000069f8(FUNCTION_4);
+}
+
+void FUN_000052f0(void)
+{
+	uint8_t Value;
+
+	Value = 0;
+	if (gSystickFlag10) {
+		Value = 1;
+		goto LAB_0000544c;
+	}
+
+	if (gCurrentStep != 0 && (g_20000410 - 200) < 7) {
+		if (g_SquelchLost) {
+			return;
+		}
+		Value = 1;
+		goto LAB_0000544c;
+	}
+
+	switch (gCopyOfCodeType) {
+	case CODE_TYPE_CONTINUOUS_TONE:
+		if (g_20000375 == 1) {
+			if (gSystickCountdown4 == 0) {
+				g_20000375 = 0;
+				g_20000376 = 0;
+				Value = 1;
+				goto LAB_0000544c;
+			}
+		}
+		break;
+	case CODE_TYPE_DIGITAL:
+	case CODE_TYPE_REVERSE_DIGITAL:
+		if (g_20000376 == 1) {
+			if (gSystickCountdown3 == 0) {
+				g_20000375 = 0;
+				g_20000376 = 0;
+				Value = 1;
+				goto LAB_0000544c;
+			}
+		}
+		break;
+	default:
+		break;
+	}
+	if (g_SquelchLost) {
+		if (g_20000377 == 0 && gInfoCHAN_A->CHANNEL_SAVE < 207) {
+			switch (gCopyOfCodeType) {
+			case CODE_TYPE_CONTINUOUS_TONE:
+				if (g_CTCSS_Lost) {
+					g_20000375 = 0;
+				} else if (g_20000375 == 0) {
+					g_20000375 = 1;
+					gSystickCountdown4 = 100;
+				}
+				if (g_CxCSS_TAIL_Found) {
+					Value = 2;
+					g_CxCSS_TAIL_Found = false;
+				}
+				break;
+			case CODE_TYPE_OFF:
+				if (gEeprom.SQUELCH_LEVEL != 0) {
+					if (g_CxCSS_TAIL_Found) {
+						Value = 2;
+						g_CxCSS_TAIL_Found = false;
+					}
+				}
+				break;
+			case CODE_TYPE_DIGITAL:
+			case CODE_TYPE_REVERSE_DIGITAL:
+				if (g_CDCSS_Lost && gCDCSSCodeReceived == 1) {
+					g_20000376 = 0;
+				} else if (g_20000376 == 0) {
+					g_20000376 = 1;
+					gSystickCountdown3 = 100;
+				}
+				if (g_CxCSS_TAIL_Found) {
+					if (BK4819_GetCTCSSPhaseShift() == 1) {
+						Value = 2;
+					}
+					g_CxCSS_TAIL_Found = false;
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	} else {
+		Value = 1;
+	}
+
+	if (g_20000377 == 0 && Value == 0 && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION) {
+		switch (gCopyOfCodeType) {
+		case CODE_TYPE_DIGITAL:
+		case CODE_TYPE_REVERSE_DIGITAL:
+			if (BK4819_GetCTCSSPhaseShift() == 1) {
+				gNextTimeslice40ms = false;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	gNextTimeslice40ms = false;
+
+LAB_0000544c:
+	switch (Value) {
+	case 1:
+		RADIO_SetupRegisters(true);
+		if (206 < gInfoCHAN_A->CHANNEL_SAVE) {
+			gSystickCountdown2 = 300;
+		}
+		gUpdateDisplay = true;
+		if (gCurrentStep) {
+			switch (gEeprom.SCAN_RESUME_MODE) {
+			case SCAN_RESUME_CO:
+				ScanPauseDelayIn10msec = 360;
+				gSystickFlag9 = false;
+				break;
+			case SCAN_RESUME_SE:
+				//FUN_0000773c();
+				break;
+			}
+		}
+		break;
+	case 2:
+		if (gEeprom.TAIL_NOTE_ELIMINATION != true) {
+			gNextTimeslice40ms = false;
+			break;
+		}
+		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+		g_20000342 = 20;
+		gSystickFlag10 = false;
+		g_2000036B = 0;
+		g_20000377 = 1;
+		break;
+	default:
+		break;
+	}
 }
 
 void FUN_0000510c(void)
@@ -121,7 +373,7 @@ void FUN_0000510c(void)
 		FUN_000051e8();
 		break;
 	case FUNCTION_4:
-		//FUN_000052f0();
+		FUN_000052f0();
 		break;
 	default:
 		break;
@@ -143,14 +395,14 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 			case SCAN_RESUME_TO:
 				if (gScanPauseMode == 0) {
 					ScanPauseDelayIn10msec = 500;
-					gSystickFlag9 = 0;
+					gSystickFlag9 = false;
 					gScanPauseMode = 1;
 				}
 				break;
 			case SCAN_RESUME_CO:
 			case SCAN_RESUME_SE:
 				ScanPauseDelayIn10msec = 0;
-				gSystickFlag9 = 0;
+				gSystickFlag9 = false;
 				break;
 			}
 			g_20000413 = 1;
@@ -161,7 +413,7 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 			gInfoCHAN_A->pDCS_Reverse->Frequency = NoaaFrequencyTable[gNoaaChannel];
 			gEeprom.VfoChannel[gEeprom.RX_CHANNEL] = gInfoCHAN_A->CHANNEL_SAVE;
 			g_20000356 = 500;
-			gSystickFlag8 = 0;
+			gSystickFlag8 = false;
 		}
 		if (g_20000381 != 0) {
 			g_20000381 = 2;
@@ -169,7 +421,7 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 		if (gCurrentStep == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 			g_2000041F = 1;
 			g_2000033A = 360;
-			gSystickFlag7 = 0;
+			gSystickFlag7 = false;
 		}
 		if (gInfoCHAN_A->IsAM) {
 			BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
@@ -263,7 +515,7 @@ void FUN_00007dd4(void)
 		RADIO_SetupRegisters(true);
 		gUpdateDisplay = true;
 	}
-	ScanPauseDelayIn10msec = 0x14;
+	ScanPauseDelayIn10msec = 20;
 	g_20000413 = 0;
 	if (bEnabled) {
 		g_20000415++;
@@ -384,7 +636,7 @@ static int FM_ChecksChannelValid_and_FrequencyDeviation(uint16_t Frequency, uint
 			if ((gFM_FrequencyDeviation & 0x800) != 0) {
 				goto Bail;
 			}
-			if (gFM_FrequencyDeviation < 0x14) {
+			if (gFM_FrequencyDeviation < 20) {
 				goto Bail;
 			}
 		}
@@ -415,7 +667,7 @@ void FUN_0000752c(uint16_t Frequency, uint8_t param_2, int param_3)
 	} else {
 		g_2000034C = 10;
 	}
-	gSystickFlag11 = 0;
+	gSystickFlag11 = false;
 	g_20000390 = param_2;
 	g_20000427 = 0;
 	gAskToSave = false;
@@ -446,7 +698,7 @@ void PlayFMRadio(void)
 	BK1080_SetFrequency(gEeprom.FM_FrequencyToPlay);
 	//StoreFMSettingsToEeprom();
 	g_2000034C = 0;
-	gSystickFlag11 = 0;
+	gSystickFlag11 = false;
 	gAskToSave = false;
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	g_2000036B = 1;
@@ -550,8 +802,8 @@ void APP_CheckRadioInterrupts(void)
 					gBatterySave = 20;
 					gBatterySaveCountdownExpired = 0;
 				}
-				if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && (gSystickFlag7 || (gSystickFlag7 == false && g_2000033A < 0x14))) {
-					g_2000033A = 0x14;
+				if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && (gSystickFlag7 || (gSystickFlag7 == false && g_2000033A < 20))) {
+					g_2000033A = 20;
 					gSystickFlag7 = false;
 				}
 			}
@@ -576,7 +828,6 @@ void APP_CheckRadioInterrupts(void)
 			}
 			//AIRCOPY_StorePacket();
 		}
-		GPIO_FlipBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
 	}
 }
 
@@ -606,7 +857,7 @@ void APP_Update(void)
 		return;
 	}
 
-	if (gScreenToDisplay != DISPLAY_SCANNER && gCurrentStep != 0 && gSystickFlag9 == 1 && !gPttIsPressed && gVoiceWriteIndex == 0) {
+	if (gScreenToDisplay != DISPLAY_SCANNER && gCurrentStep != 0 && gSystickFlag9 && !gPttIsPressed && gVoiceWriteIndex == 0) {
 		if (g_20000410 - 200 < 7) {
 			if (gCurrentFunction == FUNCTION_3) {
 				FUN_000069f8(FUNCTION_4);
