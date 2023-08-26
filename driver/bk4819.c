@@ -853,3 +853,24 @@ void BK4819_SendFSKData(uint16_t *pData)
 	BK4819_ResetFSK();
 }
 
+void BK4819_PrepareFSKReceive(void)
+{
+	BK4819_ResetFSK();
+	BK4819_WriteRegister(BK4819_REG_02, 0);
+	BK4819_WriteRegister(BK4819_REG_3F, 0);
+	BK4819_RX_TurnOn();
+	BK4819_WriteRegister(BK4819_REG_3F, 0
+			| BK4819_REG_3F_FSK_RX_FINISHED
+			| BK4819_REG_3F_FSK_FIFO_ALMOST_FULL
+			);
+	// Clear RX FIFO
+	// FSK Preamble Length 7 bytes
+	// FSK SyncLength Selection
+	BK4819_WriteRegister(BK4819_REG_59, 0x4068);
+	// Enable FSK Scramble
+	// Enable FSK RX
+	// FSK Preamble Length 7 bytes
+	// FSK SyncLength Selection
+	BK4819_WriteRegister(BK4819_REG_59, 0x3068);
+}
+

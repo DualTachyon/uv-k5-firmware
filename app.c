@@ -825,9 +825,9 @@ void APP_CheckRadioInterrupts(void)
 			uint8_t i;
 
 			for (i = 0; i < 4; i++) {
-				//SomeFSKData[gFSKWriteIndex++] = BK4819_GetRegister(BK4819_REG_5F);
+				g_FSK_Buffer[gFSKWriteIndex++] = BK4819_GetRegister(BK4819_REG_5F);
 			}
-			//AIRCOPY_StorePacket();
+			AIRCOPY_StorePacket();
 		}
 	}
 }

@@ -50,3 +50,47 @@ void AIRCOPY_SendMessage(void)
 	gAircopySendCountdown = 0x1e;
 }
 
+void AIRCOPY_StorePacket(void)
+{
+	uint16_t Status;
+
+	if (gFSKWriteIndex < 36) {
+		return;
+	}
+
+	gFSKWriteIndex = 0;
+	gUpdateDisplay = true;
+	Status = BK4819_GetRegister(BK4819_REG_0B);
+	BK4819_PrepareFSKReceive();
+	if (Status & 0x0010U && g_FSK_Buffer[0] == 0xABCD && g_FSK_Buffer[35] == 0xDCBA) {
+		uint16_t CRC;
+		uint8_t i;
+
+		for (i = 0; i < 34; i++) {
+			g_FSK_Buffer[i + 1] ^= Obfuscation[i % 8];
+		}
+
+		CRC = CRC_Calculate(&g_FSK_Buffer[1], 2 + 64);
+		if (g_FSK_Buffer[34] == CRC) {
+			const uint16_t *pData;
+			uint16_t Offset;
+
+			Offset = g_FSK_Buffer[1];
+			if (Offset < 0x1E00) {
+				pData = &g_FSK_Buffer[2];
+				for (i = 0; i < 8; i++) {
+					EEPROM_WriteBuffer(Offset, pData);
+					pData += 4;
+					Offset += 8;
+				}
+				if (Offset == 0x1E00) {
+					gAircopyState = AIRCOPY_COMPLETE;
+				}
+				gAirCopyBlockNumber++;
+				return;
+			}
+		}
+	}
+	gErrorsDuringAirCopy++;
+}
+

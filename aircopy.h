@@ -35,6 +35,7 @@ extern uint8_t gAirCopyIsSendMode;
 extern uint16_t g_FSK_Buffer[36];
 
 void AIRCOPY_SendMessage(void);
+void AIRCOPY_StorePacket(void);
 
 #endif
 
