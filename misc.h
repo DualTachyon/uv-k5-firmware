@@ -120,6 +120,7 @@ extern bool gPttIsPressed;
 extern uint8_t gPttDebounceCounter;
 extern uint8_t gDTMF_WriteIndex;
 extern uint8_t g_20000438;
+extern bool g_20000439;
 extern uint8_t gMenuListCount;
 extern uint8_t g_20000442;
 extern uint8_t g_20000458;

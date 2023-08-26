@@ -18,6 +18,8 @@
 #include <string.h>
 #include "driver/eeprom.h"
 #include "dtmf.h"
+#include "misc.h"
+#include "settings.h"
 
 char gDTMF_String[15];
 
@@ -98,5 +100,21 @@ char DTMF_GetCharacter(uint8_t Code)
 	}
 
 	return -1;
+}
+
+bool DTMF_CompareMessage(const char *pDTMF, const char *pTemplate, uint8_t Size, bool bFlag)
+{
+	uint8_t i;
+
+	for (i = 0; i < Size; i++) {
+		if (pDTMF[i] != pTemplate[i]) {
+			if (!bFlag || pDTMF[i] != gEeprom.DTMF_GROUP_CALL_CODE) {
+				return false;
+			}
+			g_20000439 = true;
+		}
+	}
+
+	return true;
 }
 

@@ -112,6 +112,7 @@ bool gPttIsPressed;
 uint8_t gPttDebounceCounter;
 uint8_t gDTMF_WriteIndex;
 uint8_t g_20000438;
+bool g_20000439;
 uint8_t gMenuListCount;
 uint8_t g_20000442;
 uint8_t g_20000458;
