@@ -16,7 +16,9 @@
 
 #include "dcs.h"
 
-const uint16_t CTCSS_Options[50] = {
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+
+const int16_t CTCSS_Options[50] = {
 	0x029E, 0x02B5, 0x02CF, 0x02E8,
 	0x0302, 0x031D, 0x0339, 0x0356,
 	0x0375, 0x0393, 0x03B4, 0x03CE,
@@ -32,7 +34,7 @@ const uint16_t CTCSS_Options[50] = {
 	0x09C7, 0x09ED,
 };
 
-const uint16_t DCS_Options[104] = {
+const int16_t DCS_Options[104] = {
 	0x0013, 0x0015, 0x0016, 0x0019,
 	0x001A, 0x001E, 0x0023, 0x0027,
 	0x0029, 0x002B, 0x002C, 0x0035,
@@ -61,7 +63,7 @@ const uint16_t DCS_Options[104] = {
 	0x01DA, 0x01DC, 0x01E3, 0x01EC,
 };
 
-uint32_t DCS_CalculateGolay(uint32_t CodeWord)
+static uint32_t DCS_CalculateGolay(uint32_t CodeWord)
 {
 	uint32_t Word;
 	uint8_t i;
@@ -86,5 +88,56 @@ uint32_t DCS_GetGolayCodeWord(DCS_CodeType_t CodeType, uint8_t Option)
 	}
 
 	return Code;
+}
+
+uint8_t DCS_GetCdcssIndex(uint32_t Code)
+{
+	uint8_t i;
+
+	for (i = 0; i < 23; i++) {
+		uint32_t Shift;
+
+		if (((Code >> 9) & 0x7U) == 4) {
+			uint8_t j;
+
+			for (j = 0; j < ARRAY_SIZE(DCS_Options); j++) {
+				if (DCS_Options[j] == (Code & 0x1FF)) {
+					if (DCS_GetGolayCodeWord(2, j) == Code) {
+						return j;
+					}
+				}
+			}
+		}
+		Shift = Code >> 1;
+		if (Code & 1U) {
+			Shift |= 0x400000U;
+		}
+		Code = Shift;
+	}
+
+	return 0xFF;
+}
+
+uint8_t DCS_GetCtcssIndex(uint16_t Code)
+{
+	uint8_t i;
+	uint16_t Smallest;
+	uint8_t Result = 0xFF;
+
+	Smallest = ARRAY_SIZE(CTCSS_Options);
+	for (i = 0; i < ARRAY_SIZE(CTCSS_Options); i++) {
+		int16_t Delta;
+
+		Delta = (int16_t)Code - CTCSS_Options[i];
+		if (Delta < 0) {
+			Delta = -(Code - CTCSS_Options[i]);
+		}
+		if (Delta < Smallest) {
+			Smallest = Delta;
+			Result = i;
+		}
+	}
+
+	return Result;
 }
 
