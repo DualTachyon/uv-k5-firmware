@@ -915,14 +915,13 @@ void APP_Update(void)
 	}
 
 	if (gSystickFlag5) {
-		if (gEeprom.BATTERY_SAVE == 0 || gCurrentStep != 0 || g_20000381 != 0 || gFmMute != false || gPttIsPressed || gScreenToDisplay != DISPLAY_MAIN || gKeyBeingHeld	 != 0 || g_200003BC != 0) {
+		if (gEeprom.BATTERY_SAVE == 0 || gCurrentStep || g_20000381 || gFmMute || gPttIsPressed || gScreenToDisplay != DISPLAY_MAIN || gKeyBeingHeld || g_200003BC) {
 			g_2000032E = 1000;
 		} else {
-			// TODO: Double check polarity
-			if ((206 < gEeprom.VfoChannel[0] || 206 < gEeprom.VfoChannel[1]) && gIsNoaaMode) {
-				g_2000032E = 1000;
-			} else {
+			if ((gEeprom.VfoChannel[0] < 207 && gEeprom.VfoChannel[1] < 207) || !gIsNoaaMode) {
 				FUNCTION_Select(FUNCTION_POWER_SAVE);
+			} else {
+				g_2000032E = 1000;
 			}
 		}
 		gSystickFlag5 = false;
