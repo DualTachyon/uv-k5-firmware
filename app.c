@@ -1081,6 +1081,97 @@ void APP_TimeSlice10ms(void)
 			GUI_SelectNextDisplay(DISPLAY_FM);
 		}
 	}
+	if (gScreenToDisplay == DISPLAY_SCANNER) {
+		int32_t Result;
+		int32_t Delta;
+		BK4819_CssScanResult_t ScanResult;
+		uint16_t CtcssFreq;
+
+		if (g_2000045D != 0) {
+			g_2000045D--;
+			APP_CheckKeys();
+			return;
+		}
+		if (g_20000461 != 0) {
+			APP_CheckKeys();
+			return;
+		}
+
+		switch (gScanState) {
+		case 0:
+			if (!BK4819_GetFrequencyScanResult(&Result)) {
+				break;
+			}
+
+			Delta = Result - gScanFrequency;
+			gScanFrequency = Result;
+			if (Delta < 0) {
+				Delta = -Delta;
+			}
+			if (Delta < 100) {
+				g_2000045F++;
+			} else {
+				g_2000045F = 0;
+			}
+			BK4819_DisableFrequencyScan();
+			if (g_2000045F < 3) {
+				BK4819_EnableFrequencyScan();
+			} else {
+				BK4819_SetScanFrequency(gScanFrequency);
+				g_CxCSS_Index = 0xFF;
+				g_CxCSS_Type = 0xFF;
+				g_2000045F = 0;
+				g_2000045C = 0;
+				g_20000464 = 0;
+				gScanState = 1;
+				GUI_SelectNextDisplay(DISPLAY_SCANNER);
+			}
+			g_2000045D = 0x15;
+			break;
+
+		case 1:
+			ScanResult = BK4819_GetCxCSSScanResult(&Result, &CtcssFreq);
+			if (ScanResult == 0) {
+				break;
+			}
+			BK4819_Disable();
+			if (ScanResult == BK4819_CSS_RESULT_CDCSS) {
+				uint8_t Index;
+
+				Index = DCS_GetCdcssIndex(Result);
+				if (Index != 0xFF) {
+					g_CxCSS_Index = Index;
+					g_CxCSS_Type = 0x02;
+					gScanState = 2;
+					g_2000045C = 1;
+				}
+			} else if (ScanResult == BK4819_CSS_RESULT_CTCSS) {
+				uint8_t Index;
+
+				Index = DCS_GetCtcssIndex(CtcssFreq);
+				if (Index != 0xFF) {
+					if (Index == g_CxCSS_Index && g_CxCSS_Type == 0x01) {
+						g_2000045F += 1;
+						if (1 < g_2000045F) {
+							gScanState = 2;
+							g_2000045C = 1;
+						}
+					} else {
+						g_2000045F = 0;
+					}
+					g_CxCSS_Type = 0x01;
+					g_CxCSS_Index = Index;
+				}
+			}
+			if (gScanState < 2) {
+				BK4819_SetScanFrequency(gScanFrequency);
+				g_2000045D = 0x15;
+				break;
+			}
+			GUI_SelectNextDisplay(DISPLAY_SCANNER);
+			break;
+		}
+	}
 
 	if (gScreenToDisplay == DISPLAY_AIRCOPY && gAircopyState == AIRCOPY_TRANSFER && gAirCopyIsSendMode == 1) {
 		if (gAircopySendCountdown != 0) {
