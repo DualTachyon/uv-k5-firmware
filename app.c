@@ -89,7 +89,7 @@ void FUN_00007fd0(void)
 		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, true)) {
 			if (gEeprom.PERMIT_REMOTE_KILL) {
 				gSetting_KILLED = true;
-				//SETTINGS_SaveSettings();
+				SETTINGS_SaveSettings();
 				g_200003BE = 2;
 				if (gFmMute == true) {
 					FM_TurnOff();
@@ -106,7 +106,7 @@ void FUN_00007fd0(void)
 			sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, gEeprom.REVIVE_CODE);
 			if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, true)) {
 				gSetting_KILLED = false;
-				//SETTINGS_SaveSettings();
+				SETTINGS_SaveSettings();
 				g_200003BE = 2;
 				g_200003BC = 0;
 				gUpdateDisplay = true;
@@ -1379,6 +1379,7 @@ static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHel
 			g_200003A5 = 0;
 		}
 		if (gFlagSaveSettings) {
+			SETTINGS_SaveSettings();
 			gFlagSaveSettings = false;
 		}
 		if (gFlagSaveFM) {

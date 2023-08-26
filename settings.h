@@ -170,6 +170,7 @@ extern EEPROM_Config_t gEeprom;
 
 void SETTINGS_SaveFM(void);
 void SETTINGS_SaveVfoIndices(void);
+void SETTINGS_SaveSettings(void);
 
 #endif
 
