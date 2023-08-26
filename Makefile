@@ -35,6 +35,7 @@ OBJS += driver/uart.o
 
 # Main
 OBJS += aircopy.o
+OBJS += app.o
 OBJS += audio.o
 OBJS += battery.o
 OBJS += bitmaps.o

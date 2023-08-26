@@ -18,6 +18,7 @@
 #include <string.h>
 #include "ARMCM0.h"
 
+#include "app.h"
 #include "audio.h"
 #include "battery.h"
 #include "bsp/dp32g030/gpio.h"
@@ -45,8 +46,11 @@
 #include "radio.h"
 #include "settings.h"
 
+//#define USE_REAL_MAIN
+
 static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
 
+#if !defined(USE_REAL_MAIN)
 static void FLASHLIGHT_Init(void)
 {
 	PORTCON_PORTC_IE = PORTCON_PORTC_IE_C5_BITS_ENABLE;
@@ -67,48 +71,6 @@ static void FLASHLIGHT_TurnOff(void)
 static void FLASHLIGHT_TurnOn(void)
 {
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
-}
-
-#if 0
-static void ProcessKey(void)
-{
-	KEY_Code_t Key;
-
-	Key = KEYBOARD_Poll();
-
-	switch (Key) {
-	case KEY_0: UART_Print("ZERO\r\n"); break;
-	case KEY_1: UART_Print("ONE\r\n"); break;
-	case KEY_2: UART_Print("TWO\r\n"); break;
-	case KEY_3: UART_Print("THREE\r\n"); break;
-	case KEY_4: UART_Print("FOUR\r\n"); break;
-	case KEY_5: UART_Print("FIVE\r\n"); break;
-	case KEY_6: UART_Print("SIX\r\n"); break;
-	case KEY_7: UART_Print("SEVEN\r\n"); break;
-	case KEY_8: UART_Print("EIGHT\r\n"); break;
-	case KEY_9: UART_Print("NINE\r\n"); break;
-	case KEY_MENU: UART_Print("MENU\r\n"); break;
-	case KEY_UP: UART_Print("UP\r\n"); break;
-	case KEY_DOWN: UART_Print("DOWN\r\n"); break;
-	case KEY_EXIT: UART_Print("EXIT\r\n"); break;
-	case KEY_STAR: UART_Print("STAR\r\n"); break;
-	case KEY_F: UART_Print("F\r\n"); break;
-	case KEY_PTT: UART_Print("PTT\r\n"); break;
-	case KEY_SIDE2: UART_Print("SIDE2\r\n"); break;
-	case KEY_SIDE1: UART_Print("SIDE1\r\n"); break;
-	case KEY_INVALID: break;
-	}
-}
-
-static void Console(void)
-{
-	KEY_Code_t Key;
-
-	Key = KEYBOARD_Poll();
-	if (Key != KEY_INVALID) {
-		Key += 0x40;
-		UART_Send(&Key, 1);
-	}
 }
 #endif
 
@@ -197,6 +159,20 @@ void Main(void)
 		RADIO_ConfigureNOAA();
 	}
 
+#if defined(USE_REAL_MAIN)
+	while (1) {
+		APP_Update();
+		if (gNextTimeslice) {
+			APP_TimeSlice10ms();
+			gNextTimeslice = false;
+		}
+		if (gNextTimeslice500ms) {
+			APP_TimeSlice500ms();
+			gNextTimeslice500ms = false;
+		}
+	}
+#else
+
 	// Below this line is development/test area not conforming to the original firmware
 
 	// Show some signs of life
@@ -227,5 +203,6 @@ void Main(void)
 		}
 		Flag = !Flag;
 	}
+#endif
 }
 
