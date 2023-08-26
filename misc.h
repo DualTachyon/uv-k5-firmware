@@ -20,6 +20,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+enum {
+	FLASHLIGHT_OFF = 0U,
+	FLASHLIGHT_ON = 1U,
+	FLASHLIGHT_BLINK = 2U,
+};
+
 extern const uint32_t *gUpperLimitFrequencyBandTable;
 extern const uint32_t *gLowerLimitFrequencyBandTable;
 
@@ -57,6 +63,7 @@ extern volatile uint16_t g_2000034C;
 extern volatile uint16_t g_20000356;
 extern uint16_t g_20000362;
 extern uint8_t g_2000036B;
+extern uint8_t gKeyLockCountdown;
 extern uint8_t g_2000036D;
 extern uint8_t g_2000036E;
 extern uint8_t g_2000036F;
@@ -68,10 +75,13 @@ extern uint8_t g_20000376;
 extern uint8_t g_20000377;
 extern uint8_t gVFO_RSSI_Level[2];
 extern uint8_t g_2000037E;
+extern uint8_t gBatteryVoltageIndex;
 extern volatile uint8_t g_20000381;
 extern uint8_t g_20000382;
 extern uint8_t g_20000383;
 extern uint16_t g_2000038E;
+extern uint8_t g_20000393;
+extern bool g_20000394;
 extern uint8_t gKeypadLocked;
 extern uint8_t g_200003AA;
 extern bool g_CDCSS_Lost;
@@ -79,12 +89,17 @@ extern bool g_CTCSS_Lost;
 extern bool g_CxCSS_TAIL_Found;
 extern bool g_VOX_Lost;
 extern uint8_t g_200003B0;
+extern uint8_t gFlashLightState;
 extern uint16_t g_200003B6;
+extern uint16_t g_200003B8;
 extern uint8_t g_200003BC;
 extern uint8_t g_200003BD;
 extern uint8_t g_200003BE;
+extern bool g_200003C1;
 extern uint8_t g_200003C3;
-extern volatile uint16_t g_200003E4;
+extern uint8_t g_200003C4;
+extern uint16_t g_200003E2;
+extern volatile uint16_t gFlashLightBlinkCounter;
 extern uint8_t g_200003FD;
 extern uint8_t g_20000400;
 extern uint8_t g_20000410;
@@ -97,15 +112,20 @@ extern uint8_t g_20000420;
 extern uint8_t g_20000427;
 extern bool gKeyBeingHeld;
 extern bool gPttIsPressed;
+extern uint8_t gPttDebounceCounter;
 extern uint8_t gDTMF_WriteIndex;
 extern uint8_t g_20000438;
 extern uint8_t gMenuListCount;
+extern uint8_t g_20000442;
 extern uint8_t g_20000458;
 extern uint8_t g_CxCSS_Type;
 extern uint8_t g_CxCSS_Index;
 extern uint8_t g_2000045C;
+extern uint8_t g_2000045D;
+extern uint8_t g_2000045F;
 extern uint8_t g_20000461;
 extern uint8_t g_20000464;
+extern uint8_t gAircopySendCountdown;
 extern uint8_t gFSKWriteIndex;
 extern uint8_t g_20000474;
 extern char g_20000D1C[15];
