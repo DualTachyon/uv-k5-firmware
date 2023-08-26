@@ -54,7 +54,7 @@ void FUNCTION_Init(void)
 	g_CDCSS_Lost = false;
 	g_CTCSS_Lost = false;
 	g_VOX_Lost = false;
-	g_200003B0 = 0;
+	g_SquelchLost = false;
 	g_20000342 = 0;
 	gSystickFlag10 = false;
 	g_20000375 = 0;

@@ -20,7 +20,7 @@
 
 static void FUN_00005144(void)
 {
-	if (g_200003B0 != 1) {
+	if (g_SquelchLost != 1) {
 		return;
 	}
 	if (gCurrentStep == 0) {

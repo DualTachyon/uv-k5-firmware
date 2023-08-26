@@ -172,6 +172,7 @@ GUI_DisplayType_t gScreenToDisplay;
 uint8_t g_200003C6;
 volatile uint8_t gCurrentStep;
 volatile int8_t g_20000390;
+GUI_DisplayType_t gRequestDisplayScreen;
 uint8_t g_200003BA;
 uint8_t g_200003BB;
 uint8_t gWasFKeyPressed;
