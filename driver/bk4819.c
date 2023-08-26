@@ -814,3 +814,8 @@ uint8_t BK4819_CheckCDCSSCodeReceived(void)
         return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
 }
 
+uint8_t BK4819_GetCTCSSPhaseShift(void)
+{
+        return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
+}
+

@@ -123,6 +123,7 @@ void BK4819_StopScan(void);
 uint8_t BK4819_GetDTMF_5TONE_Code(void);
 
 uint8_t BK4819_CheckCDCSSCodeReceived(void);
+uint8_t BK4819_GetCTCSSPhaseShift(void);
 
 #endif
 
