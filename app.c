@@ -1,6 +1,7 @@
 #include <string.h>
-#include "audio.h"
+#include "aircopy.h"
 #include "app.h"
+#include "audio.h"
 #include "battery.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
@@ -10,6 +11,7 @@
 #include "driver/gpio.h"
 #include "driver/keyboard.h"
 #include "driver/st7565.h"
+#include "dtmf.h"
 #include "fm.h"
 #include "frequencies.h"
 #include "functions.h"
@@ -450,6 +452,85 @@ void FUN_000059b4(void)
         g_2000036F = 1;
 }
 
+void APP_CheckRadioInterrupts(void)
+{
+	if (gScreenToDisplay == DISPLAY_SCANNER) {
+		return;
+	}
+
+	while (BK4819_GetRegister(BK4819_REG_0C) & 1) {
+		uint16_t Mask;
+
+		BK4819_WriteRegister(BK4819_REG_02, 0);
+		Mask = BK4819_GetRegister(BK4819_REG_02);
+		if (Mask & BK4819_REG_02_DTMF_5TONE_FOUND) {
+			g_200003AA = 1;
+			g_20000442 = 5;
+			if (15 < gDTMF_WriteIndex) {
+				uint8_t i;
+				for (i = 0; i < sizeof(gDTMF_Received) - 1; i++) {
+					gDTMF_Received[i] = gDTMF_Received[i + 1];
+				}
+				gDTMF_WriteIndex = 15;
+			}
+			gDTMF_Received[gDTMF_WriteIndex++] = DTMF_GetCharacter(BK4819_GetDTMF_5TONE_Code());
+			if (gCurrentFunction == FUNCTION_4) {
+				//FUN_00007fd0();
+			}
+		}
+		if (Mask & BK4819_REG_02_CxCSS_TAIL) {
+			g_CxCSS_TAIL_Found = true;
+		}
+		if (Mask & BK4819_REG_02_CDCSS_LOST) {
+			g_CDCSS_Lost = true;
+			gCDCSSCodeReceived = BK4819_CheckCDCSSCodeReceived();
+		}
+		if (Mask & BK4819_REG_02_CDCSS_FOUND) {
+			g_CDCSS_Lost = false;
+		}
+		if (Mask & BK4819_REG_02_CTCSS_LOST) {
+			g_CTCSS_Lost = true;
+		}
+		if (Mask & BK4819_REG_02_CTCSS_FOUND) {
+			g_CTCSS_Lost = false;
+		}
+		if (Mask & BK4819_REG_02_VOX_LOST) {
+			g_VOX_Lost = true;
+			g_200003B8 = 10;
+			if (gEeprom.VOX_SWITCH == true) {
+				if (gCurrentFunction == FUNCTION_POWER_SAVE && gThisCanEnable_BK4819_Rxon == false) {
+					gBatterySave = 20;
+					gBatterySaveCountdownExpired = 0;
+				}
+				if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && (gSystickFlag7 || (gSystickFlag7 == false && g_2000033A < 0x14))) {
+					g_2000033A = 0x14;
+					gSystickFlag7 = false;
+				}
+			}
+		}
+		if (Mask & BK4819_REG_02_VOX_FOUND) {
+			g_VOX_Lost = false;
+			g_200003B8 = 0;
+		}
+		if (Mask & BK4819_REG_02_SQUELCH_LOST) {
+			g_SquelchLost = true;
+			BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, true);
+		}
+		if (Mask & BK4819_REG_02_SQUELCH_FOUND) {
+			g_SquelchLost = false;
+			BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
+		}
+		if (Mask & BK4819_REG_02_FSK_FIFO_ALMOST_FULL && gScreenToDisplay == DISPLAY_AIRCOPY && gAircopyState == AIRCOPY_TRANSFER && gAirCopyIsSendMode == 0) {
+			uint8_t i;
+
+			for (i = 0; i < 4; i++) {
+				//SomeFSKData[gFSKWriteIndex++] = BK4819_GetRegister(BK4819_REG_5F);
+			}
+			//AIRCOPY_StorePacket();
+		}
+	}
+}
+
 void APP_Update(void)
 {
 	if (gFlagPlayQueuedVoice) {
@@ -593,8 +674,9 @@ void APP_TimeSlice10ms(void)
 	}
 
 	if (gCurrentFunction != FUNCTION_POWER_SAVE || gThisCanEnable_BK4819_Rxon == false) {
-		//AIRCOPY_Receive();
+		APP_CheckRadioInterrupts();
 	}
+
 	if (gCurrentFunction != FUNCTION_TRANSMIT) {
 		if (g_2000036F == 1) {
 			GUI_DisplayStatusLine();
