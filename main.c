@@ -46,28 +46,7 @@
 #include "radio.h"
 #include "settings.h"
 
-//#define USE_REAL_MAIN
-
 static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
-
-#if !defined(USE_REAL_MAIN)
-static void FLASHLIGHT_Init(void)
-{
-	PORTCON_PORTC_IE = PORTCON_PORTC_IE_C5_BITS_ENABLE;
-	PORTCON_PORTC_PU = PORTCON_PORTC_PU_C5_BITS_ENABLE;
-	GPIOC->DIR |= GPIO_DIR_3_BITS_OUTPUT;
-}
-
-static void FLASHLIGHT_TurnOff(void)
-{
-	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
-}
-
-static void FLASHLIGHT_TurnOn(void)
-{
-	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
-}
-#endif
 
 void _putchar(char c)
 {
@@ -154,7 +133,6 @@ void Main(void)
 		RADIO_ConfigureNOAA();
 	}
 
-#if defined(USE_REAL_MAIN)
 	while (1) {
 		APP_Update();
 		if (gNextTimeslice) {
@@ -166,38 +144,5 @@ void Main(void)
 			gNextTimeslice500ms = false;
 		}
 	}
-#else
-
-	// Below this line is development/test area not conforming to the original firmware
-
-	// Show some signs of life
-	FLASHLIGHT_Init();
-
-	bool Open = false;
-	uint8_t Flag = false;
-	while (1) {
-		uint16_t RSSI = BK4819_GetRSSI();
-		if (RSSI >= 0x100) {
-			if (!Open) {
-				BK4819_WriteRegister(BK4819_REG_48, 0
-						| (gEeprom.VOLUME_GAIN << 4)
-						| gEeprom.DAC_GAIN
-						);
-				BK4819_SetAF(BK4819_AF_OPEN);
-				Open = true;
-			}
-		} else {
-			Open = false;
-			BK4819_SetAF(BK4819_AF_MUTE);
-		}
-		SYSTEM_DelayMs(200);
-		if (Flag) {
-			FLASHLIGHT_TurnOn();
-		} else {
-			FLASHLIGHT_TurnOff();
-		}
-		Flag = !Flag;
-	}
-#endif
 }
 
