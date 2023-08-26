@@ -108,7 +108,7 @@ void Main(void)
 	gDTMF_String[14] = 0;
 
 	BK4819_Init();
-	BOARD_ADC_GetBatteryInfo(&gBatteryBootVoltage, &gBatteryCurrent);
+	BOARD_ADC_GetBatteryInfo(&gBatteryCurrentVoltage, &gBatteryCurrent);
 	BOARD_EEPROM_Init();
 	BOARD_EEPROM_LoadMoreSettings();
 

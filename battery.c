@@ -20,7 +20,7 @@
 #include "misc.h"
 
 uint16_t gBatteryCalibration[6];
-uint16_t gBatteryBootVoltage;
+uint16_t gBatteryCurrentVoltage;
 uint16_t gBatteryCurrent;
 uint16_t gBatteryVoltages[4];
 uint16_t gBatteryVoltageAverage;
