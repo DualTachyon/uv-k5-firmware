@@ -1613,7 +1613,7 @@ static void APP_ProcessKey_MAIN(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		//MAIN_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
 		break;
 	case KEY_MENU:
-		//MAIN_Key_MENU(bKeyPressed, bKeyHeld);
+		MAIN_Key_MENU(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_UP:
 		//MAIN_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
