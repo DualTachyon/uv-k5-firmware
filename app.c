@@ -80,7 +80,7 @@ static void FUN_00005144(void)
 	FUNCTION_Select(FUNCTION_3);
 }
 
-void FUN_00007fd0(void)
+void APP_CheckDTMFStuff(void)
 {
 	char String[20];
 	uint8_t Offset;
@@ -219,7 +219,7 @@ void FUN_000051e8(void)
 			return;
 		}
 	}
-	FUN_00007fd0();
+	APP_CheckDTMFStuff();
 	if (gStepDirection == 0 && g_20000381 == 0) {
 		if (gInfoCHAN_A->DTMF_DECODING_ENABLE == true || gSetting_KILLED == true) {
 			if (g_200003BC == 0) {
@@ -824,7 +824,7 @@ void APP_CheckRadioInterrupts(void)
 			}
 			gDTMF_Received[gDTMF_WriteIndex++] = DTMF_GetCharacter(BK4819_GetDTMF_5TONE_Code());
 			if (gCurrentFunction == FUNCTION_4) {
-				FUN_00007fd0();
+				APP_CheckDTMFStuff();
 			}
 		}
 		if (Mask & BK4819_REG_02_CxCSS_TAIL) {
