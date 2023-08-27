@@ -14,8 +14,10 @@
  *     limitations under the License.
  */
 
+#include <string.h>
 #include "bsp/dp32g030/gpio.h"
 #include "driver/bk1080.h"
+#include "driver/eeprom.h"
 #include "driver/gpio.h"
 #include "fm.h"
 #include "misc.h"
@@ -79,5 +81,18 @@ void FM_TurnOff(void)
 	g_2000036B = 0;
 	BK1080_Init(0, false);
 	g_2000036F = 1;
+}
+
+void FM_EraseChannels(void)
+{
+	uint8_t i;
+	uint8_t Template[8];
+
+	memset(Template, 0xFF, sizeof(Template));
+	for (i = 0; i < 5; i++) {
+		EEPROM_WriteBuffer(0x0E40 + (i * 8), Template);
+	}
+
+	memset(gFM_Channels, 0xFF, sizeof(gFM_Channels));
 }
 
