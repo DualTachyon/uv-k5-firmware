@@ -745,7 +745,7 @@ void PlayFMRadio(void)
 	}
 	FM_ConfigureChannelState();
 	BK1080_SetFrequency(gEeprom.FM_FrequencyToPlay);
-	//StoreFMSettingsToEeprom();
+	SETTINGS_SaveFM();
 	g_2000034C = 0;
 	gSystickFlag11 = false;
 	gAskToSave = false;
@@ -824,7 +824,7 @@ void APP_CheckRadioInterrupts(void)
 			}
 			gDTMF_Received[gDTMF_WriteIndex++] = DTMF_GetCharacter(BK4819_GetDTMF_5TONE_Code());
 			if (gCurrentFunction == FUNCTION_4) {
-				//FUN_00007fd0();
+				FUN_00007fd0();
 			}
 		}
 		if (Mask & BK4819_REG_02_CxCSS_TAIL) {
