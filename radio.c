@@ -774,3 +774,9 @@ void RADIO_Something(void)
 	RADIO_SetupRegisters(true);
 }
 
+void RADIO_Whatever(void)
+{
+	g_20000381 = 0;
+	RADIO_SetupRegisters(true);
+}
+

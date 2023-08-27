@@ -99,6 +99,7 @@ void RADIO_SomethingElse(uint8_t Arg);
 void RADIO_SomethingWithTransmit(void);
 void RADIO_EnableCxCSS(void);
 void RADIO_Something(void);
+void RADIO_Whatever(void);
 
 #endif
 
