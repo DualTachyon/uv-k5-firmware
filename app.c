@@ -59,7 +59,7 @@ static void FUN_00005144(void)
 		}
 		if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
 			if (gIsNoaaMode) {
-				g_20000356 = 0x1e;
+				g_20000356 = 20;
 				gSystickFlag8 = false;
 			}
 			FUNCTION_Select(FUNCTION_3);
@@ -76,7 +76,7 @@ static void FUN_00005144(void)
 			FUNCTION_Select(FUNCTION_3);
 			return;
 		}
-		ScanPauseDelayIn10msec = 0x1e;
+		ScanPauseDelayIn10msec = 20;
 		gSystickFlag9 = false;
 	}
 	g_20000411 = 1;
@@ -1985,7 +1985,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 	} else {
 		if (g_2000039B == 1) {
-			RADIO_ConfigureChannel(0,g_2000039A);
+			RADIO_ConfigureChannel(0, g_2000039A);
 			RADIO_ConfigureChannel(1, g_2000039A);
 		} else {
 			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, g_2000039A);
