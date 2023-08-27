@@ -17,6 +17,7 @@
 #include <string.h>
 #include "aircopy.h"
 #include "app.h"
+#include "app/generic.h"
 #include "app/menu.h"
 #include "audio.h"
 #include "battery.h"
