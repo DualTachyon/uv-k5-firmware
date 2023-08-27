@@ -89,7 +89,7 @@ uint8_t g_200003A0;
 uint8_t g_200003A1;
 uint8_t g_200003A2;
 bool gFlagAcceptSetting;
-uint8_t g_200003A4;
+bool gFlagRefreshSetting;
 bool gFlagSaveVfo;
 bool gFlagSaveSettings;
 bool gFlagSaveChannel;

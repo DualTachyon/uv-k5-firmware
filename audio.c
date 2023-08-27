@@ -56,7 +56,8 @@ uint8_t gVoiceReadIndex;
 uint8_t gVoiceWriteIndex;
 volatile uint16_t gCountdownToPlayNextVoice;
 volatile bool gFlagPlayQueuedVoice;
-VOICE_ID_t gAnotherVoiceID;
+VOICE_ID_t gAnotherVoiceID = VOICE_ID_INVALID;
+BEEP_Type_t gBeepToPlay;
 
 void AUDIO_PlayBeep(BEEP_Type_t Beep)
 {

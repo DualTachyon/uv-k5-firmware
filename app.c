@@ -18,6 +18,7 @@
 #include "aircopy.h"
 #include "app.h"
 #include "app/generic.h"
+#include "app/main.h"
 #include "app/menu.h"
 #include "audio.h"
 #include "battery.h"
@@ -1581,8 +1582,196 @@ void FUN_000056a0(bool bFlag)
 	gRequestDisplayScreen = DISPLAY_MAIN;
 }
 
+static void APP_ProcessKey_MAIN(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	if (gFmMute && Key != KEY_PTT && Key != KEY_EXIT) {
+		if (!bKeyHeld && bKeyPressed) {
+			g_20000396 = 2;
+		}
+		return;
+	}
+	if (g_200003BA != 0 && !bKeyHeld && bKeyPressed) {
+		char Character = DTMF_GetCharacter(Key);
+		if (Character != 0xFF) {
+			g_20000396 = 1;
+			XXX_Append(Character);
+			gRequestDisplayScreen = DISPLAY_MAIN;
+			g_20000394 = true;
+			return;
+		}
+	}
+
+	// TODO: ???
+	if (KEY_PTT < Key) {
+		Key = KEY_SIDE2;
+	}
+
+	switch(Key) {
+	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
+	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
+	case KEY_8: case KEY_9:
+		//MAIN_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		break;
+	case KEY_MENU:
+		//MAIN_Key_MENU(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_UP:
+		//MAIN_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
+		break;
+	case KEY_DOWN:
+		//MAIN_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
+		break;
+	case KEY_EXIT:
+		//MAIN_Key_EXIT(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_STAR:
+		//MAIN_Key_STAR(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_F:
+		GENERIC_Key_F(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_PTT:
+		GENERIC_Key_PTT(bKeyPressed);
+		break;
+	default:
+		if (!bKeyHeld && bKeyPressed) {
+			g_20000396 = 2;
+		}
+		break;
+	}
+}
+
+void APP_ProcessKey_MENU(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	switch(Key) {
+	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
+	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
+	case KEY_8: case KEY_9:
+		MENU_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		break;
+	case KEY_MENU:
+		MENU_Key_MENU(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_UP:
+		MENU_Key_UP_DOWN(bKeyPressed, bKeyHeld, 0x01);
+		break;
+	case KEY_DOWN:
+		MENU_Key_UP_DOWN(bKeyPressed, bKeyHeld, 0xFF);
+		break;
+	case KEY_EXIT:
+		MENU_Key_EXIT(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_STAR:
+		MENU_Key_STAR(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_F:
+		GENERIC_Key_F(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_PTT:
+		GENERIC_Key_PTT(bKeyPressed);
+		break;
+	default:
+		if (!bKeyHeld && bKeyPressed) {
+			g_20000396 = 2;
+		}
+		break;
+	}
+	if (gScreenToDisplay == DISPLAY_MENU && gMenuCursor == MENU_VOL) {
+		g_20000393 = 0x20;
+	}
+}
+
+static void APP_ProcessKey_FM(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	switch(Key) {
+	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
+	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
+	case KEY_8: case KEY_9:
+		//FM_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		break;
+	case KEY_MENU:
+		//FM_Key_MENU(bKeyPressed, bKeyHeld);
+		return;
+	case KEY_UP:
+		//FM_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
+		break;
+	case KEY_DOWN:
+		//FM_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
+		break;;
+	case KEY_EXIT:
+		//FM_Key_EXIT(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_F:
+		GENERIC_Key_F(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_PTT:
+		GENERIC_Key_PTT(bKeyPressed);
+		break;
+	default:
+		if (!bKeyHeld && bKeyPressed) {
+			g_20000396 = 2;
+		}
+		break;
+	}
+}
+
+static void APP_ProcessKey_SCANNER(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	switch(Key) {
+	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
+	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
+	case KEY_8: case KEY_9:
+		//SCANNER_Key_DIGITS((VOICE_ID_t)Key, bKeyPressed, bKeyHeld);
+		break;
+	case KEY_MENU:
+		//SCANNER_Key_MENU(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_UP:
+		//SCANNEY_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
+		break;
+	case KEY_DOWN:
+		//SCANNEY_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
+		break;
+	case KEY_EXIT:
+		//SCANNER_Key_EXIT(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_STAR:
+		//SCANNER_Key_STAR(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_PTT:
+		GENERIC_Key_PTT(bKeyPressed);
+		break;
+	default:
+		if (!bKeyHeld && bKeyPressed) {
+			g_20000396 = 2;
+		}
+		break;
+	}
+}
+
+static void APP_ProcessKey_AIRCOPY(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	switch(Key) {
+	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
+	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
+	case KEY_8: case KEY_9:
+		//AIRCOPY_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		break;
+	case KEY_MENU:
+		//AIRCOPY_Key_MENU(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_EXIT:
+		//AIRCOPY_Key_EXIT(bKeyPressed, bKeyHeld);
+		break;
+	default:
+		break;
+	}
+}
+
 static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
+	bool bFlag;
+
 	if (gCurrentFunction == FUNCTION_POWER_SAVE) {
 		FUNCTION_Select(FUNCTION_0);
 	}
@@ -1629,6 +1818,71 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 	}
 
+	if (gEeprom.KEY_LOCK && gCurrentFunction != FUNCTION_TRANSMIT && Key != KEY_PTT) {
+		if (Key == KEY_F) {
+			if (!bKeyHeld) {
+				if (!bKeyPressed) {
+					return;
+				}
+				if (bKeyHeld) {
+					return;
+				}
+				AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
+				gKeypadLocked = 4;
+				gUpdateDisplay = true;
+				return;
+			}
+			if (!bKeyPressed) {
+				return;
+			}
+		} else if (Key != KEY_SIDE1 && Key != KEY_SIDE2) {
+			if (!bKeyPressed) {
+				return;
+			}
+			if (bKeyHeld) {
+				return;
+			}
+			AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
+			gKeypadLocked = 4;
+			gUpdateDisplay = true;
+			return;
+		}
+	}
+
+	if ((gStepDirection && Key != KEY_PTT && Key != KEY_UP && Key != KEY_DOWN && Key != KEY_EXIT && Key != KEY_STAR) ||
+	    (g_20000381 && Key != KEY_PTT && Key != KEY_UP && Key != KEY_DOWN && Key != KEY_EXIT && Key != KEY_STAR && Key != KEY_MENU)) {
+		if (!bKeyPressed || bKeyHeld) {
+			return;
+		}
+		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
+		return;
+	}
+
+	bFlag = false;
+
+	if (g_20000395 == 1 && Key == KEY_PTT) {
+		bFlag = bKeyHeld;
+		if (!bKeyPressed) {
+			bFlag = true;
+			g_20000395 = 0;
+		}
+	}
+
+	if (g_20000394 && Key != KEY_PTT) {
+		if (bKeyHeld) {
+			bFlag = true;
+		}
+		if (!bKeyPressed) {
+			bFlag = true;
+			g_20000394 = 0;
+		}
+	}
+
+	if (gWasFKeyPressed && KEY_9 < Key && Key != KEY_F && Key != KEY_STAR) {
+		gWasFKeyPressed = false;
+		g_2000036F = 1;
+	}
+
 	if (gF_LOCK) {
 		if (Key == KEY_PTT) {
 			return;
@@ -1641,5 +1895,143 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 	}
 
+	if (!bFlag) {
+		if (gCurrentFunction == FUNCTION_TRANSMIT) {
+#if 0
+#endif
+		} else if (Key != KEY_SIDE1 && Key != KEY_SIDE2) {
+			switch (gScreenToDisplay) {
+			case DISPLAY_MAIN:
+				APP_ProcessKey_MAIN(Key, bKeyPressed, bKeyHeld);
+				break;
+			case DISPLAY_FM:
+				APP_ProcessKey_FM(Key, bKeyPressed, bKeyHeld);
+				break;
+			case DISPLAY_MENU:
+				APP_ProcessKey_MENU(Key, bKeyPressed, bKeyHeld);
+				break;
+			case DISPLAY_SCANNER:
+				APP_ProcessKey_SCANNER(Key, bKeyPressed, bKeyHeld);
+				break;
+			case DISPLAY_AIRCOPY:
+				APP_ProcessKey_AIRCOPY(Key, bKeyPressed, bKeyHeld);
+				break;
+			default:
+				break;
+			}
+		} else if (gScreenToDisplay != DISPLAY_SCANNER && gScreenToDisplay != DISPLAY_AIRCOPY) {
+			//FUN_00004404(Key, bKeyPressed, bKeyHeld);
+		} else if (!bKeyHeld && bKeyPressed) {
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+		}
+	}
+	if (gBeepToPlay) {
+		AUDIO_PlayBeep(gBeepToPlay);
+		gBeepToPlay = 0;
+	}
+
+	if (gFlagAcceptSetting) {
+		MENU_AcceptSetting();
+		gFlagRefreshSetting = true;
+		gFlagAcceptSetting = false;
+	}
+	if (g_200003A2 == 1) {
+		BK4819_StopScan();
+		g_200003A2 = 0;
+	}
+	if (g_2000039E) {
+		if (bKeyHeld == 0) {
+			SETTINGS_SaveSettings();
+		} else {
+			gFlagSaveSettings = 1;
+		}
+		g_2000039E = 0;
+		g_2000036F = 1;
+	}
+	if (g_2000039F != 0) {
+		if (!bKeyHeld) {
+			SETTINGS_SaveFM();
+		} else {
+			gFlagSaveFM = g_2000039F;
+		}
+		g_2000039F = 0;
+	}
+	if (g_2000039C != 0) {
+		if (!bKeyHeld) {
+			SETTINGS_SaveVfoIndices();
+		} else {
+			gFlagSaveVfo = true;
+		}
+		g_2000039C = 0;
+	}
+	if (g_2000039D != 0) {
+		if (!bKeyHeld) {
+			SETTINGS_SaveChannel(gTxRadioInfo->CHANNEL_SAVE, gEeprom.TX_CHANNEL, gTxRadioInfo, g_2000039D);
+			if (gScreenToDisplay != DISPLAY_SCANNER) {
+				g_2000039A = 1;
+			}
+		} else {
+			gFlagSaveChannel = g_2000039D;
+			if (gRequestDisplayScreen == DISPLAY_INVALID) {
+				gRequestDisplayScreen = DISPLAY_MAIN;
+			}
+		}
+		g_2000039D = 0;
+	}
+
+	if (g_2000039A == 0) {
+		if (g_20000398 == 0) {
+			goto LAB_00002aae;
+		}
+	} else {
+		if (g_2000039B == 1) {
+			RADIO_ConfigureChannel(0,g_2000039A);
+			RADIO_ConfigureChannel(1, g_2000039A);
+		} else {
+			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, g_2000039A);
+		}
+		if (gRequestDisplayScreen == DISPLAY_INVALID) {
+			gRequestDisplayScreen = DISPLAY_MAIN;
+		}
+		g_20000398 = 1;
+		g_2000039A = 0;
+		g_2000039B = 0;
+	}
+	RADIO_ConfigureTX();
+	RADIO_ConfigureNOAA();
+	RADIO_SetupRegisters(true);
+	gDTMF_AUTO_RESET_TIME = 0;
+	g_200003BC = 0;
+	g_200003C3 = 0;
+	g_200003BD = 0;
+	gVFO_RSSI_Level[0] = 0;
+	gVFO_RSSI_Level[1] = 0;
+	g_20000398 = 0;
+
+LAB_00002aae:
+	if (gFlagRefreshSetting) {
+		MENU_ShowCurrentSetting();
+		gFlagRefreshSetting = false;
+	}
+	if (g_200003A1 == 1) {
+		AUDIO_SetVoiceID(0, VOICE_ID_SCANNING_BEGIN);
+		AUDIO_PlaySingleVoice(true);
+		FUN_000075b0();
+		gRequestDisplayScreen = DISPLAY_SCANNER;
+		g_200003A1 = 0;
+	}
+	if (g_200003A0 == 1) {
+		RADIO_SomethingWithTransmit();
+		g_200003A0 = 0;
+	}
+	if (gAnotherVoiceID != VOICE_ID_INVALID) {
+		if (gAnotherVoiceID < 76) {
+			AUDIO_SetVoiceID(0, gAnotherVoiceID);
+		}
+		AUDIO_PlaySingleVoice(false);
+		gAnotherVoiceID = VOICE_ID_INVALID;
+	}
+	GUI_SelectNextDisplay(gRequestDisplayScreen);
+	gRequestDisplayScreen = DISPLAY_INVALID;
 }
 

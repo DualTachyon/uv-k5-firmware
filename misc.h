@@ -98,7 +98,7 @@ extern uint8_t g_200003A0;
 extern uint8_t g_200003A1;
 extern uint8_t g_200003A2;
 extern bool gFlagAcceptSetting;
-extern uint8_t g_200003A4;
+extern bool gFlagRefreshSetting;
 extern bool gFlagSaveVfo;
 extern bool gFlagSaveSettings;
 extern bool gFlagSaveChannel;

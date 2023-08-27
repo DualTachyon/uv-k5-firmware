@@ -35,6 +35,7 @@ OBJS += driver/uart.o
 
 # Main
 OBJS += app/generic.o
+OBJS += app/main.o
 OBJS += app/menu.o
 OBJS += aircopy.o
 OBJS += app.o

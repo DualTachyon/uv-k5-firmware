@@ -818,7 +818,7 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			Value = gNumberForPrintf[0];
 			if (Value && Value <= gMenuListCount) {
 				gMenuCursor = Value - 1;
-				g_200003A4 = 1;
+				gFlagRefreshSetting = true;
 				return;
 			}
 			break;
@@ -827,7 +827,7 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			Value = (gNumberForPrintf[0] * 10) + gNumberForPrintf[1];
 			if (Value && Value <= gMenuListCount) {
 				gMenuCursor = Value - 1;
-				g_200003A4 = 1;
+				gFlagRefreshSetting = true;
 				return;
 			}
 			break;
@@ -911,7 +911,7 @@ void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 				if (gNumberOffset == 0 || gMenuCursor != MENU_OFFSET) {
 					g_200003C6 = 0;
 					gNumberOffset = 0;
-					g_200003A4 = 1;
+					gFlagRefreshSetting = true;
 					gAnotherVoiceID = VOICE_ID_CANCEL;
 				} else {
 					gNumberOffset -= 1;
@@ -1030,7 +1030,7 @@ void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 
 	if (g_200003C6 == 0) {
 		gMenuCursor = NUMBER_AddWithWraparound(gMenuCursor, -Direction, 0, gMenuListCount - 1);
-		g_200003A4 = true;
+		gFlagRefreshSetting = true;
 		gRequestDisplayScreen = DISPLAY_MENU;
 		return;
 	}
