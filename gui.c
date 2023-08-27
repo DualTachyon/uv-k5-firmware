@@ -1366,7 +1366,7 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gAskForConfirmation = 0;
 			g_200003BA = 0;
 			g_200003BB = 0;
-			gF_LOCK = 0;
+			gF_LOCK = false;
 			gAskToSave = false;
 			gAskToDelete = false;
 			if (gWasFKeyPressed) {

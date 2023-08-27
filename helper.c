@@ -65,7 +65,7 @@ void HELPER_CheckBootKey(uint8_t KeyType)
 		gSubMenuSelection = gSetting_350TX;
 		GUI_SelectNextDisplay(DISPLAY_MENU);
 		gMenuListCount = 57;
-		gF_LOCK = 1;
+		gF_LOCK = true;
 	} else if (KeyType == 2) {
 		gEeprom.DUAL_WATCH = DUAL_WATCH_OFF;
 		gEeprom.BATTERY_SAVE = 0;

@@ -957,12 +957,12 @@ void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 						MENU_AcceptSetting();
 						overlay_FLASH_RebootToBootloader();
 					}
-					g_200003A3 = 1;
+					gFlagAcceptSetting = true;
 					g_200003C6 = 0;
 					gAskForConfirmation = 0;
 				}
 			} else {
-				g_200003A3 = 1;
+				gFlagAcceptSetting = true;
 				g_200003C6 = 0;
 			}
 			g_20000381 = 0;

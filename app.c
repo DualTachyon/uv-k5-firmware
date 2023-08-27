@@ -1587,13 +1587,13 @@ static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHel
 		FUNCTION_Select(FUNCTION_0);
 	}
 	g_2000032E = 1000;
-	if (gEeprom.AUTO_KEYPAD_LOCK == true) {
+	if (gEeprom.AUTO_KEYPAD_LOCK) {
 		gKeyLockCountdown = 30;
 	}
-	if (bKeyPressed == false) {
-		if (g_200003A5 != 0) {
+	if (!bKeyPressed) {
+		if (gFlagSaveVfo) {
 			SETTINGS_SaveVfoIndices();
-			g_200003A5 = 0;
+			gFlagSaveVfo = false;
 		}
 		if (gFlagSaveSettings) {
 			SETTINGS_SaveSettings();
@@ -1603,13 +1603,13 @@ static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHel
 			SETTINGS_SaveFM();
 			gFlagSaveFM = false;
 		}
-		if (g_200003A7 != 0) {
+		if (gFlagSaveChannel) {
 			SETTINGS_SaveChannel(
 				gTxRadioInfo->CHANNEL_SAVE,
 				gEeprom.TX_CHANNEL,
 				gTxRadioInfo,
-				g_200003A7);
-			g_200003A7 = 0;
+				gFlagSaveChannel);
+			gFlagSaveChannel = false;
 			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, 1);
 			RADIO_SetupRegisters(true);
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
