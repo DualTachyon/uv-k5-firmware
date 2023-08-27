@@ -62,7 +62,7 @@ void SystickHandler(void)
 			gBatterySaveCountdownExpired = true;
 		}
 	}
-	if (gCurrentStep == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
+	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		if (gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_4) {
 				if (g_2000033A != 0) {
@@ -75,7 +75,7 @@ void SystickHandler(void)
 		}
 	}
 
-	if (gCurrentStep == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
+	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
 		if (gIsNoaaMode && gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_4) {
 				if (g_20000356 != 0) {
@@ -88,7 +88,7 @@ void SystickHandler(void)
 		}
 	}
 
-	if (gCurrentStep != 0 || g_20000381 == 1) {
+	if (gStepDirection != 0 || g_20000381 == 1) {
 		if (gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (ScanPauseDelayIn10msec != 0) {
 				ScanPauseDelayIn10msec--;

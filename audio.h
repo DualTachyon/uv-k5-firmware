@@ -120,6 +120,7 @@ extern uint8_t gVoiceReadIndex;
 extern uint8_t gVoiceWriteIndex;
 extern volatile uint16_t gCountdownToPlayNextVoice;
 extern volatile bool gFlagPlayQueuedVoice;
+extern VOICE_ID_t gAnotherVoiceID;
 
 void AUDIO_PlayBeep(BEEP_Type_t Beep);
 void AUDIO_PlayVoice(VOICE_ID_t VoiceID);
