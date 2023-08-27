@@ -178,7 +178,7 @@ extern volatile bool gSystickFlag11;
 
 extern volatile uint16_t ScanPauseDelayIn10msec;
 
-extern uint16_t gFM_FrequencyDeviation;
+extern int16_t gFM_FrequencyDeviation;
 
 extern uint16_t gCurrentRSSI;
 

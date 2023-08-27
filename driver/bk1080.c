@@ -19,6 +19,7 @@
 #include "driver/gpio.h"
 #include "driver/i2c.h"
 #include "driver/system.h"
+#include "misc.h"
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 
@@ -100,5 +101,12 @@ void BK1080_SetFrequency(uint16_t Frequency)
 	BK1080_WriteRegister(BK1080_REG_03_CHANNEL, Frequency - 760);
 	SYSTEM_DelayMs(10);
 	BK1080_WriteRegister(BK1080_REG_03_CHANNEL, (Frequency - 760) | 0x8000);
+}
+
+void BK1080_GetFrequencyDeviation(uint16_t Frequency)
+{
+	g_20000362 = Frequency;
+	// Doubts whether this register is signed or not
+	gFM_FrequencyDeviation = (int16_t)BK1080_ReadRegister(BK1080_REG_07) / 16;
 }
 

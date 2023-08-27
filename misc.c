@@ -170,8 +170,8 @@ volatile bool gSystickFlag11;
 
 volatile uint16_t ScanPauseDelayIn10msec;
 
-// This probably should be signed! But Ghidra disgrees
-uint16_t gFM_FrequencyDeviation;
+// Doubts about whether this should be signed or not.
+int16_t gFM_FrequencyDeviation;
 
 uint16_t gCurrentRSSI;
 
