@@ -37,6 +37,15 @@ enum {
 	BANDWIDTH_NARROW = 1U,
 };
 
+enum PTT_ID_t {
+	PTT_ID_OFF  = 0U,
+	PTT_ID_BOT  = 1U,
+	PTT_ID_EOT  = 2U,
+	PTT_ID_BOTH = 3U,
+};
+
+typedef enum PTT_ID_t PTT_ID_t;
+
 typedef struct {
 	uint32_t Frequency;
 	DCS_CodeType_t CodeType;
@@ -68,7 +77,7 @@ typedef struct VFO_Info_t {
 	uint8_t SCANLIST2_PARTICIPATION;
 	uint8_t Band;
 	uint8_t DTMF_DECODING_ENABLE;
-	uint8_t DTMF_PTT_ID_TX_MODE;
+	PTT_ID_t DTMF_PTT_ID_TX_MODE;
 	uint8_t BUSY_CHANNEL_LOCK;
 	uint8_t AM_CHANNEL_MODE;
 	bool IsAM;
@@ -100,6 +109,7 @@ void RADIO_SomethingWithTransmit(void);
 void RADIO_EnableCxCSS(void);
 void RADIO_Something(void);
 void RADIO_Whatever(void);
+void RADIO_SendEndOfTransmission(void);
 
 #endif
 

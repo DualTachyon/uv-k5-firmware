@@ -1418,8 +1418,8 @@ void FUN_00001150(void)
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	g_2000036B = 0;
 	if (gEeprom.ALARM_MODE == ALARM_MODE_TONE) {
-		//Handle_DTMF_ID_and_Roger();
-		//Enable_CxCSS();
+		RADIO_SendEndOfTransmission();
+		RADIO_EnableCxCSS();
 	}
 	g_200003B6 = 0x50;
 	SYSTEM_DelayMs(5);

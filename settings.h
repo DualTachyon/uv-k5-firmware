@@ -82,6 +82,14 @@ enum ALARM_Mode_t {
 
 typedef enum ALARM_Mode_t ALARM_Mode_t;
 
+enum ROGER_Mode_t {
+	ROGER_MODE_OFF   = 0U,
+	ROGER_MODE_ROGER = 1U,
+	ROGER_MODE_MDC   = 2U,
+};
+
+typedef enum ROGER_Mode_t ROGER_Mode_t;
+
 typedef struct {
 	uint8_t VfoChannel[2];
 	uint8_t EEPROM_0E82_0E85[2];
@@ -127,7 +135,7 @@ typedef struct {
 	bool AUTO_KEYPAD_LOCK;
 	ALARM_Mode_t ALARM_MODE;
 	POWER_OnDisplayMode_t POWER_ON_DISPLAY_MODE;
-	uint8_t ROGER;
+	ROGER_Mode_t ROGER;
 	uint8_t REPEATER_TAIL_TONE_ELIMINATION;
 	uint8_t KEY_1_SHORT_PRESS_ACTION;
 	uint8_t KEY_1_LONG_PRESS_ACTION;
