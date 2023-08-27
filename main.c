@@ -18,7 +18,7 @@
 #include <string.h>
 #include "ARMCM0.h"
 
-#include "app.h"
+#include "app/app.h"
 #include "audio.h"
 #include "battery.h"
 #include "bsp/dp32g030/gpio.h"
