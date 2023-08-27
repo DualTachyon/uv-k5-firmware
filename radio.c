@@ -199,9 +199,9 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	gEeprom.VfoInfo[VFO].CHANNEL_SAVE = ChNum;
 
 	if (ChNum < 200) {
-		Base = ChNum << 4;
+		Base = ChNum * 16;
 	} else {
-		Base = 0x0C80 + (ChNum * 32) + (VFO * 16);
+		Base = 0x0C80 + ((ChNum - 200) * 32) + (VFO * 16);
 	}
 
 	if (Arg == 2 || ChNum >= 200) {
