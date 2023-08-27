@@ -879,7 +879,7 @@ void BK4819_PrepareFSKReceive(void)
 	BK4819_WriteRegister(BK4819_REG_59, 0x3068);
 }
 
-void BK4819_ConfiguresTone1ScramblingStuff(void)
+void BK4819_PlayRoger(void)
 {
 	BK4819_EnterTxMute();
 	BK4819_SetAF(BK4819_AF_MUTE);
