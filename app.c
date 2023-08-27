@@ -602,10 +602,10 @@ void APP_DCS_Related(void)
 
 	switch (gMenuCursor) {
 	case 3: // R_DCS?
-		UpperLimit = 0xD0;
+		UpperLimit = 208;
 		break;
 	case 4: // R_CTCS?
-		UpperLimit = 0x32;
+		UpperLimit = 50;
 		break;
 	default:
 		return;
@@ -613,7 +613,7 @@ void APP_DCS_Related(void)
 
 	gSubMenuSelection = AddWithRollover(gSubMenuSelection, gMenuScrollDirection, 1, UpperLimit);
 	if (gMenuCursor == 3) {
-		if (gSubMenuSelection > 104) {
+		if (gSubMenuSelection > 105) {
 			gCodeType = CODE_TYPE_REVERSE_DIGITAL;
 			gCode = gSubMenuSelection - 105;
 		} else {
