@@ -33,7 +33,7 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 				gAnotherVoiceID = VOICE_ID_LOCK;
 			}
 			gEeprom.KEY_LOCK = !gEeprom.KEY_LOCK;
-			g_2000039E = true;
+			gRequestSaveSettings = true;
 		} else {
 			if ((gFmMute || gScreenToDisplay != DISPLAY_MAIN) && gScreenToDisplay != DISPLAY_FM) {
 				return;
@@ -142,7 +142,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			gEeprom.CROSS_BAND_RX_TX = g_20000459;
 			g_2000036F = 1;
-			g_200003A2 = 1;
+			gFlagStopScan = true;
 			g_2000039A = 2;
 			g_2000039B = 1;
 		} else {

@@ -189,7 +189,7 @@ void MENU_AcceptSetting(void)
 	switch (gMenuCursor) {
 	case MENU_SQL:
 		gEeprom.SQUELCH_LEVEL = gSubMenuSelection;
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_2000039A = 1;
 		return;
 
@@ -290,7 +290,7 @@ void MENU_AcceptSetting(void)
 		}
 		BOARD_EEPROM_LoadMoreSettings();
 		g_20000398 = 1;
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_2000036F = 1;
 		return;
 
@@ -306,7 +306,7 @@ void MENU_AcceptSetting(void)
 	case MENU_TDR:
 		gEeprom.DUAL_WATCH = gSubMenuSelection;
 		g_20000398 = 1;
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_2000036F = 1;
 		return;
 
@@ -319,7 +319,7 @@ void MENU_AcceptSetting(void)
 		}
 		gEeprom.CROSS_BAND_RX_TX = gSubMenuSelection;
 		g_20000398 = 1;
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_2000036F = 1;
 		return;
 
@@ -333,7 +333,7 @@ void MENU_AcceptSetting(void)
 
 	case MENU_VOICE:
 		gEeprom.VOICE_PROMPT = gSubMenuSelection;
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_2000036F = 1;
 		return;
 
@@ -375,7 +375,7 @@ void MENU_AcceptSetting(void)
 	case MENU_MIC:
 		gEeprom.MIC_SENSITIVITY = gSubMenuSelection;
 		BOARD_EEPROM_LoadMoreSettings();
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_20000398 = 1;
 		return;
 
@@ -443,7 +443,7 @@ void MENU_AcceptSetting(void)
 
 	case MENU_NOAA_S:
 		gEeprom.NOAA_AUTO_SCAN = gSubMenuSelection;
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_20000398 = 1;
 		return;
 
@@ -475,14 +475,14 @@ void MENU_AcceptSetting(void)
 
 	case MENU_350EN:
 		gSetting_350EN = gSubMenuSelection;
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_2000039A = 2;
 		g_2000039B = 1;
 		return;
 
 	case MENU_SCREN:
 		gSetting_ScrambleEnable = gSubMenuSelection;
-		g_2000039E = 1;
+		gRequestSaveSettings = true;
 		g_20000398 = 1;
 		return;
 
@@ -490,7 +490,7 @@ void MENU_AcceptSetting(void)
 		return;
 	}
 
-	g_2000039E = 1;
+	gRequestSaveSettings = true;
 }
 
 void MENU_SelectNextDCS(void)

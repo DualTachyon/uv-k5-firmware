@@ -1461,7 +1461,7 @@ void APP_ChangeStepDirectionMaybe(bool bFlag, uint8_t Direction)
 void APP_FlipVoxSwitch(void)
 {
 	gEeprom.VOX_SWITCH = !gEeprom.VOX_SWITCH;
-	g_2000039E = 1;
+	gRequestSaveSettings = true;
 	g_20000398 = 1;
 	gAnotherVoiceID = VOICE_ID_VOX;
 	g_2000036F = 1;
@@ -1935,17 +1935,17 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		gFlagRefreshSetting = true;
 		gFlagAcceptSetting = false;
 	}
-	if (g_200003A2 == 1) {
+	if (gFlagStopScan) {
 		BK4819_StopScan();
-		g_200003A2 = 0;
+		gFlagStopScan = false;
 	}
-	if (g_2000039E) {
+	if (gRequestSaveSettings) {
 		if (bKeyHeld == 0) {
 			SETTINGS_SaveSettings();
 		} else {
 			gFlagSaveSettings = 1;
 		}
-		g_2000039E = 0;
+		gRequestSaveSettings = false;
 		g_2000036F = 1;
 	}
 	if (gRequestSaveFM) {
