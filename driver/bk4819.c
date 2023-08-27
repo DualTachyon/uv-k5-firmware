@@ -898,7 +898,7 @@ void BK4819_PlayRoger(void)
 	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);
 }
 
-void BK4819_ConfigureFSK(void)
+void BK4819_PlayRogerMDC(void)
 {
 	uint8_t i;
 
