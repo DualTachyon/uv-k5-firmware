@@ -1412,6 +1412,177 @@ LAB_00004b08:
 	}
 }
 
+void FUN_00001150(void)
+{
+	g_20000383 = 0;
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+	g_2000036B = 0;
+	if (gEeprom.ALARM_MODE == ALARM_MODE_TONE) {
+		//Handle_DTMF_ID_and_Roger();
+		//Enable_CxCSS();
+	}
+	g_200003B6 = 0x50;
+	SYSTEM_DelayMs(5);
+	RADIO_SetupRegisters(true);
+	gRequestDisplayScreen = DISPLAY_MAIN;
+}
+
+void XXX_Append(uint8_t Data)
+{
+	if (g_200003BB == 0) {
+		memset(g_20000D1C, '-', sizeof(g_20000D1C));
+		g_20000D1C[14] = 0;
+	} else if (g_200003BB >= sizeof(g_20000D1C)) {
+		return;
+	}
+	g_20000D1C[g_200003BB++] = Data;
+}
+
+void FUN_000075b0(void)
+{
+	uint8_t StepSetting;
+	uint16_t StepFrequency;
+
+	BK4819_StopScan();
+	RADIO_ConfigureTX();
+
+	if (206 < gInfoCHAN_A->CHANNEL_SAVE) {
+		gInfoCHAN_A->CHANNEL_SAVE = 205;
+	}
+	StepSetting = gInfoCHAN_A->STEP_SETTING;
+	StepFrequency = gInfoCHAN_A->StepFrequency;
+	RADIO_InitInfo(gInfoCHAN_A, gInfoCHAN_A->CHANNEL_SAVE, gInfoCHAN_A->Band, gInfoCHAN_A->pDCS_Current->Frequency);
+
+	gInfoCHAN_A->STEP_SETTING = StepSetting;
+	gInfoCHAN_A->StepFrequency = StepFrequency;
+	RADIO_SetupRegisters(true);
+
+	gIsNoaaMode = false;
+	if (g_20000458 == 1) {
+		gScanState = 1;
+		gScanFrequency = gInfoCHAN_A->pDCS_Current->Frequency;
+		gStepOffset = gInfoCHAN_A->STEP_SETTING;
+		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
+		BK4819_SetScanFrequency(gScanFrequency);
+	} else {
+		gScanState = 0;
+		gScanFrequency = 0xFFFFFFFF;
+		BK4819_PickRXFilterPathBasedOnFrequency(0xFFFFFFFF);
+		BK4819_EnableFrequencyScan();
+	}
+	g_2000045D = 0x15;
+	g_CxCSS_Index = 0xFF;
+	g_CxCSS_Type = 0xFF;
+	g_2000045F = 0;
+	g_2000045C = 0;
+	g_200003AA = 0;
+	g_CxCSS_TAIL_Found = false;
+	g_CDCSS_Lost = false;
+	gCDCSSCodeReceived = 0;
+	g_CTCSS_Lost = false;
+	g_VOX_Lost = false;
+	g_SquelchLost = false;
+	g_20000461 = 0;
+	g_20000464 = 0;
+}
+
+void FUN_000074f8(uint8_t Direction)
+{
+	g_20000381 = 1;
+	gMenuScrollDirection = Direction;
+	RADIO_ConfigureTX();
+	APP_DCS_Related();
+	ScanPauseDelayIn10msec = 50;
+	gSystickFlag9 = false;
+}
+
+void APP_ChangeStepDirectionMaybe(bool bFlag, uint8_t Direction)
+{
+	RADIO_ConfigureTX();
+	g_20000410 = gInfoCHAN_A->CHANNEL_SAVE;
+	g_20000415 = 0;
+	gStepDirection = Direction;
+	if (g_20000410 < 200) {
+		if (bFlag == 1) {
+			g_20000414 = g_20000410;
+		}
+		FUN_00007dd4();
+	} else {
+		if (bFlag == 1) {
+			g_20000418 = gInfoCHAN_A->DCS[0].Frequency;
+		}
+		APP_MoreRadioStuff();
+	}
+	ScanPauseDelayIn10msec = 50;
+	gSystickFlag9 = false;
+	g_20000411 = 0;
+	gScanPauseMode = 0;
+	g_20000413 = 0;
+}
+
+void APP_FlipVoxSwitch(void)
+{
+	gEeprom.VOX_SWITCH = !gEeprom.VOX_SWITCH;
+	g_2000039E = 1;
+	g_20000398 = 1;
+	gAnotherVoiceID = VOICE_ID_VOX;
+	g_2000036F = 1;
+}
+
+void APP_CycleOutputPower(void)
+{
+	if (++gTxRadioInfo->OUTPUT_POWER > OUTPUT_POWER_HIGH) {
+		gTxRadioInfo->OUTPUT_POWER = OUTPUT_POWER_LOW;
+	}
+
+	g_2000039D = 1;
+	gAnotherVoiceID = VOICE_ID_POWER;
+	gRequestDisplayScreen = gScreenToDisplay;
+}
+
+void FUN_00005830(bool bFlag)
+{
+	if (gFmMute) {
+		if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
+			uint16_t Frequency;
+
+			GUI_SelectNextDisplay(DISPLAY_FM);
+			if (g_20000390 != 0) {
+				PlayFMRadio();
+				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
+				return;
+			}
+			if (bFlag) {
+				gIs_A_Scan = 1;
+				gA_Scan_Channel = 0;
+				FM_EraseChannels();
+				Frequency = gEeprom.FM_LowerLimit;
+			} else {
+				gIs_A_Scan = 0;
+				gA_Scan_Channel = 0;
+				Frequency = gEeprom.FM_FrequencyToPlay;
+			}
+			BK1080_GetFrequencyDeviation(Frequency);
+			FUN_0000752c(Frequency, 1, bFlag);
+			gAnotherVoiceID = VOICE_ID_SCANNING_BEGIN;
+			return;
+		}
+	} else if (gScreenToDisplay != DISPLAY_SCANNER) {
+		RADIO_ConfigureTX();
+		if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
+			GUI_SelectNextDisplay(DISPLAY_MAIN);
+			if (gStepDirection != 0) {
+				FUN_0000773c();
+				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
+				return;
+			}
+			APP_ChangeStepDirectionMaybe(true, 1);
+			AUDIO_SetVoiceID(0, VOICE_ID_SCANNING_BEGIN);
+			AUDIO_PlaySingleVoice(true);
+		}
+	}
+}
+
 static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHeld)
 {
 	if (gCurrentFunction == FUNCTION_POWER_SAVE) {
