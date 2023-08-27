@@ -1473,7 +1473,7 @@ void APP_CycleOutputPower(void)
 		gTxRadioInfo->OUTPUT_POWER = OUTPUT_POWER_LOW;
 	}
 
-	g_2000039D = 1;
+	gRequestSaveChannel = 1;
 	gAnotherVoiceID = VOICE_ID_POWER;
 	gRequestDisplayScreen = gScreenToDisplay;
 }
@@ -1948,35 +1948,35 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		g_2000039E = 0;
 		g_2000036F = 1;
 	}
-	if (g_2000039F != 0) {
+	if (gRequestSaveFM) {
 		if (!bKeyHeld) {
 			SETTINGS_SaveFM();
 		} else {
-			gFlagSaveFM = g_2000039F;
+			gFlagSaveFM = true;
 		}
-		g_2000039F = 0;
+		gRequestSaveFM = false;
 	}
-	if (g_2000039C != 0) {
+	if (gRequestSaveVFO) {
 		if (!bKeyHeld) {
 			SETTINGS_SaveVfoIndices();
 		} else {
 			gFlagSaveVfo = true;
 		}
-		g_2000039C = 0;
+		gRequestSaveVFO = false;
 	}
-	if (g_2000039D != 0) {
+	if (gRequestSaveChannel) {
 		if (!bKeyHeld) {
-			SETTINGS_SaveChannel(gTxRadioInfo->CHANNEL_SAVE, gEeprom.TX_CHANNEL, gTxRadioInfo, g_2000039D);
+			SETTINGS_SaveChannel(gTxRadioInfo->CHANNEL_SAVE, gEeprom.TX_CHANNEL, gTxRadioInfo, gRequestSaveChannel);
 			if (gScreenToDisplay != DISPLAY_SCANNER) {
 				g_2000039A = 1;
 			}
 		} else {
-			gFlagSaveChannel = g_2000039D;
+			gFlagSaveChannel = gRequestSaveChannel;
 			if (gRequestDisplayScreen == DISPLAY_INVALID) {
 				gRequestDisplayScreen = DISPLAY_MAIN;
 			}
 		}
-		g_2000039D = 0;
+		gRequestSaveChannel = 0;
 	}
 
 	if (g_2000039A == 0) {

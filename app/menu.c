@@ -196,7 +196,7 @@ void MENU_AcceptSetting(void)
 	case MENU_STEP:
 		if ((gTxRadioInfo->CHANNEL_SAVE - 200) < 7) {
 			gTxRadioInfo->STEP_SETTING = gSubMenuSelection;
-			g_2000039D = 1;
+			gRequestSaveChannel = 1;
 			return;
 		}
 		gSubMenuSelection = gTxRadioInfo->STEP_SETTING;
@@ -204,7 +204,7 @@ void MENU_AcceptSetting(void)
 
 	case MENU_TXP:
 		gTxRadioInfo->OUTPUT_POWER = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_T_DCS:
@@ -213,7 +213,7 @@ void MENU_AcceptSetting(void)
 	case MENU_R_DCS:
 		if (gSubMenuSelection == 0) {
 			if (gTxRadioInfo->DCS[Sel].CodeType != CODE_TYPE_DIGITAL && gTxRadioInfo->DCS[Sel].CodeType != CODE_TYPE_REVERSE_DIGITAL) {
-				g_2000039D = 1;
+				gRequestSaveChannel = 1;
 				return;
 			}
 			Code = 0;
@@ -226,7 +226,7 @@ void MENU_AcceptSetting(void)
 			Code = gSubMenuSelection - 105;
 		}
 		gTxRadioInfo->DCS[Sel].RX_TX_Code = Code;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_T_CTCS:
@@ -235,7 +235,7 @@ void MENU_AcceptSetting(void)
 	case MENU_R_CTCS:
 		if (gSubMenuSelection == 0) {
 			if (gTxRadioInfo->DCS[Sel].CodeType != CODE_TYPE_CONTINUOUS_TONE) {
-				g_2000039D = 1;
+				gRequestSaveChannel = 1;
 				return;
 			}
 			Code = 0;
@@ -245,37 +245,37 @@ void MENU_AcceptSetting(void)
 			Code = gSubMenuSelection - 1;
 		}
 		gTxRadioInfo->DCS[Sel].RX_TX_Code = Code;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_SFT_D:
 		gTxRadioInfo->FREQUENCY_DEVIATION_SETTING = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_OFFSET:
 		gTxRadioInfo->FREQUENCY_OF_DEVIATION = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_W_N:
 		gTxRadioInfo->CHANNEL_BANDWIDTH = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_SCR:
 		gTxRadioInfo->SCRAMBLING_TYPE = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_BCL:
 		gTxRadioInfo->BUSY_CHANNEL_LOCK = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_MEM_CH:
 		gTxRadioInfo->CHANNEL_SAVE = gSubMenuSelection;
-		g_2000039D = 2;
+		gRequestSaveChannel = 2;
 		gEeprom.EEPROM_0E81_0E84[0] = gSubMenuSelection;
 		return;
 
@@ -409,12 +409,12 @@ void MENU_AcceptSetting(void)
 
 	case MENU_PTT_ID:
 		gTxRadioInfo->DTMF_PTT_ID_TX_MODE = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_D_DCD:
 		gTxRadioInfo->DTMF_DECODING_ENABLE = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_D_LIST:
@@ -438,7 +438,7 @@ void MENU_AcceptSetting(void)
 
 	case MENU_AM:
 		gTxRadioInfo->AM_CHANNEL_MODE = gSubMenuSelection;
-		g_2000039D = 1;
+		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_NOAA_S:
