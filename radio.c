@@ -216,7 +216,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 
 		Tmp = Data[4];
 		if (Tmp > 6) {
-			Params = 5;
+			Tmp = 5;
 		}
 		gEeprom.VfoInfo[VFO].STEP_SETTING = Tmp;
 		gEeprom.VfoInfo[VFO].StepFrequency = StepFrequencyTable[Tmp];
