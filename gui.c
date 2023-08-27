@@ -932,7 +932,7 @@ static void DisplayFM(void)
 	ST7565_BlitFullScreen();
 }
 
-static void DisplayMenu(void)
+void GUI_DisplayMenu(void)
 {
 	char String[16];
 	char Contact[8];
@@ -1341,7 +1341,7 @@ void GUI_DisplayScreen(void)
 		DisplayFM();
 		break;
 	case DISPLAY_MENU:
-		DisplayMenu();
+		GUI_DisplayMenu();
 		break;
 	case DISPLAY_SCANNER:
 		DisplayScanner();

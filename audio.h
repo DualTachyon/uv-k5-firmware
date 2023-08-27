@@ -111,6 +111,8 @@ enum VOICE_ID_t {
 	VOICE_ID_80			= 0x49U,
 	VOICE_ID_90			= 0x4AU,
 	VOICE_ID_END			= 0x4BU,
+
+	VOICE_ID_INVALID		= 0xFFU,
 };
 
 typedef enum VOICE_ID_t VOICE_ID_t;

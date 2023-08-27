@@ -17,6 +17,7 @@
 #include <string.h>
 #include "aircopy.h"
 #include "app.h"
+#include "app/menu.h"
 #include "audio.h"
 #include "battery.h"
 #include "board.h"
@@ -574,67 +575,12 @@ void FUN_00007dd4(void)
 	}
 }
 
-uint8_t AddWithRollover(uint8_t Base, uint8_t Add, uint8_t LowerLimit, uint8_t UpperLimit)
-{
-	Base += Add;
-	if (Base == 0xFF || Base < LowerLimit) {
-		return UpperLimit;
-	}
-
-	if (Base > UpperLimit) {
-		return LowerLimit;
-	}
-
-	return Base;
-}
-
 void NOAA_IncreaseChannel(void)
 {
 	gNoaaChannel++;
 	if (gNoaaChannel > 9) {
 		gNoaaChannel = 0;
 	}
-}
-
-void APP_DCS_Related(void)
-{
-	uint8_t UpperLimit;
-
-	switch (gMenuCursor) {
-	case 3: // R_DCS?
-		UpperLimit = 208;
-		break;
-	case 4: // R_CTCS?
-		UpperLimit = 50;
-		break;
-	default:
-		return;
-	}
-
-	gSubMenuSelection = AddWithRollover(gSubMenuSelection, gMenuScrollDirection, 1, UpperLimit);
-	if (gMenuCursor == 3) {
-		if (gSubMenuSelection > 105) {
-			gCodeType = CODE_TYPE_REVERSE_DIGITAL;
-			gCode = gSubMenuSelection - 105;
-		} else {
-			gCodeType = CODE_TYPE_DIGITAL;
-			gCode = gSubMenuSelection - 1;
-		}
-
-	} else {
-		gCodeType = CODE_TYPE_CONTINUOUS_TONE;
-		gCode = gSubMenuSelection - 1;
-	}
-
-	RADIO_SetupRegisters(true);
-
-	if (gCodeType == CODE_TYPE_CONTINUOUS_TONE) {
-		ScanPauseDelayIn10msec = 20;
-	} else {
-		ScanPauseDelayIn10msec = 30;
-	}
-
-	gUpdateDisplay = true;
 }
 
 void FUN_00007f4c(void)
@@ -926,7 +872,7 @@ void APP_Update(void)
 	}
 
 	if (g_20000381 == 1 && gSystickFlag9 && gVoiceWriteIndex == 0) {
-		APP_DCS_Related();
+		MENU_SelectNextDCS();
 		gSystickFlag9 = false;
 	}
 
@@ -1484,16 +1430,6 @@ void FUN_000075b0(void)
 	g_SquelchLost = false;
 	g_20000461 = 0;
 	g_20000464 = 0;
-}
-
-void FUN_000074f8(uint8_t Direction)
-{
-	g_20000381 = 1;
-	gMenuScrollDirection = Direction;
-	RADIO_ConfigureTX();
-	APP_DCS_Related();
-	ScanPauseDelayIn10msec = 50;
-	gSystickFlag9 = false;
 }
 
 void APP_ChangeStepDirectionMaybe(bool bFlag, uint8_t Direction)

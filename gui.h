@@ -117,6 +117,7 @@ void GUI_DisplayStatusLine(void);
 void GUI_DisplayFrequency(const char *pDigits, uint8_t X, uint8_t Y, bool bDisplayLeadingZero, bool Flag1);
 void GUI_DisplaySmallDigits(uint8_t Size, const char *pString, uint8_t x, uint8_t y);
 
+void GUI_DisplayMenu(void);
 void GUI_DisplayScreen(void);
 void GUI_SelectNextDisplay(GUI_DisplayType_t Display);
 

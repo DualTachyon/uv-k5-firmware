@@ -93,6 +93,8 @@ extern uint8_t g_2000039E;
 extern uint8_t gKeypadLocked;
 extern uint8_t g_200003A0;
 extern uint8_t g_200003A2;
+extern uint8_t g_200003A3;
+extern uint8_t g_200003A4;
 extern bool g_200003A5;
 extern bool gFlagSaveSettings;
 extern bool g_200003A7;
@@ -115,6 +117,7 @@ extern uint8_t g_200003C0;
 extern bool g_200003C1;
 extern uint8_t g_200003C3;
 extern uint8_t g_200003C4;
+extern uint8_t gDTMFChosenContact;
 extern uint16_t g_200003E2;
 extern volatile uint16_t gFlashLightBlinkCounter;
 extern uint8_t g_200003FD;
@@ -201,6 +204,7 @@ extern uint16_t gCurrentRSSI;
 void NUMBER_Append(char Digit);
 void NUMBER_Get(char *pDigits, uint32_t *pInteger);
 void NUMBER_ToDigits(uint32_t Value, char *pDigits);
+uint8_t NUMBER_AddWithWraparound(uint8_t Base, int8_t Add, uint8_t LowerLimit, uint8_t UpperLimit);
 
 #endif
 

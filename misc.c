@@ -84,6 +84,8 @@ uint8_t g_2000039D;
 uint8_t g_2000039E;
 uint8_t g_200003A0;
 uint8_t g_200003A2;
+uint8_t g_200003A3;
+uint8_t g_200003A4;
 bool g_200003A5;
 bool gFlagSaveSettings;
 bool g_200003A7;
@@ -106,6 +108,7 @@ uint8_t g_200003C0;
 bool g_200003C1;
 uint8_t g_200003C3;
 uint8_t g_200003C4;
+uint8_t gDTMFChosenContact;
 uint16_t g_200003E2;
 volatile uint16_t gFlashLightBlinkCounter;
 uint8_t g_200003FD;
@@ -228,5 +231,19 @@ void NUMBER_ToDigits(uint32_t Value, char *pDigits)
 		pDigits[7 - i] = Value - (Result * 10U);
 		Value = Result;
 	}
+}
+
+uint8_t NUMBER_AddWithWraparound(uint8_t Base, int8_t Add, uint8_t LowerLimit, uint8_t UpperLimit)
+{
+	Base += Add;
+	if (Base == 0xFF || Base < LowerLimit) {
+		return UpperLimit;
+	}
+
+	if (Base > UpperLimit) {
+		return LowerLimit;
+	}
+
+	return Base;
 }
 

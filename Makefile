@@ -34,6 +34,7 @@ OBJS += driver/systick.o
 OBJS += driver/uart.o
 
 # Main
+OBJS += app/menu.o
 OBJS += aircopy.o
 OBJS += app.o
 OBJS += audio.o
