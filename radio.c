@@ -214,7 +214,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		gEeprom.VfoInfo[VFO].FREQUENCY_DEVIATION_SETTING = Tmp;
 		gEeprom.VfoInfo[VFO].AM_CHANNEL_MODE = !!(Data[3] & 0x10);
 
-		Tmp = Data[4];
+		Tmp = Data[6];
 		if (Tmp > 6) {
 			Tmp = 5;
 		}
