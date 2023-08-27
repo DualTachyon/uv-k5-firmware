@@ -92,7 +92,7 @@ enum {
 };
 
 extern GUI_DisplayType_t gScreenToDisplay;
-extern uint8_t g_200003C6;
+extern bool gIsInSubMenu;
 extern volatile uint8_t gStepDirection;
 extern GUI_DisplayType_t gRequestDisplayScreen;
 extern uint8_t g_200003BA;

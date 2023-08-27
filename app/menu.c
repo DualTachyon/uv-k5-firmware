@@ -812,7 +812,7 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	g_20000396 = 1;
 	NUMBER_Append(Key);
 	gRequestDisplayScreen = DISPLAY_MENU;
-	if (g_200003C6 == 0) {
+	if (!gIsInSubMenu) {
 		switch (gNumberOffset) {
 		case 1:
 			Value = gNumberForPrintf[0];
@@ -907,14 +907,14 @@ void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 	if (!bKeyHeld && bKeyPressed) {
 		g_20000396 = 1;
 		if (g_20000381 == 0) {
-			if (g_200003C6 == 1) {
+			if (gIsInSubMenu) {
 				if (gNumberOffset == 0 || gMenuCursor != MENU_OFFSET) {
-					g_200003C6 = 0;
+					gIsInSubMenu = false;
 					gNumberOffset = 0;
 					gFlagRefreshSetting = true;
 					gAnotherVoiceID = VOICE_ID_CANCEL;
 				} else {
-					gNumberOffset -= 1;
+					gNumberOffset--;
 					gNumberForPrintf[gNumberOffset] = 10;
 				}
 				gRequestDisplayScreen = DISPLAY_MENU;
@@ -936,12 +936,12 @@ void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	if (!bKeyHeld && bKeyPressed) {
 		g_20000396 = 1;
 		gRequestDisplayScreen = DISPLAY_MENU;
-		if (g_200003C6 == 0) {
+		if (!gIsInSubMenu) {
 			if (gMenuCursor != MENU_SCR) {
 				gAnotherVoiceID = MenuVoices[gMenuCursor];
 			}
 			gAskForConfirmation = 0;
-			g_200003C6 = 1;
+			gIsInSubMenu = true;
 		} else {
 			if (gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH || gMenuCursor == MENU_DEL_CH) {
 				switch (gAskForConfirmation) {
@@ -958,12 +958,12 @@ void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 						overlay_FLASH_RebootToBootloader();
 					}
 					gFlagAcceptSetting = true;
-					g_200003C6 = 0;
+					gIsInSubMenu = false;
 					gAskForConfirmation = 0;
 				}
 			} else {
 				gFlagAcceptSetting = true;
-				g_200003C6 = 0;
+				gIsInSubMenu = false;
 			}
 			g_20000381 = 0;
 			if (gMenuCursor == MENU_SCR) {
@@ -1028,7 +1028,7 @@ void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		return;
 	}
 
-	if (g_200003C6 == 0) {
+	if (!gIsInSubMenu) {
 		gMenuCursor = NUMBER_AddWithWraparound(gMenuCursor, -Direction, 0, gMenuListCount - 1);
 		gFlagRefreshSetting = true;
 		gRequestDisplayScreen = DISPLAY_MENU;

@@ -169,7 +169,7 @@ static const char gSubMenu_F_LOCK[6][4] = {
 };
 
 GUI_DisplayType_t gScreenToDisplay;
-uint8_t g_200003C6;
+bool gIsInSubMenu;
 volatile uint8_t gStepDirection;
 GUI_DisplayType_t gRequestDisplayScreen;
 uint8_t g_200003BA;
@@ -958,7 +958,7 @@ void GUI_DisplayMenu(void)
 	}
 	NUMBER_ToDigits(gMenuCursor + 1, String);
 	GUI_DisplaySmallDigits(2, String + 6, 33, 6);
-	if (g_200003C6) {
+	if (gIsInSubMenu) {
 		memcpy(gFrameBuffer[0] + 50, BITMAP_CurrentIndicator, sizeof(BITMAP_CurrentIndicator));
 	}
 
@@ -1003,7 +1003,7 @@ void GUI_DisplayMenu(void)
 		break;
 
 	case MENU_OFFSET:
-		if (g_200003C6 != 1 || gNumberOffset == 0) {
+		if (!gIsInSubMenu || gNumberOffset == 0) {
 			sprintf(String, "%.5f", gSubMenuSelection * 1e-05);
 			break;
 		}
@@ -1363,7 +1363,7 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 	if (Display != DISPLAY_INVALID) {
 		if (gScreenToDisplay != Display) {
 			gNumberOffset = 0;
-			g_200003C6 = 0;
+			gIsInSubMenu = false;
 			g_20000381 = 0;
 			gStepDirection = 0;
 			g_20000390 = 0;
