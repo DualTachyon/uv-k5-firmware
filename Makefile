@@ -34,11 +34,11 @@ OBJS += driver/systick.o
 OBJS += driver/uart.o
 
 # Main
+OBJS += app/app.o
 OBJS += app/generic.o
 OBJS += app/main.o
 OBJS += app/menu.o
 OBJS += aircopy.o
-OBJS += app.o
 OBJS += audio.o
 OBJS += battery.o
 OBJS += bitmaps.o
