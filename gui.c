@@ -936,7 +936,7 @@ static void DisplayFM(void)
 void GUI_DisplayMenu(void)
 {
 	char String[16];
-	char Contact[8];
+	char Contact[16];
 	uint8_t i;
 
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
@@ -1147,9 +1147,10 @@ void GUI_DisplayMenu(void)
 	case MENU_D_LIST:
 		gIsDtmfContactValid = DTMF_GetContact((uint8_t)gSubMenuSelection - 1, Contact);
 		if (!gIsDtmfContactValid) {
-			strcpy(String, "NULL");
+			// Ghidra being weird again...
+			memcpy(String, "NULL\0\0\0", 8);
 		} else {
-			strcpy(String, Contact);
+			memcpy(String, Contact, 8);
 		}
 		break;
 
@@ -1204,8 +1205,9 @@ void GUI_DisplayMenu(void)
 		}
 	}
 	if (gMenuCursor == MENU_D_LIST && gIsDtmfContactValid) {
-		memcpy(&gDTMF_ID, Contact, 4);
-		sprintf(String,"ID:%s", Contact);
+		Contact[11] = 0;
+		memcpy(&gDTMF_ID, Contact + 8, 4);
+		sprintf(String,"ID:%s", Contact + 8);
 		GUI_PrintString(String, 50, 127, 4, 8, true);
 	}
 
