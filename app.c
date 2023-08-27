@@ -1568,10 +1568,10 @@ void FUN_000056d8(void)
 	}
 }
 
-void FUN_000056a0(int param_1)
+void FUN_000056a0(bool bFlag)
 {
 	gNumberOffset = 0;
-	if (param_1 == 1) {
+	if (bFlag) {
 		g_20000383 = 3;
 	} else {
 		g_20000383 = 1;
