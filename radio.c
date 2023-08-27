@@ -746,7 +746,7 @@ LAB_00007c20:
 		}
 		gSystickFlag0 = 0;
 		g_200003FD = 0;
-		g_2000036D = 0;
+		gRTTECountdown = 0;
 	}
 	g_200003BE = 0;
 }

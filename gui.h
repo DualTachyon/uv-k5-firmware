@@ -97,7 +97,7 @@ extern volatile uint8_t gStepDirection;
 extern GUI_DisplayType_t gRequestDisplayScreen;
 extern uint8_t g_200003BA;
 extern uint8_t g_200003BB;
-extern uint8_t gWasFKeyPressed;
+extern bool gWasFKeyPressed;
 
 extern uint8_t gAskForConfirmation;
 extern bool gAskToSave;

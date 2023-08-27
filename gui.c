@@ -174,7 +174,7 @@ volatile uint8_t gStepDirection;
 GUI_DisplayType_t gRequestDisplayScreen;
 uint8_t g_200003BA;
 uint8_t g_200003BB;
-uint8_t gWasFKeyPressed;
+bool gWasFKeyPressed;
 
 uint8_t gAskForConfirmation;
 bool gAskToSave;
@@ -381,7 +381,7 @@ void GUI_DisplayStatusLine(void)
 	}
 	if (gEeprom.KEY_LOCK) {
 		memcpy(gStatusLine + 90, BITMAP_KeyLock, sizeof(BITMAP_KeyLock));
-	} else if (gWasFKeyPressed == 1) {
+	} else if (gWasFKeyPressed) {
 		memcpy(gStatusLine + 90, BITMAP_F_Key, sizeof(BITMAP_F_Key));
 	}
 
@@ -1369,8 +1369,8 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gF_LOCK = 0;
 			gAskToSave = false;
 			gAskToDelete = false;
-			if (gWasFKeyPressed == 1) {
-				gWasFKeyPressed = 0;
+			if (gWasFKeyPressed) {
+				gWasFKeyPressed = false;
 				g_2000036F = 1;
 			}
 		}
