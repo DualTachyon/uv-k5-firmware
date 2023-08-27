@@ -1583,6 +1583,67 @@ void FUN_00005830(bool bFlag)
 	}
 }
 
+void FUN_00005770(void)
+{
+	if (gCurrentFunction != FUNCTION_2) {
+		RADIO_ConfigureTX();
+		if (gInfoCHAN_A->CHANNEL_SAVE >= 207 && gIsNoaaMode) {
+			gNoaaChannel = gInfoCHAN_A->CHANNEL_SAVE - 207;
+		}
+		RADIO_SetupRegisters(true);
+		FUN_000069f8(FUNCTION_2);
+		return;
+	}
+	if (gStepDirection != 0) {
+		ScanPauseDelayIn10msec = 500;
+		gSystickFlag9 = false;
+		gScanPauseMode = 1;
+	}
+	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode) {
+		g_20000356 = 500;
+		gSystickFlag8 = false;
+	}
+	RADIO_SetupRegisters(true);
+	if (gFmMute == true) {
+		FUN_000059b4();
+		gRequestDisplayScreen = DISPLAY_FM;
+	} else {
+		gRequestDisplayScreen = gScreenToDisplay;
+	}
+}
+
+void FUN_000056d8(void)
+{
+	if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_2) {
+		if (gFmMute) {
+			FM_TurnOff();
+			gNumberOffset = 0;
+			g_200003B6 = 0x50;
+			g_20000398 = 1;
+			gRequestDisplayScreen = DISPLAY_MAIN;
+			return;
+		}
+		RADIO_ConfigureTX();
+		RADIO_SetupRegisters(true);
+		FUN_000059b4();
+		gNumberOffset = 0;
+		gRequestDisplayScreen = DISPLAY_FM;
+	}
+}
+
+void FUN_000056a0(int param_1)
+{
+	gNumberOffset = 0;
+	if (param_1 == 1) {
+		g_20000383 = 3;
+	} else {
+		g_20000383 = 1;
+	}
+	g_20000422 = 0;
+	g_200003A0 = 1;
+	gRequestDisplayScreen = DISPLAY_MAIN;
+}
+
 static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHeld)
 {
 	if (gCurrentFunction == FUNCTION_POWER_SAVE) {
