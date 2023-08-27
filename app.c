@@ -42,7 +42,7 @@
 #include "settings.h"
 #include "sram-overlay.h"
 
-static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHeld);
+static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void FUN_000069f8(FUNCTION_Type_t Function);
 
 static void FUN_00005144(void)
@@ -1581,7 +1581,7 @@ void FUN_000056a0(bool bFlag)
 	gRequestDisplayScreen = DISPLAY_MAIN;
 }
 
-static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHeld)
+static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	if (gCurrentFunction == FUNCTION_POWER_SAVE) {
 		FUNCTION_Select(FUNCTION_0);
@@ -1615,28 +1615,28 @@ static void APP_ProcessKey(KEY_Code_t CurrentKey, bool bKeyPressed, bool bKeyHel
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
 		}
 	} else {
-		if (CurrentKey != KEY_PTT) {
+		if (Key != KEY_PTT) {
 			g_20000393 = 0x10;
 		}
 		BACKLIGHT_TurnOn();
 		if (g_200003C1 == 1) {
 			g_200003C1 = 0;
 			AUDIO_PlayBeep(BEEP_1KHZ_60MS_OPTIONAL);
-			if (CurrentKey != KEY_PTT) {
+			if (Key != KEY_PTT) {
 				g_20000394 = true;
 				return;
 			}
 		}
 	}
 
-	if (gF_LOCK == 1) {
-		if (CurrentKey == KEY_PTT) {
+	if (gF_LOCK) {
+		if (Key == KEY_PTT) {
 			return;
 		}
-		if (CurrentKey == KEY_SIDE2) {
+		if (Key == KEY_SIDE2) {
 			return;
 		}
-		if (CurrentKey == KEY_SIDE1) {
+		if (Key == KEY_SIDE1) {
 			return;
 		}
 	}
