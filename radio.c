@@ -122,7 +122,7 @@ void RADIO_InitInfo(VFO_Info_t *pInfo, uint8_t ChannelSave, uint8_t Band, uint32
 void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 {
 	VFO_Info_t *pRadio;
-	uint8_t ChNum;
+	uint8_t Channel;
 	uint8_t Params;
 	uint8_t Band;
 	bool bParticipation2;
@@ -142,10 +142,10 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		}
 	}
 
-	ChNum = gEeprom.VfoChannel[VFO];
-	if (ChNum < 217) {
-		if (ChNum >= 207) {
-			RADIO_InitInfo(pRadio, gEeprom.VfoChannel[VFO], 2, NoaaFrequencyTable[ChNum - 207]);
+	Channel = gEeprom.VfoChannel[VFO];
+	if (Channel < 217) {
+		if (Channel >= 207) {
+			RADIO_InitInfo(pRadio, gEeprom.VfoChannel[VFO], 2, NoaaFrequencyTable[Channel - 207]);
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 				return;
 			}
@@ -153,30 +153,30 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 			return;
 		}
-		if (ChNum < 200) {
-			ChNum = RADIO_FindNextChannel(ChNum, RADIO_CHANNEL_UP, false, VFO);
-			if (ChNum == 0xFF) {
-				ChNum = gEeprom.EEPROM_0E82_0E85[VFO];
+		if (Channel < 200) {
+			Channel = RADIO_FindNextChannel(Channel, RADIO_CHANNEL_UP, false, VFO);
+			if (Channel == 0xFF) {
+				Channel = gEeprom.EEPROM_0E82_0E85[VFO];
 				gEeprom.VfoChannel[VFO] = gEeprom.EEPROM_0E82_0E85[VFO];
 			} else {
-				gEeprom.VfoChannel[VFO] = ChNum;
-				gEeprom.EEPROM_0E81_0E84[VFO] = ChNum;
+				gEeprom.VfoChannel[VFO] = Channel;
+				gEeprom.EEPROM_0E81_0E84[VFO] = Channel;
 			}
 		}
 	} else {
-		ChNum = 205;
+		Channel = 205;
 	}
 
-	Params = gMR_ChannelParameters[ChNum];
+	Params = gMR_ChannelParameters[Channel];
 	if (Params == 0xFF) {
 		uint8_t Index;
 
-		if (ChNum < 200) {
-			ChNum = gEeprom.EEPROM_0E82_0E85[VFO];
+		if (Channel < 200) {
+			Channel = gEeprom.EEPROM_0E82_0E85[VFO];
 			gEeprom.VfoChannel[VFO] = gEeprom.EEPROM_0E82_0E85[VFO];
 		}
-		Index = ChNum - 200;
-		RADIO_InitInfo(pRadio, ChNum, Index, gLowerLimitFrequencyBandTable[Index]);
+		Index = Channel - 200;
+		RADIO_InitInfo(pRadio, Channel, Index, gLowerLimitFrequencyBandTable[Index]);
 		return;
 	}
 
@@ -185,26 +185,26 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		Band = BAND6_400MHz;
 	}
 
-	if (ChNum < 200) {
+	if (Channel < 200) {
 		gEeprom.VfoInfo[VFO].Band = Band;
 		gEeprom.VfoInfo[VFO].SCANLIST1_PARTICIPATION = !!(Params & MR_CH_SCANLIST1);
 		bParticipation2 = !!(Params & MR_CH_SCANLIST2);
 	} else {
-		Band = ChNum - 200;
+		Band = Channel - 200;
 		gEeprom.VfoInfo[VFO].Band = Band;
 		bParticipation2 = true;
 		gEeprom.VfoInfo[VFO].SCANLIST1_PARTICIPATION = true;
 	}
 	gEeprom.VfoInfo[VFO].SCANLIST2_PARTICIPATION = bParticipation2;
-	gEeprom.VfoInfo[VFO].CHANNEL_SAVE = ChNum;
+	gEeprom.VfoInfo[VFO].CHANNEL_SAVE = Channel;
 
-	if (ChNum < 200) {
-		Base = ChNum * 16;
+	if (Channel < 200) {
+		Base = Channel * 16;
 	} else {
-		Base = 0x0C80 + ((ChNum - 200) * 32) + (VFO * 16);
+		Base = 0x0C80 + ((Channel - 200) * 32) + (VFO * 16);
 	}
 
-	if (Arg == 2 || ChNum >= 200) {
+	if (Arg == 2 || Channel >= 200) {
 		EEPROM_ReadBuffer(Base + 8, Data, 8);
 
 		Tmp = Data[3] & 0x0F;
@@ -305,23 +305,23 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		pRadio->DCS[0].Frequency = gLowerLimitFrequencyBandTable[Band];
 	} else if (Frequency > gUpperLimitFrequencyBandTable[Band]) {
 		pRadio->DCS[0].Frequency = gUpperLimitFrequencyBandTable[Band];
-	} else if (ChNum >= 200) {
+	} else if (Channel >= 200) {
 		pRadio->DCS[0].Frequency = FREQUENCY_FloorToStep(pRadio->DCS[0].Frequency, gEeprom.VfoInfo[VFO].StepFrequency, gLowerLimitFrequencyBandTable[Band]);
 	}
 	pRadio->DCS[0].Frequency = Frequency;
 
 	if (Frequency - 10800000 < 2799991) {
 		gEeprom.VfoInfo[VFO].FREQUENCY_DEVIATION_SETTING = FREQUENCY_DEVIATION_OFF;
-	} else if (ChNum >= 200) {
+	} else if (Channel >= 200) {
 		Frequency = FREQUENCY_FloorToStep(gEeprom.VfoInfo[VFO].FREQUENCY_OF_DEVIATION, gEeprom.VfoInfo[VFO].StepFrequency, 0);
 		gEeprom.VfoInfo[VFO].FREQUENCY_OF_DEVIATION = Frequency;
 	}
 	RADIO_ApplyOffset(pRadio);
 	memset(gEeprom.VfoInfo[VFO].Name, 0, sizeof(gEeprom.VfoInfo[VFO].Name));
-	if (ChNum < 200) {
+	if (Channel < 200) {
 		// 16 bytes allocated but only 12 used
-		EEPROM_ReadBuffer(0x0F50 + (ChNum * 0x10), gEeprom.VfoInfo[VFO].Name + 0, 8);
-		EEPROM_ReadBuffer(0x0F58 + (ChNum * 0x10), gEeprom.VfoInfo[VFO].Name + 8, 2);
+		EEPROM_ReadBuffer(0x0F50 + (Channel * 0x10), gEeprom.VfoInfo[VFO].Name + 0, 8);
+		EEPROM_ReadBuffer(0x0F58 + (Channel * 0x10), gEeprom.VfoInfo[VFO].Name + 8, 2);
 	}
 
 	if (gEeprom.VfoInfo[VFO].FrequencyReverse == true) {
