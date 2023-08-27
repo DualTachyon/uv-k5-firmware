@@ -219,6 +219,38 @@ void FUN_000051e8(void)
 	FUN_000069f8(FUNCTION_4);
 }
 
+void FUN_0000773c(void)
+{
+	uint8_t Previous;
+
+	Previous = g_20000414;
+	gCurrentStep = 0;
+
+	if (g_20000413 != 1) {
+		if (g_20000410 < 200) {
+			gEeprom.EEPROM_0E81_0E84[gEeprom.RX_CHANNEL] = g_20000414;
+			gEeprom.VfoChannel[gEeprom.RX_CHANNEL] = Previous;
+			RADIO_ConfigureChannel(gEeprom.RX_CHANNEL, 2);
+		} else {
+			gInfoCHAN_A->DCS[0].Frequency = g_20000418;
+			RADIO_ApplyOffset(gInfoCHAN_A);
+			RADIO_ConfigureSquelchAndOutputPower(gInfoCHAN_A);
+		}
+		RADIO_SetupRegisters(true);
+		gUpdateDisplay = true;
+		return;
+	}
+
+	if (gInfoCHAN_A->CHANNEL_SAVE >= 200) {
+		RADIO_ApplyOffset(gInfoCHAN_A);
+		RADIO_ConfigureSquelchAndOutputPower(gInfoCHAN_A);
+		SETTINGS_SaveChannel(gInfoCHAN_A->CHANNEL_SAVE, gEeprom.RX_CHANNEL, gInfoCHAN_A, 1);
+		return;
+	}
+
+	SETTINGS_SaveVfoIndices();
+}
+
 void FUN_000052f0(void)
 {
 	uint8_t Value;
@@ -338,7 +370,7 @@ LAB_0000544c:
 				gSystickFlag9 = false;
 				break;
 			case SCAN_RESUME_SE:
-				//FUN_0000773c();
+				FUN_0000773c();
 				break;
 			}
 		}
