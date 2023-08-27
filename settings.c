@@ -58,8 +58,8 @@ void SETTINGS_SaveVfoIndices(void)
 	State[3] = gEeprom.VfoChannel[1];
 	State[4] = gEeprom.EEPROM_0E81_0E84[1];
 	State[5] = gEeprom.EEPROM_0E82_0E85[1];
-	State[6] = gEeprom.EEPROM_0E86;
-	State[7] = gEeprom.EEPROM_0E87;
+	State[6] = gEeprom.EEPROM_0E86_0E87[0];
+	State[7] = gEeprom.EEPROM_0E86_0E87[1];
 
 	EEPROM_WriteBuffer(0x0E80, State);
 }

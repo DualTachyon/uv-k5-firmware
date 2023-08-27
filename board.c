@@ -460,14 +460,14 @@ void BOARD_EEPROM_Init(void)
 		gEeprom.EEPROM_0E82_0E85[1] = 205;
 	}
 	if (Data[6] - 207 < 10) {
-		gEeprom.EEPROM_0E86 = Data[6];
+		gEeprom.EEPROM_0E86_0E87[0] = Data[6];
 	} else {
-		gEeprom.EEPROM_0E86 = 207;
+		gEeprom.EEPROM_0E86_0E87[0] = 207;
 	}
 	if (Data[7] - 207 < 10) {
-		gEeprom.EEPROM_0E87 = Data[7];
+		gEeprom.EEPROM_0E86_0E87[1] = Data[7];
 	} else {
-		gEeprom.EEPROM_0E87 = 207;
+		gEeprom.EEPROM_0E86_0E87[1] = 207;
 	}
 
 	// 0E88..0E8F
