@@ -128,5 +128,14 @@ uint8_t BK4819_GetCTCSSPhaseShift(void);
 void BK4819_SendFSKData(uint16_t *pData);
 void BK4819_PrepareFSKReceive(void);
 
+void BK4819_ConfiguresTone1ScramblingStuff(void);
+void BK4819_ConfigureFSK(void);
+
+void BK4819_Enable_AfDac_DiscMode_TxDsp(void);
+
+void BK4819_GetVoxAmp(uint16_t *pResult);
+void BK4819_SetScrambleFrequencyControlWord(uint32_t Frequency);
+void BK4819_PlayDTMFEx(bool bLocalLoopback, char Code);
+
 #endif
 
