@@ -86,7 +86,7 @@ uint8_t g_2000039D;
 uint8_t g_2000039E;
 uint8_t g_2000039F;
 uint8_t g_200003A0;
-uint8_t g_200003A1;
+bool gFlagStartScan;
 uint8_t g_200003A2;
 bool gFlagAcceptSetting;
 bool gFlagRefreshSetting;

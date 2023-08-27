@@ -2013,12 +2013,12 @@ LAB_00002aae:
 		MENU_ShowCurrentSetting();
 		gFlagRefreshSetting = false;
 	}
-	if (g_200003A1 == 1) {
+	if (gFlagStartScan) {
 		AUDIO_SetVoiceID(0, VOICE_ID_SCANNING_BEGIN);
 		AUDIO_PlaySingleVoice(true);
 		FUN_000075b0();
 		gRequestDisplayScreen = DISPLAY_SCANNER;
-		g_200003A1 = 0;
+		gFlagStartScan = false;
 	}
 	if (g_200003A0 == 1) {
 		RADIO_SomethingWithTransmit();

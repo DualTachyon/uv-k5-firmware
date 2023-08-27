@@ -95,7 +95,7 @@ extern uint8_t g_2000039E;
 extern uint8_t g_2000039F;
 extern uint8_t gKeypadLocked;
 extern uint8_t g_200003A0;
-extern uint8_t g_200003A1;
+extern bool gFlagStartScan;
 extern uint8_t g_200003A2;
 extern bool gFlagAcceptSetting;
 extern bool gFlagRefreshSetting;
