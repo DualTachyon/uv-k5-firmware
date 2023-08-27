@@ -792,13 +792,13 @@ void APP_PlayFM(void)
 
 void FUN_000059b4(void)
 {
-        gFmMute = true;
-        g_20000390 = 0;
-        g_2000038E = 0;
-        BK1080_Init(gEeprom.FM_FrequencyToPlay, true);
-        GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-        g_2000036B = 1;
-        g_2000036F = 1;
+	gFmMute = true;
+	g_20000390 = 0;
+	g_2000038E = 0;
+	BK1080_Init(gEeprom.FM_FrequencyToPlay, true);
+	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+	g_2000036B = 1;
+	g_2000036F = 1;
 }
 
 void APP_CheckRadioInterrupts(void)
@@ -1237,7 +1237,7 @@ void APP_TimeSlice10ms(void)
 
 void APP_TimeSlice500ms(void)
 {
-        // Skipped authentic device check
+	// Skipped authentic device check
 
 	if (gKeypadLocked) {
 		gKeypadLocked--;
@@ -1246,7 +1246,7 @@ void APP_TimeSlice500ms(void)
 		}
 	}
 
-        // Skipped authentic device check
+	// Skipped authentic device check
 
 	if (gFmRadioCountdown) {
 		gFmRadioCountdown--;
