@@ -39,8 +39,8 @@
 #include "dtmf.h"
 #include "external/printf/printf.h"
 #include "functions.h"
-#include "helper.h"
 #include "helper/battery.h"
+#include "helper/boot.h"
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
@@ -102,7 +102,7 @@ void Main(void)
 		GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 		g_2000037E = 1;
 	} else {
-		uint8_t KeyType;
+		BOOT_Mode_t BootMode;
 		uint8_t Channel;
 
 		UI_DisplayWelcome();
@@ -110,15 +110,14 @@ void Main(void)
 		SYSTEM_DelayMs(1000);
 		gMenuListCount = 51;
 
-		HELPER_GetKey();
-		KeyType = HELPER_GetKey();
+		BootMode = BOOT_GetMode();
 		if (gEeprom.POWER_ON_PASSWORD < 1000000) {
 			g_2000036E = 1;
 			UI_DisplayLock();
 			g_2000036E = 0;
 		}
 
-		HELPER_CheckBootKey(KeyType);
+		BOOT_ProcessMode(BootMode);
 
 		GPIO_ClearBit(&GPIOA->DATA, GPIOA_PIN_VOICE_0);
 		g_2000036F = 1;

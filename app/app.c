@@ -35,7 +35,6 @@
 #include "fm.h"
 #include "frequencies.h"
 #include "functions.h"
-#include "helper.h"
 #include "helper/battery.h"
 #include "misc.h"
 #include "radio.h"

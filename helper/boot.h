@@ -14,14 +14,22 @@
  *     limitations under the License.
  */
 
-#ifndef HELPER_H
-#define HELPER_H
+#ifndef HELPER_BOOT_H
+#define HELPER_BOOT_H
 
 #include <stdint.h>
 #include "driver/keyboard.h"
 
-uint8_t HELPER_GetKey(void);
-void HELPER_CheckBootKey(uint8_t KeyType);
+enum BOOT_Mode_t {
+	BOOT_MODE_NORMAL  = 0U,
+	BOOT_MODE_F_LOCK  = 1U,
+	BOOT_MODE_AIRCOPY = 2U,
+};
+
+typedef enum BOOT_Mode_t BOOT_Mode_t;
+
+BOOT_Mode_t BOOT_GetMode(void);
+void BOOT_ProcessMode(BOOT_Mode_t Mode);
 
 #endif
 
