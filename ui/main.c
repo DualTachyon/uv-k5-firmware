@@ -15,38 +15,16 @@
  */
 
 #include <string.h>
-//#include "audio.h"
-//#include "battery.h"
 #include "bitmaps.h"
-//#include "driver/eeprom.h"
-//#include "driver/keyboard.h"
 #include "driver/st7565.h"
 #include "dtmf.h"
 #include "external/printf/printf.h"
-//#include "fm.h"
 #include "functions.h"
-//#include "gui.h"
-//#include "helper.h"
 #include "misc.h"
 #include "settings.h"
-//#include "ui/aircopy.h"
-//#include "ui/fmradio.h"
 #include "ui/helper.h"
 #include "ui/inputbox.h"
 #include "ui/main.h"
-//#include "ui/menu.h"
-//#include "ui/scanner.h"
-
-//GUI_DisplayType_t gScreenToDisplay;
-//volatile int8_t gStepDirection;
-//GUI_DisplayType_t gRequestDisplayScreen;
-//uint8_t g_200003BA;
-//uint8_t g_200003BB;
-//bool gWasFKeyPressed;
-
-//uint8_t gAskForConfirmation;
-//bool gAskToSave;
-//bool gAskToDelete;
 
 void UI_DisplayMain(void)
 {
