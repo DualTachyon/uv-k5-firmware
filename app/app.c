@@ -1653,10 +1653,10 @@ void APP_ProcessKey_MENU(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		MENU_Key_MENU(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_UP:
-		MENU_Key_UP_DOWN(bKeyPressed, bKeyHeld, 0x01);
+		MENU_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
 		break;
 	case KEY_DOWN:
-		MENU_Key_UP_DOWN(bKeyPressed, bKeyHeld, 0xFF);
+		MENU_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
 		break;
 	case KEY_EXIT:
 		MENU_Key_EXIT(bKeyPressed, bKeyHeld);
