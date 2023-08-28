@@ -83,6 +83,8 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 		if (gScreenToDisplay == DISPLAY_MAIN) {
 			if (gCurrentFunction == FUNCTION_TRANSMIT) {
 				if (g_200003FD == 1) {
+					FUNCTION_Select(FUNCTION_0);
+				} else {
 					//TalkRelatedCode();
 					if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
 						FUNCTION_Select(FUNCTION_0);
@@ -101,7 +103,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 		return;
 	}
 
-	if (gStepDirection != 0) {
+	if (gStepDirection) {
 		FUN_0000773c();
 		gPttDebounceCounter = 0;
 		gPttIsPressed = false;
@@ -111,14 +113,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 
 	if (g_20000390 == 0) {
 		if (g_20000381 == 0) {
-			if (gScreenToDisplay == DISPLAY_MENU) {
-				gRequestDisplayScreen = DISPLAY_MAIN;
-				gInputBoxIndex = 0;
-				gPttIsPressed = false;
-				gPttDebounceCounter = 0;
-				return;
-			}
-			if (gScreenToDisplay == DISPLAY_FM) {
+			if (gScreenToDisplay == DISPLAY_MENU || gScreenToDisplay == DISPLAY_FM) {
 				gRequestDisplayScreen = DISPLAY_MAIN;
 				gInputBoxIndex = 0;
 				gPttIsPressed = false;
