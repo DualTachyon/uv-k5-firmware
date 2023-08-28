@@ -471,16 +471,15 @@ void GUI_DisplayFrequency(const char *pDigits, uint8_t X, uint8_t Y, bool bDispl
 
 	bCanDisplay = false;
 	for (i = 0; i < 3; i++) {
-		uint8_t Digit;
+		const uint8_t Digit = pDigits[i];
 
-		Digit = pDigits[i];
 		if (bDisplayLeadingZero || bCanDisplay || Digit) {
 			bCanDisplay = true;
 			memcpy(pFb0 + (i * 13), gFontBigDigits[Digit] +  0, 13);
 			memcpy(pFb1 + (i * 13), gFontBigDigits[Digit] + 13, 13);
 		} else if (Flag1) {
-			pFb1 = pFb1 - 6;
-			pFb0 = pFb0 - 6;
+			pFb1 -= 6;
+			pFb0 -= 6;
 		}
 	}
 
@@ -595,7 +594,7 @@ static void DisplayMain(void)
 			} else if (bIsSameVfo) {
 				memcpy(pLine0 + 2, BITMAP_VFO_Default, sizeof(BITMAP_VFO_Default));
 			}
-    	} else {
+		} else {
 			if (bIsSameVfo) {
 				memcpy(pLine0 + 2, BITMAP_VFO_Default, sizeof(BITMAP_VFO_Default));
 			} else {
