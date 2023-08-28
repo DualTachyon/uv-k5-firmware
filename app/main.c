@@ -32,7 +32,7 @@ extern void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step);
 extern void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction);
 extern void APP_CycleOutputPower(void);
 extern void APP_FlipVoxSwitch(void);
-extern void FUN_00005830(bool bFlag);
+extern void APP_StartScan(bool bFlag);
 
 void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
@@ -212,7 +212,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		gWasFKeyPressed = false;
 		g_2000036F = 1;
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-		gFlagStartScan = 1;
+		gFlagStartScan = true;
 		g_20000458 = 0;
 		g_20000459 = gEeprom.CROSS_BAND_RX_TX;
 		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
@@ -323,7 +323,7 @@ void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 			if (!bKeyPressed) {
 				return;
 			}
-			FUN_00005830(0);
+			APP_StartScan(false);
 			return;
 		}
 		if (gStepDirection == 0 && gTxRadioInfo->CHANNEL_SAVE < 207) {
@@ -342,7 +342,7 @@ void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 		gWasFKeyPressed = false;
 		g_2000036F = 1;
 		if (gTxRadioInfo->CHANNEL_SAVE < 207) {
-			gFlagStartScan = 1;
+			gFlagStartScan = true;
 			g_20000458 = 1;
 			g_20000459 = gEeprom.CROSS_BAND_RX_TX;
 			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;

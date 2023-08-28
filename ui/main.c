@@ -142,7 +142,7 @@ void UI_DisplayMain(void)
 			}
 		} else {
 			SomeValue = 2;
-			if ((gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) && gEeprom.RX_CHANNEL == i) {
+			if ((gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_MONITOR) && gEeprom.RX_CHANNEL == i) {
 				memcpy(pLine0 + 14, BITMAP_RX, sizeof(BITMAP_RX));
 			}
 		}

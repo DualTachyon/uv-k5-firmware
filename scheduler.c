@@ -62,7 +62,7 @@ void SystickHandler(void)
 		}
 	}
 	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
-		if (gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
+		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_4) {
 				if (g_2000033A != 0) {
 					g_2000033A--;
@@ -75,7 +75,7 @@ void SystickHandler(void)
 	}
 
 	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
-		if (gIsNoaaMode && gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
+		if (gIsNoaaMode && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_4) {
 				if (g_20000356 != 0) {
 					g_20000356--;
@@ -88,7 +88,7 @@ void SystickHandler(void)
 	}
 
 	if (gStepDirection != 0 || g_20000381 == 1) {
-		if (gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
+		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (ScanPauseDelayIn10msec != 0) {
 				ScanPauseDelayIn10msec--;
 				if (ScanPauseDelayIn10msec == 0) {
@@ -112,7 +112,7 @@ void SystickHandler(void)
 		}
 	}
 
-	if (g_20000390 != 0 && gCurrentFunction != FUNCTION_2) {
+	if (gFM_Step != 0 && gCurrentFunction != FUNCTION_MONITOR) {
 		if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_4) {
 			if (g_2000034C != 0) {
 				g_2000034C--;

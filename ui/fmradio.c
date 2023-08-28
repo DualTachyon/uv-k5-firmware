@@ -43,7 +43,7 @@ void UI_DisplayFM(void)
 	} else if (gAskToDelete) {
 		strcpy(String, "DEL?");
 	} else {
-		if (g_20000390 == 0) {
+		if (gFM_Step == 0) {
 			if (gEeprom.FM_IsChannelSelected == false) {
 				for (i = 0; i < 20; i++) {
 					if (gEeprom.FM_FrequencyToPlay == gFM_Channels[i]) {
@@ -71,7 +71,7 @@ void UI_DisplayFM(void)
 
 	if (gAskToSave || (gEeprom.FM_IsChannelSelected && gInputBoxIndex)) {
 		UI_GenerateChannelString(String, gA_Scan_Channel);
-	} else if (gAskToDelete) {
+	} else if (!gAskToDelete) {
 		if (gInputBoxIndex == 0) {
 			NUMBER_ToDigits(gEeprom.FM_FrequencyToPlay * 10000, String);
 			UI_DisplayFrequency(String, 23, 4, false, true);

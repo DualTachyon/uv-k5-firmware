@@ -496,7 +496,7 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 			}
 		}
 		FUNCTION_Select(Function);
-		if (Function == FUNCTION_2 || gFmRadioMode) {
+		if (Function == FUNCTION_MONITOR || gFmRadioMode) {
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
 			return;
 		}
@@ -635,7 +635,7 @@ static int FM_ChecksChannelValid_and_FrequencyDeviation(uint16_t Frequency, uint
 
 	if (Deviation < 280 || Deviation > 3815) {
 		if ((LowerLimit < Frequency) && (Frequency - g_20000362) == 1) {
-			if ((gFM_FrequencyDeviation & 0x800) != 0) {
+			if (gFM_FrequencyDeviation & 0x800) {
 				goto Bail;
 			}
 			if (gFM_FrequencyDeviation < 20) {
@@ -660,52 +660,6 @@ Bail:
 	return ret;
 }
 
-void FUN_0000752c(uint16_t Frequency, uint8_t param_2, int param_3)
-{
-	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	g_2000036B = 0;
-	if (g_20000390 == 0) {
-		g_2000034C = 0x78;
-	} else {
-		g_2000034C = 10;
-	}
-	gSystickFlag11 = false;
-	g_20000390 = param_2;
-	g_20000427 = 0;
-	gAskToSave = false;
-	gAskToDelete = false;
-	gEeprom.FM_FrequencyToPlay = Frequency;
-	if (param_3 != 1) {
-		Frequency += param_2;
-		gEeprom.FM_FrequencyToPlay = gEeprom.FM_LowerLimit;
-		if (Frequency <= gEeprom.FM_UpperLimit) {
-			gEeprom.FM_FrequencyToPlay = Frequency;
-			if (Frequency < gEeprom.FM_LowerLimit) {
-				gEeprom.FM_FrequencyToPlay = gEeprom.FM_UpperLimit;
-			}
-		}
-	}
-
-	BK1080_SetFrequency(gEeprom.FM_FrequencyToPlay);
-}
-
-void PlayFMRadio(void)
-{
-	g_20000390 = 0;
-	if (gIs_A_Scan) {
-		gEeprom.FM_IsChannelSelected = true;
-		gEeprom.FM_CurrentChannel = 0;
-	}
-	FM_ConfigureChannelState();
-	BK1080_SetFrequency(gEeprom.FM_FrequencyToPlay);
-	SETTINGS_SaveFM();
-	g_2000034C = 0;
-	gSystickFlag11 = false;
-	gAskToSave = false;
-	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	g_2000036B = 1;
-}
-
 void APP_PlayFM(void)
 {
 	if (!FM_ChecksChannelValid_and_FrequencyDeviation(gEeprom.FM_FrequencyToPlay, gEeprom.FM_LowerLimit)) {
@@ -721,23 +675,23 @@ void APP_PlayFM(void)
 			if (gA_Scan_Channel < 20) {
 				gFM_Channels[gA_Scan_Channel++] = gEeprom.FM_FrequencyToPlay;
 				if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyToPlay) {
-					FUN_0000752c(gEeprom.FM_FrequencyToPlay, g_20000390, 0);
+					FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
 				} else {
-					PlayFMRadio();
+					FM_Play();
 				}
 			} else {
-				PlayFMRadio();
+				FM_Play();
 			}
 		}
-		PlayFMRadio();
+		FM_Play();
 	} else if (gIs_A_Scan) {
 		if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyToPlay) {
-			FUN_0000752c(gEeprom.FM_FrequencyToPlay, g_20000390, 0);
+			FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
 		} else {
-			PlayFMRadio();
+			FM_Play();
 		}
 	} else {
-		FUN_0000752c(gEeprom.FM_FrequencyToPlay, g_20000390, 0);
+		FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
 	}
 
 	GUI_SelectNextDisplay(DISPLAY_FM);
@@ -746,7 +700,7 @@ void APP_PlayFM(void)
 void APP_StartFM(void)
 {
 	gFmRadioMode = true;
-	g_20000390 = 0;
+	gFM_Step = 0;
 	g_2000038E = 0;
 	BK1080_Init(gEeprom.FM_FrequencyToPlay, true);
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
@@ -851,7 +805,7 @@ static void FUN_00008334(void)
 			g_VOX_Lost = false;
 			g_200003B8 = 0;
 		}
-		if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_2 && gStepDirection == 0 && g_20000381 == 0 && !gFmRadioMode) {
+		if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_MONITOR && gStepDirection == 0 && g_20000381 == 0 && !gFmRadioMode) {
 			if (g_200003B4 == 1) {
 				if (g_VOX_Lost) {
 					gSystickCountdown11 = 100;
@@ -959,7 +913,7 @@ void APP_Update(void)
 		}
 	}
 
-	if (g_20000390 && gSystickFlag11 && gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_TRANSMIT) {
+	if (gFM_Step && gSystickFlag11 && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_TRANSMIT) {
 		APP_PlayFM();
 		gSystickFlag11 = false;
 	}
@@ -1285,7 +1239,7 @@ void APP_TimeSlice500ms(void)
 				goto LAB_00004b08;
 			}
 		}
-		if ((g_20000390 == 0 || gAskToSave) && gStepDirection == 0 && g_20000381 == 0) {
+		if ((gFM_Step == 0 || gAskToSave) && gStepDirection == 0 && g_20000381 == 0) {
 			if (gBacklightCountdown != 0) {
 				gBacklightCountdown--;
 				if (gBacklightCountdown == 0) {
@@ -1319,7 +1273,7 @@ void APP_TimeSlice500ms(void)
 						g_200003BB = 0;
 						gAskToSave = false;
 						gAskToDelete = false;
-						if (gFmRadioMode && gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
+						if (gFmRadioMode && gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 							GUI_SelectNextDisplay(DISPLAY_FM);
 						} else {
 							GUI_SelectNextDisplay(DISPLAY_MAIN);
@@ -1335,7 +1289,7 @@ LAB_00004b08:
 		g_20000373--;
 		if (g_20000373 == 0) {
 			RADIO_SomethingElse(0);
-			if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_2 && gFmRadioMode) {
+			if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR && gFmRadioMode) {
 				APP_StartFM();
 				GUI_SelectNextDisplay(DISPLAY_FM);
 			}
@@ -1535,15 +1489,15 @@ void APP_CycleOutputPower(void)
 	gRequestDisplayScreen = gScreenToDisplay;
 }
 
-void FUN_00005830(bool bFlag)
+void APP_StartScan(bool bFlag)
 {
 	if (gFmRadioMode) {
-		if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_2 && gCurrentFunction != FUNCTION_TRANSMIT) {
+		if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			uint16_t Frequency;
 
 			GUI_SelectNextDisplay(DISPLAY_FM);
-			if (g_20000390 != 0) {
-				PlayFMRadio();
+			if (gFM_Step) {
+				FM_Play();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 				return;
 			}
@@ -1558,7 +1512,7 @@ void FUN_00005830(bool bFlag)
 				Frequency = gEeprom.FM_FrequencyToPlay;
 			}
 			BK1080_GetFrequencyDeviation(Frequency);
-			FUN_0000752c(Frequency, 1, bFlag);
+			FM_Tune(Frequency, 1, bFlag);
 			gAnotherVoiceID = VOICE_ID_SCANNING_BEGIN;
 			return;
 		}
@@ -1566,7 +1520,7 @@ void FUN_00005830(bool bFlag)
 		RADIO_ConfigureTX();
 		if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
-			if (gStepDirection != 0) {
+			if (gStepDirection) {
 				FUN_0000773c();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 				return;
@@ -1580,13 +1534,13 @@ void FUN_00005830(bool bFlag)
 
 void FUN_00005770(void)
 {
-	if (gCurrentFunction != FUNCTION_2) {
+	if (gCurrentFunction != FUNCTION_MONITOR) {
 		RADIO_ConfigureTX();
 		if (gInfoCHAN_A->CHANNEL_SAVE >= 207 && gIsNoaaMode) {
 			gNoaaChannel = gInfoCHAN_A->CHANNEL_SAVE - 207;
 		}
 		RADIO_SetupRegisters(true);
-		FUN_000069f8(FUNCTION_2);
+		FUN_000069f8(FUNCTION_MONITOR);
 		return;
 	}
 	if (gStepDirection != 0) {
@@ -1609,7 +1563,7 @@ void FUN_00005770(void)
 
 void APP_SwitchToFM(void)
 {
-	if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_2) {
+	if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR) {
 		if (gFmRadioMode) {
 			FM_TurnOff();
 			gInputBoxIndex = 0;
@@ -1687,25 +1641,25 @@ void FUN_00004404(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	switch (Short) {
 	case 1:
 		//APP_ProcessFlashLight();
-		return;
+		break;
 	case 2:
 		APP_CycleOutputPower();
-		return;
+		break;
 	case 3:
 		FUN_00005770();
-		return;
+		break;
 	case 4:
-		FUN_00005830(1);
-		return;
+		APP_StartScan(true);
+		break;
 	case 5:
 		APP_FlipVoxSwitch();
-		return;
+		break;
 	case 6:
 		FUN_000056a0(0);
 		break;
 	case 7:
 		APP_SwitchToFM();
-		return;
+		break;
 	case 8:
 		FUN_000056a0(1);
 		break;
@@ -1823,13 +1777,13 @@ static void APP_ProcessKey_FM(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		//FM_Key_MENU(bKeyPressed, bKeyHeld);
 		return;
 	case KEY_UP:
-		//FM_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
+		FM_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
 		break;
 	case KEY_DOWN:
-		//FM_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
+		FM_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
 		break;;
 	case KEY_EXIT:
-		//FM_Key_EXIT(bKeyPressed, bKeyHeld);
+		FM_Key_EXIT(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_F:
 		GENERIC_Key_F(bKeyPressed, bKeyHeld);

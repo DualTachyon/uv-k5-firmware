@@ -14,8 +14,8 @@
  *     limitations under the License.
  */
 
-#ifndef AIRCOPY_H
-#define AIRCOPY_H
+#ifndef APP_AIRCOPY_H
+#define APP_AIRCOPY_H
 
 #include <stdint.h>
 

@@ -38,7 +38,7 @@ DCS_CodeType_t gCodeType;
 DCS_CodeType_t gCopyOfCodeType;
 uint8_t gCode;
 
-bool RADIO_CheckValidChannel(uint8_t Channel, bool bCheckScanList, uint8_t VFO)
+bool RADIO_CheckValidChannel(uint16_t Channel, bool bCheckScanList, uint8_t VFO)
 {
 	uint8_t Attributes;
 	uint8_t PriorityCh1;
@@ -55,19 +55,22 @@ bool RADIO_CheckValidChannel(uint8_t Channel, bool bCheckScanList, uint8_t VFO)
 	}
 	
 	if (bCheckScanList) {
-		if (VFO == 0) {
+		switch (VFO) {
+		case 0:
 			if ((Attributes & MR_CH_SCANLIST1) == 0) {
 				return false;
 			}
 			PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[0];
 			PriorityCh2 = gEeprom.SCANLIST_PRIORITY_CH2[0];
-		} else if (VFO == 1) {
+			break;
+		case 1:
 			if ((Attributes & MR_CH_SCANLIST2) == 0) {
 				return false;
 			}
 			PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[1];
 			PriorityCh2 = gEeprom.SCANLIST_PRIORITY_CH2[1];
-		} else {
+			break;
+		default:
 			return true;
 		}
 		if (PriorityCh1 == Channel) {

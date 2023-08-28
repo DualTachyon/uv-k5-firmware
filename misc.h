@@ -80,7 +80,7 @@ extern volatile uint8_t g_20000381;
 extern uint8_t g_20000382;
 extern uint8_t g_20000383;
 extern uint16_t g_2000038E;
-extern volatile int8_t g_20000390;
+extern volatile int8_t gFM_Step;
 extern uint8_t g_20000393;
 extern bool g_20000394;
 extern uint8_t g_20000395;

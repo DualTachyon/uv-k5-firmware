@@ -92,7 +92,7 @@ extern DCS_CodeType_t gCodeType;
 extern DCS_CodeType_t gCopyOfCodeType;
 extern uint8_t gCode;
 
-bool RADIO_CheckValidChannel(uint8_t ChNum, bool bCheckScanList, uint8_t RadioNum);
+bool RADIO_CheckValidChannel(uint16_t ChNum, bool bCheckScanList, uint8_t RadioNum);
 uint8_t RADIO_FindNextChannel(uint8_t ChNum, int8_t Direction, bool bCheckScanList, uint8_t RadioNum);
 void RADIO_InitInfo(VFO_Info_t *pInfo, uint8_t ChannelSave, uint8_t ChIndex, uint32_t Frequency);
 void RADIO_ConfigureChannel(uint8_t RadioNum, uint32_t Arg);

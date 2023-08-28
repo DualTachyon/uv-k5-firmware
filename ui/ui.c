@@ -63,7 +63,7 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gIsInSubMenu = false;
 			g_20000381 = 0;
 			gStepDirection = 0;
-			g_20000390 = 0;
+			gFM_Step = 0;
 			gAskForConfirmation = 0;
 			g_200003BA = 0;
 			g_200003BB = 0;

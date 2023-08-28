@@ -68,7 +68,7 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 			g_20000396 = 1;
 			return;
 		}
-		if (g_20000390 == 0) {
+		if (gFM_Step == 0) {
 			g_20000396 = 1;
 			return;
 		}
@@ -112,7 +112,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 		return;
 	}
 
-	if (g_20000390 == 0) {
+	if (gFM_Step == 0) {
 		if (g_20000381 == 0) {
 			if (gScreenToDisplay == DISPLAY_MENU || gScreenToDisplay == DISPLAY_FM) {
 				gRequestDisplayScreen = DISPLAY_MAIN;
@@ -164,7 +164,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gRequestDisplayScreen = DISPLAY_MENU;
 		}
 	} else {
-		PlayFMRadio();
+		FM_Play();
 		gRequestDisplayScreen = DISPLAY_FM;
 	}
 	gAnotherVoiceID = VOICE_ID_SCANNING_STOP;

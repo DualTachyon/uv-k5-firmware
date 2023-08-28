@@ -75,7 +75,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	if (gCurrentFunction == FUNCTION_4) {
 		return;
 	}
-	if (gCurrentFunction == FUNCTION_2) {
+	if (gCurrentFunction == FUNCTION_MONITOR) {
 		return;
 	}
 
@@ -193,7 +193,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 			VoiceID += VOICE_ID_ENG_BASE;
 		}
 
-		if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
+		if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_MONITOR) {
 			BK4819_SetAF(BK4819_AF_MUTE);
 		}
 		if (gFmRadioMode) {
@@ -208,7 +208,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 		}
 		if (bFlag) {
 			SYSTEM_DelayMs(Delay * 10);
-			if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
+			if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_MONITOR) {
 				if (gInfoCHAN_A->IsAM == true) {
 					BK4819_SetAF(BK4819_AF_AM);
 				} else {
@@ -321,7 +321,7 @@ void AUDIO_PlayQueuedVoice(void)
 		}
 	}
 
-	if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
+	if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_MONITOR) {
 		if (gInfoCHAN_A->IsAM == true) {
 			BK4819_SetAF(BK4819_AF_AM);
 		} else {

@@ -14,8 +14,8 @@
  *     limitations under the License.
  */
 
-#ifndef APP_H
-#define APP_H
+#ifndef APP_APP_H
+#define APP_APP_H
 
 void APP_Update(void);
 void APP_TimeSlice10ms(void);

@@ -71,7 +71,7 @@ volatile uint8_t g_20000381;
 uint8_t g_20000382;
 uint8_t g_20000383;
 uint16_t g_2000038E;
-volatile int8_t g_20000390;
+volatile int8_t gFM_Step;
 uint8_t g_20000393;
 bool g_20000394;
 uint8_t g_20000395;
