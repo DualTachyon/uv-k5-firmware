@@ -160,6 +160,17 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		break;
+
+	case KEY_4:
+		gWasFKeyPressed = false;
+		g_2000036F = 1;
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+		gFlagStartScan = 1;
+		g_20000458 = 0;
+		g_20000459 = gEeprom.CROSS_BAND_RX_TX;
+		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
+		return;
+
 	default:
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		g_2000036F = 1;
