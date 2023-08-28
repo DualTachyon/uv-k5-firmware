@@ -28,7 +28,7 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 				return;
 			}
 			if (gEeprom.KEY_LOCK) {
-				gAnotherVoiceID = VOICE_ID_M_LOCK;
+				gAnotherVoiceID = VOICE_ID_UNLOCK;
 			} else {
 				gAnotherVoiceID = VOICE_ID_LOCK;
 			}
