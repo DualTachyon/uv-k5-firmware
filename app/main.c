@@ -11,6 +11,8 @@ extern void APP_SwitchToFM(void);
 extern void FUN_0000773c(void);
 extern void APP_AddStepToFrequency(VFO_Info_t *pInfo, uint8_t Step);
 extern void APP_ChangeStepDirectionMaybe(bool bFlag, uint8_t Direction);
+extern void APP_CycleOutputPower(void);
+extern void APP_FlipVoxSwitch(void);
 
 void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
@@ -180,6 +182,14 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 		gRequestSaveVFO = true;
 		g_2000039A = 2;
+		break;
+
+	case KEY_6:
+		APP_CycleOutputPower();
+		break;
+
+	case KEY_7:
+		APP_FlipVoxSwitch();
 		break;
 
 	default:
