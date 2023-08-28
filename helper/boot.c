@@ -43,10 +43,10 @@ BOOT_Mode_t BOOT_GetMode(void)
 		gKeyReading0 = Keys[0];
 		gKeyReading1 = Keys[0];
 		gDebounceCounter = 2;
-		if (i == KEY_SIDE1) {
+		if (Keys[0] == KEY_SIDE1) {
 			return BOOT_MODE_F_LOCK;
 		}
-		if (i == KEY_SIDE2) {
+		if (Keys[0] == KEY_SIDE2) {
 			return BOOT_MODE_AIRCOPY;
 		}
 	}
