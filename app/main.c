@@ -248,7 +248,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 
 	Channel = gEeprom.ScreenChannel[gEeprom.TX_CHANNEL];
 	if (bKeyHeld || !bKeyPressed) {
-		if (gNumberOffset != 0) {
+		if (gNumberOffset) {
 			return;
 		}
 		if (!bKeyPressed) {
@@ -263,7 +263,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 			return;
 		}
 	} else {
-		if (gNumberOffset != 0) {
+		if (gNumberOffset) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			return;
 		}

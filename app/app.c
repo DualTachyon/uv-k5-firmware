@@ -1447,7 +1447,7 @@ void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction)
 		}
 		FUN_00007dd4();
 	} else {
-		if (bFlag == 1) {
+		if (bFlag) {
 			g_20000418 = gInfoCHAN_A->DCS[0].Frequency;
 		}
 		APP_MoreRadioStuff();
