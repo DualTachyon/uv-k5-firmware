@@ -44,6 +44,7 @@
 #include "sram-overlay.h"
 #include "ui/inputbox.h"
 #include "ui/menu.h"
+#include "ui/rssi.h"
 
 static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void FUN_000069f8(FUNCTION_Type_t Function);
@@ -942,7 +943,7 @@ void APP_Update(void)
 			gThisCanEnable_BK4819_Rxon = false;
 		} else if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF || gStepDirection != 0 || g_20000381 != 0 || g_20000382 != 0) {
 			gCurrentRSSI = BK4819_GetRSSI();
-			GUI_DisplayRSSI(gCurrentRSSI);
+			UI_UpdateRSSI(gCurrentRSSI);
 			gBatterySave = gEeprom.BATTERY_SAVE * 10;
 			gThisCanEnable_BK4819_Rxon = true;
 			BK4819_DisableVox();
@@ -1226,7 +1227,7 @@ void APP_TimeSlice500ms(void)
 		}
 		if (gCurrentFunction != FUNCTION_POWER_SAVE) {
 			gCurrentRSSI = BK4819_GetRSSI();
-			GUI_DisplayRSSI(gCurrentRSSI);
+			UI_UpdateRSSI(gCurrentRSSI);
 			if (gCurrentFunction == FUNCTION_TRANSMIT) {
 				goto LAB_00004b08;
 			}

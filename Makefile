@@ -61,6 +61,7 @@ OBJS += ui/helper.o
 OBJS += ui/inputbox.o
 OBJS += ui/main.o
 OBJS += ui/menu.o
+OBJS += ui/rssi.o
 OBJS += ui/scanner.o
 
 OBJS += main.o
