@@ -16,6 +16,7 @@
  */
 
 #include <string.h>
+#include "app/fm.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
@@ -31,7 +32,6 @@
 #include "driver/system.h"
 #include "driver/st7565.h"
 #include "dtmf.h"
-#include "fm.h"
 #include "frequencies.h"
 #include "helper/battery.h"
 #include "misc.h"

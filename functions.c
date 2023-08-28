@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include "app/fm.h"
 #include "bsp/dp32g030/gpio.h"
 #include "dcs.h"
 #include "driver/bk1080.h"
@@ -23,7 +24,6 @@
 #include "driver/system.h"
 #include "dtmf.h"
 #include "external/printf/printf.h"
-#include "fm.h"
 #include "functions.h"
 #include "helper/battery.h"
 #include "misc.h"

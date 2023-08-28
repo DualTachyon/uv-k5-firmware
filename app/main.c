@@ -15,10 +15,10 @@
  */
 
 #include <string.h>
+#include "app/fm.h"
 #include "app/main.h"
 #include "audio.h"
 #include "dtmf.h"
-#include "fm.h"
 #include "frequencies.h"
 #include "misc.h"
 #include "radio.h"

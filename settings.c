@@ -15,9 +15,9 @@
  */
 
 #include <string.h>
+#include "app/fm.h"
 #include "driver/eeprom.h"
 #include "driver/uart.h"
-#include "fm.h"
 #include "misc.h"
 #include "settings.h"
 

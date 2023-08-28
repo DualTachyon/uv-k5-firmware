@@ -15,11 +15,11 @@
  */
 
 #include <string.h>
+#include "app/fm.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/bk1080.h"
 #include "driver/eeprom.h"
 #include "driver/gpio.h"
-#include "fm.h"
 #include "misc.h"
 #include "settings.h"
 

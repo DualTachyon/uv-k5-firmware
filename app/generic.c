@@ -14,12 +14,12 @@
  *     limitations under the License.
  */
 
+#include "app/fm.h"
 #include "app/generic.h"
 #include "audio.h"
 #include "driver/keyboard.h"
 #include "dtmf.h"
 #include "external/printf/printf.h"
-#include "fm.h"
 #include "functions.h"
 #include "misc.h"
 #include "settings.h"
@@ -28,6 +28,7 @@
 
 extern void FUN_0000773c(void);
 extern void PlayFMRadio(void);
+extern void TalkRelatedCode(void);
 
 void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 {
@@ -85,7 +86,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 				if (g_200003FD == 1) {
 					FUNCTION_Select(FUNCTION_0);
 				} else {
-					//TalkRelatedCode();
+					TalkRelatedCode();
 					if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
 						FUNCTION_Select(FUNCTION_0);
 					} else {

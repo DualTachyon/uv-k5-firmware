@@ -14,6 +14,7 @@
  *     limitations under the License.
  */
 
+#include "app/fm.h"
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/bk1080.h"
@@ -21,7 +22,6 @@
 #include "driver/gpio.h"
 #include "driver/system.h"
 #include "driver/systick.h"
-#include "fm.h"
 #include "functions.h"
 #include "misc.h"
 #include "settings.h"

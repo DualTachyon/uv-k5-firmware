@@ -14,8 +14,8 @@
  *     limitations under the License.
  */
 
-#ifndef FM_H
-#define FM_H
+#ifndef APP_FM_H
+#define APP_FM_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -31,6 +31,12 @@ uint8_t FM_FindNextChannel(uint8_t Channel, uint8_t Direction);
 int FM_ConfigureChannelState(void);
 void FM_TurnOff(void);
 void FM_EraseChannels(void);
+
+void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag);
+void FM_Play(void);
+
+void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld);
+void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step);
 
 #endif
 

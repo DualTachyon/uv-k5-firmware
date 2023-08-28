@@ -36,6 +36,7 @@ OBJS += driver/uart.o
 # Main
 OBJS += app/aircopy.o
 OBJS += app/app.o
+OBJS += app/fm.o
 OBJS += app/generic.o
 OBJS += app/main.o
 OBJS += app/menu.o
@@ -44,7 +45,6 @@ OBJS += bitmaps.o
 OBJS += board.o
 OBJS += dcs.o
 OBJS += dtmf.o
-OBJS += fm.o
 OBJS += font.o
 OBJS += frequencies.o
 OBJS += functions.o

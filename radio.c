@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include "app/fm.h"
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
 #include "dcs.h"
@@ -22,7 +23,6 @@
 #include "driver/eeprom.h"
 #include "driver/gpio.h"
 #include "driver/system.h"
-#include "fm.h"
 #include "frequencies.h"
 #include "functions.h"
 #include "helper/battery.h"

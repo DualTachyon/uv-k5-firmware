@@ -17,6 +17,7 @@
 #include <string.h>
 #include "app/aircopy.h"
 #include "app/app.h"
+#include "app/fm.h"
 #include "app/generic.h"
 #include "app/main.h"
 #include "app/menu.h"
@@ -32,7 +33,6 @@
 #include "driver/system.h"
 #include "dtmf.h"
 #include "external/printf/printf.h"
-#include "fm.h"
 #include "frequencies.h"
 #include "functions.h"
 #include "helper/battery.h"
@@ -833,6 +833,59 @@ void APP_CheckRadioInterrupts(void)
 	}
 }
 
+void TalkRelatedCode(void)
+{
+	RADIO_SendEndOfTransmission();
+	RADIO_EnableCxCSS();
+	RADIO_SetupRegisters(false);
+}
+
+static void FUN_00008334(void)
+{
+	if (!gSetting_KILLED) {
+		if (g_200003B6 == 0) {
+			if (g_200003B8 != 0) {
+				return;
+			}
+		} else {
+			g_VOX_Lost = false;
+			g_200003B8 = 0;
+		}
+		if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_2 && gStepDirection == 0 && g_20000381 == 0 && !gFmRadioMode) {
+			if (g_200003B4 == 1) {
+				if (g_VOX_Lost) {
+					gSystickCountdown11 = 100;
+				} else if (gSystickCountdown11 == 0) {
+					g_200003B4 = 0;
+				}
+				if (gCurrentFunction == FUNCTION_TRANSMIT && !gPttIsPressed && g_200003B4 == 0) {
+					if (g_200003FD == 1) {
+						TalkRelatedCode();
+						if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
+							FUNCTION_Select(FUNCTION_0);
+						} else {
+							gRTTECountdown = gEeprom.REPEATER_TAIL_TONE_ELIMINATION * 10;
+						}
+					}
+					gUpdateDisplay = true;
+					g_200003FD = 0;
+					return;
+				}
+			} else if (g_VOX_Lost) {
+				g_200003B4 = 1;
+				if (gCurrentFunction == FUNCTION_POWER_SAVE) {
+					FUNCTION_Select(FUNCTION_0);
+				}
+				if (gCurrentFunction != FUNCTION_TRANSMIT) {
+					g_200003BE = 0;
+					RADIO_SomethingWithTransmit();
+					gUpdateDisplay = true;
+				}
+			}
+		}
+	}
+}
+
 void APP_Update(void)
 {
 	if (gFlagPlayQueuedVoice) {
@@ -843,8 +896,7 @@ void APP_Update(void)
 	if (gCurrentFunction == FUNCTION_TRANSMIT && gSystickFlag0) {
 		gSystickFlag0 = false;
 		g_200003FD = 1;
-		// TODO
-		//TalkRelatedCode();
+		TalkRelatedCode();
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP);
 		RADIO_SomethingElse(4);
 		GUI_DisplayScreen();
@@ -913,7 +965,7 @@ void APP_Update(void)
 	}
 
 	if (gEeprom.VOX_SWITCH) {
-		//FUN_00008334();
+		FUN_00008334();
 	}
 
 	if (gSystickFlag5) {
@@ -1587,6 +1639,79 @@ void FUN_000056a0(bool bFlag)
 	gRequestDisplayScreen = DISPLAY_MAIN;
 }
 
+void FUN_00004404(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	uint8_t Short;
+	uint8_t Long;
+
+	if (gScreenToDisplay == DISPLAY_MAIN && g_200003BA) {
+		if (Key == KEY_SIDE1 && !bKeyHeld && bKeyPressed) {
+			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+			if (g_200003BB) {
+				g_200003BB--;
+				g_20000D1C[g_200003BB] = 0x2d;
+				if (g_200003BB) {
+					g_20000394 = true;
+					gRequestDisplayScreen = DISPLAY_MAIN;
+					return;
+				}
+			}
+			gAnotherVoiceID = VOICE_ID_CANCEL;
+			gRequestDisplayScreen = DISPLAY_MAIN;
+			g_200003BA = 0;
+		}
+		g_20000394 = true;
+		return;
+	}
+
+	if (Key == KEY_SIDE1) {
+		Short = gEeprom.KEY_1_SHORT_PRESS_ACTION;
+		Long = gEeprom.KEY_1_LONG_PRESS_ACTION;
+	} else {
+		Short = gEeprom.KEY_2_SHORT_PRESS_ACTION;
+		Long = gEeprom.KEY_2_LONG_PRESS_ACTION;
+	}
+	if (!bKeyHeld && bKeyPressed) {
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+		return;
+	}
+	if (bKeyHeld || bKeyPressed) {
+		if (!bKeyHeld) {
+			return;
+		}
+		Short = Long;
+		if (!bKeyPressed) {
+			return;
+		}
+	}
+	switch (Short) {
+	case 1:
+		//APP_ProcessFlashLight();
+		return;
+	case 2:
+		APP_CycleOutputPower();
+		return;
+	case 3:
+		FUN_00005770();
+		return;
+	case 4:
+		FUN_00005830(1);
+		return;
+	case 5:
+		APP_FlipVoxSwitch();
+		return;
+	case 6:
+		FUN_000056a0(0);
+		break;
+	case 7:
+		APP_SwitchToFM();
+		return;
+	case 8:
+		FUN_000056a0(1);
+		break;
+	}
+}
+
 static void APP_ProcessKey_MAIN(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	if (gFmRadioMode && Key != KEY_PTT && Key != KEY_EXIT) {
@@ -1925,7 +2050,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				break;
 			}
 		} else if (gScreenToDisplay != DISPLAY_SCANNER && gScreenToDisplay != DISPLAY_AIRCOPY) {
-			//FUN_00004404(Key, bKeyPressed, bKeyHeld);
+			FUN_00004404(Key, bKeyPressed, bKeyHeld);
 		} else if (!bKeyHeld && bKeyPressed) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}

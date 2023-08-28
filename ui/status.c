@@ -15,10 +15,10 @@
  */
 
 #include <string.h>
+#include "app/fm.h"
 #include "bitmaps.h"
 #include "driver/keyboard.h"
 #include "driver/st7565.h"
-#include "fm.h"
 #include "functions.h"
 #include "helper/battery.h"
 #include "misc.h"
