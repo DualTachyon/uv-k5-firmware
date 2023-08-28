@@ -176,8 +176,6 @@ extern uint8_t gA_Scan_Channel;
 extern uint8_t gDebounceCounter;
 extern uint8_t gDTMF_AUTO_RESET_TIME;
 extern bool gF_LOCK;
-extern char gNumberForPrintf[8];
-extern uint8_t gNumberOffset;
 extern uint8_t gScanChannel;
 extern uint32_t gScanFrequency;
 extern uint8_t gScanPauseMode;
@@ -205,7 +203,6 @@ extern uint16_t gCurrentRSSI;
 
 // --------
 
-void NUMBER_Append(char Digit);
 void NUMBER_Get(char *pDigits, uint32_t *pInteger);
 void NUMBER_ToDigits(uint32_t Value, char *pDigits);
 uint8_t NUMBER_AddWithWraparound(uint8_t Base, int8_t Add, uint8_t LowerLimit, uint8_t UpperLimit);

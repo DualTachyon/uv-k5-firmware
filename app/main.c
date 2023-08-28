@@ -8,6 +8,7 @@
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
+#include "ui/inputbox.h"
 
 extern void APP_SwitchToFM(void);
 extern void FUN_0000773c(void);
@@ -34,18 +35,18 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 
 	if (!gWasFKeyPressed) {
-		NUMBER_Append(Key);
+		INPUTBOX_Append(Key);
 		gRequestDisplayScreen = DISPLAY_MAIN;
 		if (gTxRadioInfo->CHANNEL_SAVE < 200) {
 			uint16_t Channel;
 
-			if (gNumberOffset != 3) {
+			if (gInputBoxIndex != 3) {
 				gAnotherVoiceID = (VOICE_ID_t)Key;
 				gRequestDisplayScreen = DISPLAY_MAIN;
 				return;
 			}
-			gNumberOffset = 0;
-			Channel = ((gNumberForPrintf[0] * 100) + (gNumberForPrintf[1] * 10) + gNumberForPrintf[2]) - 1;
+			gInputBoxIndex = 0;
+			Channel = ((gInputBox[0] * 100) + (gInputBox[1] * 10) + gInputBox[2]) - 1;
 			if (!RADIO_CheckValidChannel(Channel, false, 0)) {
 				gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 				return;
@@ -60,12 +61,12 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		if (gTxRadioInfo->CHANNEL_SAVE < 207) {
 			uint32_t Frequency;
 
-			if (gNumberOffset < 6) {
+			if (gInputBoxIndex < 6) {
 				gAnotherVoiceID = Key;
 				return;
 			}
-			gNumberOffset = 0;
-			NUMBER_Get(gNumberForPrintf, &Frequency);
+			gInputBoxIndex = 0;
+			NUMBER_Get(gInputBox, &Frequency);
 			if (gSetting_350EN || (4999990 < (Frequency - 35000000))) {
 				uint8_t i;
 
@@ -96,13 +97,13 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		} else {
 			uint8_t Channel;
 
-			if (gNumberOffset != 2) {
+			if (gInputBoxIndex != 2) {
 				gAnotherVoiceID = Key;
 				gRequestDisplayScreen = DISPLAY_MAIN;
 				return;
 			}
-			gNumberOffset = 0;
-			Channel = (gNumberForPrintf[0] * 10) + gNumberForPrintf[1];
+			gInputBoxIndex = 0;
+			Channel = (gInputBox[0] * 10) + gInputBox[1];
 			if ((Channel - 1) < 10) {
 				Channel += 207;
 				gAnotherVoiceID = (VOICE_ID_t)Key;
@@ -253,12 +254,12 @@ void MAIN_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		if (!gFmRadioMode) {
 			if (gStepDirection == 0) {
-				if (gNumberOffset == 0) {
+				if (gInputBoxIndex == 0) {
 					return;
 				}
-				gNumberOffset--;
-				gNumberForPrintf[gNumberOffset] = 10;
-				if (gNumberOffset == 0) {
+				gInputBoxIndex--;
+				gInputBox[gInputBoxIndex] = 10;
+				if (gInputBoxIndex == 0) {
 					gAnotherVoiceID = VOICE_ID_CANCEL;
 				}
 			} else {
@@ -278,8 +279,8 @@ void MAIN_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 		bool bFlag;
 
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-		bFlag = gNumberOffset == 0;
-		gNumberOffset = 0;
+		bFlag = gInputBoxIndex == 0;
+		gInputBoxIndex = 0;
 		if (bFlag) {
 			gFlagRefreshSetting = true;
 			gRequestDisplayScreen = DISPLAY_MENU;
@@ -292,7 +293,7 @@ void MAIN_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 
 void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 {
-	if (gNumberOffset) {
+	if (gInputBoxIndex) {
 		if (!bKeyHeld && bKeyPressed) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
@@ -342,7 +343,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 
 	Channel = gEeprom.ScreenChannel[gEeprom.TX_CHANNEL];
 	if (bKeyHeld || !bKeyPressed) {
-		if (gNumberOffset) {
+		if (gInputBoxIndex) {
 			return;
 		}
 		if (!bKeyPressed) {
@@ -357,7 +358,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 			return;
 		}
 	} else {
-		if (gNumberOffset) {
+		if (gInputBoxIndex) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			return;
 		}

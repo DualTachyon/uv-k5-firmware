@@ -32,6 +32,7 @@
 #include "helper.h"
 #include "misc.h"
 #include "settings.h"
+#include "ui/inputbox.h"
 
 static const char MenuList[][7] = {
 	// 0x00
@@ -265,7 +266,7 @@ void GUI_PasswordScreen(void)
 	BEEP_Type_t Beep;
 
 	gUpdateDisplay = true;
-	memset(gNumberForPrintf, 10, sizeof(gNumberForPrintf));
+	memset(gInputBox, 10, sizeof(gInputBox));
 
 	while (1) {
 		while (!gNextTimeslice) {
@@ -284,28 +285,28 @@ void GUI_PasswordScreen(void)
 					case KEY_0: case KEY_1: case KEY_2: case KEY_3:
 					case KEY_4: case KEY_5: case KEY_6: case KEY_7:
 					case KEY_8: case KEY_9:
-						NUMBER_Append(Key - KEY_0);
-						if (gNumberOffset < 6) {
+						INPUTBOX_Append(Key - KEY_0);
+						if (gInputBoxIndex < 6) {
 							Beep = BEEP_1KHZ_60MS_OPTIONAL;
 						} else {
 							uint32_t Password;
 
-							gNumberOffset = 0;
-							NUMBER_Get(gNumberForPrintf, &Password);
+							gInputBoxIndex = 0;
+							NUMBER_Get(gInputBox, &Password);
 							if ((gEeprom.POWER_ON_PASSWORD * 100) == Password) {
 								AUDIO_PlayBeep(BEEP_1KHZ_60MS_OPTIONAL);
 								return;
 							}
-							memset(gNumberForPrintf, 10, sizeof(gNumberForPrintf));
+							memset(gInputBox, 10, sizeof(gInputBox));
 							Beep = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 						}
 						AUDIO_PlayBeep(Beep);
 						gUpdateDisplay = true;
 						break;
 					case KEY_EXIT: // Delete digit
-						if (gNumberOffset != 0) {
-							gNumberOffset -= 1;
-							gNumberForPrintf[gNumberOffset] = 10;
+						if (gInputBoxIndex) {
+							gInputBoxIndex -= 1;
+							gInputBox[gInputBoxIndex] = 10;
 							gUpdateDisplay = true;
 						}
 						AUDIO_PlayBeep(BEEP_1KHZ_60MS_OPTIONAL);
@@ -343,7 +344,7 @@ void GUI_LockScreen(void)
 	strcpy(String, "LOCK");
 	GUI_PrintString(String, 0, 127, 1, 10, true);
 	for (i = 0; i < 6; i++) {
-		if (gNumberForPrintf[i] == 10) {
+		if (gInputBox[i] == 10) {
 			String[i] = '-';
 		} else {
 			String[i] = '*';
@@ -415,7 +416,7 @@ static void GenerateChannelString(char *pString, uint8_t Channel)
 {
 	uint8_t i;
 
-	if (gNumberOffset == 0) {
+	if (gInputBoxIndex == 0) {
 		sprintf(pString, "CH-%02d", Channel + 1);
 		return;
 	}
@@ -425,10 +426,10 @@ static void GenerateChannelString(char *pString, uint8_t Channel)
 	pString[2] = '-';
 
 	for (i = 0; i < 2; i++) {
-		if (gNumberForPrintf[i] == 10) {
+		if (gInputBox[i] == 10) {
 			pString[i + 3] = '-';
 		} else {
-			pString[i + 3] = gNumberForPrintf[i] + '0';
+			pString[i + 3] = gInputBox[i] + '0';
 		}
 	}
 
@@ -436,14 +437,14 @@ static void GenerateChannelString(char *pString, uint8_t Channel)
 
 static void GenerateChannelStringEx(char *pString, bool bShowPrefix, uint8_t ChannelNumber)
 {
-	if (gNumberOffset) {
+	if (gInputBoxIndex) {
 		uint8_t i;
 
 		for (i = 0; i < 3; i++) {
-			if (gNumberForPrintf[i] == 10) {
+			if (gInputBox[i] == 10) {
 				pString[i] = '-';
 			} else {
-				pString[i] = gNumberForPrintf[i] + '0';
+				pString[i] = gInputBox[i] + '0';
 			}
 		}
 		return;
@@ -628,10 +629,10 @@ static void DisplayMain(void)
 		// 0x8F3C
 		if (gEeprom.ScreenChannel[i] < 200) {
 			memcpy(pLine1 + 2, BITMAP_M, sizeof(BITMAP_M));
-			if (gNumberOffset == 0 || gEeprom.TX_CHANNEL != i) {
+			if (gInputBoxIndex == 0 || gEeprom.TX_CHANNEL != i) {
 				NUMBER_ToDigits(gEeprom.ScreenChannel[i] + 1, String);
 			} else {
-				memcpy(String + 5, gNumberForPrintf, 3);
+				memcpy(String + 5, gInputBox, 3);
 			}
 			GUI_DisplaySmallDigits(3, String + 5, 10, Line + 1);
 		} else if (gEeprom.ScreenChannel[i] < 207) {
@@ -642,11 +643,11 @@ static void DisplayMain(void)
 			GUI_DisplaySmallDigits(1, &c, 22, Line + 1);
 		} else {
 			memcpy(pLine1 + 7, BITMAP_NarrowBand, sizeof(BITMAP_NarrowBand));
-			if (gNumberOffset == 0 || gEeprom.TX_CHANNEL != i) {
+			if (gInputBoxIndex == 0 || gEeprom.TX_CHANNEL != i) {
 				NUMBER_ToDigits(gEeprom.ScreenChannel[i] - 206, String);
 			} else {
-				String[6] = gNumberForPrintf[0];
-				String[7] = gNumberForPrintf[1];
+				String[6] = gInputBox[0];
+				String[7] = gInputBox[1];
 			}
 			GUI_DisplaySmallDigits(2, String + 6, 15, Line + 1);
 		}
@@ -692,8 +693,8 @@ static void DisplayMain(void)
 			}
 			GUI_PrintString(String, 31, 111, i * 4, Width, true);
 		} else {
-			if (gNumberOffset != 0 && (gEeprom.ScreenChannel[i] - 200) < 7 && gEeprom.TX_CHANNEL == i) {
-				GUI_DisplayFrequency(gNumberForPrintf, 31, i * 4, true, false);
+			if (gInputBoxIndex && (gEeprom.ScreenChannel[i] - 200) < 7 && gEeprom.TX_CHANNEL == i) {
+				GUI_DisplayFrequency(gInputBox, 31, i * 4, true, false);
 			} else {
 				if (gEeprom.ScreenChannel[i] < 200) {
 					if (gEeprom.CHANNEL_DISPLAY_MODE == 2 && (gEeprom.VfoInfo[i].Name[0] == 0 || gEeprom.VfoInfo[i].Name[0] == 0xFF)) {
@@ -913,14 +914,14 @@ static void DisplayFM(void)
 	GUI_PrintString(String, 0, 127, 2, 10, true);
 	memset(String, 0, sizeof(String));
 
-	if (gAskToSave || (gEeprom.FM_IsChannelSelected && gNumberOffset)) {
+	if (gAskToSave || (gEeprom.FM_IsChannelSelected && gInputBoxIndex)) {
 		GenerateChannelString(String, gA_Scan_Channel);
 	} else if (gAskToDelete) {
-		if (gNumberOffset == 0) {
+		if (gInputBoxIndex == 0) {
 			NUMBER_ToDigits(gEeprom.FM_FrequencyToPlay * 10000, String);
 			GUI_DisplayFrequency(String, 23, 4, false, true);
 		} else {
-			GUI_DisplayFrequency(gNumberForPrintf, 23, 4, true, false);
+			GUI_DisplayFrequency(gInputBox, 23, 4, true, false);
 		}
 		ST7565_BlitFullScreen();
 		return;
@@ -1002,23 +1003,23 @@ void GUI_DisplayMenu(void)
 		break;
 
 	case MENU_OFFSET:
-		if (!gIsInSubMenu || gNumberOffset == 0) {
+		if (!gIsInSubMenu || gInputBoxIndex == 0) {
 			sprintf(String, "%.5f", gSubMenuSelection * 1e-05);
 			break;
 		}
 		for (i = 0; i < 3; i++) {
-			if (gNumberForPrintf[i] == 10) {
+			if (gInputBox[i] == 10) {
 				String[i] = '-';
 			} else {
-				String[i] = gNumberForPrintf[i] + '0';
+				String[i] = gInputBox[i] + '0';
 			}
 		}
 		String[3] = '.';
 		for (i = 3; i < 6; i++) {
-			if (gNumberForPrintf[i] == 10) {
+			if (gInputBox[i] == 10) {
 				String[i + 1] = '-';
 			} else {
-				String[i + 1] = gNumberForPrintf[i] + '0';
+				String[i + 1] = gInputBox[i] + '0';
 			}
 		}
 		String[7] = 0x2d;
@@ -1317,12 +1318,12 @@ static void DisplayAircopy(void)
 	}
 	GUI_PrintString(String, 2, 127, 0, 8, true);
 
-	if (gNumberOffset == 0) {
+	if (gInputBoxIndex == 0) {
 		NUMBER_ToDigits(gInfoCHAN_A->DCS[0].Frequency, String);
 		GUI_DisplayFrequency(String, 16, 2, 0, 0);
 		GUI_DisplaySmallDigits(2, String + 6, 97, 3);
 	} else {
-		GUI_DisplayFrequency(gNumberForPrintf, 16, 2, 1, 0);
+		GUI_DisplayFrequency(gInputBox, 16, 2, 1, 0);
 	}
 
 	memset(String, 0, sizeof(String));
@@ -1363,7 +1364,7 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 {
 	if (Display != DISPLAY_INVALID) {
 		if (gScreenToDisplay != Display) {
-			gNumberOffset = 0;
+			gInputBoxIndex = 0;
 			gIsInSubMenu = false;
 			g_20000381 = 0;
 			gStepDirection = 0;

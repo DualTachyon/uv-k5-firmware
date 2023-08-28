@@ -55,6 +55,7 @@ OBJS += misc.o
 OBJS += radio.o
 OBJS += scheduler.o
 OBJS += settings.o
+OBJS += ui/inputbox.o
 
 OBJS += main.o
 

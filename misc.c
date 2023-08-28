@@ -167,8 +167,6 @@ uint8_t gA_Scan_Channel;
 uint8_t gDebounceCounter;
 uint8_t gDTMF_AUTO_RESET_TIME;
 bool gF_LOCK;
-char gNumberForPrintf[8];
-uint8_t gNumberOffset;
 uint8_t gScanChannel;
 uint32_t gScanFrequency;
 uint8_t gScanPauseMode;
@@ -196,16 +194,6 @@ int16_t gFM_FrequencyDeviation;
 uint16_t gCurrentRSSI;
 
 // --------
-
-void NUMBER_Append(char Digit)
-{
-	if (gNumberOffset == 0) {
-		memset(gNumberForPrintf, 10, sizeof(gNumberForPrintf));
-	} else if (gNumberOffset >= sizeof(gNumberForPrintf)) {
-		return;
-	}
-	gNumberForPrintf[gNumberOffset++] = Digit;
-}
 
 void NUMBER_Get(char *pDigits, uint32_t *pInteger)
 {

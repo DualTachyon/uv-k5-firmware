@@ -42,6 +42,7 @@
 #include "radio.h"
 #include "settings.h"
 #include "sram-overlay.h"
+#include "ui/inputbox.h"
 
 static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void FUN_000069f8(FUNCTION_Type_t Function);
@@ -1247,7 +1248,7 @@ void APP_TimeSlice500ms(void)
 				if (g_20000393 != 0) {
 					g_20000393--;
 					if (g_20000393 == 0) {
-						if (gNumberOffset != 0 || g_200003BA == 1 || gScreenToDisplay == DISPLAY_MENU) {
+						if (gInputBoxIndex || g_200003BA == 1 || gScreenToDisplay == DISPLAY_MENU) {
 							AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
 						}
 						if (gScreenToDisplay == DISPLAY_SCANNER) {
@@ -1258,7 +1259,7 @@ void APP_TimeSlice500ms(void)
 						}
 						gWasFKeyPressed = false;
 						g_2000036F = 1;
-						gNumberOffset = 0;
+						gInputBoxIndex = 0;
 						g_200003BA = 0;
 						g_200003BB = 0;
 						gAskToSave = false;
@@ -1556,7 +1557,7 @@ void APP_SwitchToFM(void)
 	if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_2) {
 		if (gFmRadioMode) {
 			FM_TurnOff();
-			gNumberOffset = 0;
+			gInputBoxIndex = 0;
 			g_200003B6 = 0x50;
 			g_20000398 = 1;
 			gRequestDisplayScreen = DISPLAY_MAIN;
@@ -1565,14 +1566,14 @@ void APP_SwitchToFM(void)
 		RADIO_ConfigureTX();
 		RADIO_SetupRegisters(true);
 		APP_StartFM();
-		gNumberOffset = 0;
+		gInputBoxIndex = 0;
 		gRequestDisplayScreen = DISPLAY_FM;
 	}
 }
 
 void FUN_000056a0(bool bFlag)
 {
-	gNumberOffset = 0;
+	gInputBoxIndex = 0;
 	if (bFlag) {
 		g_20000383 = 3;
 	} else {

@@ -11,6 +11,7 @@
 #include "misc.h"
 #include "settings.h"
 #include "sram-overlay.h"
+#include "ui/inputbox.h"
 
 static const VOICE_ID_t MenuVoices[] = {
 	VOICE_ID_SQUELCH,
@@ -810,12 +811,12 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	}
 
 	g_20000396 = 1;
-	NUMBER_Append(Key);
+	INPUTBOX_Append(Key);
 	gRequestDisplayScreen = DISPLAY_MENU;
 	if (!gIsInSubMenu) {
-		switch (gNumberOffset) {
+		switch (gInputBoxIndex) {
 		case 1:
-			Value = gNumberForPrintf[0];
+			Value = gInputBox[0];
 			if (Value && Value <= gMenuListCount) {
 				gMenuCursor = Value - 1;
 				gFlagRefreshSetting = true;
@@ -823,8 +824,8 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			}
 			break;
 		case 2:
-			gNumberOffset = 0;
-			Value = (gNumberForPrintf[0] * 10) + gNumberForPrintf[1];
+			gInputBoxIndex = 0;
+			Value = (gInputBox[0] * 10) + gInputBox[1];
 			if (Value && Value <= gMenuListCount) {
 				gMenuCursor = Value - 1;
 				gFlagRefreshSetting = true;
@@ -832,30 +833,30 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			}
 			break;
 		}
-		gNumberOffset = 0;
+		gInputBoxIndex = 0;
 	} else {
 		if (gMenuCursor == MENU_OFFSET) {
 			uint32_t Frequency;
 
-			if (gNumberOffset < 6) {
+			if (gInputBoxIndex < 6) {
 				gAnotherVoiceID = (VOICE_ID_t)Key;
 				return;
 			}
-			gNumberOffset = 0;
-			NUMBER_Get(gNumberForPrintf, &Frequency);
+			gInputBoxIndex = 0;
+			NUMBER_Get(gInputBox, &Frequency);
 			Frequency += 75;
 			gAnotherVoiceID = (VOICE_ID_t)Key;
 			gSubMenuSelection = FREQUENCY_FloorToStep(Frequency, gTxRadioInfo->StepFrequency, 0);
 			return;
 		}
 		if (gMenuCursor == MENU_MEM_CH || gMenuCursor == MENU_DEL_CH || gMenuCursor == MENU_1_CALL) {
-			if (gNumberOffset < 3) {
+			if (gInputBoxIndex < 3) {
 				gAnotherVoiceID = (VOICE_ID_t)Key;
 				gRequestDisplayScreen = DISPLAY_MENU;
 				return;
 			}
-			gNumberOffset = 0;
-			Value = ((gNumberForPrintf[0] * 100) + (gNumberForPrintf[1] * 10) + gNumberForPrintf[2]) - 1;
+			gInputBoxIndex = 0;
+			Value = ((gInputBox[0] * 100) + (gInputBox[1] * 10) + gInputBox[2]) - 1;
 			if (Value < 200) {
 				gAnotherVoiceID = Key;
 				gSubMenuSelection = Value;
@@ -876,26 +877,26 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				} else {
 					Offset = 3;
 				}
-				switch (gNumberOffset) {
+				switch (gInputBoxIndex) {
 				case 1:
-					Value = gNumberForPrintf[0];
+					Value = gInputBox[0];
 					break;
 				case 2:
-					Value = (gNumberForPrintf[0] * 10) + gNumberForPrintf[1];
+					Value = (gInputBox[0] * 10) + gInputBox[1];
 					break;
 				case 3:
-					Value = (gNumberForPrintf[0] * 100) + (gNumberForPrintf[1] * 10) + gNumberForPrintf[2];
+					Value = (gInputBox[0] * 100) + (gInputBox[1] * 10) + gInputBox[2];
 					break;
 				}
-				if (Offset == gNumberOffset) {
-					gNumberOffset = 0;
+				if (Offset == gInputBoxIndex) {
+					gInputBoxIndex = 0;
 				}
 				if (Value <= Max) {
 					gSubMenuSelection = Value;
 					return;
 				}
 			} else {
-				gNumberOffset = 0;
+				gInputBoxIndex = 0;
 			}
 		}
 	}
@@ -908,14 +909,14 @@ void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 		g_20000396 = 1;
 		if (g_20000381 == 0) {
 			if (gIsInSubMenu) {
-				if (gNumberOffset == 0 || gMenuCursor != MENU_OFFSET) {
+				if (gInputBoxIndex == 0 || gMenuCursor != MENU_OFFSET) {
 					gIsInSubMenu = false;
-					gNumberOffset = 0;
+					gInputBoxIndex = 0;
 					gFlagRefreshSetting = true;
 					gAnotherVoiceID = VOICE_ID_CANCEL;
 				} else {
-					gNumberOffset--;
-					gNumberForPrintf[gNumberOffset] = 10;
+					gInputBoxIndex--;
+					gInputBox[gInputBoxIndex] = 10;
 				}
 				gRequestDisplayScreen = DISPLAY_MENU;
 				return;
@@ -976,7 +977,7 @@ void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 				gAnotherVoiceID = VOICE_ID_CONFIRM;
 			}
 		}
-		gNumberOffset = 0;
+		gInputBoxIndex = 0;
 	}
 }
 
@@ -1016,7 +1017,7 @@ void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 			return;
 		}
 		g_20000396 = 1;
-		gNumberOffset = 0;
+		gInputBoxIndex = 0;
 	} else if (!bKeyPressed) {
 		return;
 	}

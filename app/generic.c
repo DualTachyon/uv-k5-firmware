@@ -7,13 +7,14 @@
 #include "gui.h"
 #include "misc.h"
 #include "settings.h"
+#include "ui/inputbox.h"
 
 extern void FUN_0000773c(void);
 extern void PlayFMRadio(void);
 
 void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 {
-	if (gNumberOffset != 0) {
+	if (gInputBoxIndex) {
 		if (!bKeyHeld && bKeyPressed) {
 			g_20000396 = 2;
 		}
@@ -60,7 +61,7 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 
 void GENERIC_Key_PTT(bool bKeyPressed)
 {
-	gNumberOffset = 0;
+	gInputBoxIndex = 0;
 	if (!bKeyPressed) {
 		if (gScreenToDisplay == DISPLAY_MAIN) {
 			if (gCurrentFunction == FUNCTION_TRANSMIT) {
@@ -79,7 +80,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			return;
 		}
-		gNumberOffset = 0;
+		gInputBoxIndex = 0;
 		return;
 	}
 
@@ -95,21 +96,21 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 		if (g_20000381 == 0) {
 			if (gScreenToDisplay == DISPLAY_MENU) {
 				gRequestDisplayScreen = DISPLAY_MAIN;
-				gNumberOffset = 0;
+				gInputBoxIndex = 0;
 				gPttIsPressed = false;
 				gPttDebounceCounter = 0;
 				return;
 			}
 			if (gScreenToDisplay == DISPLAY_FM) {
 				gRequestDisplayScreen = DISPLAY_MAIN;
-				gNumberOffset = 0;
+				gInputBoxIndex = 0;
 				gPttIsPressed = false;
 				gPttDebounceCounter = 0;
 				return;
 			}
 			if (gScreenToDisplay != DISPLAY_SCANNER) {
 				if (gCurrentFunction == FUNCTION_TRANSMIT && gRTTECountdown == 0) {
-					gNumberOffset = 0;
+					gInputBoxIndex = 0;
 					return;
 				}
 				g_200003A0 = 1;
@@ -136,7 +137,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 				}
 				gRequestDisplayScreen = DISPLAY_MAIN;
 				g_200003A0 = 1;
-				gNumberOffset = 0;
+				gInputBoxIndex = 0;
 				return;
 			}
 			gRequestDisplayScreen = DISPLAY_MAIN;
