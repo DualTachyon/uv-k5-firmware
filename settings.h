@@ -94,7 +94,7 @@ typedef struct {
 	uint8_t VfoChannel[2];
 	uint8_t EEPROM_0E82_0E85[2];
 	uint8_t EEPROM_0E81_0E84[2];
-	uint8_t EEPROM_0E86_0E87[2];
+	uint8_t NoaaChannel[2];
 	uint8_t RX_CHANNEL;
 	uint8_t TX_CHANNEL;
 	uint8_t field7_0xa;

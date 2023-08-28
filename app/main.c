@@ -100,7 +100,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			if ((Channel - 1) < 10) {
 				Channel += 207;
 				gAnotherVoiceID = (VOICE_ID_t)Key;
-				gEeprom.EEPROM_0E86_0E87[Vfo] = Channel;
+				gEeprom.NoaaChannel[Vfo] = Channel;
 				gEeprom.VfoChannel[Vfo] = Channel;
 				gRequestSaveVFO = true;
 				g_2000039A = 2;
@@ -169,7 +169,18 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		g_20000458 = 0;
 		g_20000459 = gEeprom.CROSS_BAND_RX_TX;
 		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
-		return;
+		break;
+
+	case KEY_5:
+		if (gTxRadioInfo->CHANNEL_SAVE < 207) {
+			gEeprom.VfoChannel[Vfo] = gEeprom.NoaaChannel[gEeprom.TX_CHANNEL];
+		} else {
+			gEeprom.VfoChannel[Vfo] = gEeprom.EEPROM_0E82_0E85[gEeprom.TX_CHANNEL];
+			gAnotherVoiceID = VOICE_ID_FREQUENCY_MODE;
+		}
+		gRequestSaveVFO = true;
+		g_2000039A = 2;
+		break;
 
 	default:
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
@@ -273,7 +284,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 			}
 		} else {
 			Channel = 207 + NUMBER_AddWithWraparound(gEeprom.VfoChannel[gEeprom.TX_CHANNEL] + 207,Direction, 0, 9);
-			gEeprom.EEPROM_0E86_0E87[gEeprom.TX_CHANNEL] = Channel;
+			gEeprom.NoaaChannel[gEeprom.TX_CHANNEL] = Channel;
 			gEeprom.VfoChannel[gEeprom.TX_CHANNEL] = Channel;
 		}
 		gRequestSaveVFO = true;
