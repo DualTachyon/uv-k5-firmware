@@ -846,7 +846,7 @@ static void DisplayMain(void)
 			if (gEeprom.VfoInfo[i].FREQUENCY_DEVIATION_SETTING == FREQUENCY_DEVIATION_ADD) {
 				memcpy(pLine1 + 128 + 54, BITMAP_Add, sizeof(BITMAP_Add));
 			}
-			if (gEeprom.VfoInfo[i].FREQUENCY_DEVIATION_SETTING == FREQUENCY_DEVIATION_ADD) {
+			if (gEeprom.VfoInfo[i].FREQUENCY_DEVIATION_SETTING == FREQUENCY_DEVIATION_SUB) {
 				memcpy(pLine1 + 128 + 54, BITMAP_Sub, sizeof(BITMAP_Sub));
 			}
 
