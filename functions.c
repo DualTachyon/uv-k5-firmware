@@ -97,7 +97,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 			gSystickFlag5 = false;
 			return;
 		}
-		if (gFmMute == true) {
+		if (gFmRadioMode) {
 			g_2000038E = 500;
 		}
 		if (g_200003BC != 1 && g_200003BC != 2) {
@@ -134,7 +134,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		return;
 	}
 
-	if (gFmMute == true) {
+	if (gFmRadioMode) {
 		BK1080_Init(0, false);
 	}
 

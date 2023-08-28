@@ -35,7 +35,7 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 			gEeprom.KEY_LOCK = !gEeprom.KEY_LOCK;
 			gRequestSaveSettings = true;
 		} else {
-			if ((gFmMute || gScreenToDisplay != DISPLAY_MAIN) && gScreenToDisplay != DISPLAY_FM) {
+			if ((gFmRadioMode || gScreenToDisplay != DISPLAY_MAIN) && gScreenToDisplay != DISPLAY_FM) {
 				return;
 			}
 			gWasFKeyPressed = !gWasFKeyPressed;

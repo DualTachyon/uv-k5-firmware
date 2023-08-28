@@ -87,7 +87,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 		BK4819_RX_TurnOn();
 	}
 
-	if (gFmMute == true) {
+	if (gFmRadioMode) {
 		BK1080_Mute(true);
 	}
 	SYSTEM_DelayMs(20);
@@ -141,7 +141,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	if (g_2000036B == 1) {
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	}
-	if (gFmMute == true) {
+	if (gFmRadioMode) {
 		BK1080_Mute(false);
 	}
 	if (gCurrentFunction == FUNCTION_POWER_SAVE && gThisCanEnable_BK4819_Rxon) {
@@ -196,8 +196,8 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 		if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_2) {
 			BK4819_SetAF(BK4819_AF_MUTE);
 		}
-		if (gFmMute) {
-			BK1080_Mute(gFmMute);
+		if (gFmRadioMode) {
+			BK1080_Mute(true);
 		}
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 		g_200003B6 = 2000;
@@ -215,7 +215,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 					BK4819_SetAF(BK4819_AF_OPEN);
 				}
 			}
-			if (gFmMute == true) {
+			if (gFmRadioMode) {
 				BK1080_Mute(false);
 			}
 			if (g_2000036B == 0) {
@@ -328,7 +328,7 @@ void AUDIO_PlayQueuedVoice(void)
 			BK4819_SetAF(BK4819_AF_OPEN);
 		}
 	}
-	if (gFmMute == true) {
+	if (gFmRadioMode) {
 		BK1080_Mute(false);
 	}
 	if (g_2000036B == 0) {

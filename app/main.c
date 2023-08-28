@@ -6,7 +6,7 @@
 #include "radio.h"
 #include "settings.h"
 
-extern void FUN_000056d8(void);
+extern void APP_SwitchToFM(void);
 extern void FUN_0000773c(void);
 extern void APP_AddStepToFrequency(VFO_Info_t *pInfo, uint8_t Step);
 extern void APP_ChangeStepDirectionMaybe(bool bFlag, uint8_t Direction);
@@ -15,7 +15,7 @@ void MAIN_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-		if (!gFmMute) {
+		if (!gFmRadioMode) {
 			if (gStepDirection == 0) {
 				if (gNumberOffset == 0) {
 					return;
@@ -32,7 +32,7 @@ void MAIN_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			return;
 		}
-		FUN_000056d8();
+		APP_SwitchToFM();
 	}
 }
 

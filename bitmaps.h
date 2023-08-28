@@ -22,7 +22,7 @@ extern const uint8_t BITMAP_WX[12];
 extern const uint8_t BITMAP_TDR[12];
 extern const uint8_t BITMAP_VoicePrompt[9];
 
-extern const uint8_t BITMAP_FM_Mute[12];
+extern const uint8_t BITMAP_FM[12];
 extern const uint8_t BITMAP_NOAA[12];
 
 extern const uint8_t BITMAP_Antenna[5];

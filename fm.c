@@ -24,7 +24,7 @@
 #include "settings.h"
 
 uint16_t gFM_Channels[20];
-bool gFmMute;
+bool gFmRadioMode;
 
 bool FM_CheckValidChannel(uint8_t Channel)
 {
@@ -74,7 +74,7 @@ int FM_ConfigureChannelState(void)
 
 void FM_TurnOff(void)
 {
-	gFmMute = false;
+	gFmRadioMode = false;
 	g_20000390 = 0;
 	g_2000038E = 0;
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);

@@ -24,7 +24,7 @@
 #define FM_CHANNEL_DOWN	0xFF
 
 extern uint16_t gFM_Channels[20];
-extern bool gFmMute;
+extern bool gFmRadioMode;
 
 bool FM_CheckValidChannel(uint8_t Channel);
 uint8_t FM_FindNextChannel(uint8_t Channel, uint8_t Direction);

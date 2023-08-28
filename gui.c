@@ -400,8 +400,8 @@ void GUI_DisplayStatusLine(void)
 	if (gSetting_KILLED) {
 		memset(gStatusLine + 21, 0xFF, 10);
 	}
-	else if (gFmMute) {
-		memcpy(gStatusLine + 21, BITMAP_FM_Mute, sizeof(BITMAP_FM_Mute));
+	else if (gFmRadioMode) {
+		memcpy(gStatusLine + 21, BITMAP_FM, sizeof(BITMAP_FM));
 	}
 	if (gIsNoaaMode) {
 		memcpy(gStatusLine + 7, BITMAP_NOAA, sizeof(BITMAP_NOAA));
