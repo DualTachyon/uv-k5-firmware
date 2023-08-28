@@ -293,7 +293,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 				gAnotherVoiceID = 0xFE;
 			}
 		} else {
-			Channel = 207 + NUMBER_AddWithWraparound(gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] + 207,Direction, 0, 9);
+			Channel = 207 + NUMBER_AddWithWraparound(gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] - 207,Direction, 0, 9);
 			gEeprom.NoaaChannel[gEeprom.TX_CHANNEL] = Channel;
 			gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] = Channel;
 		}
