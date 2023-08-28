@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-#include "aircopy.h"
+#include "app/aircopy.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/bk4819.h"
 #include "driver/keyboard.h"
@@ -25,6 +25,7 @@
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
+#include "ui/menu.h"
 
 KEY_Code_t gKeyReading0;
 KEY_Code_t gKeyReading1;

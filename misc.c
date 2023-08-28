@@ -105,6 +105,7 @@ uint8_t gFlashLightState;
 uint8_t g_200003B4;
 uint16_t g_200003B6;
 uint16_t g_200003B8;
+uint8_t g_200003BA;
 uint8_t g_200003BC;
 uint8_t g_200003BD;
 uint8_t g_200003BE;

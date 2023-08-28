@@ -12,6 +12,7 @@
 #include "settings.h"
 #include "sram-overlay.h"
 #include "ui/inputbox.h"
+#include "ui/menu.h"
 
 static const VOICE_ID_t MenuVoices[] = {
 	VOICE_ID_SQUELCH,
@@ -951,7 +952,7 @@ void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 					break;
 				case 1:
 					gAskForConfirmation = 2;
-					GUI_DisplayMenu();
+					UI_DisplayMenu();
 					if (gMenuCursor == MENU_RESET) {
 						AUDIO_SetVoiceID(0, VOICE_ID_CONFIRM);
 						AUDIO_PlaySingleVoice(true);

@@ -15,7 +15,7 @@
  */
 
 #include <string.h>
-#include "aircopy.h"
+#include "app/aircopy.h"
 #include "app/app.h"
 #include "app/generic.h"
 #include "app/main.h"
@@ -43,6 +43,7 @@
 #include "settings.h"
 #include "sram-overlay.h"
 #include "ui/inputbox.h"
+#include "ui/menu.h"
 
 static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void FUN_000069f8(FUNCTION_Type_t Function);
