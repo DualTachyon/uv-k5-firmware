@@ -1,5 +1,7 @@
+#include <string.h>
 #include "app/main.h"
 #include "audio.h"
+#include "dtmf.h"
 #include "fm.h"
 #include "frequencies.h"
 #include "gui.h"
@@ -13,6 +15,7 @@ extern void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step);
 extern void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction);
 extern void APP_CycleOutputPower(void);
 extern void APP_FlipVoxSwitch(void);
+extern void FUN_00005830(bool bFlag);
 
 void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
@@ -284,6 +287,52 @@ void MAIN_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 		} else {
 			gRequestDisplayScreen = DISPLAY_MAIN;
 		}
+	}
+}
+
+void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
+{
+	if (gNumberOffset) {
+		if (!bKeyHeld && bKeyPressed) {
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+		}
+		return;
+	}
+	if (bKeyHeld || !bKeyPressed) {
+		if (bKeyHeld || bKeyPressed) {
+			if (!bKeyHeld) {
+				return;
+			}
+			if (!bKeyPressed) {
+				return;
+			}
+			FUN_00005830(0);
+			return;
+		}
+		if (gStepDirection == 0 && gTxRadioInfo->CHANNEL_SAVE < 207) {
+			g_200003BA = 1;
+			memcpy(g_20000D1C, gDTMF_String, 15);
+			g_200003BB = 0;
+			gRequestDisplayScreen = DISPLAY_MAIN;
+			return;
+		}
+	} else {
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+		if (!gWasFKeyPressed) {
+			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+			return;
+		}
+		gWasFKeyPressed = false;
+		g_2000036F = 1;
+		if (gTxRadioInfo->CHANNEL_SAVE < 207) {
+			gFlagStartScan = 1;
+			g_20000458 = 1;
+			g_20000459 = gEeprom.CROSS_BAND_RX_TX;
+			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
+		} else {
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+		}
+		g_20000394 = true;
 	}
 }
 

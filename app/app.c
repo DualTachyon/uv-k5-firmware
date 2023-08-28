@@ -1626,7 +1626,7 @@ static void APP_ProcessKey_MAIN(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		MAIN_Key_EXIT(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_STAR:
-		//MAIN_Key_STAR(bKeyPressed, bKeyHeld);
+		MAIN_Key_STAR(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_F:
 		GENERIC_Key_F(bKeyPressed, bKeyHeld);
