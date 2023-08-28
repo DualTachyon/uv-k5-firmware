@@ -429,35 +429,35 @@ void BOARD_EEPROM_Init(void)
 
 	// 0E80..0E87
 	EEPROM_ReadBuffer(0x0E80, Data, 8);
-	if (Data[0] < 0xd9) {
-		gEeprom.VfoChannel[0] = Data[0];
+	if (Data[0] < 217) {
+		gEeprom.ScreenChannel[0] = Data[0];
 	} else {
-		gEeprom.VfoChannel[0] = 205;
+		gEeprom.ScreenChannel[0] = 205;
 	}
-	if (Data[3] < 0xd9) {
-		gEeprom.VfoChannel[1] = Data[3];
+	if (Data[3] < 217) {
+		gEeprom.ScreenChannel[1] = Data[3];
 	} else {
-		gEeprom.VfoChannel[1] = 205;
+		gEeprom.ScreenChannel[1] = 205;
 	}
 	if (Data[1] < 200) {
-		gEeprom.EEPROM_0E81_0E84[0] = Data[1];
+		gEeprom.MrChannel[0] = Data[1];
 	} else {
-		gEeprom.EEPROM_0E81_0E84[0] = 0;
+		gEeprom.MrChannel[0] = 0;
 	}
 	if (Data[4] < 200) {
-		gEeprom.EEPROM_0E81_0E84[1] = Data[4];
+		gEeprom.MrChannel[1] = Data[4];
 	} else {
-		gEeprom.EEPROM_0E81_0E84[1] = 0;
+		gEeprom.MrChannel[1] = 0;
 	}
 	if (Data[2] - 200 < 7) {
-		gEeprom.EEPROM_0E82_0E85[0] = Data[2];
+		gEeprom.FreqChannel[0] = Data[2];
 	} else {
-		gEeprom.EEPROM_0E82_0E85[0] = 205;
+		gEeprom.FreqChannel[0] = 205;
 	}
 	if (Data[5] - 200 < 7) {
-		gEeprom.EEPROM_0E82_0E85[1] = Data[5];
+		gEeprom.FreqChannel[1] = Data[5];
 	} else {
-		gEeprom.EEPROM_0E82_0E85[1] = 205;
+		gEeprom.FreqChannel[1] = 205;
 	}
 	if (Data[6] - 207 < 10) {
 		gEeprom.NoaaChannel[0] = Data[6];
@@ -743,12 +743,12 @@ void BOARD_EEPROM_Init(void)
 	}
 
 	if (gEeprom.VFO_OPEN == false) {
-		gEeprom.VfoChannel[0] = gEeprom.EEPROM_0E81_0E84[0];
-		gEeprom.VfoChannel[1] = gEeprom.EEPROM_0E81_0E84[1];
+		gEeprom.ScreenChannel[0] = gEeprom.MrChannel[0];
+		gEeprom.ScreenChannel[1] = gEeprom.MrChannel[1];
 	}
 
 	// 0D60..0E27
-	EEPROM_ReadBuffer(0x0D60, gMR_ChannelParameters, 207);
+	EEPROM_ReadBuffer(0x0D60, gMR_ChannelAttributes, 207);
 
 	// 0F30..0F3F
 	EEPROM_ReadBuffer(0x0F30, gCustomPasswordKey, 16);

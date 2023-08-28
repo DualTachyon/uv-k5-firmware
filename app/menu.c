@@ -276,7 +276,7 @@ void MENU_AcceptSetting(void)
 	case MENU_MEM_CH:
 		gTxRadioInfo->CHANNEL_SAVE = gSubMenuSelection;
 		gRequestSaveChannel = 2;
-		gEeprom.EEPROM_0E81_0E84[0] = gSubMenuSelection;
+		gEeprom.MrChannel[0] = gSubMenuSelection;
 		return;
 
 	case MENU_SAVE:
@@ -311,10 +311,10 @@ void MENU_AcceptSetting(void)
 		return;
 
 	case MENU_WX:
-		if (206 < gEeprom.VfoChannel[0]) {
+		if (206 < gEeprom.ScreenChannel[0]) {
 			return;
 		}
-		if (206 < gEeprom.VfoChannel[1]) {
+		if (206 < gEeprom.ScreenChannel[1]) {
 			return;
 		}
 		gEeprom.CROSS_BAND_RX_TX = gSubMenuSelection;
@@ -631,7 +631,7 @@ void MENU_ShowCurrentSetting(void)
 		break;
 
 	case MENU_MEM_CH:
-		gSubMenuSelection = gEeprom.EEPROM_0E81_0E84[0];
+		gSubMenuSelection = gEeprom.MrChannel[0];
 		break;
 
 	case MENU_SAVE:
@@ -767,7 +767,7 @@ void MENU_ShowCurrentSetting(void)
 		break;
 
 	case MENU_DEL_CH:
-		gSubMenuSelection = RADIO_FindNextChannel(gEeprom.EEPROM_0E81_0E84[0], 1, false, 1);
+		gSubMenuSelection = RADIO_FindNextChannel(gEeprom.MrChannel[0], 1, false, 1);
 		break;
 
 	case MENU_350TX:

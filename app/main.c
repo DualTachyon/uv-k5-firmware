@@ -47,8 +47,8 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				return;
 			}
 			gAnotherVoiceID = (VOICE_ID_t)Key;
-			gEeprom.EEPROM_0E81_0E84[Vfo] = (uint8_t)Channel;
-			gEeprom.VfoChannel[Vfo] = Channel;
+			gEeprom.MrChannel[Vfo] = (uint8_t)Channel;
+			gEeprom.ScreenChannel[Vfo] = (uint8_t)Channel;
 			gRequestSaveVFO = true;
 			g_2000039A = 2;
 			return;
@@ -71,8 +71,8 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 							gAnotherVoiceID = (VOICE_ID_t)Key;
 							if (gTxRadioInfo->Band != i) {
 								gTxRadioInfo->Band = i;
-								gEeprom.VfoChannel[Vfo] = i + 200;
-								gEeprom.EEPROM_0E82_0E85[Vfo] = i + 200;
+								gEeprom.ScreenChannel[Vfo] = i + 200;
+								gEeprom.FreqChannel[Vfo] = i + 200;
 								SETTINGS_SaveVfoIndices();
 								RADIO_ConfigureChannel(Vfo, 2);
 							}
@@ -103,7 +103,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				Channel += 207;
 				gAnotherVoiceID = (VOICE_ID_t)Key;
 				gEeprom.NoaaChannel[Vfo] = Channel;
-				gEeprom.VfoChannel[Vfo] = Channel;
+				gEeprom.ScreenChannel[Vfo] = Channel;
 				gRequestSaveVFO = true;
 				g_2000039A = 2;
 				return;
@@ -143,15 +143,15 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			uint8_t Channel;
 
 			if (gTxRadioInfo->CHANNEL_SAVE < 200) {
-				gEeprom.VfoChannel[Vfo] = gEeprom.EEPROM_0E82_0E85[gEeprom.TX_CHANNEL];
+				gEeprom.ScreenChannel[Vfo] = gEeprom.FreqChannel[gEeprom.TX_CHANNEL];
 				gAnotherVoiceID = VOICE_ID_FREQUENCY_MODE;
 				gRequestSaveVFO = true;
 				g_2000039A = 2;
 				break;
 			}
-			Channel = RADIO_FindNextChannel(gEeprom.EEPROM_0E81_0E84[gEeprom.TX_CHANNEL], 1, false, 0);
+			Channel = RADIO_FindNextChannel(gEeprom.MrChannel[gEeprom.TX_CHANNEL], 1, false, 0);
 			if (Channel != 0xFF) {
-				gEeprom.VfoChannel[Vfo] = Channel;
+				gEeprom.ScreenChannel[Vfo] = Channel;
 				AUDIO_SetVoiceID(0, VOICE_ID_CHANNEL_MODE);
 				AUDIO_SetDigitVoice(1, Channel + 1);
 				gAnotherVoiceID = 0xFE;
@@ -175,9 +175,9 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 	case KEY_5:
 		if (gTxRadioInfo->CHANNEL_SAVE < 207) {
-			gEeprom.VfoChannel[Vfo] = gEeprom.NoaaChannel[gEeprom.TX_CHANNEL];
+			gEeprom.ScreenChannel[Vfo] = gEeprom.NoaaChannel[gEeprom.TX_CHANNEL];
 		} else {
-			gEeprom.VfoChannel[Vfo] = gEeprom.EEPROM_0E82_0E85[gEeprom.TX_CHANNEL];
+			gEeprom.ScreenChannel[Vfo] = gEeprom.FreqChannel[gEeprom.TX_CHANNEL];
 			gAnotherVoiceID = VOICE_ID_FREQUENCY_MODE;
 		}
 		gRequestSaveVFO = true;
@@ -246,7 +246,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 {
 	uint8_t Channel;
 
-	Channel = gEeprom.VfoChannel[gEeprom.TX_CHANNEL];
+	Channel = gEeprom.ScreenChannel[gEeprom.TX_CHANNEL];
 	if (bKeyHeld || !bKeyPressed) {
 		if (gNumberOffset != 0) {
 			return;
@@ -286,16 +286,16 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 			if (Channel == Next) {
 				return;
 			}
-			gEeprom.EEPROM_0E81_0E84[gEeprom.TX_CHANNEL] = Next;
-			gEeprom.VfoChannel[gEeprom.TX_CHANNEL] = Next;
+			gEeprom.MrChannel[gEeprom.TX_CHANNEL] = Next;
+			gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] = Next;
 			if (!bKeyHeld) {
 				AUDIO_SetDigitVoice(0, Next + 1);
 				gAnotherVoiceID = 0xFE;
 			}
 		} else {
-			Channel = 207 + NUMBER_AddWithWraparound(gEeprom.VfoChannel[gEeprom.TX_CHANNEL] + 207,Direction, 0, 9);
+			Channel = 207 + NUMBER_AddWithWraparound(gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] + 207,Direction, 0, 9);
 			gEeprom.NoaaChannel[gEeprom.TX_CHANNEL] = Channel;
-			gEeprom.VfoChannel[gEeprom.TX_CHANNEL] = Channel;
+			gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] = Channel;
 		}
 		gRequestSaveVFO = true;
 		g_2000039A = 2;

@@ -52,12 +52,12 @@ void SETTINGS_SaveVfoIndices(void)
 
 	UART_LogSend("sidx\r\n", 6);
 
-	State[0] = gEeprom.VfoChannel[0];
-	State[1] = gEeprom.EEPROM_0E81_0E84[0];
-	State[2] = gEeprom.EEPROM_0E82_0E85[0];
-	State[3] = gEeprom.VfoChannel[1];
-	State[4] = gEeprom.EEPROM_0E81_0E84[1];
-	State[5] = gEeprom.EEPROM_0E82_0E85[1];
+	State[0] = gEeprom.ScreenChannel[0];
+	State[1] = gEeprom.MrChannel[0];
+	State[2] = gEeprom.FreqChannel[0];
+	State[3] = gEeprom.ScreenChannel[1];
+	State[4] = gEeprom.MrChannel[1];
+	State[5] = gEeprom.FreqChannel[1];
 	State[6] = gEeprom.NoaaChannel[0];
 	State[7] = gEeprom.NoaaChannel[1];
 
@@ -227,24 +227,24 @@ void SETTINGS_UpdateChannel(uint8_t Channel, const VFO_Info_t *pVFO, bool bUpdat
 	if (Channel < 207) {
 		uint8_t State[8];
 		uint16_t Offset;
-		uint8_t Params;
+		uint8_t Attributes;
 
 		Offset = 0x0D60 + (Channel & ~7U);
 		EEPROM_ReadBuffer(Offset, State, sizeof(State));
 		if (bUpdate) {
-			Params = 0
+			Attributes = 0
 				| (pVFO->SCANLIST1_PARTICIPATION << 7)
 				| (pVFO->SCANLIST2_PARTICIPATION << 6)
 				| (pVFO->Band << 0);
-			if (State[Channel & 7U] == Params) {
+			if (State[Channel & 7U] == Attributes) {
 				return;
 			}
 		} else {
-			Params = 0xFF;
+			Attributes = 0xFF;
 		}
-		State[Channel & 7U] = Params;
+		State[Channel & 7U] = Attributes;
 		EEPROM_WriteBuffer(Offset, State);
-		gMR_ChannelParameters[Channel] = Params;
+		gMR_ChannelAttributes[Channel] = Attributes;
 	}
 }
 

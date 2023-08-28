@@ -91,9 +91,9 @@ enum ROGER_Mode_t {
 typedef enum ROGER_Mode_t ROGER_Mode_t;
 
 typedef struct {
-	uint8_t VfoChannel[2];
-	uint8_t EEPROM_0E82_0E85[2];
-	uint8_t EEPROM_0E81_0E84[2];
+	uint8_t ScreenChannel[2];
+	uint8_t FreqChannel[2];
+	uint8_t MrChannel[2];
 	uint8_t NoaaChannel[2];
 	uint8_t RX_CHANNEL;
 	uint8_t TX_CHANNEL;

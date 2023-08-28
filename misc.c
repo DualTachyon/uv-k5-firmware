@@ -43,7 +43,7 @@ uint16_t gEEPROM_RSSI_CALIB[3][4];
 uint16_t gEEPROM_1F8A;
 uint16_t gEEPROM_1F8C;
 
-uint8_t gMR_ChannelParameters[207];
+uint8_t gMR_ChannelAttributes[207];
 
 volatile bool gNextTimeslice500ms;
 volatile uint16_t g_2000032E;

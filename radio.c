@@ -40,7 +40,7 @@ uint8_t gCode;
 
 bool RADIO_CheckValidChannel(uint8_t Channel, bool bCheckScanList, uint8_t VFO)
 {
-	uint8_t Params;
+	uint8_t Attributes;
 	uint8_t PriorityCh1;
 	uint8_t PriorityCh2;
 
@@ -49,20 +49,20 @@ bool RADIO_CheckValidChannel(uint8_t Channel, bool bCheckScanList, uint8_t VFO)
 	}
 
 	// Check channel is valid
-	Params = gMR_ChannelParameters[Channel];
-	if ((Params & MR_CH_BAND_MASK) > BAND7_470MHz) {
+	Attributes = gMR_ChannelAttributes[Channel];
+	if ((Attributes & MR_CH_BAND_MASK) > BAND7_470MHz) {
 		return false;
 	}
 	
 	if (bCheckScanList) {
 		if (VFO == 0) {
-			if ((Params & MR_CH_SCANLIST1) == 0) {
+			if ((Attributes & MR_CH_SCANLIST1) == 0) {
 				return false;
 			}
 			PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[0];
 			PriorityCh2 = gEeprom.SCANLIST_PRIORITY_CH2[0];
 		} else if (VFO == 1) {
-			if ((Params & MR_CH_SCANLIST2) == 0) {
+			if ((Attributes & MR_CH_SCANLIST2) == 0) {
 				return false;
 			}
 			PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[1];
@@ -123,7 +123,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 {
 	VFO_Info_t *pRadio;
 	uint8_t Channel;
-	uint8_t Params;
+	uint8_t Attributes;
 	uint8_t Band;
 	bool bParticipation2;
 	uint16_t Base;
@@ -134,18 +134,18 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	pRadio = &gEeprom.VfoInfo[VFO];
 
 	if (!gSetting_350EN) {
-		if (gEeprom.EEPROM_0E82_0E85[VFO] == 204) {
-			gEeprom.EEPROM_0E82_0E85[VFO] = 205;
+		if (gEeprom.FreqChannel[VFO] == 204) {
+			gEeprom.FreqChannel[VFO] = 205;
 		}
-		if (gEeprom.VfoChannel[VFO] == 204) {
-			gEeprom.VfoChannel[VFO] = 205;
+		if (gEeprom.ScreenChannel[VFO] == 204) {
+			gEeprom.ScreenChannel[VFO] = 205;
 		}
 	}
 
-	Channel = gEeprom.VfoChannel[VFO];
+	Channel = gEeprom.ScreenChannel[VFO];
 	if (Channel < 217) {
 		if (Channel >= 207) {
-			RADIO_InitInfo(pRadio, gEeprom.VfoChannel[VFO], 2, NoaaFrequencyTable[Channel - 207]);
+			RADIO_InitInfo(pRadio, gEeprom.ScreenChannel[VFO], 2, NoaaFrequencyTable[Channel - 207]);
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 				return;
 			}
@@ -156,39 +156,39 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		if (Channel < 200) {
 			Channel = RADIO_FindNextChannel(Channel, RADIO_CHANNEL_UP, false, VFO);
 			if (Channel == 0xFF) {
-				Channel = gEeprom.EEPROM_0E82_0E85[VFO];
-				gEeprom.VfoChannel[VFO] = gEeprom.EEPROM_0E82_0E85[VFO];
+				Channel = gEeprom.FreqChannel[VFO];
+				gEeprom.ScreenChannel[VFO] = gEeprom.FreqChannel[VFO];
 			} else {
-				gEeprom.VfoChannel[VFO] = Channel;
-				gEeprom.EEPROM_0E81_0E84[VFO] = Channel;
+				gEeprom.ScreenChannel[VFO] = Channel;
+				gEeprom.MrChannel[VFO] = Channel;
 			}
 		}
 	} else {
 		Channel = 205;
 	}
 
-	Params = gMR_ChannelParameters[Channel];
-	if (Params == 0xFF) {
+	Attributes = gMR_ChannelAttributes[Channel];
+	if (Attributes == 0xFF) {
 		uint8_t Index;
 
 		if (Channel < 200) {
-			Channel = gEeprom.EEPROM_0E82_0E85[VFO];
-			gEeprom.VfoChannel[VFO] = gEeprom.EEPROM_0E82_0E85[VFO];
+			Channel = gEeprom.FreqChannel[VFO];
+			gEeprom.ScreenChannel[VFO] = gEeprom.FreqChannel[VFO];
 		}
 		Index = Channel - 200;
 		RADIO_InitInfo(pRadio, Channel, Index, gLowerLimitFrequencyBandTable[Index]);
 		return;
 	}
 
-	Band = Params & MR_CH_BAND_MASK;
+	Band = Attributes & MR_CH_BAND_MASK;
 	if (Band > BAND7_470MHz) {
 		Band = BAND6_400MHz;
 	}
 
 	if (Channel < 200) {
 		gEeprom.VfoInfo[VFO].Band = Band;
-		gEeprom.VfoInfo[VFO].SCANLIST1_PARTICIPATION = !!(Params & MR_CH_SCANLIST1);
-		bParticipation2 = !!(Params & MR_CH_SCANLIST2);
+		gEeprom.VfoInfo[VFO].SCANLIST1_PARTICIPATION = !!(Attributes & MR_CH_SCANLIST1);
+		bParticipation2 = !!(Attributes & MR_CH_SCANLIST2);
 	} else {
 		Band = Channel - 200;
 		gEeprom.VfoInfo[VFO].Band = Band;
@@ -602,8 +602,8 @@ void RADIO_ConfigureNOAA(void)
 	g_2000036F = 1;
 	if (gEeprom.NOAA_AUTO_SCAN) {
 		if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
-			if (gEeprom.VfoChannel[0] < 207) {
-				if (gEeprom.VfoChannel[1] < 207) {
+			if (gEeprom.ScreenChannel[0] < 207) {
+				if (gEeprom.ScreenChannel[1] < 207) {
 					gIsNoaaMode = false;
 					return;
 				}
