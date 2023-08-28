@@ -1,13 +1,14 @@
 #include "app/generic.h"
 #include "audio.h"
+#include "driver/keyboard.h"
 #include "dtmf.h"
 #include "external/printf/printf.h"
 #include "fm.h"
 #include "functions.h"
-#include "gui.h"
 #include "misc.h"
 #include "settings.h"
 #include "ui/inputbox.h"
+#include "ui/ui.h"
 
 extern void FUN_0000773c(void);
 extern void PlayFMRadio(void);

@@ -15,28 +15,18 @@
  */
 
 #include <string.h>
-//#include "app/aircopy.h"
-//#include "audio.h"
-#include "battery.h"
 #include "bitmaps.h"
 #include "dcs.h"
-//#include "driver/eeprom.h"
-//#include "driver/keyboard.h"
 #include "driver/st7565.h"
 #include "dtmf.h"
 #include "external/printf/printf.h"
-//#include "font.h"
-//#include "fm.h"
-//#include "functions.h"
-#include "gui.h"
-//#include "helper.h"
+#include "helper/battery.h"
 #include "misc.h"
 #include "settings.h"
-//#include "ui/aircopy.h"
-//#include "ui/fmradio.h"
 #include "ui/helper.h"
 #include "ui/inputbox.h"
 #include "ui/menu.h"
+#include "ui/ui.h"
 
 static const char MenuList[][7] = {
 	// 0x00

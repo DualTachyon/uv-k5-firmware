@@ -16,7 +16,6 @@
 
 #include <string.h>
 #include "audio.h"
-#include "battery.h"
 #include "bsp/dp32g030/gpio.h"
 #include "dcs.h"
 #include "driver/bk4819.h"
@@ -26,6 +25,7 @@
 #include "fm.h"
 #include "frequencies.h"
 #include "functions.h"
+#include "helper/battery.h"
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"

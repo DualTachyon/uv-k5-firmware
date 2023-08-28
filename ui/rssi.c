@@ -18,10 +18,10 @@
 #include "bitmaps.h"
 #include "driver/st7565.h"
 #include "functions.h"
-#include "gui.h"
 #include "misc.h"
 #include "settings.h"
 #include "ui/rssi.h"
+#include "ui/ui.h"
 
 static void Render(uint8_t RssiLevel, uint8_t VFO)
 {

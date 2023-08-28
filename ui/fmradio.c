@@ -18,12 +18,12 @@
 #include "driver/st7565.h"
 #include "external/printf/printf.h"
 #include "fm.h"
-#include "gui.h"
 #include "misc.h"
 #include "settings.h"
 #include "ui/fmradio.h"
 #include "ui/helper.h"
 #include "ui/inputbox.h"
+#include "ui/ui.h"
 
 void UI_DisplayFM(void)
 {

@@ -20,6 +20,11 @@
 #include "driver/keyboard.h"
 #include "driver/systick.h"
 
+KEY_Code_t gKeyReading0;
+KEY_Code_t gKeyReading1;
+uint8_t gDebounceCounter;
+bool gWasFKeyPressed;
+
 KEY_Code_t KEYBOARD_Poll(void)
 {
 	KEY_Code_t Key = KEY_INVALID;

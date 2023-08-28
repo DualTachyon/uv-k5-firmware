@@ -21,7 +21,6 @@
 #include "app/main.h"
 #include "app/menu.h"
 #include "audio.h"
-#include "battery.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/backlight.h"
@@ -36,15 +35,18 @@
 #include "fm.h"
 #include "frequencies.h"
 #include "functions.h"
-#include "gui.h"
 #include "helper.h"
+#include "helper/battery.h"
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
 #include "sram-overlay.h"
+#include "ui/battery.h"
 #include "ui/inputbox.h"
 #include "ui/menu.h"
 #include "ui/rssi.h"
+#include "ui/status.h"
+#include "ui/ui.h"
 
 static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void FUN_000069f8(FUNCTION_Type_t Function);
@@ -1047,7 +1049,7 @@ void APP_TimeSlice10ms(void)
 
 	if (gCurrentFunction != FUNCTION_TRANSMIT) {
 		if (g_2000036F == 1) {
-			GUI_DisplayStatusLine();
+			UI_DisplayStatus();
 			g_2000036F = 0;
 		}
 		if (gUpdateDisplay) {
@@ -1291,7 +1293,7 @@ LAB_00004b08:
 
 	if (gLowBattery) {
 		gLowBatteryBlink = ++g_20000400 & 1;
-		GUI_DisplayBatteryLevel(g_20000400);
+		UI_DisplayBattery(g_20000400);
 		if (gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (g_20000400 < 30) {
 				if (g_20000400 == 29 && gChargingWithTypeC == false) {

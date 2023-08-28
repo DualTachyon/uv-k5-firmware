@@ -115,6 +115,7 @@ extern uint8_t g_200003B4;
 extern uint16_t g_200003B6;
 extern uint16_t g_200003B8;
 extern uint8_t g_200003BA;
+extern uint8_t g_200003BB;
 extern uint8_t g_200003BC;
 extern uint8_t g_200003BD;
 extern uint8_t g_200003BE;
@@ -174,7 +175,6 @@ extern uint8_t gNoaaChannel;
 extern bool gUpdateDisplay;
 extern uint8_t gFmRadioCountdown;
 extern uint8_t gA_Scan_Channel;
-extern uint8_t gDebounceCounter;
 extern uint8_t gDTMF_AUTO_RESET_TIME;
 extern bool gF_LOCK;
 extern uint8_t gScanChannel;
@@ -201,6 +201,8 @@ extern volatile uint16_t ScanPauseDelayIn10msec;
 extern int16_t gFM_FrequencyDeviation;
 
 extern uint16_t gCurrentRSSI;
+
+extern volatile int8_t gStepDirection;
 
 // --------
 

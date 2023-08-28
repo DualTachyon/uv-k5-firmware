@@ -4,11 +4,11 @@
 #include "dtmf.h"
 #include "fm.h"
 #include "frequencies.h"
-#include "gui.h"
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
 #include "ui/inputbox.h"
+#include "ui/ui.h"
 
 extern void APP_SwitchToFM(void);
 extern void FUN_0000773c(void);

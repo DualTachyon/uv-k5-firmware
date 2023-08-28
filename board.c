@@ -16,7 +16,6 @@
  */
 
 #include <string.h>
-#include "battery.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
@@ -34,6 +33,7 @@
 #include "dtmf.h"
 #include "fm.h"
 #include "frequencies.h"
+#include "helper/battery.h"
 #include "misc.h"
 #include "settings.h"
 #include "sram-overlay.h"

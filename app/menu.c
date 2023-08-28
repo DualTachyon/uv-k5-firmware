@@ -7,12 +7,12 @@
 #include "driver/gpio.h"
 #include "driver/keyboard.h"
 #include "frequencies.h"
-#include "gui.h"
 #include "misc.h"
 #include "settings.h"
 #include "sram-overlay.h"
 #include "ui/inputbox.h"
 #include "ui/menu.h"
+#include "ui/ui.h"
 
 static const VOICE_ID_t MenuVoices[] = {
 	VOICE_ID_SQUELCH,

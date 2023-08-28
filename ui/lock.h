@@ -14,14 +14,10 @@
  *     limitations under the License.
  */
 
-#ifndef HELPER_H
-#define HELPER_H
+#ifndef UI_LOCK_H
+#define UI_LOCK_H
 
-#include <stdint.h>
-#include "driver/keyboard.h"
-
-uint8_t HELPER_GetKey(void);
-void HELPER_CheckBootKey(uint8_t KeyType);
+void UI_DisplayLock(void);
 
 #endif
 

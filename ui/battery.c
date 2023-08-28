@@ -14,14 +14,40 @@
  *     limitations under the License.
  */
 
-#ifndef HELPER_H
-#define HELPER_H
+#include <stddef.h>
+#include "bitmaps.h"
+#include "driver/st7565.h"
+#include "functions.h"
+#include "ui/battery.h"
 
-#include <stdint.h>
-#include "driver/keyboard.h"
+void UI_DisplayBattery(uint8_t Level)
+{
+	const uint8_t *pBitmap;
+	bool bClearMode = false;
 
-uint8_t HELPER_GetKey(void);
-void HELPER_CheckBootKey(uint8_t KeyType);
-
-#endif
+	if (gCurrentFunction != 1) {
+		switch (Level) {
+		case 0:
+			pBitmap = NULL;
+			bClearMode = 1;
+			break;
+		case 1:
+			pBitmap = BITMAP_BatteryLevel1;
+			break;
+		case 2:
+			pBitmap = BITMAP_BatteryLevel2;
+			break;
+		case 3:
+			pBitmap = BITMAP_BatteryLevel3;
+			break;
+		case 4:
+			pBitmap = BITMAP_BatteryLevel4;
+			break;
+		default:
+			pBitmap = BITMAP_BatteryLevel5;
+			break;
+		}
+		ST7565_DrawLine(110, 0, 18, pBitmap, bClearMode);
+	}
+}
 

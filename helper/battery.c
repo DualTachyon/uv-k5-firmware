@@ -16,9 +16,10 @@
 
 #include "battery.h"
 #include "driver/backlight.h"
-#include "gui.h"
 #include "misc.h"
+#include "ui/battery.h"
 #include "ui/menu.h"
+#include "ui/ui.h"
 
 uint16_t gBatteryCalibration[6];
 uint16_t gBatteryCurrentVoltage;
@@ -83,7 +84,7 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 		} else {
 			gLowBattery = false;
 			if (bDisplayBatteryLevel) {
-				GUI_DisplayBatteryLevel(gBatteryDisplayLevel);
+				UI_DisplayBattery(gBatteryDisplayLevel);
 			}
 		}
 		g_20000400 = 0;

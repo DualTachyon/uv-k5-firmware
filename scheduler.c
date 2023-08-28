@@ -15,9 +15,8 @@
  */
 
 #include "audio.h"
-#include "battery.h"
 #include "functions.h"
-#include "gui.h"
+#include "helper/battery.h"
 #include "misc.h"
 #include "settings.h"
 

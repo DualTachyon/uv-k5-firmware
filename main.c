@@ -20,7 +20,6 @@
 
 #include "app/app.h"
 #include "audio.h"
-#include "battery.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
 #include "bsp/dp32g030/syscon.h"
@@ -40,11 +39,13 @@
 #include "dtmf.h"
 #include "external/printf/printf.h"
 #include "functions.h"
-#include "gui.h"
 #include "helper.h"
+#include "helper/battery.h"
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
+#include "ui/lock.h"
+#include "ui/welcome.h"
 
 static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
 
@@ -104,7 +105,7 @@ void Main(void)
 		uint8_t KeyType;
 		uint8_t Channel;
 
-		GUI_Welcome();
+		UI_DisplayWelcome();
 		BACKLIGHT_TurnOn();
 		SYSTEM_DelayMs(1000);
 		gMenuListCount = 51;
@@ -113,7 +114,7 @@ void Main(void)
 		KeyType = HELPER_GetKey();
 		if (gEeprom.POWER_ON_PASSWORD < 1000000) {
 			g_2000036E = 1;
-			GUI_PasswordScreen();
+			UI_DisplayLock();
 			g_2000036E = 0;
 		}
 

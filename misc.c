@@ -106,6 +106,7 @@ uint8_t g_200003B4;
 uint16_t g_200003B6;
 uint16_t g_200003B8;
 uint8_t g_200003BA;
+uint8_t g_200003BB;
 uint8_t g_200003BC;
 uint8_t g_200003BD;
 uint8_t g_200003BE;
@@ -165,7 +166,6 @@ uint8_t gNoaaChannel;
 bool gUpdateDisplay;
 uint8_t gFmRadioCountdown;
 uint8_t gA_Scan_Channel;
-uint8_t gDebounceCounter;
 uint8_t gDTMF_AUTO_RESET_TIME;
 bool gF_LOCK;
 uint8_t gScanChannel;
@@ -193,6 +193,8 @@ volatile uint16_t ScanPauseDelayIn10msec;
 int16_t gFM_FrequencyDeviation;
 
 uint16_t gCurrentRSSI;
+
+volatile int8_t gStepDirection;
 
 // --------
 

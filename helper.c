@@ -20,16 +20,12 @@
 #include "driver/keyboard.h"
 #include "driver/gpio.h"
 #include "driver/system.h"
-#include "gui.h"
 #include "helper.h"
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
 #include "ui/menu.h"
-
-KEY_Code_t gKeyReading0;
-KEY_Code_t gKeyReading1;
-uint8_t g_2000042A;
+#include "ui/ui.h"
 
 uint8_t HELPER_GetKey(void)
 {
@@ -48,7 +44,7 @@ uint8_t HELPER_GetKey(void)
 	if (Keys[0] == Keys[1]) {
 		gKeyReading0 = Keys[0];
 		gKeyReading1 = Keys[0];
-		g_2000042A = 2;
+		gDebounceCounter = 2;
 		if (i == KEY_SIDE1) {
 			ret = 1;
 		} else if (i == KEY_SIDE2) {

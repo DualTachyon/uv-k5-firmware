@@ -23,9 +23,9 @@
 #include "driver/systick.h"
 #include "fm.h"
 #include "functions.h"
-#include "gui.h"
 #include "misc.h"
 #include "settings.h"
+#include "ui/ui.h"
 
 static const uint8_t VoiceClipLengthChinese[58] = {
 	0x32, 0x32, 0x32, 0x37, 0x37, 0x32, 0x32, 0x32,
