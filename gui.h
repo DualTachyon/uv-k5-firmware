@@ -93,7 +93,7 @@ enum {
 
 extern GUI_DisplayType_t gScreenToDisplay;
 extern bool gIsInSubMenu;
-extern volatile uint8_t gStepDirection;
+extern volatile int8_t gStepDirection;
 extern GUI_DisplayType_t gRequestDisplayScreen;
 extern uint8_t g_200003BA;
 extern uint8_t g_200003BB;
@@ -104,7 +104,7 @@ extern bool gAskToSave;
 extern bool gAskToDelete;
 
 extern uint8_t gMenuCursor;
-extern uint8_t gMenuScrollDirection;
+extern int8_t gMenuScrollDirection;
 extern uint32_t gSubMenuSelection;
 
 void GUI_DisplayBatteryLevel(uint8_t BatteryLevel);

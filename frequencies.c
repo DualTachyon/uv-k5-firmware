@@ -113,12 +113,12 @@ uint32_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t 
 	return TxpMid + ((TxpHigh - TxpMid) * (Frequency - Middle)) / (UpperLimit - Middle);
 }
 
-uint32_t FREQUENCY_FloorToStep(uint32_t Frequency, uint32_t Step, uint32_t Base)
+uint32_t FREQUENCY_FloorToStep(uint32_t Upper, int32_t Step, uint32_t Lower)
 {
 	uint32_t Index;
 
-	Index = (Frequency - Base) / Step;
-	return Base + (Step * Index);
+	Index = (Upper - Lower) / Step;
+	return Lower + (Step * Index);
 }
 
 int FREQUENCY_Check(VFO_Info_t *pInfo)

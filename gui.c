@@ -170,7 +170,7 @@ static const char gSubMenu_F_LOCK[6][4] = {
 
 GUI_DisplayType_t gScreenToDisplay;
 bool gIsInSubMenu;
-volatile uint8_t gStepDirection;
+volatile int8_t gStepDirection;
 GUI_DisplayType_t gRequestDisplayScreen;
 uint8_t g_200003BA;
 uint8_t g_200003BB;
@@ -181,7 +181,7 @@ bool gAskToSave;
 bool gAskToDelete;
 
 uint8_t gMenuCursor;
-uint8_t gMenuScrollDirection;
+int8_t gMenuScrollDirection;
 uint32_t gSubMenuSelection;
 
 void GUI_DisplayBatteryLevel(uint8_t BatteryLevel)

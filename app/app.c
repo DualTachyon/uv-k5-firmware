@@ -1435,7 +1435,7 @@ void FUN_000075b0(void)
 	g_20000464 = 0;
 }
 
-void APP_ChangeStepDirectionMaybe(bool bFlag, uint8_t Direction)
+void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction)
 {
 	RADIO_ConfigureTX();
 	g_20000410 = gInfoCHAN_A->CHANNEL_SAVE;

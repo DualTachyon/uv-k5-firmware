@@ -72,7 +72,7 @@ static const VOICE_ID_t MenuVoices[] = {
 	VOICE_ID_INVALID,
 };
 
-static void FUN_000074f8(uint8_t Direction)
+static void FUN_000074f8(int8_t Direction)
 {
 	g_20000381 = 1;
 	gMenuScrollDirection = Direction;
@@ -988,7 +988,7 @@ void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 		if (gInfoCHAN_A->CHANNEL_SAVE < 207 && !gInfoCHAN_A->IsAM) {
 			if (gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_R_DCS) {
 				if (g_20000381 == 0) {
-					FUN_000074f8(0x01);
+					FUN_000074f8(1);
 					gRequestDisplayScreen = DISPLAY_MENU;
 					AUDIO_SetVoiceID(0,VOICE_ID_SCANNING_BEGIN);
 					AUDIO_PlaySingleVoice(1);
