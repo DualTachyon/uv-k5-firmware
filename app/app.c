@@ -500,22 +500,23 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 	}
 }
 
-void APP_AddStepToFrequency(VFO_Info_t *pInfo, uint8_t Step)
+void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step)
 {
 	uint32_t Frequency;
 
 	Frequency = pInfo->DCS[0].Frequency + (Step * pInfo->StepFrequency);
-	if (Frequency >= gLowerLimitFrequencyBandTable[pInfo->Band] && Frequency <= gUpperLimitFrequencyBandTable[pInfo->Band]) {
-		Frequency = FREQUENCY_FloorToStep(gUpperLimitFrequencyBandTable[pInfo->Band], pInfo->StepFrequency, Frequency);
+	if (Frequency >= gUpperLimitFrequencyBandTable[pInfo->Band]) {
+		pInfo->DCS[0].Frequency = gLowerLimitFrequencyBandTable[pInfo->Band];
+	} else if (Frequency < gLowerLimitFrequencyBandTable[pInfo->Band]) {
+		pInfo->DCS[0].Frequency = FREQUENCY_FloorToStep(gUpperLimitFrequencyBandTable[pInfo->Band], pInfo->StepFrequency, gLowerLimitFrequencyBandTable[pInfo->Band]);
 	} else {
-		Frequency = gLowerLimitFrequencyBandTable[pInfo->Band];
+		pInfo->DCS[0].Frequency = Frequency;
 	}
-	pInfo->DCS[0].Frequency = Frequency;
 }
 
 void APP_MoreRadioStuff(void)
 {
-	APP_AddStepToFrequency(gInfoCHAN_A, gStepDirection);
+	APP_SetFrequencyByStep(gInfoCHAN_A, gStepDirection);
 	RADIO_ApplyOffset(gInfoCHAN_A);
 	RADIO_ConfigureSquelchAndOutputPower(gInfoCHAN_A);
 	RADIO_SetupRegisters(true);

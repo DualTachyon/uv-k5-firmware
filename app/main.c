@@ -9,7 +9,7 @@
 
 extern void APP_SwitchToFM(void);
 extern void FUN_0000773c(void);
-extern void APP_AddStepToFrequency(VFO_Info_t *pInfo, uint8_t Step);
+extern void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step);
 extern void APP_ChangeStepDirectionMaybe(bool bFlag, uint8_t Direction);
 extern void APP_CycleOutputPower(void);
 extern void APP_FlipVoxSwitch(void);
@@ -275,7 +275,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 			uint8_t Next;
 
 			if (199 < Channel) {
-				APP_AddStepToFrequency(gTxRadioInfo, Direction);
+				APP_SetFrequencyByStep(gTxRadioInfo, Direction);
 				gRequestSaveChannel = 1;
 				return;
 			}
