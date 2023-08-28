@@ -17,6 +17,7 @@ extern void APP_FlipVoxSwitch(void);
 void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	uint8_t Vfo;
+	uint8_t Band;
 
 	Vfo = gEeprom.TX_CHANNEL;
 
@@ -120,6 +121,30 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		APP_SwitchToFM();
 		break;
 
+	case KEY_1:
+		if (6 < (gTxRadioInfo->CHANNEL_SAVE - 200)) {
+			gWasFKeyPressed = false;
+			g_2000036F = 1;
+			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+			return;
+		}
+		Band = gTxRadioInfo->Band + 1;
+		if (gSetting_350EN || Band != BAND5_350MHz) {
+			if (BAND7_470MHz < Band) {
+				Band = BAND1_50MHz;
+			}
+		} else {
+			Band = BAND6_400MHz;
+		}
+		gTxRadioInfo->Band = Band;
+		gEeprom.ScreenChannel[Vfo] = 200 + Band;
+		gEeprom.FreqChannel[Vfo] = 200 + Band;
+		gRequestSaveVFO = true;
+		g_2000039A = 2;
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+		gRequestDisplayScreen = DISPLAY_MAIN;
+		break;
+
 	case KEY_2:
 		if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_CHAN_A) {
 			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_CHAN_B;
@@ -192,10 +217,30 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		APP_FlipVoxSwitch();
 		break;
 
+	case KEY_8:
+		gTxRadioInfo->FrequencyReverse = gTxRadioInfo->FrequencyReverse == false;
+		gRequestSaveChannel = 1;
+		break;
+
+	case KEY_9:
+		if (RADIO_CheckValidChannel(gEeprom.CHAN_1_CALL, false, 0)) {
+			gEeprom.MrChannel[Vfo] = gEeprom.CHAN_1_CALL;
+			gEeprom.ScreenChannel[Vfo] = gEeprom.CHAN_1_CALL;
+			AUDIO_SetVoiceID(0, VOICE_ID_CHANNEL_MODE);
+			AUDIO_SetDigitVoice(1, gEeprom.CHAN_1_CALL + 1);
+			gAnotherVoiceID = 0xFE;
+			gRequestSaveVFO = true;
+			g_2000039A = 2;
+			break;
+		}
+		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+		break;
+
 	default:
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		g_2000036F = 1;
 		gWasFKeyPressed = false;
+		break;
 	}
 }
 
