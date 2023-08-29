@@ -14,7 +14,6 @@
  *     limitations under the License.
  */
 
-#include <ctype.h>
 #include <string.h>
 #include "driver/eeprom.h"
 #include "dtmf.h"
@@ -36,7 +35,7 @@ bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 			pCode[i] = 0;
 			break;
 		}
-		if (!isdigit((int)pCode[i]) && (pCode[i] < 'A' || pCode[i] > 'D') && pCode[i] != '*' && pCode[i] != '#') {
+		if ((pCode[i] < '0' || pCode[i] > '9') && (pCode[i] < 'A' || pCode[i] > 'D') && pCode[i] != '*' && pCode[i] != '#') {
 			return false;
 		}
 	}
@@ -84,7 +83,7 @@ char DTMF_GetCharacter(uint8_t Code)
 	case 0: case 1: case 2: case 3:
 	case 4: case 5: case 6: case 7:
 	case 8: case 9:
-		return '0' + Code;
+		return '0' + (char)Code;
 	case 10:
 		return 'A';
 	case 11:
