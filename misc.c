@@ -82,7 +82,7 @@ uint8_t g_20000398;
 uint8_t g_2000039A;
 uint8_t g_2000039B;
 bool gRequestSaveVFO;
-bool gRequestSaveChannel;
+uint8_t gRequestSaveChannel;
 bool gRequestSaveSettings;
 bool gRequestSaveFM;
 uint8_t g_200003A0;

@@ -90,7 +90,7 @@ extern uint8_t g_20000398;
 extern uint8_t g_2000039A;
 extern uint8_t g_2000039B;
 extern bool gRequestSaveVFO;
-extern bool gRequestSaveChannel;
+extern uint8_t gRequestSaveChannel;
 extern bool gRequestSaveSettings;
 extern bool gRequestSaveFM;
 extern uint8_t gKeypadLocked;
