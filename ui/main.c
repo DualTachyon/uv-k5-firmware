@@ -156,7 +156,7 @@ void UI_DisplayMain(void)
 				memcpy(String + 5, gInputBox, 3);
 			}
 			UI_DisplaySmallDigits(3, String + 5, 10, Line + 1);
-		} else if (IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[i])) {
+		} else if (IS_FREQ_CHANNEL(gEeprom.ScreenChannel[i])) {
 			char c;
 
 			memcpy(pLine1 + 14, BITMAP_F, sizeof(BITMAP_F));
