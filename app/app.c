@@ -1100,7 +1100,7 @@ void APP_TimeSlice10ms(void)
 			APP_CheckKeys();
 			return;
 		}
-		if (g_20000461 != 0) {
+		if (gScannerEditState != 0) {
 			APP_CheckKeys();
 			return;
 		}
@@ -1323,7 +1323,7 @@ LAB_00004b08:
 		}
 	}
 
-	if (gScreenToDisplay == DISPLAY_SCANNER && g_20000461 == 0 && gScanState < 2) {
+	if (gScreenToDisplay == DISPLAY_SCANNER && gScannerEditState == 0 && gScanState < 2) {
 		g_20000464++;
 		if (0x20 < g_20000464) {
 			if (gScanState == 1 && g_20000458 == 0) {
@@ -1420,7 +1420,7 @@ void FUN_000075b0(void)
 	if (g_20000458 == 1) {
 		gScanState = 1;
 		gScanFrequency = gInfoCHAN_A->pDCS_Current->Frequency;
-		gStepOffset = gInfoCHAN_A->STEP_SETTING;
+		gStepSetting = gInfoCHAN_A->STEP_SETTING;
 		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
 		BK4819_SetScanFrequency(gScanFrequency);
 	} else {
@@ -1441,7 +1441,7 @@ void FUN_000075b0(void)
 	g_CTCSS_Lost = false;
 	g_VOX_Lost = false;
 	g_SquelchLost = false;
-	g_20000461 = 0;
+	gScannerEditState = 0;
 	g_20000464 = 0;
 }
 

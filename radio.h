@@ -46,6 +46,18 @@ enum PTT_ID_t {
 
 typedef enum PTT_ID_t PTT_ID_t;
 
+enum STEP_Setting_t {
+	STEP_2_5kHz,
+	STEP_5_0kHz,
+	STEP_6_25kHz,
+	STEP_10_0kHz,
+	STEP_12_5kHz,
+	STEP_25_0kHz,
+	STEP_8_33kHz,
+};
+
+typedef enum STEP_Setting_t STEP_Setting_t;
+
 typedef struct {
 	uint32_t Frequency;
 	DCS_CodeType_t CodeType;
@@ -67,7 +79,7 @@ typedef struct VFO_Info_t {
 	uint8_t SquelchCloseRSSIThresh;
 	uint8_t SquelchCloseNoiseThresh;
 	uint8_t SquelchOpenGlitchThresh;
-	uint8_t STEP_SETTING;
+	STEP_Setting_t STEP_SETTING;
 	uint8_t OUTPUT_POWER;
 	uint8_t TXP_CalculatedSetting;
 	bool FrequencyReverse;
@@ -91,6 +103,8 @@ extern VFO_Info_t *gCrossTxRadioInfo;
 extern DCS_CodeType_t gCodeType;
 extern DCS_CodeType_t gCopyOfCodeType;
 extern uint8_t gCode;
+
+extern STEP_Setting_t gStepSetting;
 
 bool RADIO_CheckValidChannel(uint16_t ChNum, bool bCheckScanList, uint8_t RadioNum);
 uint8_t RADIO_FindNextChannel(uint8_t ChNum, int8_t Direction, bool bCheckScanList, uint8_t RadioNum);

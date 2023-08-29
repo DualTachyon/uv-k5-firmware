@@ -154,7 +154,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 				return;
 			}
 			gRequestDisplayScreen = DISPLAY_MAIN;
-			gEeprom.CROSS_BAND_RX_TX = g_20000459;
+			gEeprom.CROSS_BAND_RX_TX = gBackupCROSS_BAND_RX_TX;
 			g_2000036F = 1;
 			gFlagStopScan = true;
 			g_2000039A = 2;

@@ -38,6 +38,8 @@ DCS_CodeType_t gCodeType;
 DCS_CodeType_t gCopyOfCodeType;
 uint8_t gCode;
 
+STEP_Setting_t gStepSetting;
+
 bool RADIO_CheckValidChannel(uint16_t Channel, bool bCheckScanList, uint8_t VFO)
 {
 	uint8_t Attributes;
@@ -109,7 +111,7 @@ void RADIO_InitInfo(VFO_Info_t *pInfo, uint8_t ChannelSave, uint8_t Band, uint32
 	pInfo->Band = Band;
 	pInfo->SCANLIST1_PARTICIPATION = true;
 	pInfo->SCANLIST2_PARTICIPATION = true;
-	pInfo->STEP_SETTING = 5;
+	pInfo->STEP_SETTING = STEP_25_0kHz;
 	pInfo->StepFrequency = 2500;
 	pInfo->CHANNEL_SAVE = ChannelSave;
 	pInfo->FrequencyReverse = false;
@@ -218,8 +220,8 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		gEeprom.VfoInfo[VFO].AM_CHANNEL_MODE = !!(Data[3] & 0x10);
 
 		Tmp = Data[6];
-		if (Tmp > 6) {
-			Tmp = 5;
+		if (Tmp > STEP_8_33kHz) {
+			Tmp = STEP_25_0kHz;
 		}
 		gEeprom.VfoInfo[VFO].STEP_SETTING = Tmp;
 		gEeprom.VfoInfo[VFO].StepFrequency = StepFrequencyTable[Tmp];

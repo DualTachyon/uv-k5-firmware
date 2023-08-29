@@ -50,12 +50,12 @@ void UI_DisplayScanner(void)
 	UI_PrintString(String, 2, 127, 3, 8, 0);
 	memset(String, 0, sizeof(String));
 
-	if (g_20000461 == 2) {
+	if (gScannerEditState == 2) {
 		strcpy(String, "SAVE?");
 		Start = 0;
 		bCentered = 1;
 	} else {
-		if (g_20000461 == 1) {
+		if (gScannerEditState == 1) {
 			strcpy(String, "SAVE:");
 			UI_GenerateChannelStringEx(String + 5, gShowChPrefix, gScanChannel);
 		} else if (gScanState < 2) {

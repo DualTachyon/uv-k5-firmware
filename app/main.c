@@ -214,7 +214,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		gFlagStartScan = true;
 		g_20000458 = 0;
-		g_20000459 = gEeprom.CROSS_BAND_RX_TX;
+		gBackupCROSS_BAND_RX_TX = gEeprom.CROSS_BAND_RX_TX;
 		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 		break;
 
@@ -344,7 +344,7 @@ void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 		if (IS_NOT_NOAA_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			gFlagStartScan = true;
 			g_20000458 = 1;
-			g_20000459 = gEeprom.CROSS_BAND_RX_TX;
+			gBackupCROSS_BAND_RX_TX = gEeprom.CROSS_BAND_RX_TX;
 			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 		} else {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
