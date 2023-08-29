@@ -684,7 +684,6 @@ void APP_PlayFM(void)
 				FM_Play();
 			}
 		}
-		FM_Play();
 	} else if (gIs_A_Scan) {
 		if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyToPlay) {
 			FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
