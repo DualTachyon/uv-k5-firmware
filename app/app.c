@@ -103,7 +103,7 @@ void APP_CheckDTMFStuff(void)
 		return;
 	}
 
-	if (!gInfoCHAN_A->DTMF_DECODING_ENABLE && !gSetting_KILLED) {
+	if (!gRxInfo->DTMF_DECODING_ENABLE && !gSetting_KILLED) {
 		return;
 	}
 
@@ -210,7 +210,7 @@ void FUN_000051e8(void)
 	}
 
 	bFlag = (gStepDirection == 0 || gCopyOfCodeType == CODE_TYPE_OFF);
-	if (gInfoCHAN_A->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gSystickCountdown2) {
+	if (gRxInfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gSystickCountdown2) {
 		bFlag = true;
 		gSystickCountdown2 = 0;
 	}
@@ -229,7 +229,7 @@ void FUN_000051e8(void)
 	}
 	APP_CheckDTMFStuff();
 	if (gStepDirection == 0 && g_20000381 == 0) {
-		if (gInfoCHAN_A->DTMF_DECODING_ENABLE || gSetting_KILLED) {
+		if (gRxInfo->DTMF_DECODING_ENABLE || gSetting_KILLED) {
 			if (g_200003BC == 0) {
 				if (g_20000411 == 0x01) {
 					g_2000033A = 500;
@@ -256,19 +256,19 @@ void FUN_0000773c(void)
 			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = Previous;
 			RADIO_ConfigureChannel(gEeprom.RX_CHANNEL, 2);
 		} else {
-			gInfoCHAN_A->DCS[0].Frequency = g_20000418;
-			RADIO_ApplyOffset(gInfoCHAN_A);
-			RADIO_ConfigureSquelchAndOutputPower(gInfoCHAN_A);
+			gRxInfo->DCS[0].Frequency = g_20000418;
+			RADIO_ApplyOffset(gRxInfo);
+			RADIO_ConfigureSquelchAndOutputPower(gRxInfo);
 		}
 		RADIO_SetupRegisters(true);
 		gUpdateDisplay = true;
 		return;
 	}
 
-	if (!IS_MR_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE)) {
-		RADIO_ApplyOffset(gInfoCHAN_A);
-		RADIO_ConfigureSquelchAndOutputPower(gInfoCHAN_A);
-		SETTINGS_SaveChannel(gInfoCHAN_A->CHANNEL_SAVE, gEeprom.RX_CHANNEL, gInfoCHAN_A, 1);
+	if (!IS_MR_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
+		RADIO_ApplyOffset(gRxInfo);
+		RADIO_ConfigureSquelchAndOutputPower(gRxInfo);
+		SETTINGS_SaveChannel(gRxInfo->CHANNEL_SAVE, gEeprom.RX_CHANNEL, gRxInfo, 1);
 		return;
 	}
 
@@ -319,7 +319,7 @@ void FUN_000052f0(void)
 		break;
 	}
 	if (g_SquelchLost) {
-		if (g_20000377 == 0 && IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE)) {
+		if (g_20000377 == 0 && IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
 			switch (gCopyOfCodeType) {
 			case CODE_TYPE_CONTINUOUS_TONE:
 				if (g_CTCSS_Lost) {
@@ -383,7 +383,7 @@ LAB_0000544c:
 	switch (Value) {
 	case 1:
 		RADIO_SetupRegisters(true);
-		if (206 < gInfoCHAN_A->CHANNEL_SAVE) {
+		if (206 < gRxInfo->CHANNEL_SAVE) {
 			gSystickCountdown2 = 300;
 		}
 		gUpdateDisplay = true;
@@ -464,11 +464,11 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 			}
 			g_20000413 = 1;
 		}
-		if (206 < gInfoCHAN_A->CHANNEL_SAVE && gIsNoaaMode) {
-			gInfoCHAN_A->CHANNEL_SAVE = gNoaaChannel + NOAA_CHANNEL_FIRST;
-			gInfoCHAN_A->pDCS_Current->Frequency = NoaaFrequencyTable[gNoaaChannel];
-			gInfoCHAN_A->pDCS_Reverse->Frequency = NoaaFrequencyTable[gNoaaChannel];
-			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gInfoCHAN_A->CHANNEL_SAVE;
+		if (206 < gRxInfo->CHANNEL_SAVE && gIsNoaaMode) {
+			gRxInfo->CHANNEL_SAVE = gNoaaChannel + NOAA_CHANNEL_FIRST;
+			gRxInfo->pDCS_Current->Frequency = NoaaFrequencyTable[gNoaaChannel];
+			gRxInfo->pDCS_Reverse->Frequency = NoaaFrequencyTable[gNoaaChannel];
+			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gRxInfo->CHANNEL_SAVE;
 			g_20000356 = 500;
 			gSystickFlag8 = false;
 		}
@@ -480,7 +480,7 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 			g_2000033A = 360;
 			gSystickFlag7 = false;
 		}
-		if (gInfoCHAN_A->IsAM) {
+		if (gRxInfo->IsAM) {
 			BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
 			g_20000474 = 0;
 		} else {
@@ -490,7 +490,7 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 					);
 		}
 		if (gVoiceWriteIndex == 0) {
-			if (gInfoCHAN_A->IsAM) {
+			if (gRxInfo->IsAM) {
 				BK4819_SetAF(BK4819_AF_AM);
 			} else {
 				BK4819_SetAF(BK4819_AF_OPEN);
@@ -521,9 +521,9 @@ void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step)
 
 void APP_MoreRadioStuff(void)
 {
-	APP_SetFrequencyByStep(gInfoCHAN_A, gStepDirection);
-	RADIO_ApplyOffset(gInfoCHAN_A);
-	RADIO_ConfigureSquelchAndOutputPower(gInfoCHAN_A);
+	APP_SetFrequencyByStep(gRxInfo, gStepDirection);
+	RADIO_ApplyOffset(gRxInfo);
+	RADIO_ConfigureSquelchAndOutputPower(gRxInfo);
 	RADIO_SetupRegisters(true);
 	gUpdateDisplay = true;
 	ScanPauseDelayIn10msec = 10;
@@ -599,13 +599,13 @@ void FUN_00007f4c(void)
 		} else {
 			gEeprom.RX_CHANNEL = 0;
 		}
-		gInfoCHAN_A = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
+		gRxInfo = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
 		if (gEeprom.VfoInfo[0].CHANNEL_SAVE >= NOAA_CHANNEL_FIRST) {
 			NOAA_IncreaseChannel();
 		}
 	} else {
 		gEeprom.RX_CHANNEL = gEeprom.RX_CHANNEL == 0;
-		gInfoCHAN_A = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
+		gRxInfo = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
 	}
 	RADIO_SetupRegisters(false);
 	if (gIsNoaaMode) {
@@ -1399,22 +1399,22 @@ void FUN_000075b0(void)
 	BK4819_StopScan();
 	RADIO_ConfigureTX();
 
-	if (206 < gInfoCHAN_A->CHANNEL_SAVE) {
-		gInfoCHAN_A->CHANNEL_SAVE = 205;
+	if (206 < gRxInfo->CHANNEL_SAVE) {
+		gRxInfo->CHANNEL_SAVE = 205;
 	}
-	StepSetting = gInfoCHAN_A->STEP_SETTING;
-	StepFrequency = gInfoCHAN_A->StepFrequency;
-	RADIO_InitInfo(gInfoCHAN_A, gInfoCHAN_A->CHANNEL_SAVE, gInfoCHAN_A->Band, gInfoCHAN_A->pDCS_Current->Frequency);
+	StepSetting = gRxInfo->STEP_SETTING;
+	StepFrequency = gRxInfo->StepFrequency;
+	RADIO_InitInfo(gRxInfo, gRxInfo->CHANNEL_SAVE, gRxInfo->Band, gRxInfo->pDCS_Current->Frequency);
 
-	gInfoCHAN_A->STEP_SETTING = StepSetting;
-	gInfoCHAN_A->StepFrequency = StepFrequency;
+	gRxInfo->STEP_SETTING = StepSetting;
+	gRxInfo->StepFrequency = StepFrequency;
 	RADIO_SetupRegisters(true);
 
 	gIsNoaaMode = false;
 	if (g_20000458 == 1) {
 		gScanState = 1;
-		gScanFrequency = gInfoCHAN_A->pDCS_Current->Frequency;
-		gStepSetting = gInfoCHAN_A->STEP_SETTING;
+		gScanFrequency = gRxInfo->pDCS_Current->Frequency;
+		gStepSetting = gRxInfo->STEP_SETTING;
 		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
 		BK4819_SetScanFrequency(gScanFrequency);
 	} else {
@@ -1442,7 +1442,7 @@ void FUN_000075b0(void)
 void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction)
 {
 	RADIO_ConfigureTX();
-	g_20000410 = gInfoCHAN_A->CHANNEL_SAVE;
+	g_20000410 = gRxInfo->CHANNEL_SAVE;
 	g_20000415 = 0;
 	gStepDirection = Direction;
 	if (IS_MR_CHANNEL(g_20000410)) {
@@ -1452,7 +1452,7 @@ void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction)
 		FUN_00007dd4();
 	} else {
 		if (bFlag) {
-			g_20000418 = gInfoCHAN_A->DCS[0].Frequency;
+			g_20000418 = gRxInfo->DCS[0].Frequency;
 		}
 		APP_MoreRadioStuff();
 	}
@@ -1474,8 +1474,8 @@ void APP_FlipVoxSwitch(void)
 
 void APP_CycleOutputPower(void)
 {
-	if (++gTxRadioInfo->OUTPUT_POWER > OUTPUT_POWER_HIGH) {
-		gTxRadioInfo->OUTPUT_POWER = OUTPUT_POWER_LOW;
+	if (++gTxInfo->OUTPUT_POWER > OUTPUT_POWER_HIGH) {
+		gTxInfo->OUTPUT_POWER = OUTPUT_POWER_LOW;
 	}
 
 	gRequestSaveChannel = 1;
@@ -1512,7 +1512,7 @@ void APP_StartScan(bool bFlag)
 		}
 	} else if (gScreenToDisplay != DISPLAY_SCANNER) {
 		RADIO_ConfigureTX();
-		if (IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE)) {
+		if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
 			if (gStepDirection) {
 				FUN_0000773c();
@@ -1530,8 +1530,8 @@ void FUN_00005770(void)
 {
 	if (gCurrentFunction != FUNCTION_MONITOR) {
 		RADIO_ConfigureTX();
-		if (gInfoCHAN_A->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gIsNoaaMode) {
-			gNoaaChannel = gInfoCHAN_A->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
+		if (gRxInfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gIsNoaaMode) {
+			gNoaaChannel = gRxInfo->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
 		}
 		RADIO_SetupRegisters(true);
 		FUN_000069f8(FUNCTION_MONITOR);
@@ -1888,9 +1888,9 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 		if (gFlagSaveChannel) {
 			SETTINGS_SaveChannel(
-				gTxRadioInfo->CHANNEL_SAVE,
+				gTxInfo->CHANNEL_SAVE,
 				gEeprom.TX_CHANNEL,
-				gTxRadioInfo,
+				gTxInfo,
 				gFlagSaveChannel);
 			gFlagSaveChannel = false;
 			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, 1);
@@ -2112,7 +2112,7 @@ Skip:
 	}
 	if (gRequestSaveChannel) {
 		if (!bKeyHeld) {
-			SETTINGS_SaveChannel(gTxRadioInfo->CHANNEL_SAVE, gEeprom.TX_CHANNEL, gTxRadioInfo, gRequestSaveChannel);
+			SETTINGS_SaveChannel(gTxInfo->CHANNEL_SAVE, gEeprom.TX_CHANNEL, gTxInfo, gRequestSaveChannel);
 			if (gScreenToDisplay != DISPLAY_SCANNER) {
 				g_2000039A = 1;
 			}

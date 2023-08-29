@@ -96,8 +96,8 @@ typedef struct VFO_Info_t {
 	char Name[16];
 } VFO_Info_t;
 
-extern VFO_Info_t *gTxRadioInfo;
-extern VFO_Info_t *gInfoCHAN_A;
+extern VFO_Info_t *gTxInfo;
+extern VFO_Info_t *gRxInfo;
 extern VFO_Info_t *gCrossTxRadioInfo;
 
 extern DCS_CodeType_t gCodeType;

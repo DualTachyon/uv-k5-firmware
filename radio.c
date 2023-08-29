@@ -30,8 +30,8 @@
 #include "radio.h"
 #include "settings.h"
 
-VFO_Info_t *gTxRadioInfo;
-VFO_Info_t *gInfoCHAN_A;
+VFO_Info_t *gTxInfo;
+VFO_Info_t *gRxInfo;
 VFO_Info_t *gCrossTxRadioInfo;
 
 DCS_CodeType_t gCodeType;
@@ -444,7 +444,7 @@ void RADIO_ConfigureTX(void)
 		gEeprom.TX_CHANNEL = 0;
 	}
 
-	gTxRadioInfo = &gEeprom.VfoInfo[gEeprom.TX_CHANNEL];
+	gTxInfo = &gEeprom.VfoInfo[gEeprom.TX_CHANNEL];
 	gEeprom.RX_CHANNEL = gEeprom.TX_CHANNEL;
 	if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
 		if (gEeprom.TX_CHANNEL == 0) {
@@ -454,13 +454,13 @@ void RADIO_ConfigureTX(void)
 		}
 	}
 
-	gInfoCHAN_A = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
+	gRxInfo = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
 	RADIO_ConfigureCrossTX();
 }
 
 void RADIO_ConfigureCrossTX(void)
 {
-	gCrossTxRadioInfo = gInfoCHAN_A;
+	gCrossTxRadioInfo = gRxInfo;
 	if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
 		gCrossTxRadioInfo = &gEeprom.VfoInfo[gEeprom.TX_CHANNEL];
 	}
@@ -477,7 +477,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	g_2000036B = 0;
 	BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
 
-	Bandwidth = gInfoCHAN_A->CHANNEL_BANDWIDTH;
+	Bandwidth = gRxInfo->CHANNEL_BANDWIDTH;
 	if (Bandwidth != BK4819_FILTER_BW_WIDE) {
 		Bandwidth = BK4819_FILTER_BW_NARROW;
 	}
@@ -497,16 +497,16 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	}
 	BK4819_WriteRegister(BK4819_REG_3F, 0);
 	BK4819_WriteRegister(BK4819_REG_7D, gEeprom.MIC_SENSITIVITY_TUNING | 0xE940);
-	if (IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE) || !gIsNoaaMode) {
-		Frequency = gInfoCHAN_A->pDCS_Current->Frequency;
+	if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE) || !gIsNoaaMode) {
+		Frequency = gRxInfo->pDCS_Current->Frequency;
 	} else {
 		Frequency = NoaaFrequencyTable[gNoaaChannel];
 	}
 	BK4819_SetFrequency(Frequency);
 	BK4819_SetupSquelch(
-			gInfoCHAN_A->SquelchOpenRSSIThresh, gInfoCHAN_A->SquelchCloseRSSIThresh,
-			gInfoCHAN_A->SquelchOpenNoiseThresh, gInfoCHAN_A->SquelchCloseNoiseThresh,
-			gInfoCHAN_A->SquelchCloseGlitchThresh, gInfoCHAN_A->SquelchOpenGlitchThresh);
+			gRxInfo->SquelchOpenRSSIThresh, gRxInfo->SquelchCloseRSSIThresh,
+			gRxInfo->SquelchOpenNoiseThresh, gRxInfo->SquelchCloseNoiseThresh,
+			gRxInfo->SquelchCloseGlitchThresh, gRxInfo->SquelchOpenGlitchThresh);
 	BK4819_PickRXFilterPathBasedOnFrequency(Frequency);
 	BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, true);
 	BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
@@ -516,16 +516,16 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 		| BK4819_REG_3F_SQUELCH_LOST
 		;
 
-	if (IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE)) {
-		if (gInfoCHAN_A->IsAM != true) {
+	if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
+		if (gRxInfo->IsAM != true) {
 			uint8_t CodeType;
 			uint8_t CodeWord;
 
 			CodeType = gCodeType;
 			CodeWord = gCode;
 			if (g_20000381 == 0) {
-				CodeType = gInfoCHAN_A->pDCS_Current->CodeType;
-				CodeWord = gInfoCHAN_A->pDCS_Current->RX_TX_Code;
+				CodeType = gRxInfo->pDCS_Current->CodeType;
+				CodeWord = gRxInfo->pDCS_Current->RX_TX_Code;
 			}
 			switch (CodeType) {
 			case CODE_TYPE_DIGITAL:
@@ -560,10 +560,10 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 					;
 				break;
 			}
-			if (gInfoCHAN_A->SCRAMBLING_TYPE == 0 || gSetting_ScrambleEnable == false) {
+			if (gRxInfo->SCRAMBLING_TYPE == 0 || gSetting_ScrambleEnable == false) {
 				BK4819_DisableScramble();
 			} else {
-				BK4819_EnableScramble(gInfoCHAN_A->SCRAMBLING_TYPE - 1);
+				BK4819_EnableScramble(gRxInfo->SCRAMBLING_TYPE - 1);
 			}
 		}
 	} else {
@@ -585,7 +585,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	} else {
 		BK4819_DisableVox();
 	}
-	if (gInfoCHAN_A->IsAM || (!gInfoCHAN_A->DTMF_DECODING_ENABLE && !gSetting_KILLED)) {
+	if (gRxInfo->IsAM || (!gRxInfo->DTMF_DECODING_ENABLE && !gSetting_KILLED)) {
 		BK4819_DisableDTMF();
 	} else {
 		BK4819_EnableDTMF();
@@ -622,9 +622,9 @@ void RADIO_ConfigureNOAA(void)
 			gIsNoaaMode = true;
 			return;
 		}
-		if (gInfoCHAN_A->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST) {
+		if (gRxInfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST) {
 			gIsNoaaMode = true;
-			gNoaaChannel = gInfoCHAN_A->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
+			gNoaaChannel = gRxInfo->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
 			g_20000356 = 50;
 			gSystickFlag8 = 0;
 		}
@@ -704,7 +704,7 @@ void RADIO_SomethingWithTransmit(void)
 		gSystickFlag7 = 0;
 		if (g_2000041F == 0) {
 			gEeprom.RX_CHANNEL = gEeprom.TX_CHANNEL;
-			gInfoCHAN_A = gEeprom.VfoInfo + gEeprom.TX_CHANNEL;
+			gRxInfo = gEeprom.VfoInfo + gEeprom.TX_CHANNEL;
 		}
 		g_2000041F = 1;
 	}

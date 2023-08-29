@@ -36,13 +36,13 @@ FUNCTION_Type_t gCurrentFunction;
 
 void FUNCTION_Init(void)
 {
-	if (IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE)) {
+	if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
 		gCopyOfCodeType = gCodeType;
 		if (g_20000381 == 0) {
-			if (gInfoCHAN_A->IsAM == true) {
+			if (gRxInfo->IsAM) {
 				gCopyOfCodeType = CODE_TYPE_OFF;
 			} else {
-				gCopyOfCodeType = gInfoCHAN_A->pDCS_Current->CodeType;
+				gCopyOfCodeType = gRxInfo->pDCS_Current->CodeType;
 			}
 		}
 	} else {
@@ -183,7 +183,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	}
 	g_200003BE = 0;
 	Delay = gEeprom.DTMF_PRELOAD_TIME;
-	if (gEeprom.DTMF_SIDE_TONE == true) {
+	if (gEeprom.DTMF_SIDE_TONE) {
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 		g_2000036B = 1;
 		Delay = gEeprom.DTMF_PRELOAD_TIME;
