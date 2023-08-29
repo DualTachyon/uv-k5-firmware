@@ -47,7 +47,7 @@ void AIRCOPY_SendMessage(void)
 	BK4819_SendFSKData(g_FSK_Buffer);
 	BK4819_SetupPowerAmplifier(0, 0);
 	BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
-	gAircopySendCountdown = 0x1e;
+	gAircopySendCountdown = 30;
 }
 
 void AIRCOPY_StorePacket(void)

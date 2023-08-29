@@ -528,7 +528,7 @@ void BOARD_EEPROM_Init(void)
 	if (Data[5] < 3) {
 		gEeprom.SCAN_RESUME_MODE = Data[5];
 	} else {
-		gEeprom.SCAN_RESUME_MODE = 1;
+		gEeprom.SCAN_RESUME_MODE = SCAN_RESUME_CO;
 	}
 	if (Data[6] < 2) {
 		gEeprom.AUTO_KEYPAD_LOCK = Data[6];
@@ -538,7 +538,7 @@ void BOARD_EEPROM_Init(void)
 	if (Data[7] < 3) {
 		gEeprom.POWER_ON_DISPLAY_MODE = Data[7];
 	} else {
-		gEeprom.POWER_ON_DISPLAY_MODE = 1;
+		gEeprom.POWER_ON_DISPLAY_MODE = POWER_ON_DISPLAY_MODE_MESSAGE;
 	}
 
 	// 0E98..0E9F

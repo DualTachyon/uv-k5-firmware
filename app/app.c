@@ -420,7 +420,7 @@ void FUN_0000510c(void)
 	switch (gCurrentFunction) {
 	case FUNCTION_0:
 		FUN_00005144();
-		break;;
+		break;
 	case FUNCTION_POWER_SAVE:
 		if (!gThisCanEnable_BK4819_Rxon) {
 			FUN_00005144();
