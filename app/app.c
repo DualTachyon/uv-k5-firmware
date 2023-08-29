@@ -1594,6 +1594,22 @@ void FUN_000056a0(bool bFlag)
 	gRequestDisplayScreen = DISPLAY_MAIN;
 }
 
+void APP_ProcessFlashLight(void)
+{
+	switch (gFlashLightState) {
+	case 0:
+		gFlashLightState++;
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
+		break;
+	case 1:
+		gFlashLightState++;
+		break;
+	default:
+		gFlashLightState = 0;
+		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
+	}
+}
+
 void FUN_00004404(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	uint8_t Short;
@@ -1641,7 +1657,7 @@ void FUN_00004404(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	}
 	switch (Short) {
 	case 1:
-		//APP_ProcessFlashLight();
+		APP_ProcessFlashLight();
 		break;
 	case 2:
 		APP_CycleOutputPower();
