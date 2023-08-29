@@ -218,7 +218,7 @@ void UI_DisplayMain(void)
 				UI_DisplayFrequency(gInputBox, 31, i * 4, true, false);
 			} else {
 				if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
-					if (gEeprom.CHANNEL_DISPLAY_MODE == 2 && (gEeprom.VfoInfo[i].Name[0] == 0 || gEeprom.VfoInfo[i].Name[0] == 0xFF)) {
+					if (gEeprom.CHANNEL_DISPLAY_MODE == 2 && (gEeprom.VfoInfo[i].Name[0] == 0 || gEeprom.VfoInfo[i].Name[0] == -1)) {
 						sprintf(String, "CH-%03d", gEeprom.ScreenChannel[i] + 1);
 						UI_PrintString(String, 31, 112, i * 4, 8, true);
 					} else {

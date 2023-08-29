@@ -293,7 +293,6 @@ void AUDIO_PlayQueuedVoice(void)
 	bool Skip;
 
 	Skip = false;
-	gVoiceReadIndex = gVoiceReadIndex;
 	if (gVoiceReadIndex != gVoiceWriteIndex && gEeprom.VOICE_PROMPT != VOICE_PROMPT_OFF) {
 		VoiceID = gVoiceID[gVoiceReadIndex];
 		if (gEeprom.VOICE_PROMPT == VOICE_PROMPT_CHINESE) {

@@ -22,7 +22,7 @@
 
 KEY_Code_t gKeyReading0;
 KEY_Code_t gKeyReading1;
-uint8_t gDebounceCounter;
+uint16_t gDebounceCounter;
 bool gWasFKeyPressed;
 
 KEY_Code_t KEYBOARD_Poll(void)

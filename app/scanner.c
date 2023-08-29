@@ -33,13 +33,13 @@ void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			INPUTBOX_Append(Key);
 			gRequestDisplayScreen = DISPLAY_SCANNER;
 			if (gInputBoxIndex < 3) {
-				gAnotherVoiceID = Key;
+				gAnotherVoiceID = (VOICE_ID_t)Key;
 				return;
 			}
 			gInputBoxIndex = 0;
 			Channel = ((gInputBox[0] * 100) + (gInputBox[1] * 10) + gInputBox[2]) - 1;
 			if (IS_MR_CHANNEL(Channel)) {
-				gAnotherVoiceID = Key;
+				gAnotherVoiceID = (VOICE_ID_t)Key;
 				gShowChPrefix = RADIO_CheckValidChannel(Channel, false, 0);
 				gScanChannel = (uint8_t)Channel;
 				return;

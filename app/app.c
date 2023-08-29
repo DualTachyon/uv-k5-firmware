@@ -1693,7 +1693,7 @@ static void APP_ProcessKey_MAIN(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	}
 	if (g_200003BA != 0 && !bKeyHeld && bKeyPressed) {
 		char Character = DTMF_GetCharacter(Key);
-		if (Character != 0xFF) {
+		if (Character != -1) {
 			g_20000396 = 1;
 			XXX_Append(Character);
 			gRequestDisplayScreen = DISPLAY_MAIN;
@@ -1822,7 +1822,7 @@ static void APP_ProcessKey_SCANNER(KEY_Code_t Key, bool bKeyPressed, bool bKeyHe
 	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
 	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
 	case KEY_8: case KEY_9:
-		SCANNER_Key_DIGITS((VOICE_ID_t)Key, bKeyPressed, bKeyHeld);
+		SCANNER_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
 		break;
 	case KEY_MENU:
 		SCANNER_Key_MENU(bKeyPressed, bKeyHeld);
