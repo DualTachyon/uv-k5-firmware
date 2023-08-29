@@ -309,7 +309,7 @@ void MENU_AcceptSetting(void)
 		BOARD_EEPROM_LoadMoreSettings();
 		g_20000398 = 1;
 		gRequestSaveSettings = true;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 		return;
 
 	case MENU_ABR:
@@ -325,7 +325,7 @@ void MENU_AcceptSetting(void)
 		gEeprom.DUAL_WATCH = gSubMenuSelection;
 		g_20000398 = 1;
 		gRequestSaveSettings = true;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 		return;
 
 	case MENU_WX:
@@ -338,7 +338,7 @@ void MENU_AcceptSetting(void)
 		gEeprom.CROSS_BAND_RX_TX = gSubMenuSelection;
 		g_20000398 = 1;
 		gRequestSaveSettings = true;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 		return;
 
 	case MENU_BEEP:
@@ -352,7 +352,7 @@ void MENU_AcceptSetting(void)
 	case MENU_VOICE:
 		gEeprom.VOICE_PROMPT = gSubMenuSelection;
 		gRequestSaveSettings = true;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 		return;
 
 	case MENU_SC_REV:

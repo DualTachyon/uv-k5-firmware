@@ -61,7 +61,7 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 			if (!gWasFKeyPressed) {
 				gAnotherVoiceID = VOICE_ID_CANCEL;
 			}
-			g_2000036F = true;
+			gUpdateStatus = true;
 		}
 	} else {
 		if (gScreenToDisplay != DISPLAY_FM) {
@@ -155,7 +155,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			}
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			gEeprom.CROSS_BAND_RX_TX = gBackupCROSS_BAND_RX_TX;
-			g_2000036F = 1;
+			gUpdateStatus = true;
 			gFlagStopScan = true;
 			g_2000039A = 2;
 			g_2000039B = 1;

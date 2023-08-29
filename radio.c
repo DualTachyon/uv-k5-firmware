@@ -154,7 +154,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 				return;
 			}
-			g_2000036F = 1;
+			gUpdateStatus = true;
 			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 			return;
 		}
@@ -604,7 +604,7 @@ void RADIO_ConfigureNOAA(void)
 {
 	uint8_t ChanAB;
 
-	g_2000036F = 1;
+	gUpdateStatus = true;
 	if (gEeprom.NOAA_AUTO_SCAN) {
 		if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 			if (IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[0])) {

@@ -72,7 +72,7 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gAskToDelete = false;
 			if (gWasFKeyPressed) {
 				gWasFKeyPressed = false;
-				g_2000036F = 1;
+				gUpdateStatus = true;
 			}
 		}
 		gUpdateDisplay = true;

@@ -124,7 +124,7 @@ void APP_CheckDTMFStuff(void)
 			}
 			g_200003BC = 0;
 			gUpdateDisplay = true;
-			g_2000036F = true;
+			gUpdateStatus = true;
 			return;
 		} else {
 			sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, gEeprom.REVIVE_CODE);
@@ -134,7 +134,7 @@ void APP_CheckDTMFStuff(void)
 				g_200003BE = 2;
 				g_200003BC = 0;
 				gUpdateDisplay = true;
-				g_2000036F = true;
+				gUpdateStatus = true;
 				return;
 			}
 		}
@@ -659,7 +659,7 @@ void APP_StartFM(void)
 	BK1080_Init(gEeprom.FM_FrequencyToPlay, true);
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	g_2000036B = 1;
-	g_2000036F = 1;
+	gUpdateStatus = true;
 }
 
 void APP_CheckRadioInterrupts(void)
@@ -1007,9 +1007,9 @@ void APP_TimeSlice10ms(void)
 	}
 
 	if (gCurrentFunction != FUNCTION_TRANSMIT) {
-		if (g_2000036F == 1) {
+		if (gUpdateStatus) {
 			UI_DisplayStatus();
-			g_2000036F = 0;
+			gUpdateStatus = false;
 		}
 		if (gUpdateDisplay) {
 			GUI_DisplayScreen();
@@ -1246,7 +1246,7 @@ void APP_TimeSlice500ms(void)
 					if (gKeyLockCountdown == 0) {
 						gEeprom.KEY_LOCK = true;
 					}
-					g_2000036F = 1;
+					gUpdateStatus = true;
 				}
 				if (g_20000393 != 0) {
 					g_20000393--;
@@ -1261,7 +1261,7 @@ void APP_TimeSlice500ms(void)
 							RADIO_SetupRegisters(true);
 						}
 						gWasFKeyPressed = false;
-						g_2000036F = 1;
+						gUpdateStatus = true;
 						gInputBoxIndex = 0;
 						g_200003BA = 0;
 						g_200003BB = 0;
@@ -1469,7 +1469,7 @@ void APP_FlipVoxSwitch(void)
 	gRequestSaveSettings = true;
 	g_20000398 = 1;
 	gAnotherVoiceID = VOICE_ID_VOX;
-	g_2000036F = 1;
+	gUpdateStatus = true;
 }
 
 void APP_CycleOutputPower(void)
@@ -1974,7 +1974,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 	if (gWasFKeyPressed && KEY_9 < Key && Key != KEY_F && Key != KEY_STAR) {
 		gWasFKeyPressed = false;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 	}
 
 	if (gF_LOCK) {
@@ -2092,7 +2092,7 @@ Skip:
 			gFlagSaveSettings = 1;
 		}
 		gRequestSaveSettings = false;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 	}
 	if (gRequestSaveFM) {
 		if (!bKeyHeld) {

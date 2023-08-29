@@ -58,7 +58,7 @@ void SCANNER_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 		case 0:
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			gEeprom.CROSS_BAND_RX_TX = gBackupCROSS_BAND_RX_TX;
-			g_2000036F = 1;
+			gUpdateStatus = true;
 			gFlagStopScan = true;
 			g_2000039A = 2;
 			g_2000039B = 1;

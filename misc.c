@@ -57,7 +57,7 @@ uint8_t g_2000036B;
 uint8_t gKeyLockCountdown;
 uint8_t gRTTECountdown;
 uint8_t g_2000036E;
-uint8_t g_2000036F;
+uint8_t gUpdateStatus;
 uint8_t g_20000370;
 uint8_t g_20000371[2];
 uint8_t g_20000373;

@@ -86,7 +86,7 @@ void FM_TurnOff(void)
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	g_2000036B = 0;
 	BK1080_Init(0, false);
-	g_2000036F = 1;
+	gUpdateStatus = true;
 }
 
 void FM_EraseChannels(void)
@@ -272,7 +272,7 @@ void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		gWasFKeyPressed = false;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 		gRequestDisplayScreen = DISPLAY_FM;
 		switch (Key) {
 		case KEY_0:

@@ -81,7 +81,7 @@ extern uint8_t g_2000036B;
 extern uint8_t gKeyLockCountdown;
 extern uint8_t gRTTECountdown;
 extern uint8_t g_2000036E;
-extern uint8_t g_2000036F;
+extern uint8_t gUpdateStatus;
 extern uint8_t g_20000370;
 extern uint8_t g_20000371[2];
 extern uint8_t g_20000373;

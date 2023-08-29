@@ -135,7 +135,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		return;
 	}
 	gWasFKeyPressed = false;
-	g_2000036F = 1;
+	gUpdateStatus = true;
 	switch (Key) {
 	case KEY_0:
 		APP_SwitchToFM();
@@ -144,7 +144,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	case KEY_1:
 		if (!IS_FREQ_CHANNEL(gTxInfo->CHANNEL_SAVE)) {
 			gWasFKeyPressed = false;
-			g_2000036F = 1;
+			gUpdateStatus = true;
 			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 			return;
 		}
@@ -210,7 +210,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 	case KEY_4:
 		gWasFKeyPressed = false;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		gFlagStartScan = true;
 		g_20000458 = 0;
@@ -258,7 +258,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 	default:
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 		gWasFKeyPressed = false;
 		break;
 	}
@@ -340,7 +340,7 @@ void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 			return;
 		}
 		gWasFKeyPressed = false;
-		g_2000036F = 1;
+		gUpdateStatus = true;
 		if (IS_NOT_NOAA_CHANNEL(gTxInfo->CHANNEL_SAVE)) {
 			gFlagStartScan = true;
 			g_20000458 = 1;
