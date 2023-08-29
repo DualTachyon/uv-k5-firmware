@@ -19,6 +19,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "driver/keyboard.h"
 
 #define FM_CHANNEL_UP	0x01
 #define FM_CHANNEL_DOWN	0xFF
@@ -35,6 +36,7 @@ void FM_EraseChannels(void);
 void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag);
 void FM_Play(void);
 
+void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld);
 void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step);
 

@@ -1771,7 +1771,7 @@ static void APP_ProcessKey_FM(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
 	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
 	case KEY_8: case KEY_9:
-		//FM_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		FM_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
 		break;
 	case KEY_MENU:
 		//FM_Key_MENU(bKeyPressed, bKeyHeld);
