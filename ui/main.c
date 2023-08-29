@@ -214,7 +214,7 @@ void UI_DisplayMain(void)
 			}
 			UI_PrintString(String, 31, 111, i * 4, Width, true);
 		} else {
-			if (gInputBoxIndex && (gEeprom.ScreenChannel[i] - 200) < 7 && gEeprom.TX_CHANNEL == i) {
+			if (gInputBoxIndex && gEeprom.ScreenChannel[i] >= 200 && gEeprom.ScreenChannel[i] < 206 && gEeprom.TX_CHANNEL == i) {
 				UI_DisplayFrequency(gInputBox, 31, i * 4, true, false);
 			} else {
 				if (gEeprom.ScreenChannel[i] < 200) {
