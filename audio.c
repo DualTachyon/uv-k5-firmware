@@ -265,19 +265,22 @@ uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint32_t Value)
 	Count = 0;
 	Result = Value / 1000;
 	Remainder = Value % 1000;
-	if (Remainder >= 100) {
+	if (Remainder < 100) {
+		if (Remainder < 10) {
+			goto Skip;
+		}
+	} else {
 		Result = Remainder / 100;
 		gVoiceID[gVoiceWriteIndex++] = Result;
 		Count++;
 		Remainder -= Result * 100;
 	}
-	if (Remainder >= 10) {
-		Result = Remainder / 10;
-		gVoiceID[gVoiceWriteIndex++] = Result;
-		Count += 1;
-		Remainder -= Result * 10;
-	}
+	Result = Remainder / 10;
+	gVoiceID[gVoiceWriteIndex++] = Result;
+	Count++;
+	Remainder -= Result * 10;
 
+Skip:
 	gVoiceID[gVoiceWriteIndex++] = Remainder;
 
 	return Count + 1;
