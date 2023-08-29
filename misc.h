@@ -70,11 +70,11 @@ extern uint16_t gEEPROM_1F8C;
 extern uint8_t gMR_ChannelAttributes[207];
 
 extern volatile bool gNextTimeslice500ms;
-extern volatile uint16_t g_2000032E;
+extern volatile uint16_t gBatterySaveCountdown;
 extern volatile uint16_t g_2000033A;
 extern volatile uint16_t gTxTimerCountdown;
 extern volatile uint16_t g_20000342;
-extern volatile uint16_t g_2000034C;
+extern volatile uint16_t gFmPlayCountdown;
 extern volatile uint16_t g_20000356;
 extern uint16_t g_20000362;
 extern uint8_t g_2000036B;
@@ -201,15 +201,15 @@ extern volatile uint16_t gSystickCountdown2;
 extern volatile uint8_t gSystickCountdown3;
 extern volatile uint8_t gSystickCountdown4;
 extern volatile uint16_t gSystickCountdown11;
-extern volatile bool gSystickFlag0;
+extern volatile bool gTxTimeoutReached;
 extern volatile bool gNextTimeslice40ms;
-extern volatile bool gSystickFlag5;
+extern volatile bool gSchedulePowerSave;
 extern volatile bool gBatterySaveCountdownExpired;
 extern volatile bool gSystickFlag7;
 extern volatile bool gSystickFlag8;
 extern volatile bool gSystickFlag9;
 extern volatile bool gSystickFlag10;
-extern volatile bool gSystickFlag11;
+extern volatile bool gScheduleFM;
 
 extern volatile uint16_t ScanPauseDelayIn10msec;
 

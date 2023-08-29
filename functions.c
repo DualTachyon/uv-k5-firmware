@@ -94,27 +94,27 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 			gVFO_RSSI_Level[0] = 0;
 			gVFO_RSSI_Level[1] = 0;
 		} else if (PreviousFunction != FUNCTION_TRANSMIT) {
-			g_2000032E = 1000;
-			gSystickFlag5 = false;
+			gBatterySaveCountdown = 1000;
+			gSchedulePowerSave = false;
 			return;
 		}
 		if (gFmRadioMode) {
 			g_2000038E = 500;
 		}
 		if (g_200003BC != 1 && g_200003BC != 2) {
-			g_2000032E = 1000;
-			gSystickFlag5 = false;
+			gBatterySaveCountdown = 1000;
+			gSchedulePowerSave = false;
 			return;
 		}
-		g_2000032E = 1000;
-		gSystickFlag5 = false;
+		gBatterySaveCountdown = 1000;
+		gSchedulePowerSave = false;
 		gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
 		return;
 	}
 
 	if (Function == FUNCTION_MONITOR || Function == FUNCTION_3 || Function == FUNCTION_4) {
-		g_2000032E = 1000;
-		gSystickFlag5 = false;
+		gBatterySaveCountdown = 1000;
+		gSchedulePowerSave = false;
 		g_2000038E = 0;
 		return;
 	}
@@ -150,8 +150,8 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		g_2000036B = 1;
 		SYSTEM_DelayMs(60);
 		BK4819_ExitTxMute();
-		g_2000032E = 1000;
-		gSystickFlag5 = false;
+		gBatterySaveCountdown = 1000;
+		gSchedulePowerSave = false;
 		g_2000038E = 0;
 		g_20000420 = 0;
 		return;
@@ -220,20 +220,20 @@ Skip:
 		g_20000420 = 0;
 		g_2000038E = 0;
 		g_2000036B = 1;
-		gSystickFlag5 = false;
-		g_2000032E = 1000;
+		gSchedulePowerSave = false;
+		gBatterySaveCountdown = 1000;
 		return;
 	}
 	if (gCrossTxRadioInfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable != false) {
 		BK4819_EnableScramble(gCrossTxRadioInfo->SCRAMBLING_TYPE - 1U);
-		g_2000032E = 1000;
-		gSystickFlag5 = false;
+		gBatterySaveCountdown = 1000;
+		gSchedulePowerSave = false;
 		g_2000038E = 0;
 		return;
 	}
 	BK4819_DisableScramble();
-	g_2000032E = 1000;
-	gSystickFlag5 = false;
+	gBatterySaveCountdown = 1000;
+	gSchedulePowerSave = false;
 	g_2000038E = 0;
 }
 

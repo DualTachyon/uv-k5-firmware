@@ -664,7 +664,7 @@ void APP_PlayFM(void)
 {
 	if (!FM_ChecksChannelValid_and_FrequencyDeviation(gEeprom.FM_FrequencyToPlay, gEeprom.FM_LowerLimit)) {
 		if (gIs_A_Scan != 1) {
-			g_2000034C = 0;
+			gFmPlayCountdown = 0;
 			g_20000427 = 1;
 			if (gEeprom.FM_IsChannelSelected == false) {
 				gEeprom.FM_CurrentFrequency = gEeprom.FM_FrequencyToPlay;
@@ -847,8 +847,8 @@ void APP_Update(void)
 		gFlagPlayQueuedVoice = false;
 	}
 
-	if (gCurrentFunction == FUNCTION_TRANSMIT && gSystickFlag0) {
-		gSystickFlag0 = false;
+	if (gCurrentFunction == FUNCTION_TRANSMIT && gTxTimeoutReached) {
+		gTxTimeoutReached = false;
 		g_200003FD = 1;
 		TalkRelatedCode();
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP);
@@ -913,26 +913,26 @@ void APP_Update(void)
 		}
 	}
 
-	if (gFM_Step && gSystickFlag11 && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_TRANSMIT) {
+	if (gFM_Step && gScheduleFM && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_TRANSMIT) {
 		APP_PlayFM();
-		gSystickFlag11 = false;
+		gScheduleFM = false;
 	}
 
 	if (gEeprom.VOX_SWITCH) {
 		FUN_00008334();
 	}
 
-	if (gSystickFlag5) {
+	if (gSchedulePowerSave) {
 		if (gEeprom.BATTERY_SAVE == 0 || gStepDirection || g_20000381 || gFmRadioMode || gPttIsPressed || gScreenToDisplay != DISPLAY_MAIN || gKeyBeingHeld || g_200003BC) {
-			g_2000032E = 1000;
+			gBatterySaveCountdown = 1000;
 		} else {
 			if ((IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[0]) && IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[1])) || !gIsNoaaMode) {
 				FUNCTION_Select(FUNCTION_POWER_SAVE);
 			} else {
-				g_2000032E = 1000;
+				gBatterySaveCountdown = 1000;
 			}
 		}
-		gSystickFlag5 = false;
+		gSchedulePowerSave = false;
 	}
 
 	if (gBatterySaveCountdownExpired && gCurrentFunction == FUNCTION_POWER_SAVE && gVoiceWriteIndex == 0) {
@@ -1859,7 +1859,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	if (gCurrentFunction == FUNCTION_POWER_SAVE) {
 		FUNCTION_Select(FUNCTION_0);
 	}
-	g_2000032E = 1000;
+	gBatterySaveCountdown = 1000;
 	if (gEeprom.AUTO_KEYPAD_LOCK) {
 		gKeyLockCountdown = 30;
 	}

@@ -747,7 +747,7 @@ LAB_00007c20:
 		} else {
 			gTxTimerCountdown = 0;
 		}
-		gSystickFlag0 = 0;
+		gTxTimeoutReached = false;
 		g_200003FD = 0;
 		gRTTECountdown = 0;
 	}

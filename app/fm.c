@@ -107,11 +107,11 @@ void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag)
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	g_2000036B = 0;
 	if (gFM_Step == 0) {
-		g_2000034C = 120;
+		gFmPlayCountdown = 120;
 	} else {
-		g_2000034C = 10;
+		gFmPlayCountdown = 10;
 	}
-	gSystickFlag11 = false;
+	gScheduleFM = false;
 	g_20000427 = 0;
 	gAskToSave = false;
 	gAskToDelete = false;
@@ -140,8 +140,8 @@ void FM_Play(void)
 	FM_ConfigureChannelState();
 	BK1080_SetFrequency(gEeprom.FM_FrequencyToPlay);
 	SETTINGS_SaveFM();
-	g_2000034C = 0;
-	gSystickFlag11 = false;
+	gFmPlayCountdown = 0;
+	gScheduleFM = false;
 	gAskToSave = false;
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	g_2000036B = 1;
