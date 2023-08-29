@@ -91,6 +91,14 @@ enum ROGER_Mode_t {
 
 typedef enum ROGER_Mode_t ROGER_Mode_t;
 
+enum CHANNEL_DisplayMode_t {
+	MDF_FREQUENCY = 0U,
+	MDF_CHANNEL   = 1U,
+	MDF_NAME      = 2U,
+};
+
+typedef enum CHANNEL_DisplayMode_t CHANNEL_DisplayMode_t;
+
 typedef struct {
 	uint8_t ScreenChannel[2];
 	uint8_t FreqChannel[2];

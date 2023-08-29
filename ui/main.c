@@ -218,46 +218,46 @@ void UI_DisplayMain(void)
 				UI_DisplayFrequency(gInputBox, 31, i * 4, true, false);
 			} else {
 				if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
-					if (gEeprom.CHANNEL_DISPLAY_MODE == 2 && (gEeprom.VfoInfo[i].Name[0] == 0 || gEeprom.VfoInfo[i].Name[0] == -1)) {
-						sprintf(String, "CH-%03d", gEeprom.ScreenChannel[i] + 1);
-						UI_PrintString(String, 31, 112, i * 4, 8, true);
-					} else {
-						switch (gEeprom.CHANNEL_DISPLAY_MODE) {
-						case 0:
-							if (gCurrentFunction == FUNCTION_TRANSMIT) {
-								if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
-									Channel = gEeprom.RX_CHANNEL;
-								} else {
-									Channel = gEeprom.TX_CHANNEL;
-								}
-								if (Channel == i) {
-									NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Reverse->Frequency, String);
-								} else {
-									NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Current->Frequency, String);
-								}
+					switch (gEeprom.CHANNEL_DISPLAY_MODE) {
+					case MDF_FREQUENCY:
+						if (gCurrentFunction == FUNCTION_TRANSMIT) {
+							if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
+								Channel = gEeprom.RX_CHANNEL;
+							} else {
+								Channel = gEeprom.TX_CHANNEL;
+							}
+							if (Channel == i) {
+								NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Reverse->Frequency, String);
 							} else {
 								NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Current->Frequency, String);
 							}
-							UI_DisplayFrequency(String, 31, i * 4, false, false);
-							if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
-								const uint8_t Attributes = gMR_ChannelAttributes[gEeprom.ScreenChannel[i]];
-								if (Attributes & MR_CH_SCANLIST1) {
-									memcpy(pLine0 + 113, BITMAP_ScanList, sizeof(BITMAP_ScanList));
-								}
-								if (Attributes & MR_CH_SCANLIST2) {
-									memcpy(pLine0 + 120, BITMAP_ScanList, sizeof(BITMAP_ScanList));
-								}
+						} else {
+							NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Current->Frequency, String);
+						}
+						UI_DisplayFrequency(String, 31, i * 4, false, false);
+						if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
+							const uint8_t Attributes = gMR_ChannelAttributes[gEeprom.ScreenChannel[i]];
+							if (Attributes & MR_CH_SCANLIST1) {
+								memcpy(pLine0 + 113, BITMAP_ScanList, sizeof(BITMAP_ScanList));
 							}
-							UI_DisplaySmallDigits(2, String + 6, 112, Line + 1);
-							break;
-						case 1:
+							if (Attributes & MR_CH_SCANLIST2) {
+								memcpy(pLine0 + 120, BITMAP_ScanList, sizeof(BITMAP_ScanList));
+							}
+						}
+						UI_DisplaySmallDigits(2, String + 6, 112, Line + 1);
+						break;
+					case MDF_CHANNEL:
+						sprintf(String, "CH-%03d", gEeprom.ScreenChannel[i] + 1);
+						UI_PrintString(String, 31, 112, i * 4, 8, true);
+						break;
+					case MDF_NAME:
+						if(gEeprom.VfoInfo[i].Name[0] == 0 || gEeprom.VfoInfo[i].Name[0] == 0xFF) {
 							sprintf(String, "CH-%03d", gEeprom.ScreenChannel[i] + 1);
 							UI_PrintString(String, 31, 112, i * 4, 8, true);
-							break;
-						case 2:
+						} else {
 							UI_PrintString(gEeprom.VfoInfo[i].Name, 31, 112, i * 4, 8, true);
-							break;
 						}
+						break;
 					}
 				} else {
 					if (gCurrentFunction == FUNCTION_TRANSMIT) {

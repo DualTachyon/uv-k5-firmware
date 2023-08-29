@@ -1733,7 +1733,7 @@ static void APP_ProcessKey_MAIN(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	}
 	if (g_200003BA != 0 && !bKeyHeld && bKeyPressed) {
 		char Character = DTMF_GetCharacter(Key);
-		if (Character != -1) {
+		if (Character != 0xFF) {
 			g_20000396 = 1;
 			XXX_Append(Character);
 			gRequestDisplayScreen = DISPLAY_MAIN;
@@ -2048,7 +2048,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 						Code = -2;
 					} else {
 						Code = DTMF_GetCharacter(Key);
-						if (Code == -1) {
+						if (Code == 0xFF) {
 							goto Skip;
 						}
 					}
