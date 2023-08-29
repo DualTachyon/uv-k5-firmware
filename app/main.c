@@ -366,7 +366,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 			if (!bKeyHeld) {
 				return;
 			}
-			if (199 < Channel) {
+			if (IS_FREQ_CHANNEL(Channel)) {
 				return;
 			}
 			AUDIO_SetDigitVoice(0, gTxInfo->CHANNEL_SAVE + 1);
@@ -385,7 +385,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		if (IS_NOT_NOAA_CHANNEL(Channel)) {
 			uint8_t Next;
 
-			if (199 < Channel) {
+			if (IS_FREQ_CHANNEL(Channel)) {
 				APP_SetFrequencyByStep(gTxInfo, Direction);
 				gRequestSaveChannel = 1;
 				return;

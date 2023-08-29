@@ -160,12 +160,12 @@ void UI_DisplayMain(void)
 			char c;
 
 			memcpy(pLine1 + 14, BITMAP_F, sizeof(BITMAP_F));
-			c = gEeprom.ScreenChannel[i] - 199;
+			c = (gEeprom.ScreenChannel[i] - FREQ_CHANNEL_FIRST) + 1;
 			UI_DisplaySmallDigits(1, &c, 22, Line + 1);
 		} else {
 			memcpy(pLine1 + 7, BITMAP_NarrowBand, sizeof(BITMAP_NarrowBand));
 			if (gInputBoxIndex == 0 || gEeprom.TX_CHANNEL != i) {
-				NUMBER_ToDigits(gEeprom.ScreenChannel[i] - 206, String);
+				NUMBER_ToDigits((gEeprom.ScreenChannel[i] - NOAA_CHANNEL_FIRST) + 1, String);
 			} else {
 				String[6] = gInputBox[0];
 				String[7] = gInputBox[1];

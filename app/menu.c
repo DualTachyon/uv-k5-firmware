@@ -329,10 +329,10 @@ void MENU_AcceptSetting(void)
 		return;
 
 	case MENU_WX:
-		if (206 < gEeprom.ScreenChannel[0]) {
+		if (IS_NOAA_CHANNEL(gEeprom.ScreenChannel[0])) {
 			return;
 		}
-		if (206 < gEeprom.ScreenChannel[1]) {
+		if (IS_NOAA_CHANNEL(gEeprom.ScreenChannel[1])) {
 			return;
 		}
 		gEeprom.CROSS_BAND_RX_TX = gSubMenuSelection;

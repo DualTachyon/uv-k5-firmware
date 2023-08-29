@@ -383,7 +383,7 @@ LAB_0000544c:
 	switch (Value) {
 	case 1:
 		RADIO_SetupRegisters(true);
-		if (206 < gRxInfo->CHANNEL_SAVE) {
+		if (IS_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
 			gSystickCountdown2 = 300;
 		}
 		gUpdateDisplay = true;
@@ -464,7 +464,7 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 			}
 			g_20000413 = 1;
 		}
-		if (206 < gRxInfo->CHANNEL_SAVE && gIsNoaaMode) {
+		if (IS_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE) && gIsNoaaMode) {
 			gRxInfo->CHANNEL_SAVE = gNoaaChannel + NOAA_CHANNEL_FIRST;
 			gRxInfo->pDCS_Current->Frequency = NoaaFrequencyTable[gNoaaChannel];
 			gRxInfo->pDCS_Reverse->Frequency = NoaaFrequencyTable[gNoaaChannel];
@@ -1399,8 +1399,8 @@ void FUN_000075b0(void)
 	BK4819_StopScan();
 	RADIO_ConfigureTX();
 
-	if (206 < gRxInfo->CHANNEL_SAVE) {
-		gRxInfo->CHANNEL_SAVE = 205;
+	if (IS_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
+		gRxInfo->CHANNEL_SAVE = FREQ_CHANNEL_FIRST + 5;
 	}
 	StepSetting = gRxInfo->STEP_SETTING;
 	StepFrequency = gRxInfo->StepFrequency;
