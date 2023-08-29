@@ -701,7 +701,7 @@ void BK4819_TransmitTone(bool bLocalLoopback, uint32_t Frequency)
 
 void BK4819_GenTail(uint8_t Tail)
 {
-	switch(Tail) {
+	switch (Tail) {
 	case 0: // CTC134
 		BK4819_WriteRegister(BK4819_REG_52, 0x828F);
 		break;

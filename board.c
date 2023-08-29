@@ -742,7 +742,7 @@ void BOARD_EEPROM_Init(void)
 		gSetting_ScrambleEnable = true;
 	}
 
-	if (gEeprom.VFO_OPEN == false) {
+	if (!gEeprom.VFO_OPEN) {
 		gEeprom.ScreenChannel[0] = gEeprom.MrChannel[0];
 		gEeprom.ScreenChannel[1] = gEeprom.MrChannel[1];
 	}

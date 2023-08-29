@@ -33,7 +33,7 @@ void ST7565_DrawLine(uint8_t Column, uint8_t Line, uint16_t Size, const uint8_t 
 	ST7565_SelectColumnAndLine(Column + 4U, Line);
 	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
 
-	if (bIsClearMode == false) {
+	if (!bIsClearMode) {
 		for (i = 0; i < Size; i++) {
 			while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) != SPI_FIFOST_TFF_BITS_NOT_FULL) {
 			}

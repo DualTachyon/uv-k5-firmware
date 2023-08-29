@@ -30,7 +30,7 @@ void SystickHandler(void)
 	gNextTimeslice = true;
 	if ((gGlobalSysTickCounter % 50) == 0) {
 		gNextTimeslice500ms = true;
-		if (gTxTimerCountdown != 0) {
+		if (gTxTimerCountdown) {
 			gTxTimerCountdown--;
 			if (gTxTimerCountdown == 0) {
 				gTxTimeoutReached = true;
@@ -40,22 +40,22 @@ void SystickHandler(void)
 	if ((gGlobalSysTickCounter & 3) == 0) {
 		gNextTimeslice40ms = true;
 	}
-	if (gSystickCountdown2 != 0) {
+	if (gSystickCountdown2) {
 		gSystickCountdown2--;
 	}
-	if (gSystickCountdown3 != 0) {
+	if (gSystickCountdown3) {
 		gSystickCountdown3--;
 	}
-	if (gSystickCountdown4 != 0) {
+	if (gSystickCountdown4) {
 		gSystickCountdown4--;
 	}
-	if (gCurrentFunction == FUNCTION_0 && gBatterySaveCountdown != 0) {
+	if (gCurrentFunction == FUNCTION_0 && gBatterySaveCountdown) {
 		gBatterySaveCountdown--;
 		if (gBatterySaveCountdown == 0) {
 			gSchedulePowerSave = true;
 		}
 	}
-	if (gCurrentFunction == FUNCTION_POWER_SAVE && gBatterySave != 0) {
+	if (gCurrentFunction == FUNCTION_POWER_SAVE && gBatterySave) {
 		gBatterySave--;
 		if (gBatterySave == 0) {
 			gBatterySaveCountdownExpired = true;
@@ -64,7 +64,7 @@ void SystickHandler(void)
 	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_4) {
-				if (g_2000033A != 0) {
+				if (g_2000033A) {
 					g_2000033A--;
 					if (g_2000033A == 0) {
 						gSystickFlag7 = true;
@@ -77,7 +77,7 @@ void SystickHandler(void)
 	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
 		if (gIsNoaaMode && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_4) {
-				if (g_20000356 != 0) {
+				if (g_20000356) {
 					g_20000356--;
 					if (g_20000356 == 0) {
 						gSystickFlag8 = true;
@@ -87,9 +87,9 @@ void SystickHandler(void)
 		}
 	}
 
-	if (gStepDirection != 0 || g_20000381 == 1) {
+	if (gStepDirection || g_20000381 == 1) {
 		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
-			if (ScanPauseDelayIn10msec != 0) {
+			if (ScanPauseDelayIn10msec) {
 				ScanPauseDelayIn10msec--;
 				if (ScanPauseDelayIn10msec == 0) {
 					gSystickFlag9 = true;
@@ -98,23 +98,23 @@ void SystickHandler(void)
 		}
 	}
 
-	if (g_20000342 != 0) {
+	if (g_20000342) {
 		g_20000342--;
 		if (g_20000342 == 0) {
 			gSystickFlag10 = true;
 		}
 	}
 
-	if (gCountdownToPlayNextVoice != 0) {
+	if (gCountdownToPlayNextVoice) {
 		gCountdownToPlayNextVoice--;
 		if (gCountdownToPlayNextVoice == 0) {
 			gFlagPlayQueuedVoice = true;
 		}
 	}
 
-	if (gFM_Step != 0 && gCurrentFunction != FUNCTION_MONITOR) {
+	if (gFM_Step && gCurrentFunction != FUNCTION_MONITOR) {
 		if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_4) {
-			if (gFmPlayCountdown != 0) {
+			if (gFmPlayCountdown) {
 				gFmPlayCountdown--;
 				if (gFmPlayCountdown == 0) {
 					gScheduleFM = true;
@@ -122,7 +122,7 @@ void SystickHandler(void)
 			}
 		}
 	}
-	if (gSystickCountdown11 != 0) {
+	if (gSystickCountdown11) {
 		gSystickCountdown11--;
 	}
 }

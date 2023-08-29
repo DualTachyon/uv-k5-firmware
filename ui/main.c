@@ -328,7 +328,7 @@ void UI_DisplayMain(void)
 		}
 
 		// 0x931E
-		if (gEeprom.VfoInfo[i].IsAM == true) {
+		if (gEeprom.VfoInfo[i].IsAM) {
 			memcpy(pLine1 + 128 + 27, BITMAP_AM, sizeof(BITMAP_AM));
 		} else {
 			const DCS_Info_t *pDCS;

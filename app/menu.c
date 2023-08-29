@@ -1039,7 +1039,7 @@ void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		return;
 	}
 
-	if (g_20000381 != 0) {
+	if (g_20000381) {
 		FUN_000074f8(Direction);
 		g_20000394 = true;
 		gRequestDisplayScreen = DISPLAY_MENU;

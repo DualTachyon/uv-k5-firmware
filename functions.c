@@ -87,7 +87,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	}
 
 	if (Function == FUNCTION_0) {
-		if (g_200003BE != 0) {
+		if (g_200003BE) {
 			RADIO_Something();
 		}
 		if (PreviousFunction == FUNCTION_TRANSMIT) {
@@ -175,7 +175,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 			sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
 			pString = String;
 		}
-		if (g_200003BC != 0 || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 1 && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 3)) {
+		if (g_200003BC || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 1 && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 3)) {
 			g_200003BE = 0;
 			goto Skip;
 		}
@@ -209,7 +209,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	BK4819_ExitDTMF_TX(false);
 
 Skip:
-	if (g_20000383 != 0) {
+	if (g_20000383) {
 		if (g_20000383 == 3) {
 			BK4819_TransmitTone(true, 1750);
 		} else {
@@ -224,7 +224,7 @@ Skip:
 		gBatterySaveCountdown = 1000;
 		return;
 	}
-	if (gCrossTxRadioInfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable != false) {
+	if (gCrossTxRadioInfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
 		BK4819_EnableScramble(gCrossTxRadioInfo->SCRAMBLING_TYPE - 1U);
 		gBatterySaveCountdown = 1000;
 		gSchedulePowerSave = false;

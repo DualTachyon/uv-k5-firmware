@@ -465,7 +465,7 @@ void UI_DisplayMenu(void)
 			UI_GenerateChannelStringEx(String, true, (uint8_t)gSubMenuSelection);
 		}
 
-		if (gSubMenuSelection == 0xFF || gEeprom.SCAN_LIST_ENABLED[i] != true) {
+		if (gSubMenuSelection == 0xFF || !gEeprom.SCAN_LIST_ENABLED[i]) {
 			UI_PrintString(String, 50, 127, 2, 8, 1);
 		} else {
 			UI_PrintString(String, 50, 127, 0, 8, 1);

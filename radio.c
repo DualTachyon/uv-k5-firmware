@@ -337,7 +337,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		gEeprom.VfoInfo[VFO].pDCS_Reverse = &gEeprom.VfoInfo[VFO].DCS[0];
 	}
 
-	if (gSetting_350EN == false) {
+	if (!gSetting_350EN) {
 		DCS_Info_t *pDCS = gEeprom.VfoInfo[VFO].pDCS_Current;
 		if (pDCS->Frequency - 35000000 < 4999991) {
 			pDCS->Frequency = 41001250;
@@ -517,7 +517,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 		;
 
 	if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
-		if (gRxInfo->IsAM != true) {
+		if (!gRxInfo->IsAM) {
 			uint8_t CodeType;
 			uint8_t CodeWord;
 
@@ -560,7 +560,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 					;
 				break;
 			}
-			if (gRxInfo->SCRAMBLING_TYPE == 0 || gSetting_ScrambleEnable == false) {
+			if (gRxInfo->SCRAMBLING_TYPE == 0 || !gSetting_ScrambleEnable) {
 				BK4819_DisableScramble();
 			} else {
 				BK4819_EnableScramble(gRxInfo->SCRAMBLING_TYPE - 1);

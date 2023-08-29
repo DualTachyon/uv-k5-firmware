@@ -44,7 +44,7 @@ void UI_DisplayFM(void)
 		strcpy(String, "DEL?");
 	} else {
 		if (gFM_Step == 0) {
-			if (gEeprom.FM_IsChannelSelected == false) {
+			if (!gEeprom.FM_IsChannelSelected) {
 				for (i = 0; i < 20; i++) {
 					if (gEeprom.FM_FrequencyToPlay == gFM_Channels[i]) {
 						sprintf(String, "VFO(CH%02d)", i + 1);
