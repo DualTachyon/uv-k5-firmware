@@ -44,7 +44,7 @@ bool RADIO_CheckValidChannel(uint16_t Channel, bool bCheckScanList, uint8_t VFO)
 	uint8_t PriorityCh1;
 	uint8_t PriorityCh2;
 
-	if (Channel >= 200) {
+	if (!IS_MR_CHANNEL(Channel)) {
 		return false;
 	}
 
@@ -90,9 +90,9 @@ uint8_t RADIO_FindNextChannel(uint8_t Channel, int8_t Direction, bool bCheckScan
 
 	for (i = 0; i < 200; i++) {
 		if (Channel == 0xFF) {
-			Channel = 199;
-		} else if (Channel >= 200) {
-			Channel = 0;
+			Channel = MR_CHANNEL_LAST;
+		} else if (Channel > MR_CHANNEL_LAST) {
+			Channel = MR_CHANNEL_FIRST;
 		}
 		if (RADIO_CheckValidChannel(Channel, bCheckScanList, VFO)) {
 			return Channel;
@@ -315,13 +315,13 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 
 	if (Frequency - 10800000 < 2799991) {
 		gEeprom.VfoInfo[VFO].FREQUENCY_DEVIATION_SETTING = FREQUENCY_DEVIATION_OFF;
-	} else if (Channel >= 200) {
+	} else if (!IS_MR_CHANNEL(Channel)) {
 		Frequency = FREQUENCY_FloorToStep(gEeprom.VfoInfo[VFO].FREQUENCY_OF_DEVIATION, gEeprom.VfoInfo[VFO].StepFrequency, 0);
 		gEeprom.VfoInfo[VFO].FREQUENCY_OF_DEVIATION = Frequency;
 	}
 	RADIO_ApplyOffset(pRadio);
 	memset(gEeprom.VfoInfo[VFO].Name, 0, sizeof(gEeprom.VfoInfo[VFO].Name));
-	if (Channel < 200) {
+	if (IS_MR_CHANNEL(Channel)) {
 		// 16 bytes allocated but only 12 used
 		EEPROM_ReadBuffer(0x0F50 + (Channel * 0x10), gEeprom.VfoInfo[VFO].Name + 0, 8);
 		EEPROM_ReadBuffer(0x0F58 + (Channel * 0x10), gEeprom.VfoInfo[VFO].Name + 8, 2);

@@ -874,7 +874,7 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			}
 			gInputBoxIndex = 0;
 			Value = ((gInputBox[0] * 100) + (gInputBox[1] * 10) + gInputBox[2]) - 1;
-			if (Value < 200) {
+			if (IS_MR_CHANNEL(Value)) {
 				gAnotherVoiceID = Key;
 				gSubMenuSelection = Value;
 				return;

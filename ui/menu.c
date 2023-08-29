@@ -469,11 +469,11 @@ void UI_DisplayMenu(void)
 			UI_PrintString(String, 50, 127, 2, 8, 1);
 		} else {
 			UI_PrintString(String, 50, 127, 0, 8, 1);
-			if (gEeprom.SCANLIST_PRIORITY_CH1[i] < 200) {
+			if (IS_MR_CHANNEL(gEeprom.SCANLIST_PRIORITY_CH1[i])) {
 				sprintf(String, "PRI1:%d", gEeprom.SCANLIST_PRIORITY_CH1[i] + 1);
 				UI_PrintString(String, 50, 127, 2, 8, 1);
 			}
-			if (gEeprom.SCANLIST_PRIORITY_CH2[i] < 200) {
+			if (IS_MR_CHANNEL(gEeprom.SCANLIST_PRIORITY_CH2[i])) {
 				sprintf(String, "PRI2:%d", gEeprom.SCANLIST_PRIORITY_CH2[i] + 1);
 				UI_PrintString(String, 50, 127, 4, 8, 1);
 			}

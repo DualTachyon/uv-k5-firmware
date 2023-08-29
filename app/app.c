@@ -250,7 +250,7 @@ void FUN_0000773c(void)
 	gStepDirection = 0;
 
 	if (g_20000413 != 1) {
-		if (g_20000410 < 200) {
+		if (IS_MR_CHANNEL(g_20000410)) {
 			gEeprom.MrChannel[gEeprom.RX_CHANNEL] = g_20000414;
 			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = Previous;
 			RADIO_ConfigureChannel(gEeprom.RX_CHANNEL, 2);
@@ -264,7 +264,7 @@ void FUN_0000773c(void)
 		return;
 	}
 
-	if (gInfoCHAN_A->CHANNEL_SAVE >= 200) {
+	if (!IS_MR_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE)) {
 		RADIO_ApplyOffset(gInfoCHAN_A);
 		RADIO_ConfigureSquelchAndOutputPower(gInfoCHAN_A);
 		SETTINGS_SaveChannel(gInfoCHAN_A->CHANNEL_SAVE, gEeprom.RX_CHANNEL, gInfoCHAN_A, 1);
@@ -1451,8 +1451,8 @@ void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction)
 	g_20000410 = gInfoCHAN_A->CHANNEL_SAVE;
 	g_20000415 = 0;
 	gStepDirection = Direction;
-	if (g_20000410 < 200) {
-		if (bFlag == 1) {
+	if (IS_MR_CHANNEL(g_20000410)) {
+		if (bFlag) {
 			g_20000414 = g_20000410;
 		}
 		FUN_00007dd4();

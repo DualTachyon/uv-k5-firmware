@@ -348,7 +348,7 @@ void BOARD_EEPROM_Init(void)
 
 	// 0E70..0E77
 	EEPROM_ReadBuffer(0x0E70, Data, 8);
-	if (Data[0] < 200) {
+	if (IS_MR_CHANNEL(Data[0])) {
 		gEeprom.CHAN_1_CALL = Data[0];
 	} else {
 		gEeprom.CHAN_1_CALL = 0;
