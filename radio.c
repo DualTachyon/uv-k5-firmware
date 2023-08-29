@@ -119,8 +119,8 @@ void RADIO_InitInfo(VFO_Info_t *pInfo, uint8_t ChannelSave, uint8_t Band, uint32
 	pInfo->DCS[0].Frequency = Frequency;
 	pInfo->DCS[1].Frequency = Frequency;
 	pInfo->pDCS_Current = &pInfo->DCS[0];
-	pInfo->FREQUENCY_OF_DEVIATION = 1000000;
 	pInfo->pDCS_Reverse = &pInfo->DCS[1];
+	pInfo->FREQUENCY_OF_DEVIATION = 1000000;
 	RADIO_ConfigureSquelchAndOutputPower(pInfo);
 }
 
@@ -329,7 +329,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		EEPROM_ReadBuffer(0x0F58 + (Channel * 0x10), gEeprom.VfoInfo[VFO].Name + 8, 2);
 	}
 
-	if (gEeprom.VfoInfo[VFO].FrequencyReverse) {
+	if (!gEeprom.VfoInfo[VFO].FrequencyReverse) {
 		gEeprom.VfoInfo[VFO].pDCS_Current = &gEeprom.VfoInfo[VFO].DCS[0];
 		gEeprom.VfoInfo[VFO].pDCS_Reverse = &gEeprom.VfoInfo[VFO].DCS[1];
 	} else {
