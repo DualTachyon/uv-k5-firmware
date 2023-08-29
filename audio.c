@@ -51,7 +51,7 @@ static const uint8_t VoiceClipLengthEnglish[76] = {
 	0x41, 0x32, 0x3C, 0x37,
 };
 
-uint8_t gVoiceID[8];
+VOICE_ID_t gVoiceID[8];
 uint8_t gVoiceReadIndex;
 uint8_t gVoiceWriteIndex;
 volatile uint16_t gCountdownToPlayNextVoice;
@@ -149,7 +149,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	}
 }
 
-void AUDIO_PlayVoice(VOICE_ID_t VoiceID)
+void AUDIO_PlayVoice(uint8_t VoiceID)
 {
 	uint8_t i;
 
@@ -172,7 +172,7 @@ void AUDIO_PlayVoice(VOICE_ID_t VoiceID)
 
 void AUDIO_PlaySingleVoice(bool bFlag)
 {
-	VOICE_ID_t VoiceID;
+	uint8_t VoiceID;
 	uint8_t Delay;
 
 	VoiceID = gVoiceID[0];
@@ -251,7 +251,7 @@ void AUDIO_SetVoiceID(uint8_t Index, VOICE_ID_t VoiceID)
 	gVoiceWriteIndex++;
 }
 
-uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint32_t Value)
+uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint16_t Value)
 {
 	uint16_t Remainder;
 	uint8_t Result;
@@ -263,27 +263,27 @@ uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint32_t Value)
 	}
 
 	Count = 0;
-	Result = Value / 1000;
-	Remainder = Value % 1000;
-	if (Remainder < 100) {
-		if (Remainder < 10) {
+	Result = Value / 1000U;
+	Remainder = Value % 1000U;
+	if (Remainder < 100U) {
+		if (Remainder < 10U) {
 			goto Skip;
 		}
 	} else {
-		Result = Remainder / 100;
-		gVoiceID[gVoiceWriteIndex++] = Result;
+		Result = Remainder / 100U;
+		gVoiceID[gVoiceWriteIndex++] = (VOICE_ID_t)Result;
 		Count++;
-		Remainder -= Result * 100;
+		Remainder -= Result * 100U;
 	}
-	Result = Remainder / 10;
-	gVoiceID[gVoiceWriteIndex++] = Result;
+	Result = Remainder / 10U;
+	gVoiceID[gVoiceWriteIndex++] = (VOICE_ID_t)Result;
 	Count++;
-	Remainder -= Result * 10;
+	Remainder -= Result * 10U;
 
 Skip:
-	gVoiceID[gVoiceWriteIndex++] = Remainder;
+	gVoiceID[gVoiceWriteIndex++] = (VOICE_ID_t)Remainder;
 
-	return Count + 1;
+	return Count + 1U;
 }
 
 void AUDIO_PlayQueuedVoice(void)

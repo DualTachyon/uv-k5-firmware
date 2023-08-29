@@ -41,7 +41,7 @@ uint16_t CRC_Calculate(const void *pBuffer, uint16_t Size)
 	for (i = 0; i < Size; i++) {
 		CRC_DATAIN = pData[i];
 	}
-	Crc = CRC_DATAOUT;
+	Crc = (uint16_t)CRC_DATAOUT;
 
 	CRC_CR = (CRC_CR & ~CRC_CR_CRC_EN_MASK) | CRC_CR_CRC_EN_BITS_DISABLE;
 

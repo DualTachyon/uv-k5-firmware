@@ -117,7 +117,7 @@ enum VOICE_ID_t {
 
 typedef enum VOICE_ID_t VOICE_ID_t;
 
-extern uint8_t gVoiceID[8];
+extern VOICE_ID_t gVoiceID[8];
 extern uint8_t gVoiceReadIndex;
 extern uint8_t gVoiceWriteIndex;
 extern volatile uint16_t gCountdownToPlayNextVoice;
@@ -126,10 +126,10 @@ extern VOICE_ID_t gAnotherVoiceID;
 extern BEEP_Type_t gBeepToPlay;
 
 void AUDIO_PlayBeep(BEEP_Type_t Beep);
-void AUDIO_PlayVoice(VOICE_ID_t VoiceID);
+void AUDIO_PlayVoice(uint8_t VoiceID);
 void AUDIO_PlaySingleVoice(bool bFlag);
 void AUDIO_SetVoiceID(uint8_t Index, VOICE_ID_t VoiceID);
-uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint32_t Value);
+uint8_t AUDIO_SetDigitVoice(uint8_t Index, uint16_t Value);
 void AUDIO_PlayQueuedVoice(void);
 
 #endif

@@ -737,7 +737,7 @@ uint16_t BK4819_GetRSSI(void)
 	return BK4819_GetRegister(BK4819_REG_67) & 0x01FF;
 }
 
-bool BK4819_GetFrequencyScanResult(int32_t *pFrequency)
+bool BK4819_GetFrequencyScanResult(uint32_t *pFrequency)
 {
 	uint16_t High, Low;
 	bool Finished;
@@ -746,13 +746,13 @@ bool BK4819_GetFrequencyScanResult(int32_t *pFrequency)
 	Finished = (High & 0x8000) == 0;
 	if (Finished) {
 		Low = BK4819_GetRegister(BK4819_REG_0E);
-		*pFrequency = ((High & 0x7FF) << 16) | Low;
+		*pFrequency = (uint32_t)((High & 0x7FF) << 16) | Low;
 	}
 
 	return Finished;
 }
 
-BK4819_CssScanResult_t BK4819_GetCxCSSScanResult(int32_t *pCdcssFreq, uint16_t *pCtcssFreq)
+BK4819_CssScanResult_t BK4819_GetCxCSSScanResult(uint32_t *pCdcssFreq, uint16_t *pCtcssFreq)
 {
 	uint16_t High, Low;
 
@@ -782,7 +782,7 @@ void BK4819_EnableFrequencyScan(void)
 	BK4819_WriteRegister(BK4819_REG_32, 0x0245);
 }
 
-void BK4819_SetScanFrequency(int32_t Frequency)
+void BK4819_SetScanFrequency(uint32_t Frequency)
 {
 	BK4819_SetFrequency(Frequency);
 	BK4819_WriteRegister(BK4819_REG_51, 0

@@ -39,8 +39,8 @@ extern const uint32_t NoaaFrequencyTable[10];
 extern const uint16_t StepFrequencyTable[6];
 
 FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency);
-uint32_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, uint32_t LowerLimit, uint32_t Middle, uint32_t UpperLimit, uint32_t Frequency);
-uint32_t FREQUENCY_FloorToStep(uint32_t Upper, int32_t Step, uint32_t Lower);
+uint8_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, uint32_t LowerLimit, uint32_t Middle, uint32_t UpperLimit, uint32_t Frequency);
+uint32_t FREQUENCY_FloorToStep(uint32_t Upper, uint32_t Step, uint32_t Lower);
 int FREQUENCY_Check(VFO_Info_t *pInfo);
 
 #endif

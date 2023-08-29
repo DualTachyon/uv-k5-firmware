@@ -18,7 +18,7 @@
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
-const int16_t CTCSS_Options[50] = {
+const uint16_t CTCSS_Options[50] = {
 	0x029E, 0x02B5, 0x02CF, 0x02E8,
 	0x0302, 0x031D, 0x0339, 0x0356,
 	0x0375, 0x0393, 0x03B4, 0x03CE,
@@ -34,7 +34,7 @@ const int16_t CTCSS_Options[50] = {
 	0x09C7, 0x09ED,
 };
 
-const int16_t DCS_Options[104] = {
+const uint16_t DCS_Options[104] = {
 	0x0013, 0x0015, 0x0016, 0x0019,
 	0x001A, 0x001E, 0x0023, 0x0027,
 	0x0029, 0x002B, 0x002C, 0x0035,
@@ -82,7 +82,7 @@ uint32_t DCS_GetGolayCodeWord(DCS_CodeType_t CodeType, uint8_t Option)
 {
 	uint32_t Code;
 
-	Code = DCS_CalculateGolay(DCS_Options[Option] + 0x800);
+	Code = DCS_CalculateGolay(DCS_Options[Option] + 0x800U);
 	if (CodeType == CODE_TYPE_REVERSE_DIGITAL) {
 		Code ^= 0x7FFFFF;
 	}
@@ -121,14 +121,14 @@ uint8_t DCS_GetCdcssIndex(uint32_t Code)
 uint8_t DCS_GetCtcssIndex(uint16_t Code)
 {
 	uint8_t i;
-	uint16_t Smallest;
+	int Smallest;
 	uint8_t Result = 0xFF;
 
 	Smallest = ARRAY_SIZE(CTCSS_Options);
 	for (i = 0; i < ARRAY_SIZE(CTCSS_Options); i++) {
-		int16_t Delta;
+		int Delta;
 
-		Delta = (int16_t)Code - CTCSS_Options[i];
+		Delta = Code - CTCSS_Options[i];
 		if (Delta < 0) {
 			Delta = -(Code - CTCSS_Options[i]);
 		}

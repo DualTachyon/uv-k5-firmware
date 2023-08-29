@@ -110,11 +110,11 @@ void BK4819_EnableCTCSS(void);
 
 uint16_t BK4819_GetRSSI(void);
 
-bool BK4819_GetFrequencyScanResult(int32_t *pFrequency);
-BK4819_CssScanResult_t BK4819_GetCxCSSScanResult(int32_t *pCdcssFreq, uint16_t *pCtcssFreq);
+bool BK4819_GetFrequencyScanResult(uint32_t *pFrequency);
+BK4819_CssScanResult_t BK4819_GetCxCSSScanResult(uint32_t *pCdcssFreq, uint16_t *pCtcssFreq);
 void BK4819_DisableFrequencyScan(void);
 void BK4819_EnableFrequencyScan(void);
-void BK4819_SetScanFrequency(int32_t Frequency);
+void BK4819_SetScanFrequency(uint32_t Frequency);
 
 void BK4819_Disable(void);
 

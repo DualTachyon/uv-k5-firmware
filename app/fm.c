@@ -190,7 +190,7 @@ void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 						gRequestDisplayScreen = DISPLAY_FM;
 						return;
 					}
-					gEeprom.FM_CurrentFrequency = Frequency;
+					gEeprom.FM_CurrentFrequency = (uint16_t)Frequency;
 					gAnotherVoiceID = (VOICE_ID_t)Key;
 					gEeprom.FM_FrequencyToPlay = gEeprom.FM_CurrentFrequency;
 					BK1080_SetFrequency(gEeprom.FM_FrequencyToPlay);

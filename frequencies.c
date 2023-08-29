@@ -98,7 +98,7 @@ FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency)
 	return BAND6_400MHz;
 }
 
-uint32_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, uint32_t LowerLimit, uint32_t Middle, uint32_t UpperLimit, uint32_t Frequency)
+uint8_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, uint32_t LowerLimit, uint32_t Middle, uint32_t UpperLimit, uint32_t Frequency)
 {
 	if (Frequency <= LowerLimit) {
 		return TxpLow;
@@ -107,13 +107,15 @@ uint32_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t 
 		return TxpHigh;
 	}
 	if (Frequency <= Middle) {
-		return TxpMid + ((TxpMid - TxpLow) * (Frequency - LowerLimit)) / (Middle - LowerLimit);
+		TxpMid += ((TxpMid - TxpLow) * (Frequency - LowerLimit)) / (Middle - LowerLimit);
+		return TxpMid;
 	}
 
-	return TxpMid + ((TxpHigh - TxpMid) * (Frequency - Middle)) / (UpperLimit - Middle);
+	TxpMid += ((TxpHigh - TxpMid) * (Frequency - Middle)) / (UpperLimit - Middle);
+	return TxpMid;
 }
 
-uint32_t FREQUENCY_FloorToStep(uint32_t Upper, int32_t Step, uint32_t Lower)
+uint32_t FREQUENCY_FloorToStep(uint32_t Upper, uint32_t Step, uint32_t Lower)
 {
 	uint32_t Index;
 

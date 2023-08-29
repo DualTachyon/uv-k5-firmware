@@ -1091,7 +1091,7 @@ void APP_TimeSlice10ms(void)
 		}
 	}
 	if (gScreenToDisplay == DISPLAY_SCANNER) {
-		int32_t Result;
+		uint32_t Result;
 		int32_t Delta;
 		BK4819_CssScanResult_t ScanResult;
 		uint16_t CtcssFreq;
