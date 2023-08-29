@@ -17,8 +17,6 @@
 #ifndef APP_FM_H
 #define APP_FM_H
 
-#include <stdbool.h>
-#include <stdint.h>
 #include "driver/keyboard.h"
 
 #define FM_CHANNEL_UP	0x01

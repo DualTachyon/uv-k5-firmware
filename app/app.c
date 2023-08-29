@@ -21,6 +21,7 @@
 #include "app/generic.h"
 #include "app/main.h"
 #include "app/menu.h"
+#include "app/scanner.h"
 #include "audio.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
@@ -1805,22 +1806,22 @@ static void APP_ProcessKey_SCANNER(KEY_Code_t Key, bool bKeyPressed, bool bKeyHe
 	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
 	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
 	case KEY_8: case KEY_9:
-		//SCANNER_Key_DIGITS((VOICE_ID_t)Key, bKeyPressed, bKeyHeld);
+		SCANNER_Key_DIGITS((VOICE_ID_t)Key, bKeyPressed, bKeyHeld);
 		break;
 	case KEY_MENU:
-		//SCANNER_Key_MENU(bKeyPressed, bKeyHeld);
+		SCANNER_Key_MENU(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_UP:
-		//SCANNEY_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
+		SCANNER_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
 		break;
 	case KEY_DOWN:
-		//SCANNEY_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
+		SCANNER_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
 		break;
 	case KEY_EXIT:
-		//SCANNER_Key_EXIT(bKeyPressed, bKeyHeld);
+		SCANNER_Key_EXIT(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_STAR:
-		//SCANNER_Key_STAR(bKeyPressed, bKeyHeld);
+		SCANNER_Key_STAR(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_PTT:
 		GENERIC_Key_PTT(bKeyPressed);

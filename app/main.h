@@ -17,8 +17,6 @@
 #ifndef APP_MAIN_H
 #define APP_MAIN_H
 
-#include <stdbool.h>
-#include <stdint.h>
 #include "driver/keyboard.h"
 
 void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
