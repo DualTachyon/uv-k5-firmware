@@ -33,6 +33,7 @@ void FM_EraseChannels(void);
 
 void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag);
 void FM_Play(void);
+int FM_CheckFrequencyLock(uint16_t Frequency, uint16_t LowerLimit);
 
 void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld);

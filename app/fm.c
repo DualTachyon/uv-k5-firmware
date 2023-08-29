@@ -147,6 +147,52 @@ void FM_Play(void)
 	g_2000036B = 1;
 }
 
+int FM_CheckFrequencyLock(uint16_t Frequency, uint16_t LowerLimit)
+{
+	uint16_t SNR;
+	int16_t Deviation;
+	uint16_t RSSI;
+	int ret = -1;
+
+	SNR = BK1080_ReadRegister(BK1080_REG_07);
+	// This cast fails to extend the sign because ReadReg is guaranteed to be U16.
+	Deviation = (int16_t)SNR >> 4;
+	if ((SNR & 0xF) < 2) {
+		goto Bail;
+	}
+
+	RSSI = BK1080_ReadRegister(BK1080_REG_10);
+	if (RSSI & 0x1000 || (RSSI & 0xFF) < 10) {
+		goto Bail;
+	}
+
+	if (Deviation < 280 || Deviation > 3815) {
+		if ((LowerLimit < Frequency) && (Frequency - g_20000362) == 1) {
+			if (gFM_FrequencyDeviation & 0x800) {
+				goto Bail;
+			}
+			if (gFM_FrequencyDeviation < 20) {
+				goto Bail;
+			}
+		}
+		if ((LowerLimit <= Frequency) && (g_20000362 - Frequency) == 1) {
+			if ((gFM_FrequencyDeviation & 0x800) == 0) {
+				goto Bail;
+			}
+			if (4075 < gFM_FrequencyDeviation) {
+				goto Bail;
+			}
+		}
+		ret = 0;
+	}
+
+Bail:
+	gFM_FrequencyDeviation = (uint16_t)Deviation;
+	g_20000362 = Frequency;
+
+	return ret;
+}
+
 void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
