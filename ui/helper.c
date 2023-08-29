@@ -70,7 +70,7 @@ void UI_GenerateChannelStringEx(char *pString, bool bShowPrefix, uint8_t Channel
 	}
 }
 
-void UI_PrintString(const char *pString, uint8_t Start, uint8_t End, uint8_t Line, int Width, bool bCentered)
+void UI_PrintString(const char *pString, uint8_t Start, uint8_t End, uint8_t Line, uint8_t Width, bool bCentered)
 {
 	uint32_t i, Length;
 
