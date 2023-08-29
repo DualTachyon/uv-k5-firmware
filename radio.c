@@ -670,7 +670,7 @@ void RADIO_PrepareTransmit(void)
 		return;
 	}
 
-	BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pDCS_Reverse->RX_TX_Code + 1]);
+	BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pDCS_Reverse->RX_TX_Code]);
 }
 
 void RADIO_SomethingElse(uint8_t Arg)

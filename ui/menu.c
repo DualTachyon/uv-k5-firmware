@@ -230,7 +230,7 @@ void UI_DisplayMenu(void)
 		if (gSubMenuSelection == 0) {
 			strcpy(String, "OFF");
 		} else {
-			sprintf(String, "%.1fHz", CTCSS_Options[gSubMenuSelection] * 0.1);
+			sprintf(String, "%.1fHz", CTCSS_Options[gSubMenuSelection - 1] * 0.1);
 		}
 		break;
 
