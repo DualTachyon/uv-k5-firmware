@@ -1080,8 +1080,48 @@ void APP_TimeSlice10ms(void)
 		g_200003B8--;
 	}
 	if (gCurrentFunction == FUNCTION_TRANSMIT) {
-#if 0
-#endif
+		if (g_20000383 == 1 || g_20000383 == 2) {
+			uint16_t Value;
+
+			g_20000422++;
+			g_20000420++;
+
+			Value = 500 + (g_20000420 * 25);
+			if (Value > 1500) {
+				Value = 500;
+				g_20000420 = 0;
+			}
+			BK4819_SetScrambleFrequencyControlWord(Value);
+			if (gEeprom.ALARM_MODE == ALARM_MODE_TONE && g_20000422 == 512) {
+				g_20000422 = 0;
+				if (g_20000383 == 1) {
+					g_20000383 = 2;
+					RADIO_EnableCxCSS();
+					BK4819_SetupPowerAmplifier(0, 0);
+					BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
+					BK4819_Enable_AfDac_DiscMode_TxDsp();
+					BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, false);
+					GUI_DisplayScreen();
+				} else {
+					g_20000383 = 1;
+					GUI_DisplayScreen();
+					BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, true);
+					RADIO_PrepareTransmit();
+					BK4819_TransmitTone(true, 500);
+					SYSTEM_DelayMs(2);
+					GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+					g_2000036B = 1;
+					g_20000420 = 0;
+				}
+			}
+		}
+		if (gRTTECountdown != 0) {
+			gRTTECountdown--;
+			if (gRTTECountdown == 0) {
+				FUNCTION_Select(FUNCTION_0);
+				gUpdateDisplay = true;
+			}
+		}
 	}
 	if (gFmRadioMode && g_2000038E != 0) {
 		g_2000038E--;
@@ -1998,8 +2038,58 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 	if (!bFlag) {
 		if (gCurrentFunction == FUNCTION_TRANSMIT) {
-#if 0
-#endif
+			if (g_20000383 == 0) {
+				if (Key == KEY_PTT) {
+					GENERIC_Key_PTT(bKeyPressed);
+				} else {
+					char Code;
+
+					if (Key == KEY_SIDE2) {
+						Code = -2;
+					} else {
+						Code = DTMF_GetCharacter(Key);
+						if (Code == -1) {
+							goto Skip;
+						}
+					}
+
+					if (bKeyHeld || !bKeyPressed) {
+						if (!bKeyPressed) {
+							GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+							g_2000036B = 0;
+							BK4819_ExitDTMF_TX(false);
+							if (gCrossTxRadioInfo->SCRAMBLING_TYPE == 0 || !gSetting_ScrambleEnable) {
+								BK4819_DisableScramble();
+							} else {
+								BK4819_EnableScramble(gCrossTxRadioInfo->SCRAMBLING_TYPE - 1);
+							}
+						}
+					} else {
+						if (gEeprom.DTMF_SIDE_TONE) {
+							GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+							g_2000036B = 1;
+						}
+						BK4819_DisableScramble();
+						if (Code == -2) {
+							BK4819_TransmitTone(gEeprom.DTMF_SIDE_TONE, 1750);
+						} else {
+							BK4819_PlayDTMFEx(gEeprom.DTMF_SIDE_TONE, Code);
+						}
+					}
+				}
+			} else if (!bKeyHeld && bKeyPressed) {
+				FUN_00001150();
+				if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
+					FUNCTION_Select(FUNCTION_0);
+				} else {
+					gRTTECountdown = gEeprom.REPEATER_TAIL_TONE_ELIMINATION * 10;
+				}
+				if (Key == KEY_PTT) {
+					g_20000395 = 1;
+				} else {
+					g_20000394 = 1;
+				}
+			}
 		} else if (Key != KEY_SIDE1 && Key != KEY_SIDE2) {
 			switch (gScreenToDisplay) {
 			case DISPLAY_MAIN:
@@ -2026,6 +2116,8 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
 	}
+
+Skip:
 	if (gBeepToPlay) {
 		AUDIO_PlayBeep(gBeepToPlay);
 		gBeepToPlay = 0;
