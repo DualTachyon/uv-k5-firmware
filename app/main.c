@@ -53,7 +53,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	if (!gWasFKeyPressed) {
 		INPUTBOX_Append(Key);
 		gRequestDisplayScreen = DISPLAY_MAIN;
-		if (gTxRadioInfo->CHANNEL_SAVE < 200) {
+		if (IS_MR_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			uint16_t Channel;
 
 			if (gInputBoxIndex != 3) {
@@ -74,7 +74,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			g_2000039A = 2;
 			return;
 		}
-		if (gTxRadioInfo->CHANNEL_SAVE < 207) {
+		if (IS_NOT_NOAA_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			uint32_t Frequency;
 
 			if (gInputBoxIndex < 6) {
@@ -92,8 +92,8 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 							gAnotherVoiceID = (VOICE_ID_t)Key;
 							if (gTxRadioInfo->Band != i) {
 								gTxRadioInfo->Band = i;
-								gEeprom.ScreenChannel[Vfo] = i + 200;
-								gEeprom.FreqChannel[Vfo] = i + 200;
+								gEeprom.ScreenChannel[Vfo] = i + FREQ_CHANNEL_FIRST;
+								gEeprom.FreqChannel[Vfo] = i + FREQ_CHANNEL_FIRST;
 								SETTINGS_SaveVfoIndices();
 								RADIO_ConfigureChannel(Vfo, 2);
 							}
@@ -121,7 +121,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			gInputBoxIndex = 0;
 			Channel = (gInputBox[0] * 10) + gInputBox[1];
 			if ((Channel - 1) < 10) {
-				Channel += 207;
+				Channel += NOAA_CHANNEL_FIRST;
 				gAnotherVoiceID = (VOICE_ID_t)Key;
 				gEeprom.NoaaChannel[Vfo] = Channel;
 				gEeprom.ScreenChannel[Vfo] = Channel;
@@ -142,7 +142,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 
 	case KEY_1:
-		if (6 < (gTxRadioInfo->CHANNEL_SAVE - 200)) {
+		if (!IS_FREQ_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			gWasFKeyPressed = false;
 			g_2000036F = 1;
 			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
@@ -157,8 +157,8 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			Band = BAND6_400MHz;
 		}
 		gTxRadioInfo->Band = Band;
-		gEeprom.ScreenChannel[Vfo] = 200 + Band;
-		gEeprom.FreqChannel[Vfo] = 200 + Band;
+		gEeprom.ScreenChannel[Vfo] = FREQ_CHANNEL_FIRST + Band;
+		gEeprom.FreqChannel[Vfo] = FREQ_CHANNEL_FIRST + Band;
 		gRequestSaveVFO = true;
 		g_2000039A = 2;
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
@@ -184,10 +184,10 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 
 	case KEY_3:
-		if ((gEeprom.VFO_OPEN) && (gTxRadioInfo->CHANNEL_SAVE < 207)) {
+		if (gEeprom.VFO_OPEN && IS_NOT_NOAA_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			uint8_t Channel;
 
-			if (gTxRadioInfo->CHANNEL_SAVE < 200) {
+			if (IS_MR_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 				gEeprom.ScreenChannel[Vfo] = gEeprom.FreqChannel[gEeprom.TX_CHANNEL];
 				gAnotherVoiceID = VOICE_ID_FREQUENCY_MODE;
 				gRequestSaveVFO = true;
@@ -219,7 +219,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 
 	case KEY_5:
-		if (gTxRadioInfo->CHANNEL_SAVE < 207) {
+		if (IS_NOT_NOAA_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			gEeprom.ScreenChannel[Vfo] = gEeprom.NoaaChannel[gEeprom.TX_CHANNEL];
 		} else {
 			gEeprom.ScreenChannel[Vfo] = gEeprom.FreqChannel[gEeprom.TX_CHANNEL];
@@ -326,7 +326,7 @@ void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 			APP_StartScan(false);
 			return;
 		}
-		if (gStepDirection == 0 && gTxRadioInfo->CHANNEL_SAVE < 207) {
+		if (gStepDirection == 0 && IS_NOT_NOAA_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			g_200003BA = 1;
 			memcpy(g_20000D1C, gDTMF_String, 15);
 			g_200003BB = 0;
@@ -341,7 +341,7 @@ void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 		}
 		gWasFKeyPressed = false;
 		g_2000036F = 1;
-		if (gTxRadioInfo->CHANNEL_SAVE < 207) {
+		if (IS_NOT_NOAA_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			gFlagStartScan = true;
 			g_20000458 = 1;
 			g_20000459 = gEeprom.CROSS_BAND_RX_TX;
@@ -382,7 +382,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 	}
 
 	if (gStepDirection == 0) {
-		if (Channel < 207) {
+		if (IS_NOT_NOAA_CHANNEL(Channel)) {
 			uint8_t Next;
 
 			if (199 < Channel) {
@@ -404,7 +404,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 				gAnotherVoiceID = 0xFE;
 			}
 		} else {
-			Channel = 207 + NUMBER_AddWithWraparound(gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] - 207,Direction, 0, 9);
+			Channel = NOAA_CHANNEL_FIRST + NUMBER_AddWithWraparound(gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] - NOAA_CHANNEL_FIRST, Direction, 0, 9);
 			gEeprom.NoaaChannel[gEeprom.TX_CHANNEL] = Channel;
 			gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] = Channel;
 		}

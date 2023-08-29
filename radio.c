@@ -146,9 +146,9 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	}
 
 	Channel = gEeprom.ScreenChannel[VFO];
-	if (Channel < 217) {
-		if (Channel >= 207) {
-			RADIO_InitInfo(pRadio, gEeprom.ScreenChannel[VFO], 2, NoaaFrequencyTable[Channel - 207]);
+	if (IS_VALID_CHANNEL(Channel)) {
+		if (Channel >= NOAA_CHANNEL_FIRST) {
+			RADIO_InitInfo(pRadio, gEeprom.ScreenChannel[VFO], 2, NoaaFrequencyTable[Channel - NOAA_CHANNEL_FIRST]);
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 				return;
 			}
@@ -156,7 +156,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 			return;
 		}
-		if (Channel < 200) {
+		if (IS_MR_CHANNEL(Channel)) {
 			Channel = RADIO_FindNextChannel(Channel, RADIO_CHANNEL_UP, false, VFO);
 			if (Channel == 0xFF) {
 				Channel = gEeprom.FreqChannel[VFO];
@@ -174,11 +174,11 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	if (Attributes == 0xFF) {
 		uint8_t Index;
 
-		if (Channel < 200) {
+		if (IS_MR_CHANNEL(Channel)) {
 			Channel = gEeprom.FreqChannel[VFO];
 			gEeprom.ScreenChannel[VFO] = gEeprom.FreqChannel[VFO];
 		}
-		Index = Channel - 200;
+		Index = Channel - FREQ_CHANNEL_FIRST;
 		RADIO_InitInfo(pRadio, Channel, Index, gLowerLimitFrequencyBandTable[Index]);
 		return;
 	}
@@ -188,12 +188,12 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		Band = BAND6_400MHz;
 	}
 
-	if (Channel < 200) {
+	if (IS_MR_CHANNEL(Channel)) {
 		gEeprom.VfoInfo[VFO].Band = Band;
 		gEeprom.VfoInfo[VFO].SCANLIST1_PARTICIPATION = !!(Attributes & MR_CH_SCANLIST1);
 		bParticipation2 = !!(Attributes & MR_CH_SCANLIST2);
 	} else {
-		Band = Channel - 200;
+		Band = Channel - FREQ_CHANNEL_FIRST;
 		gEeprom.VfoInfo[VFO].Band = Band;
 		bParticipation2 = true;
 		gEeprom.VfoInfo[VFO].SCANLIST1_PARTICIPATION = true;
@@ -201,13 +201,13 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	gEeprom.VfoInfo[VFO].SCANLIST2_PARTICIPATION = bParticipation2;
 	gEeprom.VfoInfo[VFO].CHANNEL_SAVE = Channel;
 
-	if (Channel < 200) {
+	if (IS_MR_CHANNEL(Channel)) {
 		Base = Channel * 16;
 	} else {
-		Base = 0x0C80 + ((Channel - 200) * 32) + (VFO * 16);
+		Base = 0x0C80 + ((Channel - FREQ_CHANNEL_FIRST) * 32) + (VFO * 16);
 	}
 
-	if (Arg == 2 || Channel >= 200) {
+	if (Arg == 2 || Channel >= FREQ_CHANNEL_FIRST) {
 		EEPROM_ReadBuffer(Base + 8, Data, 8);
 
 		Tmp = Data[3] & 0x0F;
@@ -308,7 +308,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		pRadio->DCS[0].Frequency = gLowerLimitFrequencyBandTable[Band];
 	} else if (Frequency > gUpperLimitFrequencyBandTable[Band]) {
 		pRadio->DCS[0].Frequency = gUpperLimitFrequencyBandTable[Band];
-	} else if (Channel >= 200) {
+	} else if (Channel >= FREQ_CHANNEL_FIRST) {
 		pRadio->DCS[0].Frequency = FREQUENCY_FloorToStep(pRadio->DCS[0].Frequency, gEeprom.VfoInfo[VFO].StepFrequency, gLowerLimitFrequencyBandTable[Band]);
 	}
 	pRadio->DCS[0].Frequency = Frequency;
@@ -327,7 +327,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		EEPROM_ReadBuffer(0x0F58 + (Channel * 0x10), gEeprom.VfoInfo[VFO].Name + 8, 2);
 	}
 
-	if (gEeprom.VfoInfo[VFO].FrequencyReverse == true) {
+	if (gEeprom.VfoInfo[VFO].FrequencyReverse) {
 		gEeprom.VfoInfo[VFO].pDCS_Current = &gEeprom.VfoInfo[VFO].DCS[0];
 		gEeprom.VfoInfo[VFO].pDCS_Reverse = &gEeprom.VfoInfo[VFO].DCS[1];
 	} else {
@@ -342,7 +342,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		}
 	}
 
-	if (gEeprom.VfoInfo[VFO].Band == BAND2_108MHz && gEeprom.VfoInfo[VFO].AM_CHANNEL_MODE == true) {
+	if (gEeprom.VfoInfo[VFO].Band == BAND2_108MHz && gEeprom.VfoInfo[VFO].AM_CHANNEL_MODE) {
 		gEeprom.VfoInfo[VFO].IsAM = true;
 		gEeprom.VfoInfo[VFO].SCRAMBLING_TYPE = 0;
 		gEeprom.VfoInfo[VFO].DTMF_DECODING_ENABLE = false;
@@ -495,7 +495,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	}
 	BK4819_WriteRegister(BK4819_REG_3F, 0);
 	BK4819_WriteRegister(BK4819_REG_7D, gEeprom.MIC_SENSITIVITY_TUNING | 0xE940);
-	if (gInfoCHAN_A->CHANNEL_SAVE < 207 || gIsNoaaMode != false) {
+	if (IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE) || !gIsNoaaMode) {
 		Frequency = gInfoCHAN_A->pDCS_Current->Frequency;
 	} else {
 		Frequency = NoaaFrequencyTable[gNoaaChannel];
@@ -514,7 +514,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 		| BK4819_REG_3F_SQUELCH_LOST
 		;
 
-	if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
+	if (IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE)) {
 		if (gInfoCHAN_A->IsAM != true) {
 			uint8_t CodeType;
 			uint8_t CodeWord;
@@ -574,7 +574,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			;
 	}
 
-	if (gEeprom.VOX_SWITCH == true && !gFmRadioMode && gCrossTxRadioInfo->CHANNEL_SAVE < 207 && gCrossTxRadioInfo->IsAM != true) {
+	if (gEeprom.VOX_SWITCH && !gFmRadioMode && IS_NOT_NOAA_CHANNEL(gCrossTxRadioInfo->CHANNEL_SAVE) && !gCrossTxRadioInfo->IsAM) {
 		BK4819_EnableVox(gEeprom.VOX1_THRESHOLD, gEeprom.VOX0_THRESHOLD);
 		InterruptMask |= 0
 			| BK4819_REG_3F_VOX_FOUND
@@ -583,7 +583,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	} else {
 		BK4819_DisableVox();
 	}
-	if ((gInfoCHAN_A->IsAM == true) || (gInfoCHAN_A->DTMF_DECODING_ENABLE != true && (gSetting_KILLED != true))) {
+	if (gInfoCHAN_A->IsAM || (!gInfoCHAN_A->DTMF_DECODING_ENABLE && !gSetting_KILLED)) {
 		BK4819_DisableDTMF();
 	} else {
 		BK4819_EnableDTMF();
@@ -605,8 +605,8 @@ void RADIO_ConfigureNOAA(void)
 	g_2000036F = 1;
 	if (gEeprom.NOAA_AUTO_SCAN) {
 		if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
-			if (gEeprom.ScreenChannel[0] < 207) {
-				if (gEeprom.ScreenChannel[1] < 207) {
+			if (IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[0])) {
+				if (IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[1])) {
 					gIsNoaaMode = false;
 					return;
 				}
@@ -614,16 +614,16 @@ void RADIO_ConfigureNOAA(void)
 			} else {
 				ChanAB = 0;
 			}
-			if (gIsNoaaMode == false) {
-				gNoaaChannel = gEeprom.VfoInfo[ChanAB].CHANNEL_SAVE - 207;
+			if (!gIsNoaaMode) {
+				gNoaaChannel = gEeprom.VfoInfo[ChanAB].CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
 			}
 			gIsNoaaMode = true;
 			return;
 		}
-		if (gInfoCHAN_A->CHANNEL_SAVE >= 206) {
+		if (gInfoCHAN_A->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST) {
 			gIsNoaaMode = true;
-			gNoaaChannel = gInfoCHAN_A->CHANNEL_SAVE - 207;
-			g_20000356 = 0x32;
+			gNoaaChannel = gInfoCHAN_A->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
+			g_20000356 = 50;
 			gSystickFlag8 = 0;
 		}
 	}
@@ -711,7 +711,7 @@ void RADIO_SomethingWithTransmit(void)
 		uint8_t Value;
 
 		if (!FREQUENCY_Check(gCrossTxRadioInfo)) {
-			if (gCrossTxRadioInfo->BUSY_CHANNEL_LOCK == true && gCurrentFunction == FUNCTION_4) {
+			if (gCrossTxRadioInfo->BUSY_CHANNEL_LOCK && gCurrentFunction == FUNCTION_4) {
 				Value = 1;
 			} else if (gBatteryDisplayLevel == 0) {
 				Value = 2;

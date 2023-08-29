@@ -125,7 +125,7 @@ int FREQUENCY_Check(VFO_Info_t *pInfo)
 {
 	uint32_t Frequency;
 
-	if (pInfo->CHANNEL_SAVE >= 207) {
+	if (pInfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST) {
 		return -1;
 	}
 	Frequency = pInfo->pDCS_Reverse->Frequency;

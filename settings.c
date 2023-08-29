@@ -170,7 +170,7 @@ void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, 
 {
 	UART_LogSend("schn\r\n", 6);
 
-	if (Channel < 207) {
+	if (IS_NOT_NOAA_CHANNEL(Channel)) {
 		uint16_t OffsetMR;
 		uint16_t OffsetVFO;
 
@@ -211,7 +211,7 @@ void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, 
 
 			SETTINGS_UpdateChannel(Channel, pVFO, true);
 
-			if (Channel < 200) {
+			if (IS_MR_CHANNEL(Channel)) {
 				memset(&State32, 0xFF, sizeof(State32));
 				EEPROM_WriteBuffer(OffsetMR + 0x0F50, State32);
 				EEPROM_WriteBuffer(OffsetMR + 0x0F58, State32);
@@ -224,7 +224,7 @@ void SETTINGS_UpdateChannel(uint8_t Channel, const VFO_Info_t *pVFO, bool bUpdat
 {
 	UART_LogSend("svalid\r\n",8);
 
-	if (Channel < 207) {
+	if (IS_NOT_NOAA_CHANNEL(Channel)) {
 		uint8_t State[8];
 		uint16_t Offset;
 		uint8_t Attributes;

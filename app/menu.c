@@ -212,7 +212,7 @@ void MENU_AcceptSetting(void)
 		return;
 
 	case MENU_STEP:
-		if ((gTxRadioInfo->CHANNEL_SAVE - 200) < 7) {
+		if (IS_FREQ_CHANNEL(gTxRadioInfo->CHANNEL_SAVE)) {
 			gTxRadioInfo->STEP_SETTING = gSubMenuSelection;
 			gRequestSaveChannel = 1;
 			return;
@@ -1003,7 +1003,7 @@ void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 	if (!bKeyHeld && bKeyPressed) {
 		g_20000396 = 1;
 		RADIO_ConfigureTX();
-		if (gInfoCHAN_A->CHANNEL_SAVE < 207 && !gInfoCHAN_A->IsAM) {
+		if (IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE) && !gInfoCHAN_A->IsAM) {
 			if (gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_R_DCS) {
 				if (g_20000381 == 0) {
 					FUN_000074f8(1);

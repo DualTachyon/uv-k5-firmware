@@ -36,7 +36,7 @@ FUNCTION_Type_t gCurrentFunction;
 
 void FUNCTION_Init(void)
 {
-	if (gInfoCHAN_A->CHANNEL_SAVE < 207) {
+	if (IS_NOT_NOAA_CHANNEL(gInfoCHAN_A->CHANNEL_SAVE)) {
 		gCopyOfCodeType = gCodeType;
 		if (g_20000381 == 0) {
 			if (gInfoCHAN_A->IsAM == true) {

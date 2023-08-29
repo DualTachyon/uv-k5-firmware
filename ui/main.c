@@ -156,7 +156,7 @@ void UI_DisplayMain(void)
 				memcpy(String + 5, gInputBox, 3);
 			}
 			UI_DisplaySmallDigits(3, String + 5, 10, Line + 1);
-		} else if (gEeprom.ScreenChannel[i] < 207) {
+		} else if (IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[i])) {
 			char c;
 
 			memcpy(pLine1 + 14, BITMAP_F, sizeof(BITMAP_F));
@@ -214,7 +214,7 @@ void UI_DisplayMain(void)
 			}
 			UI_PrintString(String, 31, 111, i * 4, Width, true);
 		} else {
-			if (gInputBoxIndex && gEeprom.ScreenChannel[i] >= 200 && gEeprom.ScreenChannel[i] < 206 && gEeprom.TX_CHANNEL == i) {
+			if (gInputBoxIndex && IS_FREQ_CHANNEL(gEeprom.ScreenChannel[i]) && gEeprom.TX_CHANNEL == i) {
 				UI_DisplayFrequency(gInputBox, 31, i * 4, true, false);
 			} else {
 				if (gEeprom.ScreenChannel[i] < 200) {
