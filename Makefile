@@ -107,6 +107,12 @@ all: $(TARGET)
 	$(OBJCOPY) -O binary $< $<.bin
 	$(SIZE) $<
 
+debug:
+	/opt/openocd/bin/openocd -c "bindto 0.0.0.0" -f interface/jlink.cfg -f dp32g030.cfg
+
+flash:
+	/opt/openocd/bin/openocd -c "bindto 0.0.0.0" -f interface/jlink.cfg -f dp32g030.cfg -c "write_image firmware.bin 0; shutdown;"
+
 $(OVERLAY).bin: $(OVERLAY)
 	$(OBJCOPY) -O binary $< $@
 
