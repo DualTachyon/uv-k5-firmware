@@ -34,7 +34,7 @@ bool gFmRadioMode;
 
 bool FM_CheckValidChannel(uint8_t Channel)
 {
-	if (Channel < 20 && (gFM_Channels[Channel] - 760) < 321) {
+	if (Channel < 20 && (gFM_Channels[Channel] >= 760 && gFM_Channels[Channel] < 1080)) {
 		return true;
 	}
 
@@ -133,7 +133,7 @@ void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag)
 void FM_Play(void)
 {
 	gFM_Step = 0;
-	if (gIs_A_Scan) {
+	if (gFM_AutoScan) {
 		gEeprom.FM_IsChannelSelected = true;
 		gEeprom.FM_CurrentChannel = 0;
 	}
@@ -215,7 +215,7 @@ void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 					gAnotherVoiceID = (VOICE_ID_t)Key;
 					gRequestDisplayScreen = DISPLAY_FM;
 					gInputBoxIndex = 0;
-					gA_Scan_Channel = Channel;
+					gFM_ScanFoundIndex = Channel;
 					return;
 				}
 				gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
@@ -316,11 +316,11 @@ void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step)
 	}
 	if (gAskToSave) {
 		gRequestDisplayScreen = DISPLAY_FM;
-		gA_Scan_Channel = NUMBER_AddWithWraparound(gA_Scan_Channel, Step, 0, 19);
+		gFM_ScanFoundIndex = NUMBER_AddWithWraparound(gFM_ScanFoundIndex, Step, 0, 19);
 		return;
 	}
 	if (gFM_Step) {
-		if (gIs_A_Scan) {
+		if (gFM_AutoScan) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			return;
 		}

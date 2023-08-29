@@ -664,7 +664,7 @@ Bail:
 void APP_PlayFM(void)
 {
 	if (!FM_ChecksChannelValid_and_FrequencyDeviation(gEeprom.FM_FrequencyToPlay, gEeprom.FM_LowerLimit)) {
-		if (gIs_A_Scan != 1) {
+		if (!gFM_AutoScan) {
 			gFmPlayCountdown = 0;
 			g_20000427 = 1;
 			if (gEeprom.FM_IsChannelSelected == false) {
@@ -673,8 +673,8 @@ void APP_PlayFM(void)
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			g_2000036B = 1;
 		} else {
-			if (gA_Scan_Channel < 20) {
-				gFM_Channels[gA_Scan_Channel++] = gEeprom.FM_FrequencyToPlay;
+			if (gFM_ScanFoundIndex < 20) {
+				gFM_Channels[gFM_ScanFoundIndex++] = gEeprom.FM_FrequencyToPlay;
 				if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyToPlay) {
 					FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
 				} else {
@@ -684,7 +684,7 @@ void APP_PlayFM(void)
 				FM_Play();
 			}
 		}
-	} else if (gIs_A_Scan) {
+	} else if (gFM_AutoScan) {
 		if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyToPlay) {
 			FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
 		} else {
@@ -1542,13 +1542,13 @@ void APP_StartScan(bool bFlag)
 				return;
 			}
 			if (bFlag) {
-				gIs_A_Scan = 1;
-				gA_Scan_Channel = 0;
+				gFM_AutoScan = true;
+				gFM_ScanFoundIndex = 0;
 				FM_EraseChannels();
 				Frequency = gEeprom.FM_LowerLimit;
 			} else {
-				gIs_A_Scan = 0;
-				gA_Scan_Channel = 0;
+				gFM_AutoScan = false;
+				gFM_ScanFoundIndex = 0;
 				Frequency = gEeprom.FM_FrequencyToPlay;
 			}
 			BK1080_GetFrequencyDeviation(Frequency);
