@@ -89,7 +89,7 @@ extern uint8_t gFoundCTCSS;
 extern uint8_t gFoundCDCSS;
 extern uint8_t g_20000377;
 extern uint8_t gVFO_RSSI_Level[2];
-extern uint8_t g_2000037E;
+extern uint8_t gReducedService;
 extern uint8_t gBatteryVoltageIndex;
 extern volatile uint8_t g_20000381;
 extern uint8_t g_20000382;

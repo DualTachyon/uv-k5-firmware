@@ -779,7 +779,7 @@ void APP_Update(void)
 		RADIO_SomethingElse(4);
 		GUI_DisplayScreen();
 	}
-	if (g_2000037E == 1) {
+	if (gReducedService) {
 		return;
 	}
 	if (gCurrentFunction != FUNCTION_TRANSMIT) {
@@ -968,7 +968,7 @@ void APP_TimeSlice10ms(void)
 		enableIRQinterrupts();
 	}
 #endif
-	if (g_2000037E == 1) {
+	if (gReducedService) {
 		return;
 	}
 
@@ -1175,7 +1175,7 @@ void APP_TimeSlice500ms(void)
 		gFmRadioCountdown--;
 		return;
 	}
-	if (g_2000037E == 1) {
+	if (gReducedService) {
 		BOARD_ADC_GetBatteryInfo(&gBatteryCurrentVoltage, &gBatteryCurrent);
 		if ((gBatteryCurrent < 0x1f5) && (gBatteryCurrentVoltage <= gBatteryCalibration[3])) {
 			return;
@@ -1275,7 +1275,7 @@ LAB_00004b08:
 					AUDIO_SetVoiceID(0, VOICE_ID_LOW_VOLTAGE);
 					if (gBatteryDisplayLevel == 0) {
 						AUDIO_PlaySingleVoice(true);
-						g_2000037E = 1;
+						gReducedService = true;
 						FUNCTION_Select(FUNCTION_POWER_SAVE);
 						ST7565_Configure_GPIO_B11();
 						GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);

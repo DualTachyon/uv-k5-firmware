@@ -100,7 +100,7 @@ void Main(void)
 	if (!gChargingWithTypeC && !gBatteryDisplayLevel) {
 		FUNCTION_Select(FUNCTION_POWER_SAVE);
 		GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
-		g_2000037E = 1;
+		gReducedService = true;
 	} else {
 		BOOT_Mode_t BootMode;
 		uint8_t Channel;

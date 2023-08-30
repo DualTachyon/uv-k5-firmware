@@ -65,7 +65,7 @@ uint8_t gFoundCTCSS;
 uint8_t gFoundCDCSS;
 uint8_t g_20000377;
 uint8_t gVFO_RSSI_Level[2];
-uint8_t g_2000037E;
+uint8_t gReducedService;
 uint8_t gBatteryVoltageIndex;
 volatile uint8_t g_20000381;
 uint8_t g_20000382;
