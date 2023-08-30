@@ -738,6 +738,8 @@ static void FUN_00008334(void)
 				}
 				if (gCurrentFunction == FUNCTION_TRANSMIT && !gPttIsPressed && g_200003B4 == 0) {
 					if (g_200003FD == 1) {
+						FUNCTION_Select(FUNCTION_0);
+					} else {
 						TalkRelatedCode();
 						if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
 							FUNCTION_Select(FUNCTION_0);
