@@ -626,8 +626,10 @@ void RADIO_ConfigureNOAA(void)
 			gIsNoaaMode = true;
 			gNoaaChannel = gRxInfo->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
 			g_20000356 = 50;
-			gSystickFlag8 = 0;
+			gSystickFlag8 = false;
 		}
+	} else {
+		gIsNoaaMode = false;
 	}
 }
 
