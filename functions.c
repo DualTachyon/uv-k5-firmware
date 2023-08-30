@@ -58,10 +58,10 @@ void FUNCTION_Init(void)
 	g_SquelchLost = false;
 	g_20000342 = 0;
 	gSystickFlag10 = false;
-	g_20000375 = 0;
-	g_20000376 = 0;
-	gSystickCountdown4 = 0;
-	gSystickCountdown3 = 0;
+	gFoundCTCSS = false;
+	gFoundCDCSS = false;
+	gFoundCTCSSCountdown = 0;
+	gFoundCDCSSCountdown = 0;
 	g_20000377 = 0;
 	gSystickCountdown2 = 0;
 }

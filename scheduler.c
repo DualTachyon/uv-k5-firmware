@@ -43,11 +43,11 @@ void SystickHandler(void)
 	if (gSystickCountdown2) {
 		gSystickCountdown2--;
 	}
-	if (gSystickCountdown3) {
-		gSystickCountdown3--;
+	if (gFoundCDCSSCountdown) {
+		gFoundCDCSSCountdown--;
 	}
-	if (gSystickCountdown4) {
-		gSystickCountdown4--;
+	if (gFoundCTCSSCountdown) {
+		gFoundCTCSSCountdown--;
 	}
 	if (gCurrentFunction == FUNCTION_0 && gBatterySaveCountdown) {
 		gBatterySaveCountdown--;

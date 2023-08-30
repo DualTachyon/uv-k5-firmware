@@ -814,14 +814,14 @@ uint8_t BK4819_GetDTMF_5TONE_Code(void)
         return (BK4819_GetRegister(BK4819_REG_0B) >> 8) & 0x0F;
 }
 
-uint8_t BK4819_CheckCDCSSCodeReceived(void)
+uint8_t BK4819_GetCDCSSCodeType(void)
 {
         return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
 }
 
-uint8_t BK4819_GetCTCSSPhaseShift(void)
+uint8_t BK4819_GetCTCType(void)
 {
-        return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
+        return (BK4819_GetRegister(BK4819_REG_0C) >> 10) & 3;
 }
 
 void BK4819_SendFSKData(uint16_t *pData)

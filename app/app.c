@@ -209,19 +209,17 @@ void FUN_000051e8(void)
 		return;
 	}
 
-	bFlag = (gStepDirection == 0 || gCopyOfCodeType == CODE_TYPE_OFF);
+	bFlag = (gStepDirection == 0 && gCopyOfCodeType == CODE_TYPE_OFF);
 	if (gRxInfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gSystickCountdown2) {
 		bFlag = true;
 		gSystickCountdown2 = 0;
 	}
 	if (g_CTCSS_Lost && gCopyOfCodeType == CODE_TYPE_CONTINUOUS_TONE) {
 		bFlag = true;
-		g_20000375 = 0;
+		gFoundCTCSS = false;
 	}
-	if (g_CDCSS_Lost && gCDCSSCodeReceived == 0x01) {
-		if (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL) {
-			g_20000376 = 0;
-		}
+	if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL)) {
+		gFoundCDCSS = false;
 	} else {
 		if (!bFlag) {
 			return;
@@ -295,10 +293,10 @@ void FUN_000052f0(void)
 
 	switch (gCopyOfCodeType) {
 	case CODE_TYPE_CONTINUOUS_TONE:
-		if (g_20000375 == 1) {
-			if (gSystickCountdown4 == 0) {
-				g_20000375 = 0;
-				g_20000376 = 0;
+		if (gFoundCTCSS) {
+			if (gFoundCTCSSCountdown == 0) {
+				gFoundCTCSS = false;
+				gFoundCDCSS = false;
 				Value = 1;
 				goto LAB_0000544c;
 			}
@@ -306,10 +304,10 @@ void FUN_000052f0(void)
 		break;
 	case CODE_TYPE_DIGITAL:
 	case CODE_TYPE_REVERSE_DIGITAL:
-		if (g_20000376 == 1) {
-			if (gSystickCountdown3 == 0) {
-				g_20000375 = 0;
-				g_20000376 = 0;
+		if (gFoundCDCSS) {
+			if (gFoundCDCSSCountdown == 0) {
+				gFoundCTCSS = false;
+				gFoundCDCSS = false;
 				Value = 1;
 				goto LAB_0000544c;
 			}
@@ -323,10 +321,10 @@ void FUN_000052f0(void)
 			switch (gCopyOfCodeType) {
 			case CODE_TYPE_CONTINUOUS_TONE:
 				if (g_CTCSS_Lost) {
-					g_20000375 = 0;
-				} else if (g_20000375 == 0) {
-					g_20000375 = 1;
-					gSystickCountdown4 = 100;
+					gFoundCTCSS = false;
+				} else if (!gFoundCTCSS) {
+					gFoundCTCSS = true;
+					gFoundCTCSSCountdown = 100;
 				}
 				if (g_CxCSS_TAIL_Found) {
 					Value = 2;
@@ -334,7 +332,7 @@ void FUN_000052f0(void)
 				}
 				break;
 			case CODE_TYPE_OFF:
-				if (gEeprom.SQUELCH_LEVEL != 0) {
+				if (gEeprom.SQUELCH_LEVEL) {
 					if (g_CxCSS_TAIL_Found) {
 						Value = 2;
 						g_CxCSS_TAIL_Found = false;
@@ -343,14 +341,14 @@ void FUN_000052f0(void)
 				break;
 			case CODE_TYPE_DIGITAL:
 			case CODE_TYPE_REVERSE_DIGITAL:
-				if (g_CDCSS_Lost && gCDCSSCodeReceived == 1) {
-					g_20000376 = 0;
-				} else if (g_20000376 == 0) {
-					g_20000376 = 1;
-					gSystickCountdown3 = 100;
+				if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE) {
+					gFoundCDCSS = false;
+				} else if (!gFoundCDCSS) {
+					gFoundCDCSS = true;
+					gFoundCDCSSCountdown = 100;
 				}
 				if (g_CxCSS_TAIL_Found) {
-					if (BK4819_GetCTCSSPhaseShift() == 1) {
+					if (BK4819_GetCTCType() == 1) {
 						Value = 2;
 					}
 					g_CxCSS_TAIL_Found = false;
@@ -368,7 +366,7 @@ void FUN_000052f0(void)
 		switch (gCopyOfCodeType) {
 		case CODE_TYPE_DIGITAL:
 		case CODE_TYPE_REVERSE_DIGITAL:
-			if (BK4819_GetCTCSSPhaseShift() == 1) {
+			if (BK4819_GetCTCType() == 1) {
 				gNextTimeslice40ms = false;
 			}
 			break;
@@ -377,9 +375,9 @@ void FUN_000052f0(void)
 		}
 	}
 
+LAB_0000544c:
 	gNextTimeslice40ms = false;
 
-LAB_0000544c:
 	switch (Value) {
 	case 1:
 		RADIO_SetupRegisters(true);
@@ -400,15 +398,13 @@ LAB_0000544c:
 		}
 		break;
 	case 2:
-		if (!gEeprom.TAIL_NOTE_ELIMINATION) {
-			gNextTimeslice40ms = false;
-			break;
+		if (gEeprom.TAIL_NOTE_ELIMINATION) {
+			GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+			g_20000342 = 20;
+			gSystickFlag10 = false;
+			g_2000036B = 0;
+			g_20000377 = 1;
 		}
-		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		g_20000342 = 20;
-		gSystickFlag10 = false;
-		g_2000036B = 0;
-		g_20000377 = 1;
 		break;
 	default:
 		break;
@@ -693,7 +689,7 @@ void APP_CheckRadioInterrupts(void)
 		}
 		if (Mask & BK4819_REG_02_CDCSS_LOST) {
 			g_CDCSS_Lost = true;
-			gCDCSSCodeReceived = BK4819_CheckCDCSSCodeReceived();
+			gCDCSSCodeType = BK4819_GetCDCSSCodeType();
 		}
 		if (Mask & BK4819_REG_02_CDCSS_FOUND) {
 			g_CDCSS_Lost = false;
@@ -1431,7 +1427,7 @@ void FUN_000075b0(void)
 	g_200003AA = 0;
 	g_CxCSS_TAIL_Found = false;
 	g_CDCSS_Lost = false;
-	gCDCSSCodeReceived = 0;
+	gCDCSSCodeType = 0;
 	g_CTCSS_Lost = false;
 	g_VOX_Lost = false;
 	g_SquelchLost = false;

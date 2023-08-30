@@ -28,6 +28,11 @@ enum DCS_CodeType_t {
 
 typedef enum DCS_CodeType_t DCS_CodeType_t;
 
+enum {
+	CDCSS_POSITIVE_CODE = 1U,
+	CDCSS_NEGATIVE_CODE = 2U,
+};
+
 extern const uint16_t CTCSS_Options[50];
 extern const uint16_t DCS_Options[104];
 
