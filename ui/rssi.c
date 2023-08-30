@@ -46,8 +46,8 @@ static void Render(uint8_t RssiLevel, uint8_t VFO)
 		pLine = NULL;
 		bIsClearMode = true;
 	} else {
-		memcpy(pLine, BITMAP_Antenna,5);
-		memcpy(pLine + 5,BITMAP_AntennaLevel1, sizeof(BITMAP_AntennaLevel1));
+		memcpy(pLine, BITMAP_Antenna, 5);
+		memcpy(pLine + 5, BITMAP_AntennaLevel1, sizeof(BITMAP_AntennaLevel1));
 		if (RssiLevel >= 2) {
 			memcpy(pLine + 8, BITMAP_AntennaLevel2, sizeof(BITMAP_AntennaLevel2));
 		}

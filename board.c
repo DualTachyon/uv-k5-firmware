@@ -661,7 +661,7 @@ void BOARD_EEPROM_Init(void)
 	if (DTMF_ValidateCodes((char *)Data, 8)) {
 		memcpy(gEeprom.REVIVE_CODE, Data, 8);
 	} else {
-		memcpy(gEeprom.REVIVE_CODE,"9DCBA\0\0", 8);
+		memcpy(gEeprom.REVIVE_CODE, "9DCBA\0\0", 8);
 	}
 
 	// 0EF8..0F07

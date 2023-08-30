@@ -222,7 +222,7 @@ void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, 
 
 void SETTINGS_UpdateChannel(uint8_t Channel, const VFO_Info_t *pVFO, bool bUpdate)
 {
-	UART_LogSend("svalid\r\n",8);
+	UART_LogSend("svalid\r\n", 8);
 
 	if (IS_NOT_NOAA_CHANNEL(Channel)) {
 		uint8_t State[8];

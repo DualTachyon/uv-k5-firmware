@@ -56,7 +56,7 @@ void ST7565_BlitFullScreen(void)
 	uint8_t Line;
 	uint8_t Column;
 
-	SPI_ToggleMasterMode(&SPI0->CR,false);
+	SPI_ToggleMasterMode(&SPI0->CR, false);
 	ST7565_WriteByte(0x40);
 
 	for (Line = 0; Line < 7; Line++) {

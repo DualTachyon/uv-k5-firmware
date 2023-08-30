@@ -1006,7 +1006,7 @@ void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 				if (g_20000381 == 0) {
 					FUN_000074f8(1);
 					gRequestDisplayScreen = DISPLAY_MENU;
-					AUDIO_SetVoiceID(0,VOICE_ID_SCANNING_BEGIN);
+					AUDIO_SetVoiceID(0, VOICE_ID_SCANNING_BEGIN);
 					AUDIO_PlaySingleVoice(1);
 				} else {
 					RADIO_Whatever();

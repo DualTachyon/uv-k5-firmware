@@ -107,7 +107,7 @@ void APP_CheckDTMFStuff(void)
 		return;
 	}
 
-	if (8 < gDTMF_WriteIndex) {
+	if (gDTMF_WriteIndex >= 9) {
 		Offset = gDTMF_WriteIndex - 9;
 		sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, gEeprom.KILL_CODE);
 		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, true)) {
@@ -122,32 +122,28 @@ void APP_CheckDTMFStuff(void)
 			} else {
 				g_200003BE = 0;
 			}
-			g_200003BC = 0;
-			gUpdateDisplay = true;
-			gUpdateStatus = true;
-			return;
 		} else {
 			sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, gEeprom.REVIVE_CODE);
 			if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, true)) {
 				gSetting_KILLED = false;
 				SETTINGS_SaveSettings();
 				g_200003BE = 2;
-				g_200003BC = 0;
-				gUpdateDisplay = true;
-				gUpdateStatus = true;
-				return;
 			}
 		}
+		g_200003BC = 0;
+		gUpdateDisplay = true;
+		gUpdateStatus = true;
+		return;
 	}
 
-	if (1 < gDTMF_WriteIndex) {
+	if (gDTMF_WriteIndex >= 2) {
 		if (DTMF_CompareMessage(gDTMF_Received + gDTMF_WriteIndex - 2, "AB", 2, true)) {
 			g_CalloutAndDTMF_State = 1;
 			gUpdateDisplay = true;
 			return;
 		}
 	}
-	if (g_200003BC == 1 && g_20000438 == 0 && 8 < gDTMF_WriteIndex) {
+	if (g_200003BC == 1 && g_20000438 == 0 && gDTMF_WriteIndex >= 9) {
 		Offset = gDTMF_WriteIndex - 9;
 		sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
 		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, false)) {
