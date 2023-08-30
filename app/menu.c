@@ -191,10 +191,8 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax)
 void MENU_AcceptSetting(void)
 {
 	uint8_t Min, Max;
-	uint8_t Sel;
 	uint8_t Code;
-
-	Sel = 0;
+	FREQ_Config_t *pConfig = &gTxInfo->ConfigRX;
 
 	if (!MENU_GetLimits(gMenuCursor, &Min, &Max)) {
 		if (gSubMenuSelection < Min) {
@@ -226,43 +224,43 @@ void MENU_AcceptSetting(void)
 		return;
 
 	case MENU_T_DCS:
-		Sel = 1;
+		pConfig = &gTxInfo->ConfigTX;
 		// Fallthrough
 	case MENU_R_DCS:
 		if (gSubMenuSelection == 0) {
-			if (gTxInfo->DCS[Sel].CodeType != CODE_TYPE_DIGITAL && gTxInfo->DCS[Sel].CodeType != CODE_TYPE_REVERSE_DIGITAL) {
+			if (pConfig->CodeType != CODE_TYPE_DIGITAL && pConfig->CodeType != CODE_TYPE_REVERSE_DIGITAL) {
 				gRequestSaveChannel = 1;
 				return;
 			}
 			Code = 0;
-			gTxInfo->DCS[Sel].CodeType = CODE_TYPE_OFF;
+			pConfig->CodeType = CODE_TYPE_OFF;
 		} else if (gSubMenuSelection < 105) {
-			gTxInfo->DCS[Sel].CodeType = CODE_TYPE_DIGITAL;
+			pConfig->CodeType = CODE_TYPE_DIGITAL;
 			Code = gSubMenuSelection - 1;
 		} else {
-			gTxInfo->DCS[Sel].CodeType = CODE_TYPE_REVERSE_DIGITAL;
+			pConfig->CodeType = CODE_TYPE_REVERSE_DIGITAL;
 			Code = gSubMenuSelection - 105;
 		}
-		gTxInfo->DCS[Sel].RX_TX_Code = Code;
+		pConfig->RX_TX_Code = Code;
 		gRequestSaveChannel = 1;
 		return;
 
 	case MENU_T_CTCS:
-		Sel = 1;
+		pConfig = &gTxInfo->ConfigTX;
 		// Fallthrough
 	case MENU_R_CTCS:
 		if (gSubMenuSelection == 0) {
-			if (gTxInfo->DCS[Sel].CodeType != CODE_TYPE_CONTINUOUS_TONE) {
+			if (pConfig->CodeType != CODE_TYPE_CONTINUOUS_TONE) {
 				gRequestSaveChannel = 1;
 				return;
 			}
 			Code = 0;
-			gTxInfo->DCS[Sel].CodeType = CODE_TYPE_OFF;
+			pConfig->CodeType = CODE_TYPE_OFF;
 		} else {
-			gTxInfo->DCS[Sel].CodeType = CODE_TYPE_CONTINUOUS_TONE;
+			pConfig->CodeType = CODE_TYPE_CONTINUOUS_TONE;
 			Code = gSubMenuSelection - 1;
 		}
-		gTxInfo->DCS[Sel].RX_TX_Code = Code;
+		pConfig->RX_TX_Code = Code;
 		gRequestSaveChannel = 1;
 		return;
 
@@ -581,12 +579,12 @@ void MENU_ShowCurrentSetting(void)
 		break;
 
 	case MENU_R_DCS:
-		switch (gTxInfo->DCS[0].CodeType) {
+		switch (gTxInfo->ConfigRX.CodeType) {
 		case CODE_TYPE_DIGITAL:
-			gSubMenuSelection = gTxInfo->DCS[0].RX_TX_Code + 1;
+			gSubMenuSelection = gTxInfo->ConfigRX.RX_TX_Code + 1;
 			break;
 		case CODE_TYPE_REVERSE_DIGITAL:
-			gSubMenuSelection = gTxInfo->DCS[0].RX_TX_Code + 105;
+			gSubMenuSelection = gTxInfo->ConfigRX.RX_TX_Code + 105;
 			break;
 		default:
 			gSubMenuSelection = 0;
@@ -599,20 +597,20 @@ void MENU_ShowCurrentSetting(void)
 		break;
 
 	case MENU_R_CTCS:
-		if (gTxInfo->DCS[0].CodeType == CODE_TYPE_CONTINUOUS_TONE) {
-			gSubMenuSelection = gTxInfo->DCS[0].RX_TX_Code + 1;
+		if (gTxInfo->ConfigRX.CodeType == CODE_TYPE_CONTINUOUS_TONE) {
+			gSubMenuSelection = gTxInfo->ConfigRX.RX_TX_Code + 1;
 		} else {
 			gSubMenuSelection = 0;
 		}
 		break;
 
 	case MENU_T_DCS:
-		switch (gTxInfo->DCS[1].CodeType) {
+		switch (gTxInfo->ConfigTX.CodeType) {
 		case CODE_TYPE_DIGITAL:
-			gSubMenuSelection = gTxInfo->DCS[1].RX_TX_Code + 1;
+			gSubMenuSelection = gTxInfo->ConfigTX.RX_TX_Code + 1;
 			break;
 		case CODE_TYPE_REVERSE_DIGITAL:
-			gSubMenuSelection = gTxInfo->DCS[1].RX_TX_Code + 105;
+			gSubMenuSelection = gTxInfo->ConfigTX.RX_TX_Code + 105;
 			break;
 		default:
 			gSubMenuSelection = 0;
@@ -621,8 +619,8 @@ void MENU_ShowCurrentSetting(void)
 		break;
 
 	case MENU_T_CTCS:
-		if (gTxInfo->DCS[1].CodeType == CODE_TYPE_CONTINUOUS_TONE) {
-			gSubMenuSelection = gTxInfo->DCS[1].RX_TX_Code + 1;
+		if (gTxInfo->ConfigTX.CodeType == CODE_TYPE_CONTINUOUS_TONE) {
+			gSubMenuSelection = gTxInfo->ConfigTX.RX_TX_Code + 1;
 		} else {
 			gSubMenuSelection = 0;
 		}

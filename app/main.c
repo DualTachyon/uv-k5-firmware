@@ -98,7 +98,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 								RADIO_ConfigureChannel(Vfo, 2);
 							}
 							Frequency += 75;
-							gTxInfo->DCS[0].Frequency = FREQUENCY_FloorToStep(
+							gTxInfo->ConfigRX.Frequency = FREQUENCY_FloorToStep(
 									Frequency,
 									gTxInfo->StepFrequency,
 									gLowerLimitFrequencyBandTable[gTxInfo->Band]

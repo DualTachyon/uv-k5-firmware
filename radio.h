@@ -63,12 +63,13 @@ typedef struct {
 	DCS_CodeType_t CodeType;
 	uint8_t RX_TX_Code;
 	uint8_t Padding[2];
-} DCS_Info_t;
+} FREQ_Config_t;
 
 typedef struct VFO_Info_t {
-	DCS_Info_t DCS[2];
-	DCS_Info_t *pDCS_Current;
-	DCS_Info_t *pDCS_Reverse;
+	FREQ_Config_t ConfigRX;
+	FREQ_Config_t ConfigTX;
+	FREQ_Config_t *pCurrent;
+	FREQ_Config_t *pReverse;
 	uint32_t FREQUENCY_OF_DEVIATION;
 	uint16_t StepFrequency;
 	uint8_t CHANNEL_SAVE;

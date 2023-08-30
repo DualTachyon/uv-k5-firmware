@@ -116,10 +116,10 @@ void RADIO_InitInfo(VFO_Info_t *pInfo, uint8_t ChannelSave, uint8_t Band, uint32
 	pInfo->CHANNEL_SAVE = ChannelSave;
 	pInfo->FrequencyReverse = false;
 	pInfo->OUTPUT_POWER = OUTPUT_POWER_HIGH;
-	pInfo->DCS[0].Frequency = Frequency;
-	pInfo->DCS[1].Frequency = Frequency;
-	pInfo->pDCS_Current = &pInfo->DCS[0];
-	pInfo->pDCS_Reverse = &pInfo->DCS[1];
+	pInfo->ConfigRX.Frequency = Frequency;
+	pInfo->ConfigTX.Frequency = Frequency;
+	pInfo->pCurrent = &pInfo->ConfigRX;
+	pInfo->pReverse = &pInfo->ConfigTX;
 	pInfo->FREQUENCY_OF_DEVIATION = 1000000;
 	RADIO_ConfigureSquelchAndOutputPower(pInfo);
 }
@@ -231,11 +231,11 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			Tmp = 0;
 		}
 		gEeprom.VfoInfo[VFO].SCRAMBLING_TYPE = Tmp;
-		gEeprom.VfoInfo[VFO].DCS[0].CodeType = (Data[2] >> 0) & 0x0F;
-		gEeprom.VfoInfo[VFO].DCS[1].CodeType = (Data[2] >> 4) & 0x0F;
+		gEeprom.VfoInfo[VFO].ConfigRX.CodeType = (Data[2] >> 0) & 0x0F;
+		gEeprom.VfoInfo[VFO].ConfigTX.CodeType = (Data[2] >> 4) & 0x0F;
 
 		Tmp = Data[0];
-		switch (gEeprom.VfoInfo[VFO].DCS[0].CodeType) {
+		switch (gEeprom.VfoInfo[VFO].ConfigRX.CodeType) {
 		case CODE_TYPE_CONTINUOUS_TONE:
 			if (Tmp >= 50) {
 				Tmp = 0;
@@ -248,13 +248,13 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			}
 			break;
 		default:
-			gEeprom.VfoInfo[VFO].DCS[0].CodeType = CODE_TYPE_OFF;
+			gEeprom.VfoInfo[VFO].ConfigRX.CodeType = CODE_TYPE_OFF;
 			break;
 		}
-		gEeprom.VfoInfo[VFO].DCS[0].RX_TX_Code = Tmp;
+		gEeprom.VfoInfo[VFO].ConfigRX.RX_TX_Code = Tmp;
 
 		Tmp = Data[1];
-		switch (gEeprom.VfoInfo[VFO].DCS[1].CodeType) {
+		switch (gEeprom.VfoInfo[VFO].ConfigTX.CodeType) {
 		case CODE_TYPE_CONTINUOUS_TONE:
 			if (Tmp >= 50) {
 				Tmp = 0;
@@ -267,10 +267,10 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			}
 			break;
 		default:
-			gEeprom.VfoInfo[VFO].DCS[1].CodeType = CODE_TYPE_OFF;
+			gEeprom.VfoInfo[VFO].ConfigTX.CodeType = CODE_TYPE_OFF;
 			break;
 		}
-		gEeprom.VfoInfo[VFO].DCS[1].RX_TX_Code = Tmp;
+		gEeprom.VfoInfo[VFO].ConfigTX.RX_TX_Code = Tmp;
 
 		if (Data[4] == 0xFF) {
 			gEeprom.VfoInfo[VFO].FrequencyReverse = false;
@@ -298,22 +298,22 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 
 		EEPROM_ReadBuffer(Base, &Info, 8);
 
-		pRadio->DCS[0].Frequency = Info.Frequency;
+		pRadio->ConfigRX.Frequency = Info.Frequency;
 		if (Info.Offset >= 100000000) {
 			Info.Offset = 1000000;
 		}
 		gEeprom.VfoInfo[VFO].FREQUENCY_OF_DEVIATION = Info.Offset;
 	}
 
-	Frequency = pRadio->DCS[0].Frequency;
+	Frequency = pRadio->ConfigRX.Frequency;
 	if (Frequency < gLowerLimitFrequencyBandTable[Band]) {
-		pRadio->DCS[0].Frequency = gLowerLimitFrequencyBandTable[Band];
+		pRadio->ConfigRX.Frequency = gLowerLimitFrequencyBandTable[Band];
 	} else if (Frequency > gUpperLimitFrequencyBandTable[Band]) {
-		pRadio->DCS[0].Frequency = gUpperLimitFrequencyBandTable[Band];
+		pRadio->ConfigRX.Frequency = gUpperLimitFrequencyBandTable[Band];
 	} else if (Channel >= FREQ_CHANNEL_FIRST) {
-		pRadio->DCS[0].Frequency = FREQUENCY_FloorToStep(pRadio->DCS[0].Frequency, gEeprom.VfoInfo[VFO].StepFrequency, gLowerLimitFrequencyBandTable[Band]);
+		pRadio->ConfigRX.Frequency = FREQUENCY_FloorToStep(pRadio->ConfigRX.Frequency, gEeprom.VfoInfo[VFO].StepFrequency, gLowerLimitFrequencyBandTable[Band]);
 	}
-	pRadio->DCS[0].Frequency = Frequency;
+	pRadio->ConfigRX.Frequency = Frequency;
 
 	if (Frequency - 10800000 < 2799991) {
 		gEeprom.VfoInfo[VFO].FREQUENCY_DEVIATION_SETTING = FREQUENCY_DEVIATION_OFF;
@@ -330,17 +330,17 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	}
 
 	if (!gEeprom.VfoInfo[VFO].FrequencyReverse) {
-		gEeprom.VfoInfo[VFO].pDCS_Current = &gEeprom.VfoInfo[VFO].DCS[0];
-		gEeprom.VfoInfo[VFO].pDCS_Reverse = &gEeprom.VfoInfo[VFO].DCS[1];
+		gEeprom.VfoInfo[VFO].pCurrent = &gEeprom.VfoInfo[VFO].ConfigRX;
+		gEeprom.VfoInfo[VFO].pReverse = &gEeprom.VfoInfo[VFO].ConfigTX;
 	} else {
-		gEeprom.VfoInfo[VFO].pDCS_Current = &gEeprom.VfoInfo[VFO].DCS[1];
-		gEeprom.VfoInfo[VFO].pDCS_Reverse = &gEeprom.VfoInfo[VFO].DCS[0];
+		gEeprom.VfoInfo[VFO].pCurrent = &gEeprom.VfoInfo[VFO].ConfigTX;
+		gEeprom.VfoInfo[VFO].pReverse = &gEeprom.VfoInfo[VFO].ConfigRX;
 	}
 
 	if (!gSetting_350EN) {
-		DCS_Info_t *pDCS = gEeprom.VfoInfo[VFO].pDCS_Current;
-		if (pDCS->Frequency - 35000000 < 4999991) {
-			pDCS->Frequency = 41001250;
+		FREQ_Config_t *pConfig = gEeprom.VfoInfo[VFO].pCurrent;
+		if (pConfig->Frequency - 35000000 < 4999991) {
+			pConfig->Frequency = 41001250;
 		}
 	}
 
@@ -348,8 +348,8 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 		gEeprom.VfoInfo[VFO].IsAM = true;
 		gEeprom.VfoInfo[VFO].SCRAMBLING_TYPE = 0;
 		gEeprom.VfoInfo[VFO].DTMF_DECODING_ENABLE = false;
-		gEeprom.VfoInfo[VFO].DCS[0].CodeType = CODE_TYPE_OFF;
-		gEeprom.VfoInfo[VFO].DCS[1].CodeType = CODE_TYPE_OFF;
+		gEeprom.VfoInfo[VFO].ConfigRX.CodeType = CODE_TYPE_OFF;
+		gEeprom.VfoInfo[VFO].ConfigTX.CodeType = CODE_TYPE_OFF;
 	} else {
 		gEeprom.VfoInfo[VFO].IsAM = false;
 	}
@@ -363,7 +363,7 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo)
 	uint16_t Base;
 	FREQUENCY_Band_t Band;
 
-	Band = FREQUENCY_GetBand(pInfo->pDCS_Current->Frequency);
+	Band = FREQUENCY_GetBand(pInfo->pCurrent->Frequency);
 	if (Band < BAND4_174MHz) {
 		Base = 0x1E60;
 	} else {
@@ -393,7 +393,7 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo)
 		}
 	}
 
-	Band = FREQUENCY_GetBand(pInfo->pDCS_Reverse->Frequency);
+	Band = FREQUENCY_GetBand(pInfo->pReverse->Frequency);
 	EEPROM_ReadBuffer(0x1ED0 + (Band * 0x10) + (pInfo->OUTPUT_POWER * 3), Txp, 3);
 	pInfo->TXP_CalculatedSetting =
 		FREQUENCY_CalculateOutputPower(
@@ -403,14 +403,14 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo)
 				LowerLimitFrequencyBandTable[Band],
 				MiddleFrequencyBandTable[Band],
 				UpperLimitFrequencyBandTable[Band],
-				pInfo->pDCS_Reverse->Frequency);
+				pInfo->pReverse->Frequency);
 }
 
 void RADIO_ApplyOffset(VFO_Info_t *pInfo)
 {
 	uint32_t Frequency;
 
-	Frequency = pInfo->DCS[0].Frequency;
+	Frequency = pInfo->ConfigRX.Frequency;
 	switch (pInfo->FREQUENCY_DEVIATION_SETTING) {
 	case FREQUENCY_DEVIATION_OFF:
 		break;
@@ -428,7 +428,7 @@ void RADIO_ApplyOffset(VFO_Info_t *pInfo)
 		Frequency = 60000000;
 	}
 
-	pInfo->DCS[1].Frequency = Frequency;
+	pInfo->ConfigTX.Frequency = Frequency;
 }
 
 
@@ -498,7 +498,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	BK4819_WriteRegister(BK4819_REG_3F, 0);
 	BK4819_WriteRegister(BK4819_REG_7D, gEeprom.MIC_SENSITIVITY_TUNING | 0xE940);
 	if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE) || !gIsNoaaMode) {
-		Frequency = gRxInfo->pDCS_Current->Frequency;
+		Frequency = gRxInfo->pCurrent->Frequency;
 	} else {
 		Frequency = NoaaFrequencyTable[gNoaaChannel];
 	}
@@ -524,8 +524,8 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			CodeType = gCodeType;
 			CodeWord = gCode;
 			if (g_20000381 == 0) {
-				CodeType = gRxInfo->pDCS_Current->CodeType;
-				CodeWord = gRxInfo->pDCS_Current->RX_TX_Code;
+				CodeType = gRxInfo->pCurrent->CodeType;
+				CodeWord = gRxInfo->pCurrent->RX_TX_Code;
 			}
 			switch (CodeType) {
 			case CODE_TYPE_DIGITAL:
@@ -645,32 +645,32 @@ void RADIO_PrepareTransmit(void)
 		Bandwidth = BK4819_FILTER_BW_NARROW;
 	}
 	BK4819_SetFilterBandwidth(Bandwidth);
-	BK4819_SetFrequency(gCrossTxRadioInfo->pDCS_Reverse->Frequency);
+	BK4819_SetFrequency(gCrossTxRadioInfo->pReverse->Frequency);
 	BK4819_PrepareTransmit();
 	SYSTEM_DelayMs(10);
 
-	BK4819_PickRXFilterPathBasedOnFrequency(gCrossTxRadioInfo->pDCS_Reverse->Frequency);
+	BK4819_PickRXFilterPathBasedOnFrequency(gCrossTxRadioInfo->pReverse->Frequency);
 	BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, true);
 	SYSTEM_DelayMs(5);
 
-	BK4819_SetupPowerAmplifier(gCrossTxRadioInfo->TXP_CalculatedSetting, gCrossTxRadioInfo->pDCS_Reverse->Frequency);
+	BK4819_SetupPowerAmplifier(gCrossTxRadioInfo->TXP_CalculatedSetting, gCrossTxRadioInfo->pReverse->Frequency);
 	SYSTEM_DelayMs(10);
 
-	if (gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_CONTINUOUS_TONE) {
-		if ((gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_DIGITAL) && (gCrossTxRadioInfo->pDCS_Reverse->CodeType != CODE_TYPE_REVERSE_DIGITAL)) {
+	if (gCrossTxRadioInfo->pReverse->CodeType != CODE_TYPE_CONTINUOUS_TONE) {
+		if ((gCrossTxRadioInfo->pReverse->CodeType != CODE_TYPE_DIGITAL) && (gCrossTxRadioInfo->pReverse->CodeType != CODE_TYPE_REVERSE_DIGITAL)) {
 			BK4819_ExitSubAu();
 			return;
 		}
 		BK4819_SetCDCSSCodeWord(
 			DCS_GetGolayCodeWord(
-				gCrossTxRadioInfo->pDCS_Reverse->CodeType,
-				gCrossTxRadioInfo->pDCS_Reverse->RX_TX_Code
+				gCrossTxRadioInfo->pReverse->CodeType,
+				gCrossTxRadioInfo->pReverse->RX_TX_Code
 				)
 			);
 		return;
 	}
 
-	BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pDCS_Reverse->RX_TX_Code]);
+	BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pReverse->RX_TX_Code]);
 }
 
 void RADIO_SomethingElse(uint8_t Arg)
@@ -758,7 +758,7 @@ LAB_00007c20:
 
 void RADIO_EnableCxCSS(void)
 {
-	switch (gCrossTxRadioInfo->pDCS_Reverse->CodeType) {
+	switch (gCrossTxRadioInfo->pReverse->CodeType) {
 	case CODE_TYPE_DIGITAL:
 	case CODE_TYPE_REVERSE_DIGITAL:
 		BK4819_EnableCDCSS();

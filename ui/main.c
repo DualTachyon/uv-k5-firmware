@@ -227,12 +227,12 @@ void UI_DisplayMain(void)
 								Channel = gEeprom.TX_CHANNEL;
 							}
 							if (Channel == i) {
-								NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Reverse->Frequency, String);
+								NUMBER_ToDigits(gEeprom.VfoInfo[i].pReverse->Frequency, String);
 							} else {
-								NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Current->Frequency, String);
+								NUMBER_ToDigits(gEeprom.VfoInfo[i].pCurrent->Frequency, String);
 							}
 						} else {
-							NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Current->Frequency, String);
+							NUMBER_ToDigits(gEeprom.VfoInfo[i].pCurrent->Frequency, String);
 						}
 						UI_DisplayFrequency(String, 31, i * 4, false, false);
 						if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
@@ -267,12 +267,12 @@ void UI_DisplayMain(void)
 							Channel = gEeprom.TX_CHANNEL;
 						}
 						if (Channel == i) {
-							NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Reverse->Frequency, String);
+							NUMBER_ToDigits(gEeprom.VfoInfo[i].pReverse->Frequency, String);
 						} else {
-							NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Current->Frequency, String);
+							NUMBER_ToDigits(gEeprom.VfoInfo[i].pCurrent->Frequency, String);
 						}
 					} else {
-						NUMBER_ToDigits(gEeprom.VfoInfo[i].pDCS_Current->Frequency, String);
+						NUMBER_ToDigits(gEeprom.VfoInfo[i].pCurrent->Frequency, String);
 					}
 					UI_DisplayFrequency(String, 31, i * 4, false, false);
 					if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
@@ -331,14 +331,14 @@ void UI_DisplayMain(void)
 		if (gEeprom.VfoInfo[i].IsAM) {
 			memcpy(pLine1 + 128 + 27, BITMAP_AM, sizeof(BITMAP_AM));
 		} else {
-			const DCS_Info_t *pDCS;
+			const FREQ_Config_t *pConfig;
 
 			if (SomeValue == 1) {
-				pDCS = gEeprom.VfoInfo[i].pDCS_Reverse;
+				pConfig = gEeprom.VfoInfo[i].pReverse;
 			} else {
-				pDCS = gEeprom.VfoInfo[i].pDCS_Current;
+				pConfig = gEeprom.VfoInfo[i].pCurrent;
 			}
-			switch (pDCS->CodeType) {
+			switch (pConfig->CodeType) {
 			case CODE_TYPE_CONTINUOUS_TONE:
 				memcpy(pLine1 + 128 + 27, BITMAP_CT, sizeof(BITMAP_CT));
 				break;
@@ -364,7 +364,7 @@ void UI_DisplayMain(void)
 			break;
 		}
 
-		if (gEeprom.VfoInfo[i].DCS[0].Frequency != gEeprom.VfoInfo[i].DCS[1].Frequency) {
+		if (gEeprom.VfoInfo[i].ConfigRX.Frequency != gEeprom.VfoInfo[i].ConfigTX.Frequency) {
 			if (gEeprom.VfoInfo[i].FREQUENCY_DEVIATION_SETTING == FREQUENCY_DEVIATION_ADD) {
 				memcpy(pLine1 + 128 + 54, BITMAP_Add, sizeof(BITMAP_Add));
 			}

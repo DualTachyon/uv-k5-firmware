@@ -42,7 +42,7 @@ void FUNCTION_Init(void)
 			if (gRxInfo->IsAM) {
 				gCopyOfCodeType = CODE_TYPE_OFF;
 			} else {
-				gCopyOfCodeType = gRxInfo->pDCS_Current->CodeType;
+				gCopyOfCodeType = gRxInfo->pCurrent->CodeType;
 			}
 		}
 	} else {

@@ -256,7 +256,7 @@ void FUN_0000773c(void)
 			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = Previous;
 			RADIO_ConfigureChannel(gEeprom.RX_CHANNEL, 2);
 		} else {
-			gRxInfo->DCS[0].Frequency = g_20000418;
+			gRxInfo->ConfigRX.Frequency = g_20000418;
 			RADIO_ApplyOffset(gRxInfo);
 			RADIO_ConfigureSquelchAndOutputPower(gRxInfo);
 		}
@@ -466,8 +466,8 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 		}
 		if (IS_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE) && gIsNoaaMode) {
 			gRxInfo->CHANNEL_SAVE = gNoaaChannel + NOAA_CHANNEL_FIRST;
-			gRxInfo->pDCS_Current->Frequency = NoaaFrequencyTable[gNoaaChannel];
-			gRxInfo->pDCS_Reverse->Frequency = NoaaFrequencyTable[gNoaaChannel];
+			gRxInfo->pCurrent->Frequency = NoaaFrequencyTable[gNoaaChannel];
+			gRxInfo->pReverse->Frequency = NoaaFrequencyTable[gNoaaChannel];
 			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gRxInfo->CHANNEL_SAVE;
 			g_20000356 = 500;
 			gSystickFlag8 = false;
@@ -509,13 +509,13 @@ void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step)
 {
 	uint32_t Frequency;
 
-	Frequency = pInfo->DCS[0].Frequency + (Step * pInfo->StepFrequency);
+	Frequency = pInfo->ConfigRX.Frequency + (Step * pInfo->StepFrequency);
 	if (Frequency >= gUpperLimitFrequencyBandTable[pInfo->Band]) {
-		pInfo->DCS[0].Frequency = gLowerLimitFrequencyBandTable[pInfo->Band];
+		pInfo->ConfigRX.Frequency = gLowerLimitFrequencyBandTable[pInfo->Band];
 	} else if (Frequency < gLowerLimitFrequencyBandTable[pInfo->Band]) {
-		pInfo->DCS[0].Frequency = FREQUENCY_FloorToStep(gUpperLimitFrequencyBandTable[pInfo->Band], pInfo->StepFrequency, gLowerLimitFrequencyBandTable[pInfo->Band]);
+		pInfo->ConfigRX.Frequency = FREQUENCY_FloorToStep(gUpperLimitFrequencyBandTable[pInfo->Band], pInfo->StepFrequency, gLowerLimitFrequencyBandTable[pInfo->Band]);
 	} else {
-		pInfo->DCS[0].Frequency = Frequency;
+		pInfo->ConfigRX.Frequency = Frequency;
 	}
 }
 
@@ -1404,7 +1404,7 @@ void FUN_000075b0(void)
 	}
 	StepSetting = gRxInfo->STEP_SETTING;
 	StepFrequency = gRxInfo->StepFrequency;
-	RADIO_InitInfo(gRxInfo, gRxInfo->CHANNEL_SAVE, gRxInfo->Band, gRxInfo->pDCS_Current->Frequency);
+	RADIO_InitInfo(gRxInfo, gRxInfo->CHANNEL_SAVE, gRxInfo->Band, gRxInfo->pCurrent->Frequency);
 
 	gRxInfo->STEP_SETTING = StepSetting;
 	gRxInfo->StepFrequency = StepFrequency;
@@ -1413,7 +1413,7 @@ void FUN_000075b0(void)
 	gIsNoaaMode = false;
 	if (g_20000458 == 1) {
 		gScanState = 1;
-		gScanFrequency = gRxInfo->pDCS_Current->Frequency;
+		gScanFrequency = gRxInfo->pCurrent->Frequency;
 		gStepSetting = gRxInfo->STEP_SETTING;
 		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
 		BK4819_SetScanFrequency(gScanFrequency);
@@ -1452,7 +1452,7 @@ void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction)
 		FUN_00007dd4();
 	} else {
 		if (bFlag) {
-			g_20000418 = gRxInfo->DCS[0].Frequency;
+			g_20000418 = gRxInfo->ConfigRX.Frequency;
 		}
 		APP_MoreRadioStuff();
 	}
