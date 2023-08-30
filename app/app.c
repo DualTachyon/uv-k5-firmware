@@ -1817,13 +1817,13 @@ static void APP_ProcessKey_AIRCOPY(KEY_Code_t Key, bool bKeyPressed, bool bKeyHe
 	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
 	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
 	case KEY_8: case KEY_9:
-		//AIRCOPY_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		AIRCOPY_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
 		break;
 	case KEY_MENU:
-		//AIRCOPY_Key_MENU(bKeyPressed, bKeyHeld);
+		AIRCOPY_Key_MENU(bKeyPressed, bKeyHeld);
 		break;
 	case KEY_EXIT:
-		//AIRCOPY_Key_EXIT(bKeyPressed, bKeyHeld);
+		AIRCOPY_Key_EXIT(bKeyPressed, bKeyHeld);
 		break;
 	default:
 		break;

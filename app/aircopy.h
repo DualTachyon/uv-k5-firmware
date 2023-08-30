@@ -17,7 +17,7 @@
 #ifndef APP_AIRCOPY_H
 #define APP_AIRCOPY_H
 
-#include <stdint.h>
+#include "driver/keyboard.h"
 
 enum AIRCOPY_State_t {
 	AIRCOPY_READY		= 0U,
@@ -36,6 +36,10 @@ extern uint16_t g_FSK_Buffer[36];
 
 void AIRCOPY_SendMessage(void);
 void AIRCOPY_StorePacket(void);
+
+void AIRCOPY_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
+void AIRCOPY_Key_EXIT(bool bKeyPressed, bool bKeyHeld);
+void AIRCOPY_Key_MENU(bool bKeyPressed, bool bKeyHeld);
 
 #endif
 

@@ -15,11 +15,16 @@
  */
 
 #include "app/aircopy.h"
+#include "audio.h"
 #include "driver/bk4819.h"
 #include "driver/crc.h"
 #include "driver/eeprom.h"
+#include "frequencies.h"
 #include "misc.h"
 #include "radio.h"
+#include "ui/helper.h"
+#include "ui/inputbox.h"
+#include "ui/ui.h"
 
 static const uint16_t Obfuscation[8] = { 0x6C16, 0xE614, 0x912E, 0x400D, 0x3521, 0x40D5, 0x0313, 0x80E9 };
 
@@ -62,7 +67,8 @@ void AIRCOPY_StorePacket(void)
 	gUpdateDisplay = true;
 	Status = BK4819_GetRegister(BK4819_REG_0B);
 	BK4819_PrepareFSKReceive();
-	if (Status & 0x0010U && g_FSK_Buffer[0] == 0xABCD && g_FSK_Buffer[35] == 0xDCBA) {
+	// Doc says bit 4 should be 1 = CRC OK, 0 = CRC FAIL, but original firmware checks for FAIL.
+	if ((Status & 0x0010U) == 0 && g_FSK_Buffer[0] == 0xABCD && g_FSK_Buffer[35] == 0xDCBA) {
 		uint16_t CRC;
 		uint8_t i;
 
@@ -92,5 +98,74 @@ void AIRCOPY_StorePacket(void)
 		}
 	}
 	gErrorsDuringAirCopy++;
+}
+
+void AIRCOPY_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	if (!bKeyHeld && bKeyPressed) {
+		uint32_t Frequency;
+		uint8_t i;
+
+		INPUTBOX_Append(Key);
+		gRequestDisplayScreen = DISPLAY_AIRCOPY;
+		if (gInputBoxIndex < 6) {
+			gAnotherVoiceID = (VOICE_ID_t)Key;
+			return;
+		}
+		gInputBoxIndex = 0;
+		NUMBER_Get(gInputBox, &Frequency);
+		for (i = 0; i < 7; i++) {
+			if (Frequency >= gLowerLimitFrequencyBandTable[i] && Frequency <= gUpperLimitFrequencyBandTable[i]) {
+				gAnotherVoiceID = (VOICE_ID_t)Key;
+				gRxInfo->Band = i;
+				Frequency += 75;
+				Frequency = FREQUENCY_FloorToStep(Frequency, gRxInfo->StepFrequency, 0);
+				gRxInfo->ConfigRX.Frequency = Frequency;
+				gRxInfo->ConfigTX.Frequency = Frequency;
+				RADIO_ConfigureSquelchAndOutputPower(gRxInfo);
+				gCrossTxRadioInfo = gRxInfo;
+				RADIO_SetupRegisters(true);
+				BK4819_SetupAircopy();
+				BK4819_ResetFSK();
+				return;
+			}
+		}
+		gRequestDisplayScreen = DISPLAY_AIRCOPY;
+	}
+}
+
+void AIRCOPY_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
+{
+	if (!bKeyHeld && bKeyPressed) {
+		if (gInputBoxIndex == 0) {
+			gFSKWriteIndex = 0;
+			gAirCopyBlockNumber = 0;
+			gErrorsDuringAirCopy = 0;
+			gInputBoxIndex = 0;
+			gAirCopyIsSendMode = 0;
+			BK4819_PrepareFSKReceive();
+			gAircopyState = AIRCOPY_TRANSFER;
+		} else {
+			gInputBoxIndex--;
+			gInputBox[gInputBoxIndex] = 10;
+		}
+		gRequestDisplayScreen = DISPLAY_AIRCOPY;
+	}
+}
+
+void AIRCOPY_Key_MENU(bool bKeyPressed, bool bKeyHeld)
+{
+	if (!bKeyHeld && bKeyPressed) {
+		gFSKWriteIndex = 0;
+		gAirCopyBlockNumber = 0;
+		gInputBoxIndex = 0;
+		gAirCopyIsSendMode = 1;
+		g_FSK_Buffer[0] = 0xABCD;
+		g_FSK_Buffer[1] = 0;
+		g_FSK_Buffer[35] = 0xDCBA;
+		AIRCOPY_SendMessage();
+		GUI_DisplayScreen();
+		gAircopyState = AIRCOPY_TRANSFER;
+	}
 }
 
