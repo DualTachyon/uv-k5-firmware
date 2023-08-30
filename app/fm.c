@@ -261,7 +261,7 @@ void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 					gAnotherVoiceID = (VOICE_ID_t)Key;
 					gRequestDisplayScreen = DISPLAY_FM;
 					gInputBoxIndex = 0;
-					gFM_ScanFoundIndex = Channel;
+					gFM_ChannelPosition = Channel;
 					return;
 				}
 				gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
@@ -362,7 +362,7 @@ void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step)
 	}
 	if (gAskToSave) {
 		gRequestDisplayScreen = DISPLAY_FM;
-		gFM_ScanFoundIndex = NUMBER_AddWithWraparound(gFM_ScanFoundIndex, Step, 0, 19);
+		gFM_ChannelPosition = NUMBER_AddWithWraparound(gFM_ChannelPosition, Step, 0, 19);
 		return;
 	}
 	if (gFM_Step) {

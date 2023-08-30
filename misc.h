@@ -188,7 +188,7 @@ extern volatile bool gNextTimeslice;
 extern uint8_t gNoaaChannel;
 extern bool gUpdateDisplay;
 extern uint8_t gFmRadioCountdown;
-extern uint8_t gFM_ScanFoundIndex;
+extern uint8_t gFM_ChannelPosition;
 extern uint8_t gDTMF_AUTO_RESET_TIME;
 extern bool gF_LOCK;
 extern uint8_t gScanChannel;

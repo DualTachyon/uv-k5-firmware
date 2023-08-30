@@ -164,7 +164,7 @@ volatile bool gNextTimeslice;
 uint8_t gNoaaChannel;
 bool gUpdateDisplay;
 uint8_t gFmRadioCountdown;
-uint8_t gFM_ScanFoundIndex;
+uint8_t gFM_ChannelPosition;
 uint8_t gDTMF_AUTO_RESET_TIME;
 bool gF_LOCK;
 uint8_t gScanChannel;

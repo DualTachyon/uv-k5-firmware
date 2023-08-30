@@ -61,7 +61,7 @@ void UI_DisplayFM(void)
 			if (!gFM_AutoScan) {
 				strcpy(String, "M-SCAN");
 			} else {
-				sprintf(String, "A-SCAN(%d)", gFM_ScanFoundIndex + 1);
+				sprintf(String, "A-SCAN(%d)", gFM_ChannelPosition + 1);
 			}
 		}
 	}
@@ -70,7 +70,7 @@ void UI_DisplayFM(void)
 	memset(String, 0, sizeof(String));
 
 	if (gAskToSave || (gEeprom.FM_IsChannelSelected && gInputBoxIndex)) {
-		UI_GenerateChannelString(String, gFM_ScanFoundIndex);
+		UI_GenerateChannelString(String, gFM_ChannelPosition);
 	} else if (!gAskToDelete) {
 		if (gInputBoxIndex == 0) {
 			NUMBER_ToDigits(gEeprom.FM_FrequencyToPlay * 10000, String);
