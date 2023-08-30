@@ -178,18 +178,18 @@ void APP_CheckDTMFStuff(void)
 
 	switch (gEeprom.DTMF_DECODE_RESPONSE) {
 	case 3:
-		g_200003C1 = true;
-		g_200003C4 = 20;
+		gDTMF_DecodeRing = true;
+		gDTMF_DecodeRingCountdown = 20;
 		// Fallthrough
 	case 2:
 		g_200003BE = 3;
 		break;
 	case 1:
-		g_200003C1 = true;
-		g_200003C4 = 20;
+		gDTMF_DecodeRing = true;
+		gDTMF_DecodeRingCountdown = 20;
 		break;
 	default:
-		g_200003C1 = false;
+		gDTMF_DecodeRing = false;
 		g_200003BE = 0;
 		break;
 	}
@@ -1337,13 +1337,13 @@ LAB_00004b08:
 				gUpdateDisplay = true;
 			}
 		}
-		if (g_200003C1 == 1 && g_200003C4) {
-			g_200003C4--;
-			if ((g_200003C4 % 3) == 0) {
+		if (gDTMF_DecodeRing && gDTMF_DecodeRingCountdown) {
+			gDTMF_DecodeRingCountdown--;
+			if ((gDTMF_DecodeRingCountdown % 3) == 0) {
 				AUDIO_PlayBeep(BEEP_440HZ_500MS);
 			}
-			if (g_200003C4 == 0) {
-				g_200003C1 = 0;
+			if (gDTMF_DecodeRingCountdown == 0) {
+				gDTMF_DecodeRing = false;
 			}
 		}
 	}
@@ -1902,8 +1902,8 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			g_20000393 = 0x10;
 		}
 		BACKLIGHT_TurnOn();
-		if (g_200003C1 == 1) {
-			g_200003C1 = 0;
+		if (gDTMF_DecodeRing) {
+			gDTMF_DecodeRing = false;
 			AUDIO_PlayBeep(BEEP_1KHZ_60MS_OPTIONAL);
 			if (Key != KEY_PTT) {
 				g_20000394 = true;
