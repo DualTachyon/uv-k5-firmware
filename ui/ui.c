@@ -26,7 +26,7 @@
 #include "ui/ui.h"
 
 GUI_DisplayType_t gScreenToDisplay;
-GUI_DisplayType_t gRequestDisplayScreen;
+GUI_DisplayType_t gRequestDisplayScreen = DISPLAY_INVALID;
 
 uint8_t gAskForConfirmation;
 bool gAskToSave;
