@@ -49,7 +49,7 @@
 #include "ui/ui.h"
 
 static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
-void FUN_000069f8(FUNCTION_Type_t Function);
+void APP_StartListening(FUNCTION_Type_t Function);
 
 static void FUN_00005144(void)
 {
@@ -238,7 +238,7 @@ void FUN_000051e8(void)
 			}
 		}
 	}
-	FUN_000069f8(FUNCTION_RECEIVE);
+	APP_StartListening(FUNCTION_RECEIVE);
 }
 
 void FUN_0000773c(void)
@@ -407,7 +407,7 @@ void FUN_0000510c(void)
 	}
 }
 
-void FUN_000069f8(FUNCTION_Type_t Function)
+void APP_StartListening(FUNCTION_Type_t Function)
 {
 	if (!gSetting_KILLED) {
 		if (gFmRadioMode) {
@@ -792,7 +792,7 @@ void APP_Update(void)
 	if (gScreenToDisplay != DISPLAY_SCANNER && gStepDirection && gSystickFlag9 && !gPttIsPressed && gVoiceWriteIndex == 0) {
 		if (IS_FREQ_CHANNEL(g_20000410)) {
 			if (gCurrentFunction == FUNCTION_3) {
-				FUN_000069f8(FUNCTION_RECEIVE);
+				APP_StartListening(FUNCTION_RECEIVE);
 			} else {
 				APP_MoreRadioStuff();
 			}
@@ -800,7 +800,7 @@ void APP_Update(void)
 			if (gCopyOfCodeType != CODE_TYPE_OFF || gCurrentFunction != FUNCTION_3) {
 				FUN_00007dd4();
 			} else {
-				FUN_000069f8(FUNCTION_RECEIVE);
+				APP_StartListening(FUNCTION_RECEIVE);
 			}
 		}
 		gScanPauseMode = 0;
@@ -1504,7 +1504,7 @@ void FUN_00005770(void)
 			gNoaaChannel = gRxInfo->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
 		}
 		RADIO_SetupRegisters(true);
-		FUN_000069f8(FUNCTION_MONITOR);
+		APP_StartListening(FUNCTION_MONITOR);
 		return;
 	}
 	if (gStepDirection) {
