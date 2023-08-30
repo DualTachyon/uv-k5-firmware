@@ -249,6 +249,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			break;
 		default:
 			gEeprom.VfoInfo[VFO].ConfigRX.CodeType = CODE_TYPE_OFF;
+			Tmp = 0;
 			break;
 		}
 		gEeprom.VfoInfo[VFO].ConfigRX.RX_TX_Code = Tmp;
@@ -268,6 +269,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			break;
 		default:
 			gEeprom.VfoInfo[VFO].ConfigTX.CodeType = CODE_TYPE_OFF;
+			Tmp = 0;
 			break;
 		}
 		gEeprom.VfoInfo[VFO].ConfigTX.RX_TX_Code = Tmp;
@@ -519,18 +521,18 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
 		if (!gRxInfo->IsAM) {
 			uint8_t CodeType;
-			uint8_t CodeWord;
+			uint8_t Code;
 
 			CodeType = gCodeType;
-			CodeWord = gCode;
+			Code = gCode;
 			if (g_20000381 == 0) {
 				CodeType = gRxInfo->pCurrent->CodeType;
-				CodeWord = gRxInfo->pCurrent->RX_TX_Code;
+				Code = gRxInfo->pCurrent->RX_TX_Code;
 			}
 			switch (CodeType) {
 			case CODE_TYPE_DIGITAL:
 			case CODE_TYPE_REVERSE_DIGITAL:
-				BK4819_SetCDCSSCodeWord(DCS_GetGolayCodeWord(CodeType, CodeWord));
+				BK4819_SetCDCSSCodeWord(DCS_GetGolayCodeWord(CodeType, Code));
 				InterruptMask = 0
 					| BK4819_REG_3F_CxCSS_TAIL
 					| BK4819_REG_3F_CDCSS_FOUND
@@ -540,7 +542,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 					;
 				break;
 			case CODE_TYPE_CONTINUOUS_TONE:
-				BK4819_SetCTCSSBaudRate(CTCSS_Options[CodeWord]);
+				BK4819_SetCTCSSBaudRate(CTCSS_Options[Code]);
 				BK4819_Set55HzTailDetection();
 				InterruptMask = 0
 					| BK4819_REG_3F_CxCSS_TAIL
@@ -660,21 +662,23 @@ void RADIO_PrepareTransmit(void)
 	BK4819_SetupPowerAmplifier(gCrossTxRadioInfo->TXP_CalculatedSetting, gCrossTxRadioInfo->pReverse->Frequency);
 	SYSTEM_DelayMs(10);
 
-	if (gCrossTxRadioInfo->pReverse->CodeType != CODE_TYPE_CONTINUOUS_TONE) {
-		if ((gCrossTxRadioInfo->pReverse->CodeType != CODE_TYPE_DIGITAL) && (gCrossTxRadioInfo->pReverse->CodeType != CODE_TYPE_REVERSE_DIGITAL)) {
-			BK4819_ExitSubAu();
-			return;
-		}
+	switch (gCrossTxRadioInfo->pReverse->CodeType) {
+	case CODE_TYPE_CONTINUOUS_TONE:
+		BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pReverse->RX_TX_Code]);
+		break;
+	case CODE_TYPE_DIGITAL:
+	case CODE_TYPE_REVERSE_DIGITAL:
 		BK4819_SetCDCSSCodeWord(
 			DCS_GetGolayCodeWord(
 				gCrossTxRadioInfo->pReverse->CodeType,
 				gCrossTxRadioInfo->pReverse->RX_TX_Code
 				)
 			);
-		return;
+		break;
+	default:
+		BK4819_ExitSubAu();
+		break;
 	}
-
-	BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pReverse->RX_TX_Code]);
 }
 
 void RADIO_SomethingElse(uint8_t Arg)

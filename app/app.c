@@ -475,7 +475,7 @@ void FUN_000069f8(FUNCTION_Type_t Function)
 		if (g_20000381) {
 			g_20000381 = 2;
 		}
-		if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
+		if ((gStepDirection == 0 || g_20000381 == 0) && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 			g_2000041F = 1;
 			g_2000033A = 360;
 			gSystickFlag7 = false;
