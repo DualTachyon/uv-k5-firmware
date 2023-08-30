@@ -472,26 +472,26 @@ void BOARD_EEPROM_Init(void)
 
 	// 0E88..0E8F
 	struct {
-		uint16_t Frequency;
-		uint8_t CurrentChannel;
-		uint8_t IsChannelSelected;
+		uint16_t SelectedFrequency;
+		uint8_t SelectedChannel;
+		uint8_t IsMrMode;
 		uint8_t Padding[8];
 	} FM;
 
 	EEPROM_ReadBuffer(0x0E88, &FM, 8);
 	gEeprom.FM_LowerLimit = 760;
 	gEeprom.FM_UpperLimit = 1080;
-	if (FM.Frequency < gEeprom.FM_LowerLimit || FM.Frequency > gEeprom.FM_UpperLimit) {
-		gEeprom.FM_CurrentFrequency = 760;
+	if (FM.SelectedFrequency < gEeprom.FM_LowerLimit || FM.SelectedFrequency > gEeprom.FM_UpperLimit) {
+		gEeprom.FM_SelectedFrequency = 760;
 	} else {
-		gEeprom.FM_CurrentFrequency = FM.Frequency;
+		gEeprom.FM_SelectedFrequency = FM.SelectedFrequency;
 	}
 
-	gEeprom.FM_CurrentChannel = FM.CurrentChannel;
-	if (FM.IsChannelSelected < 2) {
-		gEeprom.FM_IsChannelSelected = FM.IsChannelSelected;
+	gEeprom.FM_SelectedChannel = FM.SelectedChannel;
+	if (FM.IsMrMode < 2) {
+		gEeprom.FM_IsMrMode = FM.IsMrMode;
 	} else {
-		gEeprom.FM_IsChannelSelected = false;
+		gEeprom.FM_IsMrMode = false;
 	}
 
 	// 0E40..0E67

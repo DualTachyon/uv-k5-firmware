@@ -583,20 +583,20 @@ void FUN_00007f4c(void)
 
 void APP_PlayFM(void)
 {
-	if (!FM_CheckFrequencyLock(gEeprom.FM_FrequencyToPlay, gEeprom.FM_LowerLimit)) {
+	if (!FM_CheckFrequencyLock(gEeprom.FM_FrequencyPlaying, gEeprom.FM_LowerLimit)) {
 		if (!gFM_AutoScan) {
 			gFmPlayCountdown = 0;
 			g_20000427 = 1;
-			if (!gEeprom.FM_IsChannelSelected) {
-				gEeprom.FM_CurrentFrequency = gEeprom.FM_FrequencyToPlay;
+			if (!gEeprom.FM_IsMrMode) {
+				gEeprom.FM_SelectedFrequency = gEeprom.FM_FrequencyPlaying;
 			}
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			g_2000036B = 1;
 		} else {
 			if (gFM_ChannelPosition < 20) {
-				gFM_Channels[gFM_ChannelPosition++] = gEeprom.FM_FrequencyToPlay;
-				if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyToPlay) {
-					FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
+				gFM_Channels[gFM_ChannelPosition++] = gEeprom.FM_FrequencyPlaying;
+				if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyPlaying) {
+					FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
 				} else {
 					FM_Play();
 				}
@@ -605,13 +605,13 @@ void APP_PlayFM(void)
 			}
 		}
 	} else if (gFM_AutoScan) {
-		if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyToPlay) {
-			FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
+		if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyPlaying) {
+			FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
 		} else {
 			FM_Play();
 		}
 	} else {
-		FM_Tune(gEeprom.FM_FrequencyToPlay, gFM_Step, false);
+		FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
 	}
 
 	GUI_SelectNextDisplay(DISPLAY_FM);
@@ -622,7 +622,7 @@ void APP_StartFM(void)
 	gFmRadioMode = true;
 	gFM_Step = 0;
 	g_2000038E = 0;
-	BK1080_Init(gEeprom.FM_FrequencyToPlay, true);
+	BK1080_Init(gEeprom.FM_FrequencyPlaying, true);
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	g_2000036B = 1;
 	gUpdateStatus = true;
@@ -1473,7 +1473,7 @@ void APP_StartScan(bool bFlag)
 			} else {
 				gFM_AutoScan = false;
 				gFM_ChannelPosition = 0;
-				Frequency = gEeprom.FM_FrequencyToPlay;
+				Frequency = gEeprom.FM_FrequencyPlaying;
 			}
 			BK1080_GetFrequencyDeviation(Frequency);
 			FM_Tune(Frequency, 1, bFlag);

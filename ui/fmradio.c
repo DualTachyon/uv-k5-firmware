@@ -44,9 +44,9 @@ void UI_DisplayFM(void)
 		strcpy(String, "DEL?");
 	} else {
 		if (gFM_Step == 0) {
-			if (!gEeprom.FM_IsChannelSelected) {
+			if (!gEeprom.FM_IsMrMode) {
 				for (i = 0; i < 20; i++) {
-					if (gEeprom.FM_FrequencyToPlay == gFM_Channels[i]) {
+					if (gEeprom.FM_FrequencyPlaying == gFM_Channels[i]) {
 						sprintf(String, "VFO(CH%02d)", i + 1);
 						break;
 					}
@@ -55,7 +55,7 @@ void UI_DisplayFM(void)
 					strcpy(String, "VFO");
 				}
 			} else {
-				sprintf(String, "MR(CH%02d)", gEeprom.FM_CurrentChannel + 1);
+				sprintf(String, "MR(CH%02d)", gEeprom.FM_SelectedChannel + 1);
 			}
 		} else {
 			if (!gFM_AutoScan) {
@@ -69,11 +69,11 @@ void UI_DisplayFM(void)
 	UI_PrintString(String, 0, 127, 2, 10, true);
 	memset(String, 0, sizeof(String));
 
-	if (gAskToSave || (gEeprom.FM_IsChannelSelected && gInputBoxIndex)) {
+	if (gAskToSave || (gEeprom.FM_IsMrMode && gInputBoxIndex)) {
 		UI_GenerateChannelString(String, gFM_ChannelPosition);
 	} else if (!gAskToDelete) {
 		if (gInputBoxIndex == 0) {
-			NUMBER_ToDigits(gEeprom.FM_FrequencyToPlay * 10000, String);
+			NUMBER_ToDigits(gEeprom.FM_FrequencyPlaying * 10000, String);
 			UI_DisplayFrequency(String, 23, 4, false, true);
 		} else {
 			UI_DisplayFrequency(gInputBox, 23, 4, true, false);
@@ -81,7 +81,7 @@ void UI_DisplayFM(void)
 		ST7565_BlitFullScreen();
 		return;
 	} else {
-		sprintf(String, "CH-%02d", gEeprom.FM_CurrentChannel + 1);
+		sprintf(String, "CH-%02d", gEeprom.FM_SelectedChannel + 1);
 	}
 
 	UI_PrintString(String, 0, 127, 4, 10, true);

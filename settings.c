@@ -36,9 +36,9 @@ void SETTINGS_SaveFM(void)
 	UART_LogSend("sFm\r\n", 5);
 
 	memset(&State, 0xFF, sizeof(State));
-	State.Channel = gEeprom.FM_CurrentChannel;
-	State.Frequency = gEeprom.FM_CurrentFrequency;
-	State.IsChannelSelected = gEeprom.FM_IsChannelSelected;
+	State.Channel = gEeprom.FM_SelectedChannel;
+	State.Frequency = gEeprom.FM_SelectedFrequency;
+	State.IsChannelSelected = gEeprom.FM_IsMrMode;
 
 	EEPROM_WriteBuffer(0x0E88, &State);
 	for (i = 0; i < 5; i++) {

@@ -132,10 +132,10 @@ typedef struct {
 	uint8_t field30_0x27;
 	uint16_t VOX1_THRESHOLD;
 	uint16_t VOX0_THRESHOLD;
-	uint16_t FM_CurrentFrequency;
-	uint8_t FM_CurrentChannel;
-	bool FM_IsChannelSelected;
-	uint16_t FM_FrequencyToPlay;
+	uint16_t FM_SelectedFrequency;
+	uint8_t FM_SelectedChannel;
+	bool FM_IsMrMode;
+	uint16_t FM_FrequencyPlaying;
 	uint8_t field37_0x32;
 	uint8_t field38_0x33;
 	uint16_t FM_LowerLimit;
