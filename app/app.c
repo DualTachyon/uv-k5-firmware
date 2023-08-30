@@ -240,7 +240,7 @@ void FUN_000051e8(void)
 			}
 		}
 	}
-	FUN_000069f8(FUNCTION_4);
+	FUN_000069f8(FUNCTION_RECEIVE);
 }
 
 void FUN_0000773c(void)
@@ -429,7 +429,7 @@ void FUN_0000510c(void)
 	case FUNCTION_3:
 		FUN_000051e8();
 		break;
-	case FUNCTION_4:
+	case FUNCTION_RECEIVE:
 		FUN_000052f0();
 		break;
 	default:
@@ -684,7 +684,7 @@ void APP_CheckRadioInterrupts(void)
 				gDTMF_WriteIndex = 15;
 			}
 			gDTMF_Received[gDTMF_WriteIndex++] = DTMF_GetCharacter(BK4819_GetDTMF_5TONE_Code());
-			if (gCurrentFunction == FUNCTION_4) {
+			if (gCurrentFunction == FUNCTION_RECEIVE) {
 				APP_CheckDTMFStuff();
 			}
 		}
@@ -759,7 +759,7 @@ static void FUN_00008334(void)
 			g_VOX_Lost = false;
 			g_200003B8 = 0;
 		}
-		if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_MONITOR && gStepDirection == 0 && g_20000381 == 0 && !gFmRadioMode) {
+		if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gStepDirection == 0 && g_20000381 == 0 && !gFmRadioMode) {
 			if (g_200003B4 == 1) {
 				if (g_VOX_Lost) {
 					gSystickCountdown11 = 100;
@@ -822,7 +822,7 @@ void APP_Update(void)
 	if (gScreenToDisplay != DISPLAY_SCANNER && gStepDirection && gSystickFlag9 && !gPttIsPressed && gVoiceWriteIndex == 0) {
 		if (IS_FREQ_CHANNEL(g_20000410)) {
 			if (gCurrentFunction == FUNCTION_3) {
-				FUN_000069f8(FUNCTION_4);
+				FUN_000069f8(FUNCTION_RECEIVE);
 			} else {
 				APP_MoreRadioStuff();
 			}
@@ -830,7 +830,7 @@ void APP_Update(void)
 			if (gCopyOfCodeType != CODE_TYPE_OFF || gCurrentFunction != FUNCTION_3) {
 				FUN_00007dd4();
 			} else {
-				FUN_000069f8(FUNCTION_4);
+				FUN_000069f8(FUNCTION_RECEIVE);
 			}
 		}
 		gScanPauseMode = 0;
@@ -867,7 +867,7 @@ void APP_Update(void)
 		}
 	}
 
-	if (gFM_Step && gScheduleFM && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_TRANSMIT) {
+	if (gFM_Step && gScheduleFM && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_TRANSMIT) {
 		APP_PlayFM();
 		gScheduleFM = false;
 	}
@@ -1267,7 +1267,7 @@ void APP_TimeSlice500ms(void)
 						g_200003BB = 0;
 						gAskToSave = false;
 						gAskToDelete = false;
-						if (gFmRadioMode && gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
+						if (gFmRadioMode && gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 							GUI_SelectNextDisplay(DISPLAY_FM);
 						} else {
 							GUI_SelectNextDisplay(DISPLAY_MAIN);
@@ -1283,7 +1283,7 @@ LAB_00004b08:
 		g_20000373--;
 		if (g_20000373 == 0) {
 			RADIO_SomethingElse(0);
-			if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR && gFmRadioMode) {
+			if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR && gFmRadioMode) {
 				APP_StartFM();
 				GUI_SelectNextDisplay(DISPLAY_FM);
 			}
@@ -1329,7 +1329,7 @@ LAB_00004b08:
 		gUpdateDisplay = true;
 	}
 
-	if (g_200003BC && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_4) {
+	if (g_200003BC && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_RECEIVE) {
 		if (gDTMF_AUTO_RESET_TIME) {
 			gDTMF_AUTO_RESET_TIME--;
 			if (gDTMF_AUTO_RESET_TIME == 0) {
@@ -1486,7 +1486,7 @@ void APP_CycleOutputPower(void)
 void APP_StartScan(bool bFlag)
 {
 	if (gFmRadioMode) {
-		if (gCurrentFunction != FUNCTION_4 && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
+		if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			uint16_t Frequency;
 
 			GUI_SelectNextDisplay(DISPLAY_FM);

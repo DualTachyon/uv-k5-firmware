@@ -72,7 +72,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	if (gScreenToDisplay == DISPLAY_AIRCOPY) {
 		return;
 	}
-	if (gCurrentFunction == FUNCTION_4) {
+	if (gCurrentFunction == FUNCTION_RECEIVE) {
 		return;
 	}
 	if (gCurrentFunction == FUNCTION_MONITOR) {
@@ -193,7 +193,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 			VoiceID += VOICE_ID_ENG_BASE;
 		}
 
-		if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_MONITOR) {
+		if (gCurrentFunction == FUNCTION_RECEIVE || gCurrentFunction == FUNCTION_MONITOR) {
 			BK4819_SetAF(BK4819_AF_MUTE);
 		}
 		if (gFmRadioMode) {
@@ -208,7 +208,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 		}
 		if (bFlag) {
 			SYSTEM_DelayMs(Delay * 10);
-			if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_MONITOR) {
+			if (gCurrentFunction == FUNCTION_RECEIVE || gCurrentFunction == FUNCTION_MONITOR) {
 				if (gRxInfo->IsAM) {
 					BK4819_SetAF(BK4819_AF_AM);
 				} else {
@@ -323,7 +323,7 @@ void AUDIO_PlayQueuedVoice(void)
 		}
 	}
 
-	if (gCurrentFunction == FUNCTION_4 || gCurrentFunction == FUNCTION_MONITOR) {
+	if (gCurrentFunction == FUNCTION_RECEIVE || gCurrentFunction == FUNCTION_MONITOR) {
 		if (gRxInfo->IsAM) {
 			BK4819_SetAF(BK4819_AF_AM);
 		} else {

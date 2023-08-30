@@ -721,7 +721,7 @@ void RADIO_SomethingWithTransmit(void)
 		uint8_t Value;
 
 		if (!FREQUENCY_Check(gCrossTxRadioInfo)) {
-			if (gCrossTxRadioInfo->BUSY_CHANNEL_LOCK && gCurrentFunction == FUNCTION_4) {
+			if (gCrossTxRadioInfo->BUSY_CHANNEL_LOCK && gCurrentFunction == FUNCTION_RECEIVE) {
 				Value = 1;
 			} else if (gBatteryDisplayLevel == 0) {
 				Value = 2;

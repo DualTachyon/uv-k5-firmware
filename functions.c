@@ -112,7 +112,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		return;
 	}
 
-	if (Function == FUNCTION_MONITOR || Function == FUNCTION_3 || Function == FUNCTION_4) {
+	if (Function == FUNCTION_MONITOR || Function == FUNCTION_3 || Function == FUNCTION_RECEIVE) {
 		gBatterySaveCountdown = 1000;
 		gSchedulePowerSave = false;
 		g_2000038E = 0;
