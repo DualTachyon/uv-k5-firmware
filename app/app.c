@@ -892,67 +892,69 @@ void APP_CheckKeys(void)
 {
 	KEY_Code_t Key;
 
-	if (!gSetting_KILLED && (gScreenToDisplay != DISPLAY_AIRCOPY || gAircopyState == AIRCOPY_READY)) {
-		if (gPttIsPressed) {
+	if (gSetting_KILLED || (gScreenToDisplay == DISPLAY_AIRCOPY && gAircopyState != AIRCOPY_READY)) {
+		return;
+	}
+
+	if (gPttIsPressed) {
+		if (GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT)) {
+			SYSTEM_DelayMs(20);
 			if (GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT)) {
-				SYSTEM_DelayMs(20);
-				if (GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT)) {
-					APP_ProcessKey(KEY_PTT, false, false);
-					gPttIsPressed = false;
-					if (gKeyReading1 != KEY_INVALID) {
-						g_20000394 = true;
-					}
+				APP_ProcessKey(KEY_PTT, false, false);
+				gPttIsPressed = false;
+				if (gKeyReading1 != KEY_INVALID) {
+					g_20000394 = true;
 				}
+			}
+		}
+	} else {
+		if (!GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT)) {
+			gPttDebounceCounter = gPttDebounceCounter + 1;
+			if (gPttDebounceCounter > 4) {
+				gPttIsPressed = true;
+				APP_ProcessKey(KEY_PTT, true, false);
 			}
 		} else {
-			if (!GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT)) {
-				gPttDebounceCounter = gPttDebounceCounter + 1;
-				if (gPttDebounceCounter > 4) {
-					gPttIsPressed = true;
-					APP_ProcessKey(KEY_PTT, true, false);
-				}
-			} else {
-				gPttDebounceCounter = 0;
-			}
+			gPttDebounceCounter = 0;
 		}
-		Key = KEYBOARD_Poll();
-		if (gKeyReading0 != Key) {
-			if (gKeyReading0 != KEY_INVALID && Key != KEY_INVALID) {
+	}
+	Key = KEYBOARD_Poll();
+	if (gKeyReading0 != Key) {
+		if (gKeyReading0 != KEY_INVALID && Key != KEY_INVALID) {
+			APP_ProcessKey(gKeyReading1, false, gKeyBeingHeld);
+		}
+		gKeyReading0 = Key;
+		gDebounceCounter = 0;
+		return;
+	}
+	gDebounceCounter++;
+	if (gDebounceCounter == 2) {
+		if (Key == KEY_INVALID) {
+			if (gKeyReading1 != KEY_INVALID) {
 				APP_ProcessKey(gKeyReading1, false, gKeyBeingHeld);
+				gKeyReading1 = KEY_INVALID;
 			}
-			gKeyReading0 = Key;
-			gDebounceCounter = 0;
-			return;
+		} else {
+			gKeyReading1 = Key;
+			APP_ProcessKey(Key, true, false);
 		}
-		gDebounceCounter++;
-		if (gDebounceCounter == 2) {
-			if (Key == KEY_INVALID) {
-				if (gKeyReading1 != KEY_INVALID) {
-					APP_ProcessKey(gKeyReading1, false, gKeyBeingHeld);
-					gKeyReading1 = KEY_INVALID;
-				}
-			} else {
-				gKeyReading1 = Key;
-				APP_ProcessKey(Key, true, false);
-			}
-			gKeyBeingHeld = false;
-		} else if (gDebounceCounter == 128) {
-			if (Key == KEY_STAR || Key == KEY_F || Key == KEY_SIDE2 || Key == KEY_SIDE1 || Key == KEY_UP || Key == KEY_DOWN) {
-				gKeyBeingHeld = true;
+		gKeyBeingHeld = false;
+	} else if (gDebounceCounter == 128) {
+		if (Key == KEY_STAR || Key == KEY_F || Key == KEY_SIDE2 || Key == KEY_SIDE1 || Key == KEY_UP || Key == KEY_DOWN) {
+			gKeyBeingHeld = true;
+			APP_ProcessKey(Key, true, true);
+		}
+	} else if (gDebounceCounter > 128) {
+		if (Key == KEY_UP || Key == KEY_DOWN) {
+			gKeyBeingHeld = true;
+			if ((gDebounceCounter & 15) == 0) {
 				APP_ProcessKey(Key, true, true);
 			}
-		} else if (gDebounceCounter > 128) {
-			if (Key == KEY_UP || Key == KEY_DOWN) {
-				gKeyBeingHeld = true;
-				if ((gDebounceCounter & 15) == 0) {
-					APP_ProcessKey(Key, true, true);
-				}
-			}
-			if (gDebounceCounter != 0xFFFF) {
-				return;
-			}
-			gDebounceCounter = 128;
 		}
+		if (gDebounceCounter != 0xFFFF) {
+			return;
+		}
+		gDebounceCounter = 128;
 	}
 }
 
