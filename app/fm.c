@@ -344,6 +344,53 @@ void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 	gRequestDisplayScreen = DISPLAY_FM;
 }
 
+void FM_Key_MENU(bool bKeyPressed, bool bKeyHeld)
+{
+	if (bKeyHeld) {
+		return;
+	}
+	if (!bKeyPressed) {
+		return;
+	}
+
+	gRequestDisplayScreen = DISPLAY_FM;
+	gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+
+	if (gFM_Step == 0) {
+		if (!gEeprom.FM_IsChannelSelected) {
+			if (gAskToSave) {
+				gFM_Channels[gFM_ChannelPosition] = gEeprom.FM_FrequencyToPlay;
+				gAskToSave = false;
+				gRequestSaveFM = true;
+			} else {
+				gAskToSave = true;
+			}
+		} else {
+			if (gAskToDelete) {
+				gFM_Channels[gEeprom.FM_CurrentChannel] = 0xFFFF;
+				FM_ConfigureChannelState();
+				BK1080_SetFrequency(gEeprom.FM_FrequencyToPlay);
+				gRequestSaveFM = true;
+				gAskToDelete = false;
+			} else {
+				gAskToDelete = true;
+			}
+		}
+	} else {
+		if (gFM_AutoScan || g_20000427 != 1) {
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+			gInputBoxIndex = 0;
+			return;
+		} else if (gAskToSave) {
+			gFM_Channels[gFM_ChannelPosition] = gEeprom.FM_FrequencyToPlay;
+			gAskToSave = false;
+			gRequestSaveFM = true;
+		} else {
+			gAskToSave = true;
+		}
+	}
+}
+
 void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step)
 {
 	if (bKeyHeld || !bKeyPressed) {

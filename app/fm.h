@@ -37,6 +37,7 @@ int FM_CheckFrequencyLock(uint16_t Frequency, uint16_t LowerLimit);
 
 void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld);
+void FM_Key_MENU(bool bKeyPressed, bool bKeyHeld);
 void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step);
 
 #endif
