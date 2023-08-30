@@ -98,7 +98,7 @@ FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency)
 	return BAND6_400MHz;
 }
 
-uint8_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, uint32_t LowerLimit, uint32_t Middle, uint32_t UpperLimit, uint32_t Frequency)
+uint8_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, int32_t LowerLimit, int32_t Middle, int32_t UpperLimit, int32_t Frequency)
 {
 	if (Frequency <= LowerLimit) {
 		return TxpLow;
