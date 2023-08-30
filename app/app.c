@@ -797,10 +797,10 @@ void APP_Update(void)
 				APP_MoreRadioStuff();
 			}
 		} else {
-			if (gCopyOfCodeType != CODE_TYPE_OFF || gCurrentFunction != FUNCTION_3) {
-				FUN_00007dd4();
-			} else {
+			if (gCopyOfCodeType == CODE_TYPE_OFF && gCurrentFunction == FUNCTION_3) {
 				APP_StartListening(FUNCTION_RECEIVE);
+			} else {
+				FUN_00007dd4();
 			}
 		}
 		gScanPauseMode = 0;
@@ -1261,15 +1261,15 @@ LAB_00004b08:
 	}
 
 	if (gLowBattery) {
-		gLowBatteryBlink = ++g_20000400 & 1;
-		UI_DisplayBattery(g_20000400);
+		gLowBatteryBlink = ++gLowBatteryCountdown & 1;
+		UI_DisplayBattery(gLowBatteryCountdown);
 		if (gCurrentFunction != FUNCTION_TRANSMIT) {
-			if (g_20000400 < 30) {
-				if (g_20000400 == 29 && !gChargingWithTypeC) {
+			if (gLowBatteryCountdown < 30) {
+				if (gLowBatteryCountdown == 29 && !gChargingWithTypeC) {
 					AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP);
 				}
 			} else {
-				g_20000400 = 0;
+				gLowBatteryCountdown = 0;
 				if (!gChargingWithTypeC) {
 					AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP);
 					AUDIO_SetVoiceID(0, VOICE_ID_LOW_VOLTAGE);

@@ -61,7 +61,7 @@ typedef enum STEP_Setting_t STEP_Setting_t;
 typedef struct {
 	uint32_t Frequency;
 	DCS_CodeType_t CodeType;
-	uint8_t RX_TX_Code;
+	uint8_t Code;
 	uint8_t Padding[2];
 } FREQ_Config_t;
 

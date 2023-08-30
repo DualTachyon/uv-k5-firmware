@@ -317,7 +317,7 @@ void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency)
 
 void BK4819_SetFrequency(uint32_t Frequency)
 {
-	BK4819_WriteRegister(BK4819_REG_38,  (Frequency >>  0) & 0xFFFF);
+	BK4819_WriteRegister(BK4819_REG_38, (Frequency >>  0) & 0xFFFF);
 	BK4819_WriteRegister(BK4819_REG_39, (Frequency >> 16) & 0xFFFF);
 }
 

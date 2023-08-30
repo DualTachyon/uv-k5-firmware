@@ -142,7 +142,7 @@ extern uint8_t gDTMFChosenContact;
 extern uint16_t g_200003E2;
 extern volatile uint16_t gFlashLightBlinkCounter;
 extern uint8_t g_200003FD;
-extern uint8_t g_20000400;
+extern uint8_t gLowBatteryCountdown;
 extern uint8_t g_20000410;
 extern uint8_t g_20000411;
 extern uint8_t g_20000413;

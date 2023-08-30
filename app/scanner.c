@@ -165,7 +165,7 @@ void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 			RADIO_InitInfo(gTxInfo, gTxInfo->CHANNEL_SAVE, FREQUENCY_GetBand(gScanFrequency), gScanFrequency);
 			if (g_2000045C == 1) {
 				gTxInfo->ConfigRX.CodeType = g_CxCSS_Type;
-				gTxInfo->ConfigRX.RX_TX_Code = g_CxCSS_Index;
+				gTxInfo->ConfigRX.Code = g_CxCSS_Index;
 			}
 			gTxInfo->ConfigTX = gTxInfo->ConfigRX;
 			gTxInfo->STEP_SETTING = gStepSetting;
@@ -173,9 +173,9 @@ void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 			RADIO_ConfigureChannel(0, 2);
 			RADIO_ConfigureChannel(1, 2);
 			gTxInfo->ConfigRX.CodeType = g_CxCSS_Type;
-			gTxInfo->ConfigRX.RX_TX_Code = g_CxCSS_Index;
+			gTxInfo->ConfigRX.Code = g_CxCSS_Index;
 			gTxInfo->ConfigTX.CodeType = g_CxCSS_Type;
-			gTxInfo->ConfigTX.RX_TX_Code = g_CxCSS_Index;
+			gTxInfo->ConfigTX.Code = g_CxCSS_Index;
 		}
 
 		if (IS_MR_CHANNEL(gTxInfo->CHANNEL_SAVE)) {

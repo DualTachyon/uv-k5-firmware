@@ -118,7 +118,7 @@ uint8_t gDTMFChosenContact;
 uint16_t g_200003E2;
 volatile uint16_t gFlashLightBlinkCounter;
 uint8_t g_200003FD;
-uint8_t g_20000400;
+uint8_t gLowBatteryCountdown;
 uint8_t g_20000410;
 uint8_t g_20000411;
 uint8_t g_20000413;

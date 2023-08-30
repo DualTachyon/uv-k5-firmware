@@ -87,7 +87,7 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 				UI_DisplayBattery(gBatteryDisplayLevel);
 			}
 		}
-		g_20000400 = 0;
+		gLowBatteryCountdown = 0;
 	}
 }
 

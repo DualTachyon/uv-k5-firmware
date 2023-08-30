@@ -252,7 +252,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			Tmp = 0;
 			break;
 		}
-		gEeprom.VfoInfo[VFO].ConfigRX.RX_TX_Code = Tmp;
+		gEeprom.VfoInfo[VFO].ConfigRX.Code = Tmp;
 
 		Tmp = Data[1];
 		switch (gEeprom.VfoInfo[VFO].ConfigTX.CodeType) {
@@ -272,7 +272,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			Tmp = 0;
 			break;
 		}
-		gEeprom.VfoInfo[VFO].ConfigTX.RX_TX_Code = Tmp;
+		gEeprom.VfoInfo[VFO].ConfigTX.Code = Tmp;
 
 		if (Data[4] == 0xFF) {
 			gEeprom.VfoInfo[VFO].FrequencyReverse = false;
@@ -527,7 +527,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			Code = gCode;
 			if (g_20000381 == 0) {
 				CodeType = gRxInfo->pCurrent->CodeType;
-				Code = gRxInfo->pCurrent->RX_TX_Code;
+				Code = gRxInfo->pCurrent->Code;
 			}
 			switch (CodeType) {
 			case CODE_TYPE_DIGITAL:
@@ -664,14 +664,14 @@ void RADIO_PrepareTransmit(void)
 
 	switch (gCrossTxRadioInfo->pReverse->CodeType) {
 	case CODE_TYPE_CONTINUOUS_TONE:
-		BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pReverse->RX_TX_Code]);
+		BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pReverse->Code]);
 		break;
 	case CODE_TYPE_DIGITAL:
 	case CODE_TYPE_REVERSE_DIGITAL:
 		BK4819_SetCDCSSCodeWord(
 			DCS_GetGolayCodeWord(
 				gCrossTxRadioInfo->pReverse->CodeType,
-				gCrossTxRadioInfo->pReverse->RX_TX_Code
+				gCrossTxRadioInfo->pReverse->Code
 				)
 			);
 		break;
