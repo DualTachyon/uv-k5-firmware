@@ -278,104 +278,80 @@ void FUN_000052f0(void)
 	uint8_t Value;
 
 	Value = 0;
+
 	if (gSystickFlag10) {
 		Value = 1;
-		goto LAB_0000544c;
-	}
-
-	if (gStepDirection && IS_FREQ_CHANNEL(g_20000410)) {
+	} else if (gStepDirection && IS_FREQ_CHANNEL(g_20000410)) {
 		if (g_SquelchLost) {
 			return;
 		}
 		Value = 1;
-		goto LAB_0000544c;
-	}
+	} else if (gCopyOfCodeType == CODE_TYPE_CONTINUOUS_TONE && gFoundCTCSS && gFoundCTCSSCountdown == 0) {
+		gFoundCTCSS = false;
+		gFoundCDCSS = false;
+		Value = 1;
+	} else if ((gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL) && gFoundCDCSS && gFoundCDCSSCountdown == 0) {
+		gFoundCTCSS = false;
+		gFoundCDCSS = false;
+		Value = 1;
+	} else {
+		if (g_SquelchLost) {
+			if (g_20000377 == 0 && IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
+				switch (gCopyOfCodeType) {
+				case CODE_TYPE_OFF:
+					if (gEeprom.SQUELCH_LEVEL) {
+						if (g_CxCSS_TAIL_Found) {
+							Value = 2;
+							g_CxCSS_TAIL_Found = false;
+						}
+					}
+					break;
 
-	switch (gCopyOfCodeType) {
-	case CODE_TYPE_CONTINUOUS_TONE:
-		if (gFoundCTCSS) {
-			if (gFoundCTCSSCountdown == 0) {
-				gFoundCTCSS = false;
-				gFoundCDCSS = false;
-				Value = 1;
-				goto LAB_0000544c;
-			}
-		}
-		break;
-	case CODE_TYPE_DIGITAL:
-	case CODE_TYPE_REVERSE_DIGITAL:
-		if (gFoundCDCSS) {
-			if (gFoundCDCSSCountdown == 0) {
-				gFoundCTCSS = false;
-				gFoundCDCSS = false;
-				Value = 1;
-				goto LAB_0000544c;
-			}
-		}
-		break;
-	default:
-		break;
-	}
-	if (g_SquelchLost) {
-		if (g_20000377 == 0 && IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
-			switch (gCopyOfCodeType) {
-			case CODE_TYPE_CONTINUOUS_TONE:
-				if (g_CTCSS_Lost) {
-					gFoundCTCSS = false;
-				} else if (!gFoundCTCSS) {
-					gFoundCTCSS = true;
-					gFoundCTCSSCountdown = 100;
-				}
-				if (g_CxCSS_TAIL_Found) {
-					Value = 2;
-					g_CxCSS_TAIL_Found = false;
-				}
-				break;
-			case CODE_TYPE_OFF:
-				if (gEeprom.SQUELCH_LEVEL) {
+				case CODE_TYPE_CONTINUOUS_TONE:
+					if (g_CTCSS_Lost) {
+						gFoundCTCSS = false;
+					} else if (!gFoundCTCSS) {
+						gFoundCTCSS = true;
+						gFoundCTCSSCountdown = 100;
+					}
 					if (g_CxCSS_TAIL_Found) {
 						Value = 2;
 						g_CxCSS_TAIL_Found = false;
 					}
-				}
-				break;
-			case CODE_TYPE_DIGITAL:
-			case CODE_TYPE_REVERSE_DIGITAL:
-				if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE) {
-					gFoundCDCSS = false;
-				} else if (!gFoundCDCSS) {
-					gFoundCDCSS = true;
-					gFoundCDCSSCountdown = 100;
-				}
-				if (g_CxCSS_TAIL_Found) {
-					if (BK4819_GetCTCType() == 1) {
-						Value = 2;
+					break;
+
+				case CODE_TYPE_DIGITAL:
+				case CODE_TYPE_REVERSE_DIGITAL:
+					if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE) {
+						gFoundCDCSS = false;
+					} else if (!gFoundCDCSS) {
+						gFoundCDCSS = true;
+						gFoundCDCSSCountdown = 100;
 					}
-					g_CxCSS_TAIL_Found = false;
+					if (g_CxCSS_TAIL_Found) {
+						if (BK4819_GetCTCType() == 1) {
+							Value = 2;
+						}
+						g_CxCSS_TAIL_Found = false;
+					}
+					break;
+
+				default:
+					break;
 				}
-				break;
-			default:
-				break;
 			}
+		} else {
+			Value = 1;
 		}
+	}
+
+	if (g_20000377 || Value || !gNextTimeslice40ms || !gEeprom.TAIL_NOTE_ELIMINATION || (gCopyOfCodeType != CODE_TYPE_DIGITAL && gCopyOfCodeType != CODE_TYPE_REVERSE_DIGITAL)) {
 	} else {
-		Value = 1;
-	}
-
-	if (g_20000377 == 0 && Value == 0 && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION) {
-		switch (gCopyOfCodeType) {
-		case CODE_TYPE_DIGITAL:
-		case CODE_TYPE_REVERSE_DIGITAL:
-			if (BK4819_GetCTCType() == 1) {
-				gNextTimeslice40ms = false;
-			}
-			break;
-		default:
-			break;
+		if (BK4819_GetCTCType() == 1) {
+			Value = 2;
 		}
 	}
 
-LAB_0000544c:
 	gNextTimeslice40ms = false;
 
 	switch (Value) {
@@ -405,8 +381,6 @@ LAB_0000544c:
 			g_2000036B = 0;
 			g_20000377 = 1;
 		}
-		break;
-	default:
 		break;
 	}
 }
