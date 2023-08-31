@@ -157,7 +157,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gEeprom.CROSS_BAND_RX_TX = gBackupCROSS_BAND_RX_TX;
 			gUpdateStatus = true;
 			gFlagStopScan = true;
-			g_2000039A = 2;
+			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 			g_2000039B = 1;
 		} else {
 			RADIO_Whatever();

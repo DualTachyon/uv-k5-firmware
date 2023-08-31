@@ -41,6 +41,12 @@ enum {
 	FLASHLIGHT_BLINK = 2U,
 };
 
+enum {
+	VFO_CONFIGURE_0 = 0U,
+	VFO_CONFIGURE_1 = 1U,
+	VFO_CONFIGURE_RELOAD = 2U,
+};
+
 extern const uint32_t *gUpperLimitFrequencyBandTable;
 extern const uint32_t *gLowerLimitFrequencyBandTable;
 
@@ -102,7 +108,7 @@ extern uint8_t g_20000395;
 extern uint8_t g_20000395;
 extern uint8_t g_20000396;
 extern uint8_t g_20000398;
-extern uint8_t g_2000039A;
+extern uint8_t gVfoConfigureMode;
 extern uint8_t g_2000039B;
 extern bool gRequestSaveVFO;
 extern uint8_t gRequestSaveChannel;

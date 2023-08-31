@@ -79,7 +79,7 @@ uint8_t gKeypadLocked;
 uint8_t g_20000395;
 uint8_t g_20000396;
 uint8_t g_20000398;
-uint8_t g_2000039A;
+uint8_t gVfoConfigureMode;
 uint8_t g_2000039B;
 bool gRequestSaveVFO;
 uint8_t gRequestSaveChannel;

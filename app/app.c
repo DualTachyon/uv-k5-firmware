@@ -2084,7 +2084,7 @@ Skip:
 		if (!bKeyHeld) {
 			SETTINGS_SaveChannel(gTxInfo->CHANNEL_SAVE, gEeprom.TX_CHANNEL, gTxInfo, gRequestSaveChannel);
 			if (gScreenToDisplay != DISPLAY_SCANNER) {
-				g_2000039A = 1;
+				gVfoConfigureMode = VFO_CONFIGURE_1;
 			}
 		} else {
 			gFlagSaveChannel = gRequestSaveChannel;
@@ -2095,22 +2095,22 @@ Skip:
 		gRequestSaveChannel = 0;
 	}
 
-	if (g_2000039A == 0) {
+	if (gVfoConfigureMode == VFO_CONFIGURE_0) {
 		if (g_20000398 == 0) {
 			goto LAB_00002aae;
 		}
 	} else {
 		if (g_2000039B == 1) {
-			RADIO_ConfigureChannel(0, g_2000039A);
-			RADIO_ConfigureChannel(1, g_2000039A);
+			RADIO_ConfigureChannel(0, gVfoConfigureMode);
+			RADIO_ConfigureChannel(1, gVfoConfigureMode);
 		} else {
-			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, g_2000039A);
+			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, gVfoConfigureMode);
 		}
 		if (gRequestDisplayScreen == DISPLAY_INVALID) {
 			gRequestDisplayScreen = DISPLAY_MAIN;
 		}
 		g_20000398 = 1;
-		g_2000039A = 0;
+		gVfoConfigureMode = VFO_CONFIGURE_0;
 		g_2000039B = 0;
 	}
 	RADIO_ConfigureTX();

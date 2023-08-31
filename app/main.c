@@ -71,7 +71,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			gEeprom.MrChannel[Vfo] = (uint8_t)Channel;
 			gEeprom.ScreenChannel[Vfo] = (uint8_t)Channel;
 			gRequestSaveVFO = true;
-			g_2000039A = 2;
+			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 			return;
 		}
 		if (IS_NOT_NOAA_CHANNEL(gTxInfo->CHANNEL_SAVE)) {
@@ -126,7 +126,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				gEeprom.NoaaChannel[Vfo] = Channel;
 				gEeprom.ScreenChannel[Vfo] = Channel;
 				gRequestSaveVFO = true;
-				g_2000039A = 2;
+				gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 				return;
 			}
 		}
@@ -160,7 +160,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		gEeprom.ScreenChannel[Vfo] = FREQ_CHANNEL_FIRST + Band;
 		gEeprom.FreqChannel[Vfo] = FREQ_CHANNEL_FIRST + Band;
 		gRequestSaveVFO = true;
-		g_2000039A = 2;
+		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		gRequestDisplayScreen = DISPLAY_MAIN;
 		break;
@@ -191,7 +191,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				gEeprom.ScreenChannel[Vfo] = gEeprom.FreqChannel[gEeprom.TX_CHANNEL];
 				gAnotherVoiceID = VOICE_ID_FREQUENCY_MODE;
 				gRequestSaveVFO = true;
-				g_2000039A = 2;
+				gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 				break;
 			}
 			Channel = RADIO_FindNextChannel(gEeprom.MrChannel[gEeprom.TX_CHANNEL], 1, false, 0);
@@ -201,7 +201,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				AUDIO_SetDigitVoice(1, Channel + 1);
 				gAnotherVoiceID = (VOICE_ID_t)0xFE;
 				gRequestSaveVFO = true;
-				g_2000039A = 2;
+				gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 				break;
 			}
 		}
@@ -226,7 +226,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			gAnotherVoiceID = VOICE_ID_FREQUENCY_MODE;
 		}
 		gRequestSaveVFO = true;
-		g_2000039A = 2;
+		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 		break;
 
 	case KEY_6:
@@ -250,7 +250,7 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			AUDIO_SetDigitVoice(1, gEeprom.CHAN_1_CALL + 1);
 			gAnotherVoiceID = (VOICE_ID_t)0xFE;
 			gRequestSaveVFO = true;
-			g_2000039A = 2;
+			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 			break;
 		}
 		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
@@ -409,7 +409,7 @@ void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 			gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] = Channel;
 		}
 		gRequestSaveVFO = true;
-		g_2000039A = 2;
+		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 		return;
 	}
 	APP_ChangeStepDirectionMaybe(false, Direction);

@@ -60,7 +60,7 @@ void SCANNER_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 			gEeprom.CROSS_BAND_RX_TX = gBackupCROSS_BAND_RX_TX;
 			gUpdateStatus = true;
 			gFlagStopScan = true;
-			g_2000039A = 2;
+			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 			g_2000039B = 1;
 			gAnotherVoiceID = VOICE_ID_CANCEL;
 			break;
