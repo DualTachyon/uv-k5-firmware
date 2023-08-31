@@ -15,10 +15,10 @@
  */
 
 #include <string.h>
+#include "app/dtmf.h"
 #include "bitmaps.h"
 #include "dcs.h"
 #include "driver/st7565.h"
-#include "dtmf.h"
 #include "external/printf/printf.h"
 #include "helper/battery.h"
 #include "misc.h"
@@ -258,7 +258,7 @@ void UI_DisplayMenu(void)
 				String[i + 1] = gInputBox[i] + '0';
 			}
 		}
-		String[7] = 0x2d;
+		String[7] = '-';
 		String[8] = '-';
 		String[9] = 0;
 		String[10] = 0;

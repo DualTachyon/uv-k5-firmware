@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include "app/dtmf.h"
 #include "driver/keyboard.h"
 #include "misc.h"
 #include "ui/aircopy.h"
@@ -65,8 +66,8 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gStepDirection = 0;
 			gFM_Step = 0;
 			gAskForConfirmation = 0;
-			g_200003BA = 0;
-			g_200003BB = 0;
+			gDTMF_InputMode = false;
+			gDTMF_InputIndex = 0;
 			gF_LOCK = false;
 			gAskToSave = false;
 			gAskToDelete = false;

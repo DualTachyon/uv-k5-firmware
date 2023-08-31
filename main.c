@@ -19,6 +19,7 @@
 #include "ARMCM0.h"
 
 #include "app/app.h"
+#include "app/dtmf.h"
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
@@ -36,7 +37,6 @@
 #include "driver/system.h"
 #include "driver/systick.h"
 #include "driver/uart.h"
-#include "dtmf.h"
 #include "external/printf/printf.h"
 #include "functions.h"
 #include "helper/battery.h"

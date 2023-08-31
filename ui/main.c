@@ -15,9 +15,9 @@
  */
 
 #include <string.h>
+#include "app/dtmf.h"
 #include "bitmaps.h"
 #include "driver/st7565.h"
-#include "dtmf.h"
 #include "external/printf/printf.h"
 #include "functions.h"
 #include "misc.h"
@@ -65,10 +65,10 @@ void UI_DisplayMain(void)
 		}
 
 		if (Channel != i) {
-			if (g_200003BC || g_200003BD || g_200003BA) {
-				if (g_200003BA == 0) {
+			if (g_200003BC || g_200003BD || gDTMF_InputMode) {
+				if (!gDTMF_InputMode) {
 					if (g_200003BC == 1) {
-						if (g_CalloutAndDTMF_State == 2) {
+						if (gDTMF_State == 2) {
 							strcpy(String, "CALL OUT(RSP)");
 						} else {
 							strcpy(String, "CALL OUT");
@@ -80,21 +80,21 @@ void UI_DisplayMain(void)
 							sprintf(String, "CALL:%s", gDTMF_Contact0);
 						}
 					} else if (g_200003BD == 1) {
-						if (g_CalloutAndDTMF_State == 1) {
+						if (gDTMF_State == 1) {
 							strcpy(String, "DTMF TX(SUCC)");
 						} else {
 							strcpy(String, "DTMF TX");
 						}
 					}
 				} else {
-					sprintf(String, ">%s", g_20000D1C);
+					sprintf(String, ">%s", gDTMF_InputBox);
 				}
 				UI_PrintString(String, 2, 127, i * 3, 8, false);
 
 				memset(String, 0, sizeof(String));
 				memset(String2, 0, sizeof(String2));
 
-				if (g_200003BA == 0) {
+				if (!gDTMF_InputMode) {
 					if (g_200003BC == 1) {
 						if (DTMF_FindContact(gDTMF_String, String2)) {
 							sprintf(String, ">%s", String2);

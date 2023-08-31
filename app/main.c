@@ -327,9 +327,9 @@ void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 			return;
 		}
 		if (gStepDirection == 0 && IS_NOT_NOAA_CHANNEL(gTxInfo->CHANNEL_SAVE)) {
-			g_200003BA = 1;
-			memcpy(g_20000D1C, gDTMF_String, 15);
-			g_200003BB = 0;
+			gDTMF_InputMode = true;
+			memcpy(gDTMF_InputBox, gDTMF_String, 15);
+			gDTMF_InputIndex = 0;
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			return;
 		}

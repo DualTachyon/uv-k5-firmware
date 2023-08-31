@@ -127,25 +127,25 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 					return;
 				}
 				g_200003A0 = 1;
-				if (g_200003BA == 1) {
-					if (g_200003BB || g_200003C0) {
-						if (g_200003BB == 0) {
-							g_200003BB = g_200003C0;
+				if (gDTMF_InputMode) {
+					if (gDTMF_InputIndex || g_200003C0) {
+						if (gDTMF_InputIndex == 0) {
+							gDTMF_InputIndex = g_200003C0;
 						}
-						g_20000D1C[g_200003BB] = 0;
-						if (g_200003BB == 3) {
-							g_20000438 = DTMF_IsGroupCall(g_20000D1C, 3);
+						gDTMF_InputBox[gDTMF_InputIndex] = 0;
+						if (gDTMF_InputIndex == 3) {
+							g_20000438 = DTMF_IsGroupCall(gDTMF_InputBox, 3);
 						} else {
 							g_20000438 = 2;
 						}
-						sprintf(gDTMF_String, "%s", g_20000D1C);
-						g_200003C0 = g_200003BB;
+						sprintf(gDTMF_String, "%s", gDTMF_InputBox);
+						g_200003C0 = gDTMF_InputIndex;
 						g_200003BE = 1;
-						g_CalloutAndDTMF_State = 0;
+						gDTMF_State = 0;
 					}
 					gRequestDisplayScreen = DISPLAY_MAIN;
-					g_200003BA = 0;
-					g_200003BB = 0;
+					gDTMF_InputMode = false;
+					gDTMF_InputIndex = 0;
 					return;
 				}
 				gRequestDisplayScreen = DISPLAY_MAIN;

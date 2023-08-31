@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include "app/dtmf.h"
 #include "app/fm.h"
 #include "bsp/dp32g030/gpio.h"
 #include "dcs.h"
@@ -22,7 +23,6 @@
 #include "driver/bk4819.h"
 #include "driver/gpio.h"
 #include "driver/system.h"
-#include "dtmf.h"
 #include "external/printf/printf.h"
 #include "functions.h"
 #include "helper/battery.h"
@@ -48,7 +48,7 @@ void FUNCTION_Init(void)
 	} else {
 		gCopyOfCodeType = CODE_TYPE_CONTINUOUS_TONE;
 	}
-	g_200003AA = 0;
+	gDTMF_RequestPending = false;
 	gDTMF_WriteIndex = 0;
 	memset(gDTMF_Received, 0, sizeof(gDTMF_Received));
 	g_CxCSS_TAIL_Found = false;

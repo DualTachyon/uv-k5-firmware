@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include "app/dtmf.h"
 #include "app/menu.h"
 #include "audio.h"
 #include "board.h"
@@ -437,9 +438,9 @@ void MENU_AcceptSetting(void)
 		gDTMFChosenContact = gSubMenuSelection - 1;
 		if (gIsDtmfContactValid) {
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
-			g_200003BA = 1;
-			g_200003BB = 3;
-			memcpy(g_20000D1C, gDTMF_ID, 4);
+			gDTMF_InputMode = true;
+			gDTMF_InputIndex = 3;
+			memcpy(gDTMF_InputBox, gDTMF_ID, 4);
 			gRequestDisplayScreen = DISPLAY_INVALID;
 		}
 		return;
