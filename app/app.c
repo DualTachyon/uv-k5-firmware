@@ -65,8 +65,8 @@ static void FUN_00005144(void)
 		}
 		if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
 			if (gIsNoaaMode) {
-				g_20000356 = 20;
-				gSystickFlag8 = false;
+				gNOAA_Countdown = 20;
+				gScheduleNOAA = false;
 			}
 			FUNCTION_Select(FUNCTION_3);
 			return;
@@ -115,7 +115,9 @@ void FUN_000051e8(void)
 			return;
 		}
 	}
+
 	DTMF_HandleRequest();
+
 	if (gStepDirection == 0 && g_20000381 == 0) {
 		if (gRxInfo->DTMF_DECODING_ENABLE || gSetting_KILLED) {
 			if (g_200003BC == 0) {
@@ -128,6 +130,7 @@ void FUN_000051e8(void)
 			}
 		}
 	}
+
 	APP_StartListening(FUNCTION_RECEIVE);
 }
 
@@ -329,8 +332,8 @@ void APP_StartListening(FUNCTION_Type_t Function)
 			gRxInfo->pCurrent->Frequency = NoaaFrequencyTable[gNoaaChannel];
 			gRxInfo->pReverse->Frequency = NoaaFrequencyTable[gNoaaChannel];
 			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gRxInfo->CHANNEL_SAVE;
-			g_20000356 = 500;
-			gSystickFlag8 = false;
+			gNOAA_Countdown = 500;
+			gScheduleNOAA = false;
 		}
 		if (g_20000381) {
 			g_20000381 = 2;
@@ -705,11 +708,11 @@ void APP_Update(void)
 		gSystickFlag9 = false;
 	}
 
-	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode && gSystickFlag8 && gVoiceWriteIndex == 0) {
+	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode && gScheduleNOAA && gVoiceWriteIndex == 0) {
 		NOAA_IncreaseChannel();
 		RADIO_SetupRegisters(false);
-		gSystickFlag8 = false;
-		g_20000356 = 7;
+		gScheduleNOAA = false;
+		gNOAA_Countdown = 7;
 	}
 
 	if (gScreenToDisplay != DISPLAY_SCANNER && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
@@ -1396,8 +1399,8 @@ void FUN_00005770(void)
 		gScanPauseMode = 1;
 	}
 	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode) {
-		g_20000356 = 500;
-		gSystickFlag8 = false;
+		gNOAA_Countdown = 500;
+		gScheduleNOAA = false;
 	}
 	RADIO_SetupRegisters(true);
 	if (gFmRadioMode) {

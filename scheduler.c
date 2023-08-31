@@ -77,10 +77,10 @@ void SystickHandler(void)
 	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
 		if (gIsNoaaMode && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_RECEIVE) {
-				if (g_20000356) {
-					g_20000356--;
-					if (g_20000356 == 0) {
-						gSystickFlag8 = true;
+				if (gNOAA_Countdown) {
+					gNOAA_Countdown--;
+					if (gNOAA_Countdown == 0) {
+						gScheduleNOAA = true;
 					}
 				}
 			}
