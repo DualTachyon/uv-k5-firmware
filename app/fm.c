@@ -31,6 +31,13 @@ extern void APP_SwitchToFM(void);
 
 uint16_t gFM_Channels[20];
 bool gFmRadioMode;
+uint8_t gFmRadioCountdown;
+volatile uint16_t gFmPlayCountdown = 1;
+volatile int8_t gFM_Step;
+bool gFM_AutoScan;
+uint8_t gFM_ChannelPosition;
+// Doubts about whether this should be signed or not.
+int16_t gFM_FrequencyDeviation;
 
 bool FM_CheckValidChannel(uint8_t Channel)
 {

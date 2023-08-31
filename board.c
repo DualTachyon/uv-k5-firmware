@@ -755,12 +755,12 @@ void BOARD_EEPROM_Init(void)
 
 	for (i = 0; i < 4; i++) {
 		if (gCustomPasswordKey[i] != 0xFFFFFFFFU) {
-			bIsCheckExistingPassword = true;
+			bHasCustomAesKey = true;
 			return;
 		}
 	}
 
-	bIsCheckExistingPassword = false;
+	bHasCustomAesKey = false;
 }
 
 void BOARD_EEPROM_LoadMoreSettings(void)

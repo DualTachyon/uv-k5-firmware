@@ -112,9 +112,9 @@ void Main(void)
 
 		BootMode = BOOT_GetMode();
 		if (gEeprom.POWER_ON_PASSWORD < 1000000) {
-			g_2000036E = 1;
+			bIsInLockScreen = true;
 			UI_DisplayLock();
-			g_2000036E = 0;
+			bIsInLockScreen = false;
 		}
 
 		BOOT_ProcessMode(BootMode);

@@ -24,6 +24,13 @@
 
 extern uint16_t gFM_Channels[20];
 extern bool gFmRadioMode;
+extern uint8_t gFmRadioCountdown;
+extern volatile uint16_t gFmPlayCountdown;
+extern volatile int8_t gFM_Step;
+extern bool gFM_AutoScan;
+extern uint8_t gFM_ChannelPosition;
+// Doubts about whether this should be signed or not.
+extern int16_t gFM_FrequencyDeviation;
 
 bool FM_CheckValidChannel(uint8_t Channel);
 uint8_t FM_FindNextChannel(uint8_t Channel, uint8_t Direction);

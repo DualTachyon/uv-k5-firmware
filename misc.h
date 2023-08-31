@@ -61,7 +61,7 @@ extern uint8_t gSetting_F_LOCK;
 
 extern uint32_t gCustomPasswordKey[4];
 
-extern bool bIsCheckExistingPassword;
+extern bool bHasCustomAesKey;
 
 extern uint8_t gEEPROM_1EC0_0[8];
 extern uint8_t gEEPROM_1EC0_1[8];
@@ -86,7 +86,7 @@ extern uint16_t g_20000362;
 extern uint8_t g_2000036B;
 extern uint8_t gKeyLockCountdown;
 extern uint8_t gRTTECountdown;
-extern uint8_t g_2000036E;
+extern bool bIsInLockScreen;
 extern uint8_t gUpdateStatus;
 extern uint8_t g_20000370;
 extern uint8_t g_20000371[2];
@@ -179,7 +179,6 @@ extern bool gIsNoaaMode;
 extern volatile bool gNextTimeslice;
 extern uint8_t gNoaaChannel;
 extern bool gUpdateDisplay;
-extern uint8_t gFmRadioCountdown;
 extern uint8_t gFM_ChannelPosition;
 extern bool gF_LOCK;
 extern uint8_t gScanChannel;
@@ -208,6 +207,8 @@ extern int16_t gFM_FrequencyDeviation;
 extern uint16_t gCurrentRSSI;
 
 extern volatile int8_t gStepDirection;
+
+extern bool gIsLocked;
 
 // --------
 

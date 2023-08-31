@@ -31,7 +31,7 @@ uint8_t gSetting_F_LOCK;
 
 uint32_t gCustomPasswordKey[4];
 
-bool bIsCheckExistingPassword;
+bool bHasCustomAesKey;
 
 uint8_t gEEPROM_1EC0_0[8];
 uint8_t gEEPROM_1EC0_1[8];
@@ -50,13 +50,12 @@ volatile uint16_t gBatterySaveCountdown;
 volatile uint16_t g_2000033A;
 volatile uint16_t gTxTimerCountdown = 1000;
 volatile uint16_t g_20000342;
-volatile uint16_t gFmPlayCountdown = 1;
 volatile uint16_t gNOAA_Countdown;
 uint16_t g_20000362;
 uint8_t g_2000036B;
 uint8_t gKeyLockCountdown;
 uint8_t gRTTECountdown;
-uint8_t g_2000036E;
+bool bIsInLockScreen;
 uint8_t gUpdateStatus;
 uint8_t g_20000370;
 uint8_t g_20000371[2];
@@ -71,7 +70,6 @@ volatile uint8_t g_20000381;
 uint8_t g_20000382;
 uint8_t g_20000383;
 uint16_t g_2000038E;
-volatile int8_t gFM_Step;
 uint8_t g_20000393;
 bool g_20000394;
 uint8_t g_20000395;
@@ -145,13 +143,10 @@ uint8_t gAircopySendCountdown;
 uint8_t gFSKWriteIndex;
 uint8_t g_20000474;
 
-bool gFM_AutoScan;
 bool gIsNoaaMode;
 volatile bool gNextTimeslice;
 uint8_t gNoaaChannel;
 bool gUpdateDisplay;
-uint8_t gFmRadioCountdown;
-uint8_t gFM_ChannelPosition;
 bool gF_LOCK;
 uint8_t gScanChannel;
 uint32_t gScanFrequency;
@@ -174,12 +169,11 @@ volatile bool gScheduleFM;
 
 volatile uint16_t ScanPauseDelayIn10msec;
 
-// Doubts about whether this should be signed or not.
-int16_t gFM_FrequencyDeviation;
-
 uint16_t gCurrentRSSI;
 
 volatile int8_t gStepDirection;
+
+bool gIsLocked;
 
 // --------
 
