@@ -23,6 +23,8 @@
 #include "app/main.h"
 #include "app/menu.h"
 #include "app/scanner.h"
+#include "app/uart.h"
+#include "ARMCM0.h"
 #include "audio.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
@@ -858,13 +860,13 @@ void APP_CheckKeys(void)
 void APP_TimeSlice10ms(void)
 {
 	gFlashLightBlinkCounter++;
-#if 0
-	if (UART_CheckForCommand()) {
-		disableIRQinterrupts();
-		ProcessUartCommand();
-		enableIRQinterrupts();
+
+	if (UART_IsCommandAvailable()) {
+		__disable_irq();
+		UART_HandleCommand();
+		__enable_irq();
 	}
-#endif
+
 	if (gReducedService) {
 		return;
 	}

@@ -15,6 +15,8 @@
  */
 
 #include <string.h>
+#include "ARMCM0.h"
+#include "app/uart.h"
 #include "audio.h"
 #include "driver/keyboard.h"
 #include "driver/st7565.h"
@@ -106,13 +108,13 @@ void UI_DisplayLock(void)
 			gDebounceCounter = 0;
 			gKeyReading0 = Key;
 		}
-#if 0
-		if (UART_CheckForCommand()) {
+
+		if (UART_IsCommandAvailable()) {
 			__disable_irq();
-			ProcessUartCommand();
+			UART_HandleCommand();
 			__enable_irq();
 		}
-#endif
+
 		if (gUpdateDisplay) {
 			Render();
 			gUpdateDisplay = false;
