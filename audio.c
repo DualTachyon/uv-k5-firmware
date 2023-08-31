@@ -138,7 +138,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	BK4819_TurnsOffTones_TurnsOnRX();
 	SYSTEM_DelayMs(5);
 	BK4819_WriteRegister(BK4819_REG_71, ToneConfig);
-	if (g_2000036B == 1) {
+	if (gEnableSpeaker) {
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	}
 	if (gFmRadioMode) {
@@ -218,7 +218,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 			if (gFmRadioMode) {
 				BK1080_Mute(false);
 			}
-			if (g_2000036B == 0) {
+			if (!gEnableSpeaker) {
 				GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			}
 			gVoiceWriteIndex = 0;
@@ -333,7 +333,7 @@ void AUDIO_PlayQueuedVoice(void)
 	if (gFmRadioMode) {
 		BK1080_Mute(false);
 	}
-	if (g_2000036B == 0) {
+	if (!gEnableSpeaker) {
 		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	}
 	g_200003B6 = 80;

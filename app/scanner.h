@@ -17,7 +17,11 @@
 #ifndef APP_SCANNER_H
 #define APP_SCANNER_H
 
+#include "dcs.h"
 #include "driver/keyboard.h"
+
+extern DCS_CodeType_t gCS_ScannedType;
+extern uint8_t gCS_ScannedIndex;
 
 void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 void SCANNER_Key_EXIT(bool bKeyPressed, bool bKeyHeld);

@@ -476,7 +476,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	uint32_t Frequency;
 
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	g_2000036B = 0;
+	gEnableSpeaker = false;
 	BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
 
 	Bandwidth = gRxInfo->CHANNEL_BANDWIDTH;
@@ -643,7 +643,7 @@ void RADIO_PrepareTransmit(void)
 
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 
-	g_2000036B = 0;
+	gEnableSpeaker = false;
 
 	BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
 	Bandwidth = gCrossTxRadioInfo->CHANNEL_BANDWIDTH;
@@ -802,7 +802,7 @@ void RADIO_SendEndOfTransmission(void)
 	if (g_200003BC == 0 && (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_EOT || gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_BOTH)) {
 		if (gEeprom.DTMF_SIDE_TONE) {
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-			g_2000036B = 1;
+			gEnableSpeaker = true;
 			SYSTEM_DelayMs(60);
 		}
 		BK4819_EnterDTMF_TX(gEeprom.DTMF_SIDE_TONE);
@@ -815,7 +815,7 @@ void RADIO_SendEndOfTransmission(void)
 			gEeprom.DTMF_CODE_INTERVAL_TIME
 			);
 		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		g_2000036B = 0;
+		gEnableSpeaker = false;
 	}
 	BK4819_ExitDTMF_TX(true);
 }

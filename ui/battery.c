@@ -29,7 +29,7 @@ void UI_DisplayBattery(uint8_t Level)
 		switch (Level) {
 		case 0:
 			pBitmap = NULL;
-			bClearMode = 1;
+			bClearMode = true;
 			break;
 		case 1:
 			pBitmap = BITMAP_BatteryLevel1;

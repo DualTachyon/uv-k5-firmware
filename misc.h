@@ -82,8 +82,7 @@ extern volatile uint16_t gTxTimerCountdown;
 extern volatile uint16_t g_20000342;
 extern volatile uint16_t gFmPlayCountdown;
 extern volatile uint16_t gNOAA_Countdown;
-extern uint16_t g_20000362;
-extern uint8_t g_2000036B;
+extern bool gEnableSpeaker;
 extern uint8_t gKeyLockCountdown;
 extern uint8_t gRTTECountdown;
 extern bool bIsInLockScreen;
@@ -163,8 +162,6 @@ extern uint8_t gMenuListCount;
 extern uint8_t g_20000442;
 extern uint8_t g_20000458;
 extern uint8_t gBackupCROSS_BAND_RX_TX;
-extern uint8_t g_CxCSS_Type;
-extern uint8_t g_CxCSS_Index;
 extern uint8_t g_2000045C;
 extern uint8_t g_2000045D;
 extern uint8_t g_2000045F;
@@ -201,8 +198,6 @@ extern volatile bool gSystickFlag10;
 extern volatile bool gScheduleFM;
 
 extern volatile uint16_t ScanPauseDelayIn10msec;
-
-extern int16_t gFM_FrequencyDeviation;
 
 extern uint16_t gCurrentRSSI;
 

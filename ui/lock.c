@@ -91,9 +91,9 @@ void UI_DisplayLock(void)
 						AUDIO_PlayBeep(Beep);
 						gUpdateDisplay = true;
 						break;
-					case KEY_EXIT: // Delete digit
+					case KEY_EXIT:
 						if (gInputBoxIndex) {
-							gInputBoxIndex -= 1;
+							gInputBoxIndex--;
 							gInputBox[gInputBoxIndex] = 10;
 							gUpdateDisplay = true;
 						}

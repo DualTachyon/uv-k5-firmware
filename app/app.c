@@ -273,7 +273,7 @@ void FUN_000052f0(void)
 			GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			g_20000342 = 20;
 			gSystickFlag10 = false;
-			g_2000036B = 0;
+			gEnableSpeaker = false;
 			g_20000377 = 1;
 		}
 		break;
@@ -310,7 +310,7 @@ void APP_StartListening(FUNCTION_Type_t Function)
 		}
 		gVFO_RSSI_Level[gEeprom.RX_CHANNEL == 0] = 0;
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		g_2000036B = 1;
+		gEnableSpeaker = true;
 		BACKLIGHT_TurnOn();
 		if (gStepDirection) {
 			switch (gEeprom.SCAN_RESUME_MODE) {
@@ -490,7 +490,7 @@ void APP_PlayFM(void)
 				gEeprom.FM_SelectedFrequency = gEeprom.FM_FrequencyPlaying;
 			}
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-			g_2000036B = 1;
+			gEnableSpeaker = true;
 		} else {
 			if (gFM_ChannelPosition < 20) {
 				gFM_Channels[gFM_ChannelPosition++] = gEeprom.FM_FrequencyPlaying;
@@ -523,7 +523,7 @@ void APP_StartFM(void)
 	g_2000038E = 0;
 	BK1080_Init(gEeprom.FM_FrequencyPlaying, true);
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	g_2000036B = 1;
+	gEnableSpeaker = true;
 	gUpdateStatus = true;
 }
 
@@ -932,7 +932,7 @@ void APP_TimeSlice10ms(void)
 					BK4819_TransmitTone(true, 500);
 					SYSTEM_DelayMs(2);
 					GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-					g_2000036B = 1;
+					gEnableSpeaker = true;
 					g_20000420 = 0;
 				}
 			}
@@ -989,8 +989,8 @@ void APP_TimeSlice10ms(void)
 				BK4819_EnableFrequencyScan();
 			} else {
 				BK4819_SetScanFrequency(gScanFrequency);
-				g_CxCSS_Index = 0xFF;
-				g_CxCSS_Type = 0xFF;
+				gCS_ScannedIndex = 0xFF;
+				gCS_ScannedType = 0xFF;
 				g_2000045F = 0;
 				g_2000045C = 0;
 				g_20000464 = 0;
@@ -1011,8 +1011,8 @@ void APP_TimeSlice10ms(void)
 
 				Index = DCS_GetCdcssIndex(Result);
 				if (Index != 0xFF) {
-					g_CxCSS_Index = Index;
-					g_CxCSS_Type = 0x02;
+					gCS_ScannedIndex = Index;
+					gCS_ScannedType = CODE_TYPE_DIGITAL;
 					gScanState = 2;
 					g_2000045C = 1;
 				}
@@ -1021,8 +1021,8 @@ void APP_TimeSlice10ms(void)
 
 				Index = DCS_GetCtcssIndex(CtcssFreq);
 				if (Index != 0xFF) {
-					if (Index == g_CxCSS_Index && g_CxCSS_Type == 0x01) {
-						g_2000045F += 1;
+					if (Index == gCS_ScannedIndex && gCS_ScannedType == CODE_TYPE_CONTINUOUS_TONE) {
+						g_2000045F++;
 						if (1 < g_2000045F) {
 							gScanState = 2;
 							g_2000045C = 1;
@@ -1030,8 +1030,8 @@ void APP_TimeSlice10ms(void)
 					} else {
 						g_2000045F = 0;
 					}
-					g_CxCSS_Type = 0x01;
-					g_CxCSS_Index = Index;
+					gCS_ScannedType = CODE_TYPE_CONTINUOUS_TONE;
+					gCS_ScannedIndex = Index;
 				}
 			}
 			if (gScanState < 2) {
@@ -1238,7 +1238,7 @@ void FUN_00001150(void)
 {
 	g_20000383 = 0;
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	g_2000036B = 0;
+	gEnableSpeaker = false;
 	if (gEeprom.ALARM_MODE == ALARM_MODE_TONE) {
 		RADIO_SendEndOfTransmission();
 		RADIO_EnableCxCSS();
@@ -1282,8 +1282,8 @@ void FUN_000075b0(void)
 		BK4819_EnableFrequencyScan();
 	}
 	g_2000045D = 0x15;
-	g_CxCSS_Index = 0xFF;
-	g_CxCSS_Type = 0xFF;
+	gCS_ScannedIndex = 0xFF;
+	gCS_ScannedType = 0xFF;
 	g_2000045F = 0;
 	g_2000045C = 0;
 	gDTMF_RequestPending = false;
@@ -1856,7 +1856,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 					char Code;
 
 					if (Key == KEY_SIDE2) {
-						Code = -2;
+						Code = 0xFE;
 					} else {
 						Code = DTMF_GetCharacter(Key);
 						if (Code == 0xFF) {
@@ -1867,7 +1867,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 					if (bKeyHeld || !bKeyPressed) {
 						if (!bKeyPressed) {
 							GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-							g_2000036B = 0;
+							gEnableSpeaker = false;
 							BK4819_ExitDTMF_TX(false);
 							if (gCrossTxRadioInfo->SCRAMBLING_TYPE == 0 || !gSetting_ScrambleEnable) {
 								BK4819_DisableScramble();
@@ -1878,10 +1878,10 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 					} else {
 						if (gEeprom.DTMF_SIDE_TONE) {
 							GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-							g_2000036B = 1;
+							gEnableSpeaker = true;
 						}
 						BK4819_DisableScramble();
-						if (Code == -2) {
+						if (Code == 0xFE) {
 							BK4819_TransmitTone(gEeprom.DTMF_SIDE_TONE, 1750);
 						} else {
 							BK4819_PlayDTMFEx(gEeprom.DTMF_SIDE_TONE, Code);

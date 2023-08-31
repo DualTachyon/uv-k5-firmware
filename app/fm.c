@@ -36,8 +36,6 @@ volatile uint16_t gFmPlayCountdown = 1;
 volatile int8_t gFM_Step;
 bool gFM_AutoScan;
 uint8_t gFM_ChannelPosition;
-// Doubts about whether this should be signed or not.
-int16_t gFM_FrequencyDeviation;
 
 bool FM_CheckValidChannel(uint8_t Channel)
 {
@@ -91,7 +89,7 @@ void FM_TurnOff(void)
 	gFM_Step = 0;
 	g_2000038E = 0;
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	g_2000036B = 0;
+	gEnableSpeaker = false;
 	BK1080_Init(0, false);
 	gUpdateStatus = true;
 }
@@ -112,7 +110,7 @@ void FM_EraseChannels(void)
 void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag)
 {
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	g_2000036B = 0;
+	gEnableSpeaker = false;
 	if (gFM_Step == 0) {
 		gFmPlayCountdown = 120;
 	} else {
@@ -151,7 +149,7 @@ void FM_Play(void)
 	gScheduleFM = false;
 	gAskToSave = false;
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	g_2000036B = 1;
+	gEnableSpeaker = true;
 }
 
 int FM_CheckFrequencyLock(uint16_t Frequency, uint16_t LowerLimit)
@@ -174,19 +172,19 @@ int FM_CheckFrequencyLock(uint16_t Frequency, uint16_t LowerLimit)
 	}
 
 	if (Deviation < 280 || Deviation > 3815) {
-		if ((LowerLimit < Frequency) && (Frequency - g_20000362) == 1) {
-			if (gFM_FrequencyDeviation & 0x800) {
+		if ((LowerLimit < Frequency) && (Frequency - BK1080_BaseFrequency) == 1) {
+			if (BK1080_FrequencyDeviation & 0x800) {
 				goto Bail;
 			}
-			if (gFM_FrequencyDeviation < 20) {
+			if (BK1080_FrequencyDeviation < 20) {
 				goto Bail;
 			}
 		}
-		if ((LowerLimit <= Frequency) && (g_20000362 - Frequency) == 1) {
-			if ((gFM_FrequencyDeviation & 0x800) == 0) {
+		if ((LowerLimit <= Frequency) && (BK1080_BaseFrequency - Frequency) == 1) {
+			if ((BK1080_FrequencyDeviation & 0x800) == 0) {
 				goto Bail;
 			}
-			if (4075 < gFM_FrequencyDeviation) {
+			if (4075 < BK1080_FrequencyDeviation) {
 				goto Bail;
 			}
 		}
@@ -194,45 +192,49 @@ int FM_CheckFrequencyLock(uint16_t Frequency, uint16_t LowerLimit)
 	}
 
 Bail:
-	gFM_FrequencyDeviation = (uint16_t)Deviation;
-	g_20000362 = Frequency;
+	BK1080_FrequencyDeviation = Deviation;
+	BK1080_BaseFrequency = Frequency;
 
 	return ret;
 }
 
 void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
+#define STATE_FREQ_MODE 0
+#define STATE_MR_MODE   1
+#define STATE_SAVE      2
+
 	if (!bKeyHeld && bKeyPressed) {
 		if (!gWasFKeyPressed) {
-			uint8_t Value;
+			uint8_t State;
 
 			if (gAskToDelete) {
 				gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 				return;
 			}
 			if (gAskToSave) {
-				Value = 2;
+				State = STATE_SAVE;
 			} else {
 				if (gFM_Step) {
 					gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 					return;
 				}
 				if (gEeprom.FM_IsMrMode) {
-					Value = 1;
+					State = STATE_MR_MODE;
 				} else {
-					Value = 0;
+					State = STATE_FREQ_MODE;
 				}
 			}
 			INPUTBOX_Append(Key);
 			gRequestDisplayScreen = DISPLAY_FM;
-			if (Value == 0) {
+			if (State == STATE_FREQ_MODE) {
 				if (gInputBoxIndex == 1) {
-					if (1 < gInputBox[0]) {
+					if (gInputBox[0] > 1) {
 						gInputBox[1] = gInputBox[0];
 						gInputBox[0] = 0;
 						gInputBoxIndex = 2;
 					}
-				} else if (3 < gInputBoxIndex) {
+				} else if (gInputBoxIndex > 3) {
 					uint32_t Frequency;
 
 					gInputBoxIndex = 0;
@@ -255,7 +257,7 @@ void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 				gInputBoxIndex = 0;
 				Channel = ((gInputBox[0] * 10) + gInputBox[1]) - 1;
-				if (Value == 1) {
+				if (State == STATE_MR_MODE) {
 					if (FM_CheckValidChannel(Channel)) {
 						gAnotherVoiceID = (VOICE_ID_t)Key;
 						gEeprom.FM_SelectedChannel = Channel;

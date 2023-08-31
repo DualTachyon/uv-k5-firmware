@@ -16,6 +16,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include "app/scanner.h"
 #include "dcs.h"
 #include "driver/st7565.h"
 #include "external/printf/printf.h"
@@ -42,10 +43,10 @@ void UI_DisplayScanner(void)
 
 	if (gScanState < 2 || g_2000045C != 1) {
 		sprintf(String, "CTC:******");
-	} else if (g_CxCSS_Type == 1) {
-		sprintf(String, "CTC:%.1fHz", CTCSS_Options[g_CxCSS_Index] * 0.1);
+	} else if (gCS_ScannedType == CODE_TYPE_CONTINUOUS_TONE) {
+		sprintf(String, "CTC:%.1fHz", CTCSS_Options[gCS_ScannedIndex] * 0.1);
 	} else {
-		sprintf(String, "DCS:D%03oN", DCS_Options[g_CxCSS_Index]);
+		sprintf(String, "DCS:D%03oN", DCS_Options[gCS_ScannedIndex]);
 	}
 	UI_PrintString(String, 2, 127, 3, 8, 0);
 	memset(String, 0, sizeof(String));
