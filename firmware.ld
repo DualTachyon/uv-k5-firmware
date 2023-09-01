@@ -32,20 +32,25 @@ SECTIONS
 	} >FLASH
 
 	/* Used by startup code */
-	_sidata = .;
 
-	/* Data sections go into RAM */
+	. = ALIGN(4);
+
+	flash_data_start = .;
+
 	.data :
 	{
 		. = ALIGN(4);
-		_sdata = .;        /* Global symbol at data start */
+		sram_data_start = .;
+		*(.sramtext)
+		*(.srambss)
 		*(.data)           /* .data sections              */
 		*(.data*)          /* .data* sections             */
 
 		. = ALIGN(4);
 		_edata = .;        /* Global symbol at data end   */
 	} >RAM AT> FLASH
-	_sidata_end__ = .;
+
+	sram_data_end = .;
 
 	/* Uninitialized data */
 	. = ALIGN(4);

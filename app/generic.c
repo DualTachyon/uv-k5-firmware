@@ -134,14 +134,14 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 						}
 						gDTMF_InputBox[gDTMF_InputIndex] = 0;
 						if (gDTMF_InputIndex == 3) {
-							g_20000438 = DTMF_IsGroupCall(gDTMF_InputBox, 3);
+							gDTMF_CallMode = DTMF_IsGroupCall(gDTMF_InputBox, 3);
 						} else {
-							g_20000438 = 2;
+							gDTMF_CallMode = DTMF_CALL_MODE_2;
 						}
 						sprintf(gDTMF_String, "%s", gDTMF_InputBox);
 						g_200003C0 = gDTMF_InputIndex;
-						g_200003BE = 1;
-						gDTMF_State = 0;
+						gDTMF_ReplyState = DTMF_REPLY_ANI;
+						gDTMF_State = DTMF_STATE_0;
 					}
 					gRequestDisplayScreen = DISPLAY_MAIN;
 					gDTMF_InputMode = false;
