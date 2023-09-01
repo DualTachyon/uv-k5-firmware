@@ -543,7 +543,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 					;
 				break;
 			case CODE_TYPE_CONTINUOUS_TONE:
-				BK4819_SetCTCSSBaudRate(CTCSS_Options[Code]);
+				BK4819_SetCTCSSFrequency(CTCSS_Options[Code]);
 				BK4819_Set55HzTailDetection();
 				InterruptMask = 0
 					| BK4819_REG_3F_CxCSS_TAIL
@@ -554,7 +554,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 					;
 				break;
 			default:
-				BK4819_SetCTCSSBaudRate(670);
+				BK4819_SetCTCSSFrequency(670);
 				BK4819_Set55HzTailDetection();
 				InterruptMask = 0
 					| BK4819_REG_3F_CxCSS_TAIL
@@ -570,7 +570,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			}
 		}
 	} else {
-		BK4819_SetCTCSSBaudRate(2625);
+		BK4819_SetCTCSSFrequency(2625);
 		InterruptMask = 0
 			| BK4819_REG_3F_CTCSS_FOUND
 			| BK4819_REG_3F_CTCSS_LOST
@@ -665,7 +665,7 @@ void RADIO_PrepareTransmit(void)
 
 	switch (gCrossTxRadioInfo->pReverse->CodeType) {
 	case CODE_TYPE_CONTINUOUS_TONE:
-		BK4819_SetCTCSSBaudRate(CTCSS_Options[gCrossTxRadioInfo->pReverse->Code]);
+		BK4819_SetCTCSSFrequency(CTCSS_Options[gCrossTxRadioInfo->pReverse->Code]);
 		break;
 	case CODE_TYPE_DIGITAL:
 	case CODE_TYPE_REVERSE_DIGITAL:
