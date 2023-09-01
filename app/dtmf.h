@@ -25,8 +25,8 @@ extern char gDTMF_InputBox[15];
 extern char gDTMF_Received[16];
 extern bool gIsDtmfContactValid;
 extern char gDTMF_ID[4];
-extern char gDTMF_Contact0[4];
-extern char gDTMF_Contact1[4];
+extern char gDTMF_Caller[4];
+extern char gDTMF_Callee[4];
 extern uint8_t gDTMF_State;
 extern bool gDTMF_DecodeRing;
 extern uint8_t gDTMF_DecodeRingCountdown;
@@ -35,6 +35,7 @@ extern uint8_t gDTMF_WriteIndex;
 extern uint8_t gDTMF_AUTO_RESET_TIME;
 extern uint8_t gDTMF_InputIndex;
 extern bool gDTMF_InputMode;
+extern uint8_t gDTMF_RecvTimeout;
 
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size);
 bool DTMF_GetContact(uint8_t Index, char *pContact);
@@ -44,6 +45,7 @@ bool DTMF_CompareMessage(const char *pDTMF, const char *pTemplate, uint8_t Size,
 bool DTMF_IsGroupCall(const char *pDTMF, uint32_t Size);
 void DTMF_Append(char Code);
 void DTMF_HandleRequest(void);
+void DTMF_Reply(void);
 
 #endif
 

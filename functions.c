@@ -70,9 +70,6 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 {
 	FUNCTION_Type_t PreviousFunction;
 	bool bWasPowerSave;
-	char *pString;
-	char String[16]; // Can be overflown with the right EEPROM values
-	uint16_t Delay;
 
 	PreviousFunction = gCurrentFunction;
 	bWasPowerSave = (PreviousFunction == FUNCTION_POWER_SAVE);
@@ -161,54 +158,8 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	RADIO_PrepareTransmit();
 	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, true);
 
-	if (g_200003BE == 1) {
-		if (g_20000438 == 2) {
-			pString = gDTMF_String;
-		} else {
-			sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, gEeprom.ANI_DTMF_ID);
-			pString = String;
-		}
-	} else if (g_200003BE == 2) {
-		pString = "AB";
-	} else {
-		if (g_200003BE == 3) {
-			sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
-			pString = String;
-		}
-		if (g_200003BC || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 1 && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 3)) {
-			g_200003BE = 0;
-			goto Skip;
-		}
-		pString = gEeprom.DTMF_UP_CODE;
-	}
-	g_200003BE = 0;
-	Delay = gEeprom.DTMF_PRELOAD_TIME;
-	if (gEeprom.DTMF_SIDE_TONE) {
-		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		gEnableSpeaker = true;
-		Delay = gEeprom.DTMF_PRELOAD_TIME;
-		if (gEeprom.DTMF_PRELOAD_TIME < 60) {
-			Delay = 60;
-		}
-	}
-	SYSTEM_DelayMs(Delay);
+	DTMF_Reply();
 
-	BK4819_EnterDTMF_TX(gEeprom.DTMF_SIDE_TONE);
-
-	BK4819_PlayDTMFString(
-		pString,
-		1,
-		gEeprom.DTMF_FIRST_CODE_PERSIST_TIME,
-		gEeprom.DTMF_HASH_CODE_PERSIST_TIME,
-		gEeprom.DTMF_CODE_PERSIST_TIME,
-		gEeprom.DTMF_CODE_INTERVAL_TIME);
-
-	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-
-	gEnableSpeaker = false;
-	BK4819_ExitDTMF_TX(false);
-
-Skip:
 	if (g_20000383) {
 		if (g_20000383 == 3) {
 			BK4819_TransmitTone(true, 1750);

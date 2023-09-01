@@ -29,7 +29,6 @@
 void UI_DisplayMain(void)
 {
 	char String[16];
-	char String2[16];
 	uint8_t i;
 
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
@@ -66,6 +65,8 @@ void UI_DisplayMain(void)
 
 		if (Channel != i) {
 			if (g_200003BC || g_200003BD || gDTMF_InputMode) {
+				char Contact[16];
+
 				if (!gDTMF_InputMode) {
 					if (g_200003BC == 1) {
 						if (gDTMF_State == 2) {
@@ -74,10 +75,10 @@ void UI_DisplayMain(void)
 							strcpy(String, "CALL OUT");
 						}
 					} else if (g_200003BC == 2) {
-						if (DTMF_FindContact(gDTMF_Contact0, String2)) {
-							sprintf(String, "CALL:%s", String2);
+						if (DTMF_FindContact(gDTMF_Caller, Contact)) {
+							sprintf(String, "CALL:%s", Contact);
 						} else {
-							sprintf(String, "CALL:%s", gDTMF_Contact0);
+							sprintf(String, "CALL:%s", gDTMF_Caller);
 						}
 					} else if (g_200003BD == 1) {
 						if (gDTMF_State == 1) {
@@ -92,20 +93,20 @@ void UI_DisplayMain(void)
 				UI_PrintString(String, 2, 127, i * 3, 8, false);
 
 				memset(String, 0, sizeof(String));
-				memset(String2, 0, sizeof(String2));
+				memset(Contact, 0, sizeof(Contact));
 
 				if (!gDTMF_InputMode) {
 					if (g_200003BC == 1) {
-						if (DTMF_FindContact(gDTMF_String, String2)) {
-							sprintf(String, ">%s", String2);
+						if (DTMF_FindContact(gDTMF_String, Contact)) {
+							sprintf(String, ">%s", Contact);
 						} else {
 							sprintf(String, ">%s", gDTMF_String);
 						}
 					} else if (g_200003BC == 2) {
-						if (DTMF_FindContact(gDTMF_Contact1, String2)) {
-							sprintf(String, ">%s", String2);
+						if (DTMF_FindContact(gDTMF_Callee, Contact)) {
+							sprintf(String, ">%s", Contact);
 						} else {
-							sprintf(String, ">%s", gDTMF_Contact1);
+							sprintf(String, ">%s", gDTMF_Callee);
 						}
 					} else if (g_200003BD == 1) {
 						sprintf(String, ">%s", gDTMF_String);

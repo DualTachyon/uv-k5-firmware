@@ -540,7 +540,7 @@ void APP_CheckRadioInterrupts(void)
 		Mask = BK4819_GetRegister(BK4819_REG_02);
 		if (Mask & BK4819_REG_02_DTMF_5TONE_FOUND) {
 			gDTMF_RequestPending = true;
-			g_20000442 = 5;
+			gDTMF_RecvTimeout = 5;
 			if (gDTMF_WriteIndex > 15) {
 				uint8_t i;
 				for (i = 0; i < sizeof(gDTMF_Received) - 1; i++) {
@@ -1225,9 +1225,9 @@ LAB_00004b08:
 		}
 	}
 
-	if (g_20000442) {
-		g_20000442--;
-		if (g_20000442 == 0) {
+	if (gDTMF_RecvTimeout) {
+		gDTMF_RecvTimeout--;
+		if (gDTMF_RecvTimeout == 0) {
 			gDTMF_WriteIndex = 0;
 			memset(gDTMF_Received, 0, sizeof(gDTMF_Received));
 		}

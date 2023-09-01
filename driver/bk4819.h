@@ -100,7 +100,7 @@ void BK4819_ExitDTMF_TX(bool bKeep);
 void BK4819_EnableTXLink(void);
 
 void BK4819_PlayDTMF(char Code);
-void BK4819_PlayDTMFString(char *pString, bool bDelayFirst, uint16_t FirstCodePersistTime, uint16_t HashCodePersistTime, uint16_t CodePersistTime, uint16_t CodeInternalTime);
+void BK4819_PlayDTMFString(const char *pString, bool bDelayFirst, uint16_t FirstCodePersistTime, uint16_t HashCodePersistTime, uint16_t CodePersistTime, uint16_t CodeInternalTime);
 
 void BK4819_TransmitTone(bool bLocalLoopback, uint32_t Frequency);
 

@@ -16,7 +16,11 @@
 
 #include <string.h>
 #include "app/fm.h"
+#include "bsp/dp32g030/gpio.h"
+#include "driver/bk4819.h"
 #include "driver/eeprom.h"
+#include "driver/gpio.h"
+#include "driver/system.h"
 #include "dtmf.h"
 #include "external/printf/printf.h"
 #include "misc.h"
@@ -28,8 +32,8 @@ char gDTMF_InputBox[15];
 char gDTMF_Received[16];
 bool gIsDtmfContactValid;
 char gDTMF_ID[4];
-char gDTMF_Contact0[4];
-char gDTMF_Contact1[4];
+char gDTMF_Caller[4];
+char gDTMF_Callee[4];
 uint8_t gDTMF_State;
 bool gDTMF_DecodeRing;
 uint8_t gDTMF_DecodeRingCountdown;
@@ -38,6 +42,7 @@ uint8_t gDTMF_WriteIndex;
 uint8_t gDTMF_AUTO_RESET_TIME;
 uint8_t gDTMF_InputIndex;
 bool gDTMF_InputMode;
+uint8_t gDTMF_RecvTimeout;
 
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 {
@@ -210,7 +215,7 @@ void DTMF_HandleRequest(void)
 	}
 
 	if (gDTMF_WriteIndex >= 2) {
-		if (DTMF_CompareMessage(gDTMF_Received + gDTMF_WriteIndex - 2, "AB", 2, true)) {
+		if (DTMF_CompareMessage(gDTMF_Received + (gDTMF_WriteIndex - 2), "AB", 2, true)) {
 			gDTMF_State = 1;
 			gUpdateDisplay = true;
 			return;
@@ -240,8 +245,8 @@ void DTMF_HandleRequest(void)
 		return;
 	}
 	g_200003BC = 2;
-	memcpy(gDTMF_Contact1, gDTMF_Received + Offset, 3);
-	memcpy(gDTMF_Contact0, gDTMF_Received + Offset + 4, 3);
+	memcpy(gDTMF_Callee, gDTMF_Received + Offset, 3);
+	memcpy(gDTMF_Caller, gDTMF_Received + Offset + 4, 3);
 
 	gUpdateDisplay = true;
 
@@ -266,5 +271,67 @@ void DTMF_HandleRequest(void)
 	if (g_20000439) {
 		g_200003BE = 0;
 	}
+}
+
+void DTMF_Reply(void)
+{
+	char String[20];
+	const char *pString;
+	uint16_t Delay;
+
+	switch (g_200003BE) {
+	case 1:
+		if (g_20000438 == 2) {
+			pString = gDTMF_String;
+		} else {
+			sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, gEeprom.ANI_DTMF_ID);
+			pString = String;
+		}
+		break;
+
+	case 2:
+		pString = "AB";
+		break;
+
+	case 3:
+		sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
+		pString = String;
+		break;
+
+	default:
+		if (g_200003BC || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 1 && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 3)) {
+			g_200003BE = 0;
+			return;
+		}
+		pString = gEeprom.DTMF_UP_CODE;
+		break;
+	}
+
+	g_200003BE = 0;
+	Delay = gEeprom.DTMF_PRELOAD_TIME;
+	if (gEeprom.DTMF_SIDE_TONE) {
+		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+		gEnableSpeaker = true;
+		Delay = gEeprom.DTMF_PRELOAD_TIME;
+		if (gEeprom.DTMF_PRELOAD_TIME < 60) {
+			Delay = 60;
+		}
+	}
+	SYSTEM_DelayMs(Delay);
+
+	BK4819_EnterDTMF_TX(gEeprom.DTMF_SIDE_TONE);
+
+	BK4819_PlayDTMFString(
+		pString,
+		1,
+		gEeprom.DTMF_FIRST_CODE_PERSIST_TIME,
+		gEeprom.DTMF_HASH_CODE_PERSIST_TIME,
+		gEeprom.DTMF_CODE_PERSIST_TIME,
+		gEeprom.DTMF_CODE_INTERVAL_TIME);
+
+	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+
+	gEnableSpeaker = false;
+	BK4819_ExitDTMF_TX(false);
 }
 

@@ -84,6 +84,7 @@ SIZE = arm-none-eabi-size
 ASFLAGS = -mcpu=cortex-m0
 CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-builtin -fshort-enums -std=c11 -MMD
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
+CFLAGS_LTO = -flto
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
 
 OVERLAY_CFLAGS = $(CFLAGS) -fno-inline -fno-toplevel-reorder
@@ -138,7 +139,7 @@ $(TARGET): $(OBJS)
 bsp/dp32g030/%.h: hardware/dp32g030/%.def
 
 %.o: %.c | $(BSP_HEADERS)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	$(CC) $(CFLAGS) $(CFLAGS_LTO) $(INC) -c $< -o $@
 
 %.o: %.S
 	$(AS) $(ASFLAGS) $< -o $@
