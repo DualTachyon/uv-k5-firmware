@@ -61,7 +61,7 @@ void BK4819_SetAGC(uint8_t Value);
 void BK4819_ToggleGpioOut(BK4819_GPIO_PIN_t Pin, bool bSet);
 
 void BK4819_SetCDCSSCodeWord(uint32_t CodeWord);
-void BK4819_SetCTCSSBaudRate(uint32_t BaudRate);
+void BK4819_SetCTCSSFrequency(uint32_t BaudRate);
 void BK4819_Set55HzTailDetection(void);
 void BK4819_EnableVox(uint16_t Vox1Threshold, uint16_t Vox0Threshold);
 void BK4819_SetFilterBandwidth(BK4819_FilterBandwidth_t Bandwidth);

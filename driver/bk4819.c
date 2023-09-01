@@ -238,11 +238,11 @@ void BK4819_SetCDCSSCodeWord(uint32_t CodeWord)
 	BK4819_WriteRegister(BK4819_REG_08, 0x8000 | ((CodeWord >> 12) & 0xFFF));
 }
 
-void BK4819_SetCTCSSBaudRate(uint32_t BaudRate)
+void BK4819_SetCTCSSFrequency(uint32_t FreqControlWord)
 {
 	uint16_t Config;
 
-	if (BaudRate == 2625) {
+	if (FreqControlWord == 2625) { // Enables 1050Hz detection mode
 		// Enable TxCTCSS
 		// CTCSS Mode
 		// 1050/4 Detect Enable
@@ -262,7 +262,7 @@ void BK4819_SetCTCSSBaudRate(uint32_t BaudRate)
 	// CTC1 Frequency Control Word
 	BK4819_WriteRegister(BK4819_REG_07, 0
 			| BK4819_REG_07_MODE_CTC1
-			| ((BaudRate * 2065) / 1000) << BK4819_REG_07_SHIFT_FREQUENCY);
+			| ((FreqControlWord * 2065) / 1000) << BK4819_REG_07_SHIFT_FREQUENCY);
 }
 
 void BK4819_Set55HzTailDetection(void)
@@ -271,19 +271,22 @@ void BK4819_Set55HzTailDetection(void)
 	BK4819_WriteRegister(BK4819_REG_07, (1U << 13) | 462);
 }
 
-void BK4819_EnableVox(uint16_t Vox1Threshold, uint16_t Vox0Threshold)
+void BK4819_EnableVox(uint16_t VoxEnableThreshold, uint16_t VoxDisableThreshold)
 {
-	uint16_t Value;
+	//VOX Algorithm
+	//if(voxamp>VoxEnableThreshold)       VOX = 1;
+	//else if(voxamp<VoxDisableThreshold) (After Delay) VOX = 0;
+	uint16_t REG_31_Value;
 
-	Value = BK4819_GetRegister(BK4819_REG_31);
+	REG_31_Value = BK4819_GetRegister(BK4819_REG_31);
 	// 0xA000 is undocumented?
-	BK4819_WriteRegister(BK4819_REG_46, 0xA000 | (Vox1Threshold & 0x07FF));
+	BK4819_WriteRegister(BK4819_REG_46, 0xA000 | (VoxEnableThreshold & 0x07FF));
 	// 0x1800 is undocumented?
-	BK4819_WriteRegister(BK4819_REG_79, 0x1800 | (Vox0Threshold & 0x07FF));
-	// Bottom 12 bits are undocumented?
-	BK4819_WriteRegister(BK4819_REG_7A, 0x289A);
+	BK4819_WriteRegister(BK4819_REG_79, 0x1800 | (VoxDisableThreshold & 0x07FF));
+	// Bottom 12 bits are undocumented, 15:12 vox disable delay *128ms
+	BK4819_WriteRegister(BK4819_REG_7A, 0x289A); // vox disable delay = 128*5 = 640ms
 	// Enable VOX
-	BK4819_WriteRegister(BK4819_REG_31, Value | 4);
+	BK4819_WriteRegister(BK4819_REG_31, REG_31_Value | 4); //bit 2 - VOX Enable
 }
 
 void BK4819_SetFilterBandwidth(BK4819_FilterBandwidth_t Bandwidth)
