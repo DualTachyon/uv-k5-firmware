@@ -64,17 +64,17 @@ void UI_DisplayMain(void)
 		}
 
 		if (Channel != i) {
-			if (gDTMF_CallState != DTMF_CALL_NONE || g_200003BD || gDTMF_InputMode) {
+			if (gDTMF_CallState != DTMF_CALL_STATE_NONE || g_200003BD || gDTMF_InputMode) {
 				char Contact[16];
 
 				if (!gDTMF_InputMode) {
-					if (gDTMF_CallState == DTMF_CALL_1) {
+					if (gDTMF_CallState == DTMF_CALL_STATE_1) {
 						if (gDTMF_State == 2) {
 							strcpy(String, "CALL OUT(RSP)");
 						} else {
 							strcpy(String, "CALL OUT");
 						}
-					} else if (gDTMF_CallState == DTMF_CALL_RECEIVED) {
+					} else if (gDTMF_CallState == DTMF_CALL_STATE_RECEIVED) {
 						if (DTMF_FindContact(gDTMF_Caller, Contact)) {
 							sprintf(String, "CALL:%s", Contact);
 						} else {
@@ -96,13 +96,13 @@ void UI_DisplayMain(void)
 				memset(Contact, 0, sizeof(Contact));
 
 				if (!gDTMF_InputMode) {
-					if (gDTMF_CallState == DTMF_CALL_1) {
+					if (gDTMF_CallState == DTMF_CALL_STATE_1) {
 						if (DTMF_FindContact(gDTMF_String, Contact)) {
 							sprintf(String, ">%s", Contact);
 						} else {
 							sprintf(String, ">%s", gDTMF_String);
 						}
-					} else if (gDTMF_CallState == DTMF_CALL_RECEIVED) {
+					} else if (gDTMF_CallState == DTMF_CALL_STATE_RECEIVED) {
 						if (DTMF_FindContact(gDTMF_Callee, Contact)) {
 							sprintf(String, ">%s", Contact);
 						} else {

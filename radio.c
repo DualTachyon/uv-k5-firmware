@@ -737,18 +737,18 @@ void RADIO_SomethingWithTransmit(void)
 		RADIO_SomethingElse(Value);
 		g_20000383 = 0;
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
-		g_200003BE = 0;
+		gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 		return;
 	}
 
 Skip:
-	if (g_200003BE == 1) {
-		if (g_20000438 == 2) {
+	if (gDTMF_ReplyState == DTMF_REPLY_ANI) {
+		if (gDTMF_CallMode == DTMF_CALL_MODE_2) {
 			g_200003BD = 1;
-			gDTMF_CallState = DTMF_CALL_NONE;
+			gDTMF_CallState = DTMF_CALL_STATE_NONE;
 			g_200003C3 = 6;
 		} else {
-			gDTMF_CallState = DTMF_CALL_1;
+			gDTMF_CallState = DTMF_CALL_STATE_1;
 			g_200003BD = 0;
 		}
 	}
@@ -761,7 +761,7 @@ Skip:
 	gTxTimeoutReached = false;
 	g_200003FD = 0;
 	gRTTECountdown = 0;
-	g_200003BE = 0;
+	gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 }
 
 void RADIO_EnableCxCSS(void)
@@ -800,7 +800,7 @@ void RADIO_SendEndOfTransmission(void)
 	} else if (gEeprom.ROGER == ROGER_MODE_MDC) {
 		BK4819_PlayRogerMDC();
 	}
-	if (gDTMF_CallState == DTMF_CALL_NONE && (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_EOT || gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_BOTH)) {
+	if (gDTMF_CallState == DTMF_CALL_STATE_NONE && (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_EOT || gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_BOTH)) {
 		if (gEeprom.DTMF_SIDE_TONE) {
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			gEnableSpeaker = true;

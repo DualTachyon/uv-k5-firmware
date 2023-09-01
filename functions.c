@@ -84,7 +84,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	}
 
 	if (Function == FUNCTION_0) {
-		if (g_200003BE) {
+		if (gDTMF_ReplyState) {
 			RADIO_Something();
 		}
 		if (PreviousFunction == FUNCTION_TRANSMIT) {
@@ -98,7 +98,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		if (gFmRadioMode) {
 			g_2000038E = 500;
 		}
-		if (gDTMF_CallState != DTMF_CALL_1 && gDTMF_CallState != DTMF_CALL_RECEIVED) {
+		if (gDTMF_CallState != DTMF_CALL_STATE_1 && gDTMF_CallState != DTMF_CALL_STATE_RECEIVED) {
 			gBatterySaveCountdown = 1000;
 			gSchedulePowerSave = false;
 			return;
