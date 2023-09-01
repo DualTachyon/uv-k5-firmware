@@ -34,7 +34,7 @@ bool gIsDtmfContactValid;
 char gDTMF_ID[4];
 char gDTMF_Caller[4];
 char gDTMF_Callee[4];
-uint8_t gDTMF_State;
+DTMF_State_t gDTMF_State;
 bool gDTMF_DecodeRing;
 uint8_t gDTMF_DecodeRingCountdown;
 uint8_t gDTMFChosenContact;
@@ -219,7 +219,7 @@ void DTMF_HandleRequest(void)
 
 	if (gDTMF_WriteIndex >= 2) {
 		if (DTMF_CompareMessage(gDTMF_Received + (gDTMF_WriteIndex - 2), "AB", 2, true)) {
-			gDTMF_State = 1;
+			gDTMF_State = DTMF_STATE_TX_SUCC;
 			gUpdateDisplay = true;
 			return;
 		}
@@ -228,7 +228,7 @@ void DTMF_HandleRequest(void)
 		Offset = gDTMF_WriteIndex - 9;
 		sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
 		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, false)) {
-			gDTMF_State = 2;
+			gDTMF_State = DTMF_STATE_CALL_OUT_RSP;
 			gUpdateDisplay = true;
 		}
 	}

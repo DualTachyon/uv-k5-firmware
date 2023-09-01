@@ -141,7 +141,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 						sprintf(gDTMF_String, "%s", gDTMF_InputBox);
 						g_200003C0 = gDTMF_InputIndex;
 						gDTMF_ReplyState = DTMF_REPLY_ANI;
-						gDTMF_State = 0;
+						gDTMF_State = DTMF_STATE_0;
 					}
 					gRequestDisplayScreen = DISPLAY_MAIN;
 					gDTMF_InputMode = false;

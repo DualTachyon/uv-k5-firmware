@@ -20,6 +20,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+enum DTMF_State_t {
+	DTMF_STATE_0            = 0U,
+	DTMF_STATE_TX_SUCC      = 1U,
+	DTMF_STATE_CALL_OUT_RSP = 2U,
+};
+
+typedef enum DTMF_State_t DTMF_State_t;
+
 enum DTMF_CallState_t {
 	DTMF_CALL_STATE_NONE     = 0U,
 	DTMF_CALL_STATE_1        = 1U,
@@ -52,7 +60,7 @@ extern bool gIsDtmfContactValid;
 extern char gDTMF_ID[4];
 extern char gDTMF_Caller[4];
 extern char gDTMF_Callee[4];
-extern uint8_t gDTMF_State;
+extern DTMF_State_t gDTMF_State;
 extern bool gDTMF_DecodeRing;
 extern uint8_t gDTMF_DecodeRingCountdown;
 extern uint8_t gDTMFChosenContact;

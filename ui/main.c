@@ -69,7 +69,7 @@ void UI_DisplayMain(void)
 
 				if (!gDTMF_InputMode) {
 					if (gDTMF_CallState == DTMF_CALL_STATE_1) {
-						if (gDTMF_State == 2) {
+						if (gDTMF_State == DTMF_STATE_CALL_OUT_RSP) {
 							strcpy(String, "CALL OUT(RSP)");
 						} else {
 							strcpy(String, "CALL OUT");
@@ -81,7 +81,7 @@ void UI_DisplayMain(void)
 							sprintf(String, "CALL:%s", gDTMF_Caller);
 						}
 					} else if (g_200003BD == 1) {
-						if (gDTMF_State == 1) {
+						if (gDTMF_State == DTMF_STATE_TX_SUCC) {
 							strcpy(String, "DTMF TX(SUCC)");
 						} else {
 							strcpy(String, "DTMF TX");
