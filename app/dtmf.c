@@ -34,7 +34,7 @@ bool gIsDtmfContactValid;
 char gDTMF_ID[4];
 char gDTMF_Caller[4];
 char gDTMF_Callee[4];
-uint8_t gDTMF_State;
+DTMF_State_t gDTMF_State;
 bool gDTMF_DecodeRing;
 uint8_t gDTMF_DecodeRingCountdown;
 uint8_t gDTMFChosenContact;
@@ -44,6 +44,8 @@ uint8_t gDTMF_InputIndex;
 bool gDTMF_InputMode;
 uint8_t gDTMF_RecvTimeout;
 DTMF_CallState_t gDTMF_CallState;
+DTMF_ReplyState_t gDTMF_ReplyState;
+DTMF_CallMode_t gDTMF_CallMode;
 
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 {
@@ -193,23 +195,23 @@ void DTMF_HandleRequest(void)
 			if (gEeprom.PERMIT_REMOTE_KILL) {
 				gSetting_KILLED = true;
 				SETTINGS_SaveSettings();
-				g_200003BE = 2;
+				gDTMF_ReplyState = DTMF_REPLY_AB;
 				if (gFmRadioMode) {
 					FM_TurnOff();
 					GUI_SelectNextDisplay(DISPLAY_MAIN);
 				}
 			} else {
-				g_200003BE = 0;
+				gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 			}
 		} else {
 			sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, gEeprom.REVIVE_CODE);
 			if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, true)) {
 				gSetting_KILLED = false;
 				SETTINGS_SaveSettings();
-				g_200003BE = 2;
+				gDTMF_ReplyState = DTMF_REPLY_AB;
 			}
 		}
-		gDTMF_CallState = DTMF_CALL_NONE;
+		gDTMF_CallState = DTMF_CALL_STATE_NONE;
 		gUpdateDisplay = true;
 		gUpdateStatus = true;
 		return;
@@ -217,23 +219,23 @@ void DTMF_HandleRequest(void)
 
 	if (gDTMF_WriteIndex >= 2) {
 		if (DTMF_CompareMessage(gDTMF_Received + (gDTMF_WriteIndex - 2), "AB", 2, true)) {
-			gDTMF_State = 1;
+			gDTMF_State = DTMF_STATE_TX_SUCC;
 			gUpdateDisplay = true;
 			return;
 		}
 	}
-	if (gDTMF_CallState == DTMF_CALL_1 && g_20000438 == 0 && gDTMF_WriteIndex >= 9) {
+	if (gDTMF_CallState == DTMF_CALL_STATE_1 && gDTMF_CallMode == DTMF_CALL_MODE_NOT_GROUP && gDTMF_WriteIndex >= 9) {
 		Offset = gDTMF_WriteIndex - 9;
 		sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
 		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, false)) {
-			gDTMF_State = 2;
+			gDTMF_State = DTMF_STATE_CALL_OUT_RSP;
 			gUpdateDisplay = true;
 		}
 	}
 	if (gSetting_KILLED) {
 		return;
 	}
-	if (gDTMF_CallState != DTMF_CALL_NONE) {
+	if (gDTMF_CallState != DTMF_CALL_STATE_NONE) {
 		return;
 	}
 	if (gDTMF_WriteIndex < 7) {
@@ -245,7 +247,7 @@ void DTMF_HandleRequest(void)
 	if (!DTMF_CompareMessage(gDTMF_Received + Offset, String, 4, true)) {
 		return;
 	}
-	gDTMF_CallState = DTMF_CALL_RECEIVED;
+	gDTMF_CallState = DTMF_CALL_STATE_RECEIVED;
 	memcpy(gDTMF_Callee, gDTMF_Received + Offset, 3);
 	memcpy(gDTMF_Caller, gDTMF_Received + Offset + 4, 3);
 
@@ -257,7 +259,7 @@ void DTMF_HandleRequest(void)
 		gDTMF_DecodeRingCountdown = 20;
 		// Fallthrough
 	case 2:
-		g_200003BE = 3;
+		gDTMF_ReplyState = DTMF_REPLY_AAAAA;
 		break;
 	case 1:
 		gDTMF_DecodeRing = true;
@@ -265,12 +267,12 @@ void DTMF_HandleRequest(void)
 		break;
 	default:
 		gDTMF_DecodeRing = false;
-		g_200003BE = 0;
+		gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 		break;
 	}
 
 	if (g_20000439) {
-		g_200003BE = 0;
+		gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 	}
 }
 
@@ -280,9 +282,9 @@ void DTMF_Reply(void)
 	const char *pString;
 	uint16_t Delay;
 
-	switch (g_200003BE) {
-	case 1:
-		if (g_20000438 == 2) {
+	switch (gDTMF_ReplyState) {
+	case DTMF_REPLY_ANI:
+		if (gDTMF_CallMode == DTMF_CALL_MODE_2) {
 			pString = gDTMF_String;
 		} else {
 			sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, gEeprom.ANI_DTMF_ID);
@@ -290,25 +292,25 @@ void DTMF_Reply(void)
 		}
 		break;
 
-	case 2:
+	case DTMF_REPLY_AB:
 		pString = "AB";
 		break;
 
-	case 3:
+	case DTMF_REPLY_AAAAA:
 		sprintf(String, "%s%c%s", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
 		pString = String;
 		break;
 
 	default:
-		if (gDTMF_CallState != DTMF_CALL_NONE || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOT && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOTH)) {
-			g_200003BE = 0;
+		if (gDTMF_CallState != DTMF_CALL_STATE_NONE || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOT && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOTH)) {
+			gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 			return;
 		}
 		pString = gEeprom.DTMF_UP_CODE;
 		break;
 	}
 
-	g_200003BE = 0;
+	gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 	Delay = gEeprom.DTMF_PRELOAD_TIME;
 	if (gEeprom.DTMF_SIDE_TONE) {
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);

@@ -20,6 +20,7 @@
 #include "bsp/dp32g030/syscon.h"
 #include "sram-overlay.h"
 
+static volatile uint32_t *pFlash = 0;
 uint32_t overlay_FLASH_MainClock;
 uint32_t overlay_FLASH_ClockMultiplier;
 uint32_t overlay_0x20000478; // Nothing is using this???
@@ -87,7 +88,8 @@ void overlay_FLASH_Unlock(void)
 
 uint32_t overlay_FLASH_ReadByAHB(uint32_t Offset)
 {
-	return *(volatile uint32_t *)(Offset & ~3U);
+
+	return pFlash[(Offset & ~3U) / 4];
 }
 
 uint32_t overlay_FLASH_ReadByAPB(uint32_t Offset)
