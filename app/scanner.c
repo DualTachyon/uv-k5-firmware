@@ -203,7 +203,6 @@ void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 }
 
 void SCANNER_Key_STAR(bool bKeyPressed, bool bKeyHeld)
-
 {
 	if ((!bKeyHeld) && (bKeyPressed)) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;

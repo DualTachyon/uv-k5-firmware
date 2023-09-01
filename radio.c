@@ -725,12 +725,10 @@ void RADIO_SomethingWithTransmit(void)
 				Value = 1;
 			} else if (gBatteryDisplayLevel == 0) {
 				Value = 2;
-			} else {
-				// TODO: Fix this goto, a bit painful to disentangle
-				if (gBatteryDisplayLevel != 6) {
-					goto LAB_00007c20;
-				}
+			} else if (gBatteryDisplayLevel == 6) {
 				Value = 6;
+			} else {
+				goto Skip;
 			}
 		} else {
 			Value = 3;
@@ -738,28 +736,30 @@ void RADIO_SomethingWithTransmit(void)
 		RADIO_SomethingElse(Value);
 		g_20000383 = 0;
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
-	} else {
-LAB_00007c20:
-		if (g_200003BE == 1) {
-			if (g_20000438 == 2) {
-				g_200003BD = 1;
-				g_200003BC = 0;
-				g_200003C3 = 6;
-			} else {
-				g_200003BC = 1;
-				g_200003BD = 0;
-			}
-		}
-		FUNCTION_Select(FUNCTION_TRANSMIT);
-		if (g_20000383 == 0) {
-			gTxTimerCountdown = gEeprom.TX_TIMEOUT_TIMER * 120;
-		} else {
-			gTxTimerCountdown = 0;
-		}
-		gTxTimeoutReached = false;
-		g_200003FD = 0;
-		gRTTECountdown = 0;
+		g_200003BE = 0;
+		return;
 	}
+
+Skip:
+	if (g_200003BE == 1) {
+		if (g_20000438 == 2) {
+			g_200003BD = 1;
+			g_200003BC = 0;
+			g_200003C3 = 6;
+		} else {
+			g_200003BC = 1;
+			g_200003BD = 0;
+		}
+	}
+	FUNCTION_Select(FUNCTION_TRANSMIT);
+	if (g_20000383 == 0) {
+		gTxTimerCountdown = gEeprom.TX_TIMEOUT_TIMER * 120;
+	} else {
+		gTxTimerCountdown = 0;
+	}
+	gTxTimeoutReached = false;
+	g_200003FD = 0;
+	gRTTECountdown = 0;
 	g_200003BE = 0;
 }
 
