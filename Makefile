@@ -1,7 +1,4 @@
 TARGET = firmware
-OVERLAY = sram-overlay
-BLOB_OVERLAY = blob-overlay
-LINK_OVERLAY = link-overlay
 
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
 BSP_HEADERS := $(patsubst hardware/%,bsp/%,$(BSP_DEFINITIONS))
@@ -11,9 +8,7 @@ OBJS =
 # Startup files
 OBJS += start.o
 OBJS += init.o
-OBJS += overlay.o
-OBJS += $(LINK_OVERLAY).o
-OBJS += $(BLOB_OVERLAY).o
+OBJS += sram-overlay.o
 OBJS += external/printf/printf.o
 
 # Drivers
@@ -86,10 +81,6 @@ CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-builtin -fshort-enums -std=c11 -
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
 
-OVERLAY_CFLAGS = $(CFLAGS) -fno-inline -fno-toplevel-reorder
-OVERLAY_LD = arm-none-eabi-ld
-OVERLAY_LDFLAGS = -T $(OVERLAY).ld -S
-
 ifeq ($(DEBUG),1)
 ASFLAGS += -g
 CFLAGS += -g
@@ -115,23 +106,6 @@ debug:
 flash:
 	/opt/openocd/bin/openocd -c "bindto 0.0.0.0" -f interface/jlink.cfg -f dp32g030.cfg -c "write_image firmware.bin 0; shutdown;"
 
-$(OVERLAY).bin: $(OVERLAY)
-	$(OBJCOPY) -O binary $< $@
-
-$(OVERLAY): $(OVERLAY).o
-	$(OVERLAY_LD) $(OVERLAY_LDFLAGS) $< -o $@
-
-$(OVERLAY).o: $(OVERLAY).c
-	$(CC) $(OVERLAY_CFLAGS) $(INC) -c $< -o $@
-
-$(LINK_OVERLAY).o: $(LINK_OVERLAY).S
-	$(AS) $(ASFLAGS) $< -o $@
-
-$(LINK_OVERLAY).S: $(OVERLAY)
-	./gen-overlay-symbols.sh $< $@
-
-$(BLOB_OVERLAY).S: $(OVERLAY).bin
-
 $(TARGET): $(OBJS)
 	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
@@ -146,5 +120,5 @@ bsp/dp32g030/%.h: hardware/dp32g030/%.def
 -include $(DEPS)
 
 clean:
-	rm -f $(TARGET).bin $(TARGET) $(OBJS) $(DEPS) $(OVERLAY).bin $(OVERLAY) $(OVERLAY).o $(OVERLAY).d $(LINK_OVERLAY).o $(LINK_OVERLAY).S $(BLOB_OVERLAY).o
+	rm -f $(TARGET).bin $(TARGET) $(OBJS) $(DEPS)
 
