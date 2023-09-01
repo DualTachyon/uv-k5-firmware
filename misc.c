@@ -29,9 +29,17 @@ uint8_t gSetting_F_LOCK;
 bool gSetting_ScrambleEnable;
 uint8_t gSetting_F_LOCK;
 
-uint32_t gCustomPasswordKey[4];
+const uint32_t gDefaultAesKey[4] = {
+	0x4AA5CC60,
+	0x0312CC5F,
+	0xFFD2DABB,
+	0x6BBA7F92,
+};
 
+uint32_t gCustomAesKey[4];
 bool bHasCustomAesKey;
+uint32_t gChallenge[4];
+uint8_t gTryCount;
 
 uint8_t gEEPROM_1EC0_0[8];
 uint8_t gEEPROM_1EC0_1[8];

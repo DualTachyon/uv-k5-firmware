@@ -59,9 +59,11 @@ extern uint8_t gSetting_F_LOCK;
 extern bool gSetting_ScrambleEnable;
 extern uint8_t gSetting_F_LOCK;
 
-extern uint32_t gCustomPasswordKey[4];
-
+extern const uint32_t gDefaultAesKey[4];
+extern uint32_t gCustomAesKey[4];
 extern bool bHasCustomAesKey;
+extern uint32_t gChallenge[4];
+extern uint8_t gTryCount;
 
 extern uint8_t gEEPROM_1EC0_0[8];
 extern uint8_t gEEPROM_1EC0_1[8];

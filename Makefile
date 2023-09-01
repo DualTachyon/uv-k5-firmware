@@ -18,6 +18,7 @@ OBJS += external/printf/printf.o
 
 # Drivers
 OBJS += driver/adc.o
+OBJS += driver/aes.o
 OBJS += driver/backlight.o
 OBJS += driver/bk1080.o
 OBJS += driver/bk4819.o

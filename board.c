@@ -751,10 +751,10 @@ void BOARD_EEPROM_Init(void)
 	EEPROM_ReadBuffer(0x0D60, gMR_ChannelAttributes, 207);
 
 	// 0F30..0F3F
-	EEPROM_ReadBuffer(0x0F30, gCustomPasswordKey, 16);
+	EEPROM_ReadBuffer(0x0F30, gCustomAesKey, 16);
 
 	for (i = 0; i < 4; i++) {
-		if (gCustomPasswordKey[i] != 0xFFFFFFFFU) {
+		if (gCustomAesKey[i] != 0xFFFFFFFFU) {
 			bHasCustomAesKey = true;
 			return;
 		}
