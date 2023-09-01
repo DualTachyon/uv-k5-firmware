@@ -748,7 +748,7 @@ Skip:
 			gDTMF_CallState = DTMF_CALL_STATE_NONE;
 			g_200003C3 = 6;
 		} else {
-			gDTMF_CallState = DTMF_CALL_STATE_1;
+			gDTMF_CallState = DTMF_CALL_STATE_CALL_OUT;
 			g_200003BD = 0;
 		}
 	}

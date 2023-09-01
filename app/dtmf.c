@@ -224,7 +224,7 @@ void DTMF_HandleRequest(void)
 			return;
 		}
 	}
-	if (gDTMF_CallState == DTMF_CALL_STATE_1 && gDTMF_CallMode == DTMF_CALL_MODE_NOT_GROUP && gDTMF_WriteIndex >= 9) {
+	if (gDTMF_CallState == DTMF_CALL_STATE_CALL_OUT && gDTMF_CallMode == DTMF_CALL_MODE_NOT_GROUP && gDTMF_WriteIndex >= 9) {
 		Offset = gDTMF_WriteIndex - 9;
 		sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
 		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, false)) {

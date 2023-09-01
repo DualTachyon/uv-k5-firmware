@@ -30,7 +30,7 @@ typedef enum DTMF_State_t DTMF_State_t;
 
 enum DTMF_CallState_t {
 	DTMF_CALL_STATE_NONE     = 0U,
-	DTMF_CALL_STATE_1        = 1U,
+	DTMF_CALL_STATE_CALL_OUT = 1U,
 	DTMF_CALL_STATE_RECEIVED = 2U,
 };
 

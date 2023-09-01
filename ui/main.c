@@ -68,7 +68,7 @@ void UI_DisplayMain(void)
 				char Contact[16];
 
 				if (!gDTMF_InputMode) {
-					if (gDTMF_CallState == DTMF_CALL_STATE_1) {
+					if (gDTMF_CallState == DTMF_CALL_STATE_CALL_OUT) {
 						if (gDTMF_State == DTMF_STATE_CALL_OUT_RSP) {
 							strcpy(String, "CALL OUT(RSP)");
 						} else {
@@ -96,7 +96,7 @@ void UI_DisplayMain(void)
 				memset(Contact, 0, sizeof(Contact));
 
 				if (!gDTMF_InputMode) {
-					if (gDTMF_CallState == DTMF_CALL_STATE_1) {
+					if (gDTMF_CallState == DTMF_CALL_STATE_CALL_OUT) {
 						if (DTMF_FindContact(gDTMF_String, Contact)) {
 							sprintf(String, ">%s", Contact);
 						} else {
