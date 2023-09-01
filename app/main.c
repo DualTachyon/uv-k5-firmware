@@ -88,25 +88,22 @@ void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 				for (i = 0; i < 7; i++) {
 					if (Frequency <= gUpperLimitFrequencyBandTable[i] && (gLowerLimitFrequencyBandTable[i] <= Frequency)) {
-						if (i < 7) {
-							gAnotherVoiceID = (VOICE_ID_t)Key;
-							if (gTxInfo->Band != i) {
-								gTxInfo->Band = i;
-								gEeprom.ScreenChannel[Vfo] = i + FREQ_CHANNEL_FIRST;
-								gEeprom.FreqChannel[Vfo] = i + FREQ_CHANNEL_FIRST;
-								SETTINGS_SaveVfoIndices();
-								RADIO_ConfigureChannel(Vfo, 2);
-							}
-							Frequency += 75;
-							gTxInfo->ConfigRX.Frequency = FREQUENCY_FloorToStep(
-									Frequency,
-									gTxInfo->StepFrequency,
-									gLowerLimitFrequencyBandTable[gTxInfo->Band]
-									);
-							gRequestSaveChannel = 1;
-							return;
+						gAnotherVoiceID = (VOICE_ID_t)Key;
+						if (gTxInfo->Band != i) {
+							gTxInfo->Band = i;
+							gEeprom.ScreenChannel[Vfo] = i + FREQ_CHANNEL_FIRST;
+							gEeprom.FreqChannel[Vfo] = i + FREQ_CHANNEL_FIRST;
+							SETTINGS_SaveVfoIndices();
+							RADIO_ConfigureChannel(Vfo, 2);
 						}
-						break;
+						Frequency += 75;
+						gTxInfo->ConfigRX.Frequency = FREQUENCY_FloorToStep(
+								Frequency,
+								gTxInfo->StepFrequency,
+								gLowerLimitFrequencyBandTable[gTxInfo->Band]
+								);
+						gRequestSaveChannel = 1;
+						return;
 					}
 				}
 			}
