@@ -471,7 +471,7 @@ void MENU_AcceptSetting(void)
 		return;
 
 	case MENU_RESET:
-		//EepromFactoryReset(gSubMenuSelection);
+		BOARD_FactoryReset(gSubMenuSelection);
 		return;
 
 	case MENU_350TX:

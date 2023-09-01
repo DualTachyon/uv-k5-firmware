@@ -27,6 +27,7 @@ void BOARD_ADC_GetBatteryInfo(uint16_t *pVoltage, uint16_t *pCurrent);
 void BOARD_Init(void);
 void BOARD_EEPROM_Init(void);
 void BOARD_EEPROM_LoadMoreSettings(void);
+void BOARD_FactoryReset(bool bIsAll);
 
 #endif
 
