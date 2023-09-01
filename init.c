@@ -18,8 +18,8 @@
 
 #include <stdint.h>
 
-extern uint8_t __bss_start__[];
-extern uint8_t __bss_end__[];
+extern uint32_t __bss_start__[];
+extern uint32_t __bss_end__[];
 extern uint8_t flash_data_start[];
 extern uint8_t sram_data_start[];
 extern uint8_t sram_data_end[];
@@ -29,7 +29,7 @@ void DATA_Init(void);
 
 void BSS_Init(void)
 {
-	uint8_t *pBss;
+	uint32_t *pBss;
 
 	for (pBss = __bss_start__; pBss < __bss_end__; pBss++) {
 		*pBss = 0;
