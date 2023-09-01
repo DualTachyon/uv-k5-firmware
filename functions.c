@@ -98,7 +98,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		if (gFmRadioMode) {
 			g_2000038E = 500;
 		}
-		if (g_200003BC != 1 && g_200003BC != 2) {
+		if (gDTMF_CallState != DTMF_CALL_1 && gDTMF_CallState != DTMF_CALL_RECEIVED) {
 			gBatterySaveCountdown = 1000;
 			gSchedulePowerSave = false;
 			return;

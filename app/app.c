@@ -122,7 +122,7 @@ void FUN_000051e8(void)
 
 	if (gStepDirection == 0 && g_20000381 == 0) {
 		if (gRxInfo->DTMF_DECODING_ENABLE || gSetting_KILLED) {
-			if (g_200003BC == 0) {
+			if (gDTMF_CallState == DTMF_CALL_NONE) {
 				if (g_20000411 == 0x01) {
 					g_2000033A = 500;
 					gSystickFlag7 = false;
@@ -720,7 +720,7 @@ void APP_Update(void)
 	if (gScreenToDisplay != DISPLAY_SCANNER && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		if (gSystickFlag7 && gVoiceWriteIndex == 0) {
 			if (gStepDirection == 0 && g_20000381 == 0) {
-				if (!gPttIsPressed && !gFmRadioMode && g_200003BC == 0 && gCurrentFunction != FUNCTION_POWER_SAVE) {
+				if (!gPttIsPressed && !gFmRadioMode && gDTMF_CallState == DTMF_CALL_NONE && gCurrentFunction != FUNCTION_POWER_SAVE) {
 					FUN_00007f4c();
 					if (g_2000041F == 1 && gScreenToDisplay == DISPLAY_MAIN) {
 						GUI_SelectNextDisplay(DISPLAY_MAIN);
@@ -744,7 +744,7 @@ void APP_Update(void)
 	}
 
 	if (gSchedulePowerSave) {
-		if (gEeprom.BATTERY_SAVE == 0 || gStepDirection || g_20000381 || gFmRadioMode || gPttIsPressed || gScreenToDisplay != DISPLAY_MAIN || gKeyBeingHeld || g_200003BC) {
+		if (gEeprom.BATTERY_SAVE == 0 || gStepDirection || g_20000381 || gFmRadioMode || gPttIsPressed || gScreenToDisplay != DISPLAY_MAIN || gKeyBeingHeld || gDTMF_CallState != DTMF_CALL_NONE) {
 			gBatterySaveCountdown = 1000;
 		} else {
 			if ((IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[0]) && IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[1])) || !gIsNoaaMode) {
@@ -1198,11 +1198,11 @@ LAB_00004b08:
 		gUpdateDisplay = true;
 	}
 
-	if (g_200003BC && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_RECEIVE) {
+	if (gDTMF_CallState != DTMF_CALL_NONE && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_RECEIVE) {
 		if (gDTMF_AUTO_RESET_TIME) {
 			gDTMF_AUTO_RESET_TIME--;
 			if (gDTMF_AUTO_RESET_TIME == 0) {
-				g_200003BC = 0;
+				gDTMF_CallState = DTMF_CALL_NONE;
 				gUpdateDisplay = true;
 			}
 		}
@@ -2005,7 +2005,7 @@ Skip:
 	RADIO_ConfigureNOAA();
 	RADIO_SetupRegisters(true);
 	gDTMF_AUTO_RESET_TIME = 0;
-	g_200003BC = 0;
+	gDTMF_CallState = DTMF_CALL_NONE;
 	g_200003C3 = 0;
 	g_200003BD = 0;
 	gVFO_RSSI_Level[0] = 0;

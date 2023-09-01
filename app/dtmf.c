@@ -43,6 +43,7 @@ uint8_t gDTMF_AUTO_RESET_TIME;
 uint8_t gDTMF_InputIndex;
 bool gDTMF_InputMode;
 uint8_t gDTMF_RecvTimeout;
+DTMF_CallState_t gDTMF_CallState;
 
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 {
@@ -208,7 +209,7 @@ void DTMF_HandleRequest(void)
 				g_200003BE = 2;
 			}
 		}
-		g_200003BC = 0;
+		gDTMF_CallState = DTMF_CALL_NONE;
 		gUpdateDisplay = true;
 		gUpdateStatus = true;
 		return;
@@ -221,7 +222,7 @@ void DTMF_HandleRequest(void)
 			return;
 		}
 	}
-	if (g_200003BC == 1 && g_20000438 == 0 && gDTMF_WriteIndex >= 9) {
+	if (gDTMF_CallState == DTMF_CALL_1 && g_20000438 == 0 && gDTMF_WriteIndex >= 9) {
 		Offset = gDTMF_WriteIndex - 9;
 		sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, "AAAAA");
 		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 9, false)) {
@@ -232,7 +233,7 @@ void DTMF_HandleRequest(void)
 	if (gSetting_KILLED) {
 		return;
 	}
-	if (g_200003BC) {
+	if (gDTMF_CallState != DTMF_CALL_NONE) {
 		return;
 	}
 	if (gDTMF_WriteIndex < 7) {
@@ -244,7 +245,7 @@ void DTMF_HandleRequest(void)
 	if (!DTMF_CompareMessage(gDTMF_Received + Offset, String, 4, true)) {
 		return;
 	}
-	g_200003BC = 2;
+	gDTMF_CallState = DTMF_CALL_RECEIVED;
 	memcpy(gDTMF_Callee, gDTMF_Received + Offset, 3);
 	memcpy(gDTMF_Caller, gDTMF_Received + Offset + 4, 3);
 
@@ -299,7 +300,7 @@ void DTMF_Reply(void)
 		break;
 
 	default:
-		if (g_200003BC || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 1 && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != 3)) {
+		if (gDTMF_CallState != DTMF_CALL_NONE || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOT && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOTH)) {
 			g_200003BE = 0;
 			return;
 		}

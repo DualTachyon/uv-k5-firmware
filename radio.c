@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include "app/dtmf.h"
 #include "app/fm.h"
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
@@ -744,10 +745,10 @@ Skip:
 	if (g_200003BE == 1) {
 		if (g_20000438 == 2) {
 			g_200003BD = 1;
-			g_200003BC = 0;
+			gDTMF_CallState = DTMF_CALL_NONE;
 			g_200003C3 = 6;
 		} else {
-			g_200003BC = 1;
+			gDTMF_CallState = DTMF_CALL_1;
 			g_200003BD = 0;
 		}
 	}
@@ -799,7 +800,7 @@ void RADIO_SendEndOfTransmission(void)
 	} else if (gEeprom.ROGER == ROGER_MODE_MDC) {
 		BK4819_PlayRogerMDC();
 	}
-	if (g_200003BC == 0 && (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_EOT || gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_BOTH)) {
+	if (gDTMF_CallState == DTMF_CALL_NONE && (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_EOT || gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE == PTT_ID_BOTH)) {
 		if (gEeprom.DTMF_SIDE_TONE) {
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			gEnableSpeaker = true;

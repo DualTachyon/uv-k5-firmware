@@ -135,7 +135,6 @@ extern uint8_t gFlashLightState;
 extern uint8_t g_200003B4;
 extern uint16_t g_200003B6;
 extern uint16_t g_200003B8;
-extern uint8_t g_200003BC;
 extern uint8_t g_200003BD;
 extern uint8_t g_200003BE;
 extern uint8_t g_200003C0;
