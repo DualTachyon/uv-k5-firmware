@@ -22,7 +22,7 @@
 static void AES_Setup_ENC_CBC(bool IsDecrypt, const void *pKey, const void *pIv)
 {
 	const uint32_t *pK = (const uint32_t *)pKey;
-	const uint32_t *pI = (const uint32_t *)pI;
+	const uint32_t *pI = (const uint32_t *)pIv;
 
 	AES_CR = (AES_CR & ~AES_CR_EN_MASK) | AES_CR_EN_VALUE_DISABLE;
 	AES_CR = AES_CR_CHMOD_VALUE_CBC;
@@ -39,8 +39,8 @@ static void AES_Setup_ENC_CBC(bool IsDecrypt, const void *pKey, const void *pIv)
 
 static void AES_Transform(const void *pIn, void *pOut)
 {
-	const uint32_t *pI = (const uint32_t *)pI;
-	uint32_t *pO = (uint32_t *)pO;
+	const uint32_t *pI = (const uint32_t *)pIn;
+	uint32_t *pO = (uint32_t *)pOut;
 
 	AES_DINR = pI[0];
 	AES_DINR = pI[1];
@@ -60,8 +60,8 @@ static void AES_Transform(const void *pIn, void *pOut)
 
 void AES_Encrypt(const void *pKey, const void *pIv, const void *pIn, void *pOut, uint8_t NumBlocks)
 {
-	const uint8_t *pI = (const uint8_t *)pI;
-	uint8_t *pO = (uint8_t *)pO;
+	const uint8_t *pI = (const uint8_t *)pIn;
+	uint8_t *pO = (uint8_t *)pOut;
 	uint8_t i;
 
 	AES_Setup_ENC_CBC(0, pKey, pIv);
