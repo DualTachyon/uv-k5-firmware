@@ -826,7 +826,7 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		return;
 	}
 
-	g_20000396 = 1;
+	gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 	INPUTBOX_Append(Key);
 	gRequestDisplayScreen = DISPLAY_MENU;
 	if (!gIsInSubMenu) {
@@ -916,13 +916,13 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			}
 		}
 	}
-	g_20000396 = 2;
+	gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 }
 
 void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
-		g_20000396 = 1;
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		if (g_20000381 == 0) {
 			if (gIsInSubMenu) {
 				if (gInputBoxIndex == 0 || gMenuCursor != MENU_OFFSET) {
@@ -951,7 +951,7 @@ void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
-		g_20000396 = 1;
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		gRequestDisplayScreen = DISPLAY_MENU;
 		if (!gIsInSubMenu) {
 			if (gMenuCursor != MENU_SCR) {
@@ -1000,7 +1000,7 @@ void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
-		g_20000396 = 1;
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		RADIO_ConfigureTX();
 		if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE) && !gRxInfo->IsAM) {
 			if (gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_R_DCS) {
@@ -1018,7 +1018,7 @@ void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 			g_20000394 = true;
 			return;
 		}
-		g_20000396 = 2;
+		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 	}
 }
 
@@ -1032,7 +1032,7 @@ void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		if (!bKeyPressed) {
 			return;
 		}
-		g_20000396 = 1;
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		gInputBoxIndex = 0;
 	} else if (!bKeyPressed) {
 		return;

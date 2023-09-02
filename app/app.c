@@ -1538,14 +1538,14 @@ static void APP_ProcessKey_MAIN(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	if (gFmRadioMode && Key != KEY_PTT && Key != KEY_EXIT) {
 		if (!bKeyHeld && bKeyPressed) {
-			g_20000396 = 2;
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
 		return;
 	}
 	if (gDTMF_InputMode && !bKeyHeld && bKeyPressed) {
 		char Character = DTMF_GetCharacter(Key);
 		if (Character != 0xFF) {
-			g_20000396 = 1;
+			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 			DTMF_Append(Character);
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			g_20000394 = true;
@@ -1587,7 +1587,7 @@ static void APP_ProcessKey_MAIN(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 	default:
 		if (!bKeyHeld && bKeyPressed) {
-			g_20000396 = 2;
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
 		break;
 	}
@@ -1624,7 +1624,7 @@ void APP_ProcessKey_MENU(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 	default:
 		if (!bKeyHeld && bKeyPressed) {
-			g_20000396 = 2;
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
 		break;
 	}
@@ -1661,7 +1661,7 @@ static void APP_ProcessKey_FM(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 	default:
 		if (!bKeyHeld && bKeyPressed) {
-			g_20000396 = 2;
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
 		break;
 	}
@@ -1695,7 +1695,7 @@ static void APP_ProcessKey_SCANNER(KEY_Code_t Key, bool bKeyPressed, bool bKeyHe
 		break;
 	default:
 		if (!bKeyHeld && bKeyPressed) {
-			g_20000396 = 2;
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
 		break;
 	}
@@ -1931,7 +1931,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 Skip:
 	if (gBeepToPlay) {
 		AUDIO_PlayBeep(gBeepToPlay);
-		gBeepToPlay = 0;
+		gBeepToPlay = BEEP_NONE;
 	}
 
 	if (gFlagAcceptSetting) {

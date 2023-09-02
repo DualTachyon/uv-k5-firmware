@@ -106,7 +106,6 @@ extern volatile int8_t gFM_Step;
 extern uint8_t g_20000393;
 extern bool g_20000394;
 extern uint8_t g_20000395;
-extern uint8_t g_20000396;
 extern uint8_t g_20000398;
 extern uint8_t gVfoConfigureMode;
 extern uint8_t g_2000039B;

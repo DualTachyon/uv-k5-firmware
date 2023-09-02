@@ -82,7 +82,6 @@ bool g_20000394;
 uint8_t g_20000395;
 uint8_t gKeypadLocked;
 uint8_t g_20000395;
-uint8_t g_20000396;
 uint8_t g_20000398;
 uint8_t gVfoConfigureMode;
 uint8_t g_2000039B;
