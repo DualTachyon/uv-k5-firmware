@@ -48,7 +48,7 @@ typedef enum DTMF_ReplyState_t DTMF_ReplyState_t;
 enum DTMF_CallMode_t {
 	DTMF_CALL_MODE_NOT_GROUP = 0U,
 	DTMF_CALL_MODE_GROUP     = 1U,
-	DTMF_CALL_MODE_2         = 2U,
+	DTMF_CALL_MODE_DTMF      = 2U,
 };
 
 typedef enum DTMF_CallMode_t DTMF_CallMode_t;

@@ -284,7 +284,7 @@ void DTMF_Reply(void)
 
 	switch (gDTMF_ReplyState) {
 	case DTMF_REPLY_ANI:
-		if (gDTMF_CallMode == DTMF_CALL_MODE_2) {
+		if (gDTMF_CallMode == DTMF_CALL_MODE_DTMF) {
 			pString = gDTMF_String;
 		} else {
 			sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, gEeprom.ANI_DTMF_ID);

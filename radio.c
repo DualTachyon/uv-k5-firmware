@@ -746,7 +746,7 @@ void RADIO_SomethingWithTransmit(void)
 
 Skip:
 	if (gDTMF_ReplyState == DTMF_REPLY_ANI) {
-		if (gDTMF_CallMode == DTMF_CALL_MODE_2) {
+		if (gDTMF_CallMode == DTMF_CALL_MODE_DTMF) {
 			g_200003BD = 1;
 			gDTMF_CallState = DTMF_CALL_STATE_NONE;
 			g_200003C3 = 6;

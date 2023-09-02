@@ -137,7 +137,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 						if (gDTMF_InputIndex == 3) {
 							gDTMF_CallMode = DTMF_IsGroupCall(gDTMF_InputBox, 3);
 						} else {
-							gDTMF_CallMode = DTMF_CALL_MODE_2;
+							gDTMF_CallMode = DTMF_CALL_MODE_DTMF;
 						}
 						sprintf(gDTMF_String, "%s", gDTMF_InputBox);
 						g_200003C0 = gDTMF_InputIndex;
