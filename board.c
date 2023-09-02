@@ -353,122 +353,34 @@ void BOARD_EEPROM_Init(void)
 	} else {
 		gEeprom.CHAN_1_CALL = 0;
 	}
-	if (Data[1] < 10) {
-		gEeprom.SQUELCH_LEVEL = Data[1];
-	} else {
-		gEeprom.SQUELCH_LEVEL = 4;
-	}
-	if (Data[2] < 11) {
-		gEeprom.TX_TIMEOUT_TIMER = Data[2];
-	} else {
-		gEeprom.TX_TIMEOUT_TIMER = 2;
-	}
-	if (Data[3] < 2) {
-		gEeprom.NOAA_AUTO_SCAN = Data[3];
-	} else {
-		gEeprom.NOAA_AUTO_SCAN = true;
-	}
-	if (Data[4] < 2) {
-		gEeprom.KEY_LOCK = Data[4];
-	} else {
-		gEeprom.KEY_LOCK = false;
-	}
-	if (Data[5] < 2) {
-		gEeprom.VOX_SWITCH = Data[5];
-	} else {
-		gEeprom.VOX_SWITCH = false;
-	}
-	if (Data[6] < 10) {
-		gEeprom.VOX_LEVEL = Data[6];
-	} else {
-		gEeprom.VOX_LEVEL = 5;
-	}
-	if (Data[7] < 5) {
-		gEeprom.MIC_SENSITIVITY = Data[7];
-	} else {
-		gEeprom.MIC_SENSITIVITY = 2;
-	}
+	gEeprom.SQUELCH_LEVEL    = (Data[1] < 10) ? Data[1] : 4;
+	gEeprom.TX_TIMEOUT_TIMER = (Data[2] < 11) ? Data[2] : 2;
+	gEeprom.NOAA_AUTO_SCAN   = (Data[3] <  2) ? Data[3] : true;
+	gEeprom.KEY_LOCK         = (Data[4] <  2) ? Data[4] : false;
+	gEeprom.VOX_SWITCH       = (Data[5] <  2) ? Data[5] : false;
+	gEeprom.VOX_LEVEL        = (Data[6] < 10) ? Data[6] : 5;
+	gEeprom.MIC_SENSITIVITY  = (Data[7] <  5) ? Data[7] : 2;
 
 	// 0E78..0E7F
 	EEPROM_ReadBuffer(0x0E78, Data, 8);
-	if (Data[1] < 3) {
-		gEeprom.CHANNEL_DISPLAY_MODE = Data[1];
-	} else {
-		gEeprom.CHANNEL_DISPLAY_MODE = 0;
-	}
-	if (Data[2] < 3) {
-		gEeprom.CROSS_BAND_RX_TX = Data[2];
-	} else {
-		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
-	}
-	if (Data[3] < 5) {
-		gEeprom.BATTERY_SAVE = Data[3];
-	} else {
-		gEeprom.BATTERY_SAVE = 4;
-	}
-	if (Data[4] < 3) {
-		gEeprom.DUAL_WATCH = Data[4];
-	} else {
-		gEeprom.DUAL_WATCH = DUAL_WATCH_CHAN_A;
-	}
-	if (Data[5] < 6) {
-		gEeprom.BACKLIGHT = Data[5];
-	} else {
-		gEeprom.BACKLIGHT = 5;
-	}
-	if (Data[6] < 2) {
-		gEeprom.TAIL_NOTE_ELIMINATION = Data[6];
-	} else {
-		gEeprom.TAIL_NOTE_ELIMINATION = true;
-	}
-	if (Data[7] < 2) {
-		gEeprom.VFO_OPEN = Data[7];
-	} else {
-		gEeprom.VFO_OPEN = true;
-	}
+	gEeprom.CHANNEL_DISPLAY_MODE  = (Data[1] < 3) ? Data[1] : MDF_FREQUENCY;
+	gEeprom.CROSS_BAND_RX_TX      = (Data[2] < 3) ? Data[2] : CROSS_BAND_OFF;
+	gEeprom.BATTERY_SAVE          = (Data[3] < 5) ? Data[3] : 4;
+	gEeprom.DUAL_WATCH            = (Data[4] < 3) ? Data[4] : DUAL_WATCH_CHAN_A;
+	gEeprom.BACKLIGHT             = (Data[5] < 6) ? Data[5] : 5;
+	gEeprom.TAIL_NOTE_ELIMINATION = (Data[6] < 2) ? Data[6] : true;
+	gEeprom.VFO_OPEN              = (Data[7] < 2) ? Data[7] : true;
 
 	// 0E80..0E87
 	EEPROM_ReadBuffer(0x0E80, Data, 8);
-	if (IS_VALID_CHANNEL(Data[0])) {
-		gEeprom.ScreenChannel[0] = Data[0];
-	} else {
-		gEeprom.ScreenChannel[0] = 205;
-	}
-	if (IS_VALID_CHANNEL(Data[3])) {
-		gEeprom.ScreenChannel[1] = Data[3];
-	} else {
-		gEeprom.ScreenChannel[1] = 205;
-	}
-	if (IS_MR_CHANNEL(Data[1])) {
-		gEeprom.MrChannel[0] = Data[1];
-	} else {
-		gEeprom.MrChannel[0] = 0;
-	}
-	if (IS_MR_CHANNEL(Data[4])) {
-		gEeprom.MrChannel[1] = Data[4];
-	} else {
-		gEeprom.MrChannel[1] = 0;
-	}
-	if (IS_FREQ_CHANNEL(Data[2])) {
-		gEeprom.FreqChannel[0] = Data[2];
-	} else {
-		gEeprom.FreqChannel[0] = 205;
-	}
-	if (IS_FREQ_CHANNEL(Data[5])) {
-		gEeprom.FreqChannel[1] = Data[5];
-	} else {
-		gEeprom.FreqChannel[1] = 205;
-	}
-	if (IS_NOAA_CHANNEL(Data[6])) {
-		gEeprom.NoaaChannel[0] = Data[6];
-	} else {
-		gEeprom.NoaaChannel[0] = NOAA_CHANNEL_FIRST;
-	}
-	if (IS_NOAA_CHANNEL(Data[7])) {
-		gEeprom.NoaaChannel[1] = Data[7];
-	} else {
-		gEeprom.NoaaChannel[1] = NOAA_CHANNEL_FIRST;
-	}
+	gEeprom.ScreenChannel[0] = IS_VALID_CHANNEL(Data[0]) ? Data[0] : (FREQ_CHANNEL_FIRST + 5);
+	gEeprom.ScreenChannel[1] = IS_VALID_CHANNEL(Data[3]) ? Data[3] : (FREQ_CHANNEL_FIRST + 5);
+	gEeprom.MrChannel[0]     = IS_MR_CHANNEL(Data[1])    ? Data[1] : MR_CHANNEL_FIRST;
+	gEeprom.MrChannel[1]     = IS_MR_CHANNEL(Data[4])    ? Data[4] : MR_CHANNEL_FIRST;
+	gEeprom.FreqChannel[0]   = IS_FREQ_CHANNEL(Data[2])  ? Data[2] : (FREQ_CHANNEL_FIRST + 5);
+	gEeprom.FreqChannel[1]   = IS_FREQ_CHANNEL(Data[5])  ? Data[5] : (FREQ_CHANNEL_FIRST + 5);
+	gEeprom.NoaaChannel[0]   = IS_NOAA_CHANNEL(Data[6])  ? Data[6] : NOAA_CHANNEL_FIRST;
+	gEeprom.NoaaChannel[1]   = IS_NOAA_CHANNEL(Data[7])  ? Data[7] : NOAA_CHANNEL_FIRST;
 
 	// 0E88..0E8F
 	struct {
@@ -488,11 +400,7 @@ void BOARD_EEPROM_Init(void)
 	}
 
 	gEeprom.FM_SelectedChannel = FM.SelectedChannel;
-	if (FM.IsMrMode < 2) {
-		gEeprom.FM_IsMrMode = FM.IsMrMode;
-	} else {
-		gEeprom.FM_IsMrMode = false;
-	}
+	gEeprom.FM_IsMrMode = (FM.IsMrMode < 2) ? FM.IsMrMode : false;
 
 	// 0E40..0E67
 	EEPROM_ReadBuffer(0x0E40, gFM_Channels, sizeof(gFM_Channels));
@@ -500,46 +408,14 @@ void BOARD_EEPROM_Init(void)
 
 	// 0E90..0E97
 	EEPROM_ReadBuffer(0x0E90, Data, 8);
-	if (Data[0] < 2) {
-		gEeprom.BEEP_CONTROL = Data[0];
-	} else {
-		gEeprom.BEEP_CONTROL = 1;
-	}
-	if (Data[1] < 9) {
-		gEeprom.KEY_1_SHORT_PRESS_ACTION = Data[1];
-	} else {
-		gEeprom.KEY_1_SHORT_PRESS_ACTION = 3;
-	}
-	if (Data[2] < 9) {
-		gEeprom.KEY_1_LONG_PRESS_ACTION = Data[2];
-	} else {
-		gEeprom.KEY_1_LONG_PRESS_ACTION = 8;
-	}
-	if (Data[3] < 9) {
-		gEeprom.KEY_2_SHORT_PRESS_ACTION = Data[3];
-	} else {
-		gEeprom.KEY_2_SHORT_PRESS_ACTION = 1;
-	}
-	if (Data[4] < 9) {
-		gEeprom.KEY_2_LONG_PRESS_ACTION = Data[4];
-	} else {
-		gEeprom.KEY_2_LONG_PRESS_ACTION = 6;
-	}
-	if (Data[5] < 3) {
-		gEeprom.SCAN_RESUME_MODE = Data[5];
-	} else {
-		gEeprom.SCAN_RESUME_MODE = SCAN_RESUME_CO;
-	}
-	if (Data[6] < 2) {
-		gEeprom.AUTO_KEYPAD_LOCK = Data[6];
-	} else {
-		gEeprom.AUTO_KEYPAD_LOCK = true;
-	}
-	if (Data[7] < 3) {
-		gEeprom.POWER_ON_DISPLAY_MODE = Data[7];
-	} else {
-		gEeprom.POWER_ON_DISPLAY_MODE = POWER_ON_DISPLAY_MODE_MESSAGE;
-	}
+	gEeprom.BEEP_CONTROL             = (Data[0] < 2) ? Data[0] : true;
+	gEeprom.KEY_1_SHORT_PRESS_ACTION = (Data[1] < 9) ? Data[1] : 3;
+	gEeprom.KEY_1_LONG_PRESS_ACTION  = (Data[2] < 9) ? Data[2] : 8;
+	gEeprom.KEY_2_SHORT_PRESS_ACTION = (Data[3] < 9) ? Data[3] : 1;
+	gEeprom.KEY_2_LONG_PRESS_ACTION  = (Data[4] < 9) ? Data[4] : 6;
+	gEeprom.SCAN_RESUME_MODE         = (Data[5] < 3) ? Data[5] : SCAN_RESUME_CO;
+	gEeprom.AUTO_KEYPAD_LOCK         = (Data[6] < 2) ? Data[6] : true;
+	gEeprom.POWER_ON_DISPLAY_MODE    = (Data[7] < 3) ? Data[7] : POWER_ON_DISPLAY_MODE_MESSAGE;
 
 	// 0E98..0E9F
 	EEPROM_ReadBuffer(0x0E98, Data, 8);
@@ -547,97 +423,31 @@ void BOARD_EEPROM_Init(void)
 
 	// 0EA0..0EA7
 	EEPROM_ReadBuffer(0x0EA0, Data, 8);
-	if (Data[0] < 3) {
-		gEeprom.VOICE_PROMPT = Data[0];
-	} else {
-		gEeprom.VOICE_PROMPT = VOICE_PROMPT_CHINESE;
-	}
+	gEeprom.VOICE_PROMPT = (Data[0] < 3) ? Data[0] : VOICE_PROMPT_CHINESE;
 
 	// 0EA8..0EAF
 	EEPROM_ReadBuffer(0x0EA8, Data, 8);
-	if (Data[0] < 2) {
-		gEeprom.ALARM_MODE = Data[0];
-	} else {
-		gEeprom.ALARM_MODE = true;
-	}
-	if (Data[1] < 3) {
-		gEeprom.ROGER = Data[1];
-	} else {
-		gEeprom.ROGER = 0;
-	}
-	if (Data[2] < 11) {
-		gEeprom.REPEATER_TAIL_TONE_ELIMINATION = Data[2];
-	} else {
-		gEeprom.REPEATER_TAIL_TONE_ELIMINATION = 0;
-	}
-	if (Data[3] < 2) {
-		gEeprom.TX_CHANNEL = Data[3];
-	} else {
-		gEeprom.TX_CHANNEL = 0;
-	}
+	gEeprom.ALARM_MODE                     = (Data[0] <  2) ? Data[0] : true;
+	gEeprom.ROGER                          = (Data[1] <  3) ? Data[1] : ROGER_MODE_OFF;
+	gEeprom.REPEATER_TAIL_TONE_ELIMINATION = (Data[2] < 11) ? Data[2] : 0;
+	gEeprom.TX_CHANNEL                     = (Data[3] <  2) ? Data[3] : 0;
 
 	// 0ED0..0ED7
 	EEPROM_ReadBuffer(0x0ED0, Data, 8);
-	if (Data[0] < 2) {
-		gEeprom.DTMF_SIDE_TONE = Data[0];
-	} else {
-		gEeprom.DTMF_SIDE_TONE = true;
-	}
-	if (DTMF_ValidateCodes((char *)(Data + 1), 1)) {
-		gEeprom.DTMF_SEPARATE_CODE = Data[1];
-	} else {
-		gEeprom.DTMF_SEPARATE_CODE = '*';
-	}
-	if (DTMF_ValidateCodes((char *)(Data + 2), 1)) {
-		gEeprom.DTMF_GROUP_CALL_CODE = Data[2];
-	} else {
-		gEeprom.DTMF_GROUP_CALL_CODE = '#';
-	}
-	if (Data[3] < 4) {
-		gEeprom.DTMF_DECODE_RESPONSE = Data[3];
-	} else {
-		gEeprom.DTMF_DECODE_RESPONSE = 0;
-	}
-
-	if (Data[4] < 61) {
-		gEeprom.DTMF_AUTO_RESET_TIME = Data[4];
-	} else {
-		gEeprom.DTMF_AUTO_RESET_TIME = 5;
-	}
-
-	if (Data[5] < 101) {
-		gEeprom.DTMF_PRELOAD_TIME = Data[5] * 10;
-	} else {
-		gEeprom.DTMF_PRELOAD_TIME = 300;
-	}
-	if (Data[6] < 101) {
-		gEeprom.DTMF_FIRST_CODE_PERSIST_TIME = Data[6] * 10;
-	} else {
-		gEeprom.DTMF_FIRST_CODE_PERSIST_TIME = 100;
-	}
-	if (Data[7] < 101) {
-		gEeprom.DTMF_HASH_CODE_PERSIST_TIME = Data[7] * 10;
-	} else {
-		gEeprom.DTMF_HASH_CODE_PERSIST_TIME = 100;
-	}
+	gEeprom.DTMF_SIDE_TONE               = (Data[0] <   2) ? Data[0] : true;
+	gEeprom.DTMF_SEPARATE_CODE           = DTMF_ValidateCodes((char *)(Data + 1), 1) ? Data[1] : '*';
+	gEeprom.DTMF_GROUP_CALL_CODE         = DTMF_ValidateCodes((char *)(Data + 2), 1) ? Data[2] : '#';
+	gEeprom.DTMF_DECODE_RESPONSE         = (Data[3] <   4) ? Data[3] : 0;
+	gEeprom.DTMF_AUTO_RESET_TIME         = (Data[4] <  61) ? Data[4] : 5;
+	gEeprom.DTMF_PRELOAD_TIME            = (Data[5] < 101) ? Data[5] * 10 : 300;
+	gEeprom.DTMF_FIRST_CODE_PERSIST_TIME = (Data[6] < 101) ? Data[6] * 10 : 100;
+	gEeprom.DTMF_HASH_CODE_PERSIST_TIME  = (Data[7] < 101) ? Data[7] * 10 : 100;
 
 	// 0ED8..0EDF
 	EEPROM_ReadBuffer(0x0ED8, Data, 8);
-	if (Data[0] < 101) {
-		gEeprom.DTMF_CODE_PERSIST_TIME = Data[0] * 10;
-	} else {
-		gEeprom.DTMF_CODE_PERSIST_TIME = 100;
-	}
-	if (Data[1] < 101) {
-		gEeprom.DTMF_CODE_INTERVAL_TIME = Data[1] * 10;
-	} else {
-		gEeprom.DTMF_CODE_INTERVAL_TIME = 100;
-	}
-	if (Data[2] < 2) {
-		gEeprom.PERMIT_REMOTE_KILL = Data[2];
-	} else {
-		gEeprom.PERMIT_REMOTE_KILL = true;
-	}
+	gEeprom.DTMF_CODE_PERSIST_TIME  = (Data[0] < 101) ? Data[0] * 10 : 100;
+	gEeprom.DTMF_CODE_INTERVAL_TIME = (Data[1] < 101) ? Data[1] * 10 : 100;
+	gEeprom.PERMIT_REMOTE_KILL      = (Data[2] <   2) ? Data[2] : true;
 
 	// 0EE0..0EE7
 	EEPROM_ReadBuffer(0x0EE0, Data, 8);
@@ -683,64 +493,28 @@ void BOARD_EEPROM_Init(void)
 	// 0F18..0F1F
 	EEPROM_ReadBuffer(0x0F18, Data, 8);
 
-	if (Data[0] < 2) {
-		gEeprom.SCAN_LIST_DEFAULT = Data[0];
-	} else {
-		gEeprom.SCAN_LIST_DEFAULT = false;
-	}
+	gEeprom.SCAN_LIST_DEFAULT = (Data[0] < 2) ? Data[0] : false;
 
 	for (i = 0; i < 2; i++) {
 		uint8_t j = (i * 3) + 1;
-		if (Data[j] < 2) {
-			gEeprom.SCAN_LIST_ENABLED[i] = Data[j];
-		} else {
-			gEeprom.SCAN_LIST_ENABLED[i] = false;
-		}
+		gEeprom.SCAN_LIST_ENABLED[i]     = (Data[j] < 2) ? Data[j] : false;
 		gEeprom.SCANLIST_PRIORITY_CH1[i] = Data[j + 1];
 		gEeprom.SCANLIST_PRIORITY_CH2[i] = Data[j + 2];
 	}
 
 	// 0F40..0F47
 	EEPROM_ReadBuffer(0x0F40, Data, 8);
-	if (Data[0] < 6) {
-		gSetting_F_LOCK = Data[0];
-	} else {
-		gSetting_F_LOCK = 0;
-	}
+	gSetting_F_LOCK         = (Data[0] < 6) ? Data[0] : F_LOCK_OFF;
 
 	gUpperLimitFrequencyBandTable = UpperLimitFrequencyBandTable;
 	gLowerLimitFrequencyBandTable = LowerLimitFrequencyBandTable;
 
-	if (Data[1] < 2) {
-		gSetting_350TX = Data[1];
-	} else {
-		gSetting_350TX = true;
-	}
-	if (Data[2] < 2) {
-		gSetting_KILLED = Data[2];
-	} else {
-		gSetting_KILLED = false;
-	}
-	if (Data[3] < 2) {
-		gSetting_200TX = Data[3];
-	} else {
-		gSetting_200TX = false;
-	}
-	if (Data[4] < 2) {
-		gSetting_500TX = Data[4];
-	} else {
-		gSetting_500TX = false;
-	}
-	if (Data[5] < 2) {
-		gSetting_350EN = Data[5];
-	} else {
-		gSetting_350EN = true;
-	}
-	if (Data[6] < 2) {
-		gSetting_ScrambleEnable = Data[6];
-	} else {
-		gSetting_ScrambleEnable = true;
-	}
+	gSetting_350TX          = (Data[1] < 2) ? Data[1] : true;
+	gSetting_KILLED         = (Data[2] < 2) ? Data[2] : false;
+	gSetting_200TX          = (Data[3] < 2) ? Data[3] : false;
+	gSetting_500TX          = (Data[4] < 2) ? Data[4] : false;
+	gSetting_350EN          = (Data[5] < 2) ? Data[5] : true;
+	gSetting_ScrambleEnable = (Data[6] < 2) ? Data[6] : true;
 
 	if (!gEeprom.VFO_OPEN) {
 		gEeprom.ScreenChannel[0] = gEeprom.MrChannel[0];
@@ -748,10 +522,10 @@ void BOARD_EEPROM_Init(void)
 	}
 
 	// 0D60..0E27
-	EEPROM_ReadBuffer(0x0D60, gMR_ChannelAttributes, 207);
+	EEPROM_ReadBuffer(0x0D60, gMR_ChannelAttributes, sizeof(gMR_ChannelAttributes));
 
 	// 0F30..0F3F
-	EEPROM_ReadBuffer(0x0F30, gCustomAesKey, 16);
+	EEPROM_ReadBuffer(0x0F30, gCustomAesKey, sizeof(gCustomAesKey));
 
 	for (i = 0; i < 4; i++) {
 		if (gCustomAesKey[i] != 0xFFFFFFFFU) {
@@ -787,10 +561,7 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 	EEPROM_ReadBuffer(0x1F68 + (gEeprom.VOX_LEVEL * 2), &gEeprom.VOX0_THRESHOLD, 2);
 
 	EEPROM_ReadBuffer(0x1F80 + gEeprom.MIC_SENSITIVITY, &Mic, 1);
-	if (Mic >= 32) {
-		Mic = 15;
-	}
-	gEeprom.MIC_SENSITIVITY_TUNING = Mic;
+	gEeprom.MIC_SENSITIVITY_TUNING = (Mic >= 32) ? Mic : 15;
 
 	struct {
 		int16_t BK4819_XtalFreqLow;
@@ -801,26 +572,13 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 	} Misc;
 
 	EEPROM_ReadBuffer(0x1F88, &Misc, 8);
-	if (Misc.BK4819_XtalFreqLow + 1000 < 2000) {
-		gEeprom.BK4819_XTAL_FREQ_LOW = Misc.BK4819_XtalFreqLow;
-	} else {
-		gEeprom.BK4819_XTAL_FREQ_LOW = 0;
-	}
+	gEeprom.BK4819_XTAL_FREQ_LOW = (Misc.BK4819_XtalFreqLow + 1000 < 2000) ? Misc.BK4819_XtalFreqLow : 0;
 
 	gEEPROM_1F8A = Misc.EEPROM_1F8A & 0x01FF;
 	gEEPROM_1F8C = Misc.EEPROM_1F8C & 0x01FF;
 
-	if (Misc.VOLUME_GAIN < 64)  {
-		gEeprom.VOLUME_GAIN = Misc.VOLUME_GAIN;
-	} else {
-		gEeprom.VOLUME_GAIN = 58;
-	}
-
-	if (Misc.DAC_GAIN < 16) {
-		gEeprom.DAC_GAIN = Misc.DAC_GAIN;
-	} else {
-		gEeprom.DAC_GAIN = 8;
-	}
+	gEeprom.VOLUME_GAIN = (Misc.VOLUME_GAIN < 64) ? Misc.VOLUME_GAIN : 58;
+	gEeprom.DAC_GAIN    = (Misc.DAC_GAIN    < 16) ? Misc.DAC_GAIN : 8;
 
 	BK4819_WriteRegister(BK4819_REG_3B, gEeprom.BK4819_XTAL_FREQ_LOW + 22656);
 }
