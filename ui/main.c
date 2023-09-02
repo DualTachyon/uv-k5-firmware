@@ -65,7 +65,7 @@ void UI_DisplayMain(void)
 		}
 
 		if (Channel != i) {
-			if (gDTMF_CallState != DTMF_CALL_STATE_NONE || g_200003BD || gDTMF_InputMode) {
+			if (gDTMF_CallState != DTMF_CALL_STATE_NONE || gDTMF_IsTx || gDTMF_InputMode) {
 				char Contact[16];
 
 				if (!gDTMF_InputMode) {
@@ -81,7 +81,7 @@ void UI_DisplayMain(void)
 						} else {
 							sprintf(String, "CALL:%s", gDTMF_Caller);
 						}
-					} else if (g_200003BD == 1) {
+					} else if (gDTMF_IsTx) {
 						if (gDTMF_State == DTMF_STATE_TX_SUCC) {
 							strcpy(String, "DTMF TX(SUCC)");
 						} else {
@@ -109,7 +109,7 @@ void UI_DisplayMain(void)
 						} else {
 							sprintf(String, ">%s", gDTMF_Callee);
 						}
-					} else if (g_200003BD == 1) {
+					} else if (gDTMF_IsTx) {
 						sprintf(String, ">%s", gDTMF_String);
 					}
 				}

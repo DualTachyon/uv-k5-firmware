@@ -72,6 +72,8 @@ extern uint8_t gDTMF_RecvTimeout;
 extern DTMF_CallState_t gDTMF_CallState;
 extern DTMF_ReplyState_t gDTMF_ReplyState;
 extern DTMF_CallMode_t gDTMF_CallMode;
+extern bool gDTMF_IsTx;
+extern uint8_t gDTMF_TxStopCountdown;
 
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size);
 bool DTMF_GetContact(uint8_t Index, char *pContact);

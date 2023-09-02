@@ -46,6 +46,8 @@ uint8_t gDTMF_RecvTimeout;
 DTMF_CallState_t gDTMF_CallState;
 DTMF_ReplyState_t gDTMF_ReplyState;
 DTMF_CallMode_t gDTMF_CallMode;
+bool gDTMF_IsTx;
+uint8_t gDTMF_TxStopCountdown;
 
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 {

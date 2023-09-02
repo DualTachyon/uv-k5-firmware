@@ -747,12 +747,12 @@ void RADIO_SomethingWithTransmit(void)
 Skip:
 	if (gDTMF_ReplyState == DTMF_REPLY_ANI) {
 		if (gDTMF_CallMode == DTMF_CALL_MODE_DTMF) {
-			g_200003BD = 1;
+			gDTMF_IsTx = true;
 			gDTMF_CallState = DTMF_CALL_STATE_NONE;
-			g_200003C3 = 6;
+			gDTMF_TxStopCountdown = 6;
 		} else {
 			gDTMF_CallState = DTMF_CALL_STATE_CALL_OUT;
-			g_200003BD = 0;
+			gDTMF_IsTx = false;
 		}
 	}
 	FUNCTION_Select(FUNCTION_TRANSMIT);

@@ -1169,10 +1169,10 @@ LAB_00004b08:
 		}
 	}
 
-	if (g_200003BD && g_200003C3) {
-		g_200003C3--;
-		if (g_200003C3 == 0) {
-			g_200003BD = 0;
+	if (gDTMF_IsTx && gDTMF_TxStopCountdown) {
+		gDTMF_TxStopCountdown--;
+		if (gDTMF_TxStopCountdown == 0) {
+			gDTMF_IsTx = false;
 			gUpdateDisplay = true;
 		}
 	}
@@ -1559,8 +1559,8 @@ Skip:
 	RADIO_SetupRegisters(true);
 	gDTMF_AUTO_RESET_TIME = 0;
 	gDTMF_CallState = DTMF_CALL_STATE_NONE;
-	g_200003C3 = 0;
-	g_200003BD = 0;
+	gDTMF_TxStopCountdown = 0;
+	gDTMF_IsTx = false;
 	gVFO_RSSI_Level[0] = 0;
 	gVFO_RSSI_Level[1] = 0;
 	g_20000398 = 0;
