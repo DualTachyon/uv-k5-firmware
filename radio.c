@@ -689,7 +689,7 @@ void RADIO_SetVfoState(VfoState_t State)
 	if (State == VFO_STATE_NORMAL) {
 		VfoState[0] = VFO_STATE_NORMAL;
 		VfoState[1] = VFO_STATE_NORMAL;
-		g_20000373 = 0;
+		gFM_ResumeCountdown = 0;
 	} else {
 		if (State == VFO_STATE_VOL_HIGH) {
 			VfoState[0] = VFO_STATE_VOL_HIGH;
@@ -697,13 +697,14 @@ void RADIO_SetVfoState(VfoState_t State)
 		} else {
 			uint8_t Channel;
 
-			Channel = gEeprom.RX_CHANNEL;
-			if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
+			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
+				Channel = gEeprom.RX_CHANNEL;
+			} else {
 				Channel = gEeprom.TX_CHANNEL;
 			}
 			VfoState[Channel] = State;
 		}
-		g_20000373 = 5;
+		gFM_ResumeCountdown = 5;
 	}
 	gUpdateDisplay = true;
 }

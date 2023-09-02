@@ -1100,9 +1100,9 @@ void APP_TimeSlice500ms(void)
 	}
 
 LAB_00004b08:
-	if (!gPttIsPressed && g_20000373) {
-		g_20000373--;
-		if (g_20000373 == 0) {
+	if (!gPttIsPressed && gFM_ResumeCountdown) {
+		gFM_ResumeCountdown--;
+		if (gFM_ResumeCountdown == 0) {
 			RADIO_SetVfoState(VFO_STATE_NORMAL);
 			if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR && gFmRadioMode) {
 				FM_Start();

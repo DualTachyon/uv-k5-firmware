@@ -99,7 +99,6 @@ extern uint8_t gRTTECountdown;
 extern bool bIsInLockScreen;
 extern uint8_t gUpdateStatus;
 extern uint8_t g_20000370;
-extern uint8_t g_20000373;
 extern uint8_t gFoundCTCSS;
 extern uint8_t gFoundCDCSS;
 extern uint8_t g_20000377;

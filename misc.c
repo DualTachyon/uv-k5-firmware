@@ -65,7 +65,6 @@ uint8_t gRTTECountdown;
 bool bIsInLockScreen;
 uint8_t gUpdateStatus;
 uint8_t g_20000370;
-uint8_t g_20000373;
 uint8_t gFoundCTCSS;
 uint8_t gFoundCDCSS;
 uint8_t g_20000377;

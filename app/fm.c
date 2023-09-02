@@ -38,6 +38,7 @@ bool gFM_AutoScan;
 uint8_t gFM_ChannelPosition;
 bool gFM_FoundFrequency;
 bool gFM_AutoScan;
+uint8_t gFM_ResumeCountdown;
 
 bool FM_CheckValidChannel(uint8_t Channel)
 {
