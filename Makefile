@@ -68,7 +68,11 @@ OBJS += ui/welcome.o
 
 OBJS += main.o
 
+ifeq ($(OS),Windows_NT)
+TOP := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+else
 TOP := $(shell pwd)
+endif
 
 AS = arm-none-eabi-as
 CC = arm-none-eabi-gcc
