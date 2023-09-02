@@ -150,7 +150,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		gBatterySaveCountdown = 1000;
 		gSchedulePowerSave = false;
 		g_2000038E = 0;
-		g_20000420 = 0;
+		gAlarmToneCounter = 0;
 		return;
 	}
 
@@ -168,7 +168,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		}
 		SYSTEM_DelayMs(2);
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		g_20000420 = 0;
+		gAlarmToneCounter = 0;
 		g_2000038E = 0;
 		gEnableSpeaker = true;
 		gSchedulePowerSave = false;

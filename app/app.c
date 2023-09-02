@@ -853,19 +853,19 @@ void APP_TimeSlice10ms(void)
 	}
 	if (gCurrentFunction == FUNCTION_TRANSMIT) {
 		if (gAlarmState == ALARM_STATE_TXALARM || gAlarmState == ALARM_STATE_ALARM) {
-			uint16_t Value;
+			uint16_t Tone;
 
-			g_20000422++;
-			g_20000420++;
+			gAlarmRunningCounter++;
+			gAlarmToneCounter++;
 
-			Value = 500 + (g_20000420 * 25);
-			if (Value > 1500) {
-				Value = 500;
-				g_20000420 = 0;
+			Tone = 500 + (gAlarmToneCounter * 25);
+			if (Tone > 1500) {
+				Tone = 500;
+				gAlarmToneCounter = 0;
 			}
-			BK4819_SetScrambleFrequencyControlWord(Value);
-			if (gEeprom.ALARM_MODE == ALARM_MODE_TONE && g_20000422 == 512) {
-				g_20000422 = 0;
+			BK4819_SetScrambleFrequencyControlWord(Tone);
+			if (gEeprom.ALARM_MODE == ALARM_MODE_TONE && gAlarmRunningCounter == 512) {
+				gAlarmRunningCounter = 0;
 				if (gAlarmState == ALARM_STATE_TXALARM) {
 					gAlarmState = ALARM_STATE_ALARM;
 					RADIO_EnableCxCSS();
@@ -883,7 +883,7 @@ void APP_TimeSlice10ms(void)
 					SYSTEM_DelayMs(2);
 					GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 					gEnableSpeaker = true;
-					g_20000420 = 0;
+					gAlarmToneCounter = 0;
 				}
 			}
 		}
