@@ -112,10 +112,8 @@ void FUN_000051e8(void)
 	}
 	if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL)) {
 		gFoundCDCSS = false;
-	} else {
-		if (!bFlag) {
-			return;
-		}
+	} else if (!bFlag) {
+		return;
 	}
 
 	DTMF_HandleRequest();
@@ -240,8 +238,7 @@ void FUN_000052f0(void)
 		}
 	}
 
-	if (g_20000377 || Value || !gNextTimeslice40ms || !gEeprom.TAIL_NOTE_ELIMINATION || (gCopyOfCodeType != CODE_TYPE_DIGITAL && gCopyOfCodeType != CODE_TYPE_REVERSE_DIGITAL)) {
-	} else {
+	if (!g_20000377 && !Value && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL)) {
 		if (BK4819_GetCTCType() == 1) {
 			Value = 2;
 		}

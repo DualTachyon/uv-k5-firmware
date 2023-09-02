@@ -713,7 +713,7 @@ void RADIO_SomethingWithTransmit(void)
 		gScheduleDualWatch = false;
 		if (g_2000041F == 0) {
 			gEeprom.RX_CHANNEL = gEeprom.TX_CHANNEL;
-			gRxInfo = gEeprom.VfoInfo + gEeprom.TX_CHANNEL;
+			gRxInfo = &gEeprom.VfoInfo[gEeprom.TX_CHANNEL];
 		}
 		g_2000041F = 1;
 	}
