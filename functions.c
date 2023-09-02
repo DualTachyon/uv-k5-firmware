@@ -136,8 +136,8 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		BK1080_Init(0, false);
 	}
 
-	if (g_20000383 == 1 && gEeprom.ALARM_MODE != ALARM_MODE_TONE) {
-		g_20000383 = 2;
+	if (gAlarmState == ALARM_STATE_TXALARM && gEeprom.ALARM_MODE != ALARM_MODE_TONE) {
+		gAlarmState = ALARM_STATE_ALARM;
 		GUI_DisplayScreen();
 		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 		SYSTEM_DelayMs(20);
@@ -160,8 +160,8 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 
 	DTMF_Reply();
 
-	if (g_20000383) {
-		if (g_20000383 == 3) {
+	if (gAlarmState != ALARM_STATE_OFF) {
+		if (gAlarmState == ALARM_STATE_TX1750) {
 			BK4819_TransmitTone(true, 1750);
 		} else {
 			BK4819_TransmitTone(true, 500);

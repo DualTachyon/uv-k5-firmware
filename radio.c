@@ -41,6 +41,8 @@ uint8_t gCode;
 
 STEP_Setting_t gStepSetting;
 
+VfoState_t VfoState[2];
+
 bool RADIO_CheckValidChannel(uint16_t Channel, bool bCheckScanList, uint8_t VFO)
 {
 	uint8_t Attributes;
@@ -682,16 +684,16 @@ void RADIO_PrepareTransmit(void)
 	}
 }
 
-void RADIO_SomethingElse(uint8_t Arg)
+void RADIO_SetVfoState(VfoState_t State)
 {
-	if (Arg == 0) {
-		g_20000371[0] = 0;
-		g_20000371[1] = 0;
+	if (State == VFO_STATE_NORMAL) {
+		VfoState[0] = VFO_STATE_NORMAL;
+		VfoState[1] = VFO_STATE_NORMAL;
 		g_20000373 = 0;
 	} else {
-		if (Arg == 6) {
-			g_20000371[0] = 6;
-			g_20000371[1] = 3;
+		if (State == VFO_STATE_VOL_HIGH) {
+			VfoState[0] = VFO_STATE_VOL_HIGH;
+			VfoState[1] = VFO_STATE_TX_DISABLE;
 		} else {
 			uint8_t Channel;
 
@@ -699,7 +701,7 @@ void RADIO_SomethingElse(uint8_t Arg)
 			if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
 				Channel = gEeprom.TX_CHANNEL;
 			}
-			g_20000371[Channel] = Arg;
+			VfoState[Channel] = State;
 		}
 		g_20000373 = 5;
 	}
@@ -718,24 +720,24 @@ void RADIO_SomethingWithTransmit(void)
 		g_2000041F = 1;
 	}
 	RADIO_ConfigureCrossTX();
-	if (g_20000383 == 0 || g_20000383 == 3 || (g_20000383 == 1 && gEeprom.ALARM_MODE == 1)) {
-		uint8_t Value;
+	if (gAlarmState == ALARM_STATE_OFF || gAlarmState == ALARM_STATE_TX1750 || (gAlarmState == ALARM_STATE_ALARM && gEeprom.ALARM_MODE == ALARM_MODE_TONE)) {
+		VfoState_t State;
 
 		if (!FREQUENCY_Check(gCrossTxRadioInfo)) {
 			if (gCrossTxRadioInfo->BUSY_CHANNEL_LOCK && gCurrentFunction == FUNCTION_RECEIVE) {
-				Value = 1;
+				State = VFO_STATE_BUSY;
 			} else if (gBatteryDisplayLevel == 0) {
-				Value = 2;
+				State = VFO_STATE_BAT_LOW;
 			} else if (gBatteryDisplayLevel == 6) {
-				Value = 6;
+				State = VFO_STATE_VOL_HIGH;
 			} else {
 				goto Skip;
 			}
 		} else {
-			Value = 3;
+			State = VFO_STATE_TX_DISABLE;
 		}
-		RADIO_SomethingElse(Value);
-		g_20000383 = 0;
+		RADIO_SetVfoState(State);
+		gAlarmState = ALARM_STATE_OFF;
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
 		gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 		return;
@@ -753,7 +755,7 @@ Skip:
 		}
 	}
 	FUNCTION_Select(FUNCTION_TRANSMIT);
-	if (g_20000383 == 0) {
+	if (gAlarmState == ALARM_STATE_OFF) {
 		gTxTimerCountdown = gEeprom.TX_TIMEOUT_TIMER * 120;
 	} else {
 		gTxTimerCountdown = 0;

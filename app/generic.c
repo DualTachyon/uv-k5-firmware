@@ -97,7 +97,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 				g_200003FD = 0;
 				g_200003B4 = 0;
 			}
-			RADIO_SomethingElse(0);
+			RADIO_SetVfoState(VFO_STATE_NORMAL);
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			return;
 		}

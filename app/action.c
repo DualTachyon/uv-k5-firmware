@@ -142,9 +142,9 @@ static void ACTION_AlarmOr1750(bool b1750)
 {
 	gInputBoxIndex = 0;
 	if (b1750) {
-		g_20000383 = 3;
+		gAlarmState = ALARM_STATE_TX1750;
 	} else {
-		g_20000383 = 1;
+		gAlarmState = ALARM_STATE_TXALARM;
 	}
 	g_20000422 = 0;
 	g_200003A0 = 1;

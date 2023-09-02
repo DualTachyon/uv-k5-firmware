@@ -21,6 +21,7 @@
 #include "external/printf/printf.h"
 #include "functions.h"
 #include "misc.h"
+#include "radio.h"
 #include "settings.h"
 #include "ui/helper.h"
 #include "ui/inputbox.h"
@@ -129,7 +130,7 @@ void UI_DisplayMain(void)
 		uint32_t SomeValue = 0;
 
 		if (gCurrentFunction == FUNCTION_TRANSMIT) {
-			if (g_20000383 == 2) {
+			if (gAlarmState == ALARM_STATE_ALARM) {
 				SomeValue = 2;
 			} else {
 				if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
@@ -177,22 +178,22 @@ void UI_DisplayMain(void)
 
 		// 0x8FEC
 
-		uint8_t g371 = g_20000371[i];
-		if (gCurrentFunction == FUNCTION_TRANSMIT && g_20000383 == 2) {
+		uint8_t State = VfoState[i];
+		if (gCurrentFunction == FUNCTION_TRANSMIT && gAlarmState == ALARM_STATE_ALARM) {
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 				Channel = gEeprom.RX_CHANNEL;
 			} else {
 				Channel = gEeprom.TX_CHANNEL;
 			}
 			if (Channel == i) {
-				g371 = 5;
+				State = VFO_STATE_ALARM;
 			}
 		}
-		if (g371) {
+		if (State) {
 			uint8_t Width = 10;
 
 			memset(String, 0, sizeof(String));
-			switch (g371) {
+			switch (State) {
 			case 1:
 				strcpy(String, "BUSY");
 				Width = 15;

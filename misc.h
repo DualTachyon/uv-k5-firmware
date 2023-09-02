@@ -47,6 +47,15 @@ enum {
 	VFO_CONFIGURE_RELOAD = 2U,
 };
 
+enum AlarmState_t {
+	ALARM_STATE_OFF     = 0U,
+	ALARM_STATE_TXALARM = 1U,
+	ALARM_STATE_ALARM   = 2U,
+	ALARM_STATE_TX1750  = 3U,
+};
+
+typedef enum AlarmState_t AlarmState_t;
+
 extern const uint32_t *gUpperLimitFrequencyBandTable;
 extern const uint32_t *gLowerLimitFrequencyBandTable;
 
@@ -90,7 +99,6 @@ extern uint8_t gRTTECountdown;
 extern bool bIsInLockScreen;
 extern uint8_t gUpdateStatus;
 extern uint8_t g_20000370;
-extern uint8_t g_20000371[2];
 extern uint8_t g_20000373;
 extern uint8_t gFoundCTCSS;
 extern uint8_t gFoundCDCSS;
@@ -100,7 +108,7 @@ extern uint8_t gReducedService;
 extern uint8_t gBatteryVoltageIndex;
 extern volatile uint8_t g_20000381;
 extern uint8_t g_20000382;
-extern uint8_t g_20000383;
+extern AlarmState_t gAlarmState;
 extern uint16_t g_2000038E;
 extern volatile int8_t gFM_Step;
 extern uint8_t g_20000393;

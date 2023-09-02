@@ -623,7 +623,7 @@ void APP_Update(void)
 		g_200003FD = 1;
 		TalkRelatedCode();
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP);
-		RADIO_SomethingElse(4);
+		RADIO_SetVfoState(VFO_STATE_TIMEOUT);
 		GUI_DisplayScreen();
 	}
 	if (gReducedService) {
@@ -852,7 +852,7 @@ void APP_TimeSlice10ms(void)
 		g_200003B8--;
 	}
 	if (gCurrentFunction == FUNCTION_TRANSMIT) {
-		if (g_20000383 == 1 || g_20000383 == 2) {
+		if (gAlarmState == ALARM_STATE_TXALARM || gAlarmState == ALARM_STATE_ALARM) {
 			uint16_t Value;
 
 			g_20000422++;
@@ -866,8 +866,8 @@ void APP_TimeSlice10ms(void)
 			BK4819_SetScrambleFrequencyControlWord(Value);
 			if (gEeprom.ALARM_MODE == ALARM_MODE_TONE && g_20000422 == 512) {
 				g_20000422 = 0;
-				if (g_20000383 == 1) {
-					g_20000383 = 2;
+				if (gAlarmState == ALARM_STATE_TXALARM) {
+					gAlarmState = ALARM_STATE_ALARM;
 					RADIO_EnableCxCSS();
 					BK4819_SetupPowerAmplifier(0, 0);
 					BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
@@ -875,7 +875,7 @@ void APP_TimeSlice10ms(void)
 					BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, false);
 					GUI_DisplayScreen();
 				} else {
-					g_20000383 = 1;
+					gAlarmState = ALARM_STATE_TXALARM;
 					GUI_DisplayScreen();
 					BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, true);
 					RADIO_PrepareTransmit();
@@ -1103,7 +1103,7 @@ LAB_00004b08:
 	if (!gPttIsPressed && g_20000373) {
 		g_20000373--;
 		if (g_20000373 == 0) {
-			RADIO_SomethingElse(0);
+			RADIO_SetVfoState(VFO_STATE_NORMAL);
 			if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR && gFmRadioMode) {
 				FM_Start();
 				GUI_SelectNextDisplay(DISPLAY_FM);
@@ -1188,7 +1188,7 @@ LAB_00004b08:
 
 void FUN_00001150(void)
 {
-	g_20000383 = 0;
+	gAlarmState = ALARM_STATE_OFF;
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	gEnableSpeaker = false;
 	if (gEeprom.ALARM_MODE == ALARM_MODE_TONE) {
@@ -1402,7 +1402,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 	if (!bFlag) {
 		if (gCurrentFunction == FUNCTION_TRANSMIT) {
-			if (g_20000383 == 0) {
+			if (gAlarmState == ALARM_STATE_OFF) {
 				if (Key == KEY_PTT) {
 					GENERIC_Key_PTT(bKeyPressed);
 				} else {
