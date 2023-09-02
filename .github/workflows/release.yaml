@@ -1,5 +1,7 @@
 on:
   push:
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -30,7 +32,7 @@ jobs:
         path: firmware.bin
 
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: ncipollo/release-action@v1
       with:
-        files: firmware.bin
+        artifacts: firmware.bin
 
