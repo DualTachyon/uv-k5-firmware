@@ -162,7 +162,7 @@ volatile bool gSchedulePowerSave;
 volatile bool gBatterySaveCountdownExpired;
 volatile bool gScheduleDualWatch;
 volatile bool gScheduleNOAA;
-volatile bool gSystickFlag9;
+volatile bool gScheduleScanListen;
 volatile bool gSystickFlag10;
 volatile bool gScheduleFM;
 

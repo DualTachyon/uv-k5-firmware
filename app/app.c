@@ -62,7 +62,7 @@ static void FUN_00005144(void)
 	if (gStepDirection == 0) {
 		if (g_20000381 && g_20000411 == 0) {
 			ScanPauseDelayIn10msec = 100;
-			gSystickFlag9 = false;
+			gScheduleScanListen = false;
 			g_20000411 = 1;
 		}
 		if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
@@ -85,7 +85,7 @@ static void FUN_00005144(void)
 			return;
 		}
 		ScanPauseDelayIn10msec = 20;
-		gSystickFlag9 = false;
+		gScheduleScanListen = false;
 	}
 	g_20000411 = 1;
 	FUNCTION_Select(FUNCTION_3);
@@ -257,7 +257,7 @@ void FUN_000052f0(void)
 			switch (gEeprom.SCAN_RESUME_MODE) {
 			case SCAN_RESUME_CO:
 				ScanPauseDelayIn10msec = 360;
-				gSystickFlag9 = false;
+				gScheduleScanListen = false;
 				break;
 			case SCAN_RESUME_SE:
 				FUN_0000773c();
@@ -314,14 +314,14 @@ void APP_StartListening(FUNCTION_Type_t Function)
 			case SCAN_RESUME_TO:
 				if (gScanPauseMode == 0) {
 					ScanPauseDelayIn10msec = 500;
-					gSystickFlag9 = false;
+					gScheduleScanListen = false;
 					gScanPauseMode = 1;
 				}
 				break;
 			case SCAN_RESUME_CO:
 			case SCAN_RESUME_SE:
 				ScanPauseDelayIn10msec = 0;
-				gSystickFlag9 = false;
+				gScheduleScanListen = false;
 				break;
 			}
 			g_20000413 = 1;
@@ -636,7 +636,7 @@ void APP_Update(void)
 		return;
 	}
 
-	if (gScreenToDisplay != DISPLAY_SCANNER && gStepDirection && gSystickFlag9 && !gPttIsPressed && gVoiceWriteIndex == 0) {
+	if (gScreenToDisplay != DISPLAY_SCANNER && gStepDirection && gScheduleScanListen && !gPttIsPressed && gVoiceWriteIndex == 0) {
 		if (IS_FREQ_CHANNEL(g_20000410)) {
 			if (gCurrentFunction == FUNCTION_3) {
 				APP_StartListening(FUNCTION_RECEIVE);
@@ -652,12 +652,12 @@ void APP_Update(void)
 		}
 		gScanPauseMode = 0;
 		g_20000411 = 0;
-		gSystickFlag9 = false;
+		gScheduleScanListen = false;
 	}
 
-	if (g_20000381 == 1 && gSystickFlag9 && gVoiceWriteIndex == 0) {
+	if (g_20000381 == 1 && gScheduleScanListen && gVoiceWriteIndex == 0) {
 		MENU_SelectNextDCS();
-		gSystickFlag9 = false;
+		gScheduleScanListen = false;
 	}
 
 	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode && gScheduleNOAA && gVoiceWriteIndex == 0) {
@@ -1265,7 +1265,7 @@ void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction)
 		APP_MoreRadioStuff();
 	}
 	ScanPauseDelayIn10msec = 50;
-	gSystickFlag9 = false;
+	gScheduleScanListen = false;
 	g_20000411 = 0;
 	gScanPauseMode = 0;
 	g_20000413 = 0;
@@ -1347,7 +1347,7 @@ void FUN_00005770(void)
 	}
 	if (gStepDirection) {
 		ScanPauseDelayIn10msec = 500;
-		gSystickFlag9 = false;
+		gScheduleScanListen = false;
 		gScanPauseMode = 1;
 	}
 	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode) {

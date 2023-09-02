@@ -99,7 +99,7 @@ static void FUN_000074f8(int8_t Direction)
 	RADIO_ConfigureTX();
 	MENU_SelectNextDCS();
 	ScanPauseDelayIn10msec = 50;
-	gSystickFlag9 = false;
+	gScheduleScanListen = false;
 }
 
 int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax)

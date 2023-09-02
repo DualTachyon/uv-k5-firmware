@@ -92,7 +92,7 @@ void SystickHandler(void)
 			if (ScanPauseDelayIn10msec) {
 				ScanPauseDelayIn10msec--;
 				if (ScanPauseDelayIn10msec == 0) {
-					gSystickFlag9 = true;
+					gScheduleScanListen = true;
 				}
 			}
 		}
