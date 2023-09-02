@@ -348,11 +348,7 @@ void BOARD_EEPROM_Init(void)
 
 	// 0E70..0E77
 	EEPROM_ReadBuffer(0x0E70, Data, 8);
-	if (IS_MR_CHANNEL(Data[0])) {
-		gEeprom.CHAN_1_CALL = Data[0];
-	} else {
-		gEeprom.CHAN_1_CALL = 0;
-	}
+	gEeprom.CHAN_1_CALL      = IS_MR_CHANNEL(Data[0]) ? Data[0] : MR_CHANNEL_FIRST;
 	gEeprom.SQUELCH_LEVEL    = (Data[1] < 10) ? Data[1] : 4;
 	gEeprom.TX_TIMEOUT_TIMER = (Data[2] < 11) ? Data[2] : 2;
 	gEeprom.NOAA_AUTO_SCAN   = (Data[3] <  2) ? Data[3] : true;
