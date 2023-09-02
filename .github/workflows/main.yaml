@@ -22,3 +22,10 @@ jobs:
 
     - name: size
       run:  arm-none-eabi-size firmware
+
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: firmware
+        path: firmware.bin
+
