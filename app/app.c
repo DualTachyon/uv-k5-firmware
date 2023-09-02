@@ -575,13 +575,13 @@ static void FUN_00008334(void)
 			g_200003B8 = 0;
 		}
 		if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gStepDirection == 0 && g_20000381 == 0 && !gFmRadioMode) {
-			if (g_200003B4 == 1) {
+			if (gVOX_NoiseDetected) {
 				if (g_VOX_Lost) {
 					gSystickCountdown11 = 100;
 				} else if (gSystickCountdown11 == 0) {
-					g_200003B4 = 0;
+					gVOX_NoiseDetected = false;
 				}
-				if (gCurrentFunction == FUNCTION_TRANSMIT && !gPttIsPressed && g_200003B4 == 0) {
+				if (gCurrentFunction == FUNCTION_TRANSMIT && !gPttIsPressed && !gVOX_NoiseDetected) {
 					if (g_200003FD == 1) {
 						FUNCTION_Select(FUNCTION_0);
 					} else {
@@ -597,7 +597,7 @@ static void FUN_00008334(void)
 					return;
 				}
 			} else if (g_VOX_Lost) {
-				g_200003B4 = 1;
+				gVOX_NoiseDetected = true;
 				if (gCurrentFunction == FUNCTION_POWER_SAVE) {
 					FUNCTION_Select(FUNCTION_0);
 				}
@@ -943,7 +943,7 @@ void APP_TimeSlice10ms(void)
 				gCS_ScannedType = 0xFF;
 				g_2000045F = 0;
 				g_2000045C = 0;
-				g_20000464 = 0;
+				gScanProgressIndicator = 0;
 				gScanCssState = SCAN_CSS_STATE_SCANNING;
 				GUI_SelectNextDisplay(DISPLAY_SCANNER);
 			}
@@ -1139,8 +1139,8 @@ LAB_00004b08:
 	}
 
 	if (gScreenToDisplay == DISPLAY_SCANNER && gScannerEditState == 0 && gScanCssState < SCAN_CSS_STATE_FOUND) {
-		g_20000464++;
-		if (0x20 < g_20000464) {
+		gScanProgressIndicator++;
+		if (gScanProgressIndicator > 32) {
 			if (gScanCssState == SCAN_CSS_STATE_SCANNING && !gScanSingleFrequency) {
 				gScanCssState = SCAN_CSS_STATE_FOUND;
 			} else {
@@ -1246,7 +1246,7 @@ void FUN_000075b0(void)
 	g_VOX_Lost = false;
 	g_SquelchLost = false;
 	gScannerEditState = 0;
-	g_20000464 = 0;
+	gScanProgressIndicator = 0;
 }
 
 void APP_SetStepDirection(bool bFlag, int8_t Direction)

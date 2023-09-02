@@ -36,6 +36,7 @@ uint8_t gScanPauseMode;
 SCAN_CssState_t gScanCssState;
 volatile bool gScheduleScanListen;
 volatile uint16_t ScanPauseDelayIn10msec;
+uint8_t gScanProgressIndicator;
 
 static void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {

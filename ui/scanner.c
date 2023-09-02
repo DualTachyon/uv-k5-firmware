@@ -61,7 +61,7 @@ void UI_DisplayScanner(void)
 			UI_GenerateChannelStringEx(String + 5, gShowChPrefix, gScanChannel);
 		} else if (gScanCssState < SCAN_CSS_STATE_FOUND) {
 			strcpy(String, "SCAN");
-			memset(String + 4, '.', (g_20000464 & 7) + 1);
+			memset(String + 4, '.', (gScanProgressIndicator & 7) + 1);
 		} else {
 			if (gScanCssState == SCAN_CSS_STATE_FOUND) {
 				strcpy(String, "SCAN CMP.");

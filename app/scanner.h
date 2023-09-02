@@ -41,6 +41,7 @@ extern uint8_t gScanPauseMode;
 extern SCAN_CssState_t gScanCssState;
 extern volatile bool gScheduleScanListen;
 extern volatile uint16_t ScanPauseDelayIn10msec;
+extern uint8_t gScanProgressIndicator;
 
 void SCANNER_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
