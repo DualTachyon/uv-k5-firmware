@@ -47,15 +47,6 @@ enum {
 	VFO_CONFIGURE_RELOAD = 2U,
 };
 
-enum SCAN_CssState_t {
-	SCAN_CSS_STATE_OFF      = 0U,
-	SCAN_CSS_STATE_SCANNING = 1U,
-	SCAN_CSS_STATE_FOUND    = 2U,
-	SCAN_CSS_STATE_FAILED   = 3U,
-};
-
-typedef enum SCAN_CssState_t SCAN_CssState_t;
-
 extern const uint32_t *gUpperLimitFrequencyBandTable;
 extern const uint32_t *gLowerLimitFrequencyBandTable;
 
@@ -124,8 +115,6 @@ extern bool gRequestSaveSettings;
 extern bool gRequestSaveFM;
 extern uint8_t gKeypadLocked;
 extern uint8_t g_200003A0;
-extern bool gFlagStartScan;
-extern bool gFlagStopScan;
 extern bool gFlagAcceptSetting;
 extern bool gFlagRefreshSetting;
 extern bool gFlagSaveVfo;
@@ -165,28 +154,21 @@ extern bool gPttIsPressed;
 extern uint8_t gPttDebounceCounter;
 extern bool g_20000439;
 extern uint8_t gMenuListCount;
-extern uint8_t g_20000458;
 extern uint8_t gBackupCROSS_BAND_RX_TX;
 extern uint8_t g_2000045C;
 extern uint8_t g_2000045D;
 extern uint8_t g_2000045F;
-extern uint8_t gScannerEditState;
 extern uint8_t g_20000464;
 extern uint8_t gAircopySendCountdown;
 extern uint8_t gFSKWriteIndex;
 extern uint8_t g_20000474;
 
-extern bool gFM_AutoScan;
 extern bool gIsNoaaMode;
 extern volatile bool gNextTimeslice;
 extern uint8_t gNoaaChannel;
 extern bool gUpdateDisplay;
 extern uint8_t gFM_ChannelPosition;
 extern bool gF_LOCK;
-extern uint8_t gScanChannel;
-extern uint32_t gScanFrequency;
-extern uint8_t gScanPauseMode;
-extern SCAN_CssState_t gScanCssState;
 extern uint8_t gShowChPrefix;
 extern volatile uint16_t gSystickCountdown2;
 extern volatile uint8_t gFoundCDCSSCountdown;
@@ -198,11 +180,8 @@ extern volatile bool gSchedulePowerSave;
 extern volatile bool gBatterySaveCountdownExpired;
 extern volatile bool gScheduleDualWatch;
 extern volatile bool gScheduleNOAA;
-extern volatile bool gScheduleScanListen;
 extern volatile bool gSystickFlag10;
 extern volatile bool gScheduleFM;
-
-extern volatile uint16_t ScanPauseDelayIn10msec;
 
 extern uint16_t gCurrentRSSI;
 

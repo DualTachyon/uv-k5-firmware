@@ -1141,7 +1141,7 @@ LAB_00004b08:
 	if (gScreenToDisplay == DISPLAY_SCANNER && gScannerEditState == 0 && gScanCssState < SCAN_CSS_STATE_FOUND) {
 		g_20000464++;
 		if (0x20 < g_20000464) {
-			if (gScanCssState == SCAN_CSS_STATE_SCANNING && g_20000458 == 0) {
+			if (gScanCssState == SCAN_CSS_STATE_SCANNING && !gScanSingleFrequency) {
 				gScanCssState = SCAN_CSS_STATE_FOUND;
 			} else {
 				gScanCssState = SCAN_CSS_STATE_FAILED;
@@ -1221,7 +1221,7 @@ void FUN_000075b0(void)
 	RADIO_SetupRegisters(true);
 
 	gIsNoaaMode = false;
-	if (g_20000458 == 1) {
+	if (gScanSingleFrequency) {
 		gScanCssState = SCAN_CSS_STATE_SCANNING;
 		gScanFrequency = gRxInfo->pCurrent->Frequency;
 		gStepSetting = gRxInfo->STEP_SETTING;

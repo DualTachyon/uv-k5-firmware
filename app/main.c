@@ -18,6 +18,7 @@
 #include "app/fm.h"
 #include "app/generic.h"
 #include "app/main.h"
+#include "app/scanner.h"
 #include "audio.h"
 #include "dtmf.h"
 #include "frequencies.h"
@@ -210,7 +211,7 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		gUpdateStatus = true;
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		gFlagStartScan = true;
-		g_20000458 = 0;
+		gScanSingleFrequency = false;
 		gBackupCROSS_BAND_RX_TX = gEeprom.CROSS_BAND_RX_TX;
 		gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 		break;
@@ -340,7 +341,7 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 		gUpdateStatus = true;
 		if (IS_NOT_NOAA_CHANNEL(gTxInfo->CHANNEL_SAVE)) {
 			gFlagStartScan = true;
-			g_20000458 = 1;
+			gScanSingleFrequency = true;
 			gBackupCROSS_BAND_RX_TX = gEeprom.CROSS_BAND_RX_TX;
 			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 		} else {

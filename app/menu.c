@@ -18,6 +18,7 @@
 #include "app/dtmf.h"
 #include "app/generic.h"
 #include "app/menu.h"
+#include "app/scanner.h"
 #include "audio.h"
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"

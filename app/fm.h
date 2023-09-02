@@ -32,6 +32,7 @@ extern uint8_t gFM_ChannelPosition;
 // Doubts about whether this should be signed or not.
 extern int16_t gFM_FrequencyDeviation;
 extern bool gFM_FoundFrequency;
+extern bool gFM_AutoScan;
 
 bool FM_CheckValidChannel(uint8_t Channel);
 uint8_t FM_FindNextChannel(uint8_t Channel, uint8_t Direction);

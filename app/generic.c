@@ -16,6 +16,7 @@
 
 #include "app/fm.h"
 #include "app/generic.h"
+#include "app/scanner.h"
 #include "audio.h"
 #include "driver/keyboard.h"
 #include "dtmf.h"

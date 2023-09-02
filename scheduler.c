@@ -14,6 +14,7 @@
  *     limitations under the License.
  */
 
+#include "app/scanner.h"
 #include "audio.h"
 #include "functions.h"
 #include "helper/battery.h"

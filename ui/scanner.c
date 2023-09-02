@@ -33,7 +33,7 @@ void UI_DisplayScanner(void)
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 	memset(String, 0, sizeof(String));
 
-	if (g_20000458 == 1 || (gScanCssState != SCAN_CSS_STATE_OFF && gScanCssState != SCAN_CSS_STATE_FAILED)) {
+	if (gScanSingleFrequency || (gScanCssState != SCAN_CSS_STATE_OFF && gScanCssState != SCAN_CSS_STATE_FAILED)) {
 		sprintf(String, "FREQ:%.5f", gScanFrequency * 1e-05);
 	} else {
 		sprintf(String, "FREQ:**.*****");

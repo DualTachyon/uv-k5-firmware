@@ -26,6 +26,16 @@
 
 DCS_CodeType_t gCS_ScannedType;
 uint8_t gCS_ScannedIndex;
+bool gFlagStartScan;
+bool gFlagStopScan;
+bool gScanSingleFrequency;
+uint8_t gScannerEditState;
+uint8_t gScanChannel;
+uint32_t gScanFrequency;
+uint8_t gScanPauseMode;
+SCAN_CssState_t gScanCssState;
+volatile bool gScheduleScanListen;
+volatile uint16_t ScanPauseDelayIn10msec;
 
 static void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
@@ -97,13 +107,13 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	if (!bKeyPressed) {
 		return;
 	}
-	if (gScanCssState == SCAN_CSS_STATE_OFF && g_20000458 == 0) {
+	if (gScanCssState == SCAN_CSS_STATE_OFF && !gScanSingleFrequency) {
 		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		return;
 	}
 
 	if (gScanCssState == SCAN_CSS_STATE_SCANNING) {
-		if (g_20000458 == 1) {
+		if (gScanSingleFrequency) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			return;
 		}
@@ -118,7 +128,7 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 
 	switch (gScannerEditState) {
 	case 0:
-		if (g_20000458 == 0) {
+		if (!gScanSingleFrequency) {
 			uint32_t Freq250;
 			uint32_t Freq625;
 			int16_t Delta250;
@@ -165,7 +175,7 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 		break;
 
 	case 2:
-		if (g_20000458 == 0) {
+		if (!gScanSingleFrequency) {
 			RADIO_InitInfo(gTxInfo, gTxInfo->CHANNEL_SAVE, FREQUENCY_GetBand(gScanFrequency), gScanFrequency);
 			if (g_2000045C == 1) {
 				gTxInfo->ConfigRX.CodeType = gCS_ScannedType;

@@ -20,8 +20,27 @@
 #include "dcs.h"
 #include "driver/keyboard.h"
 
+enum SCAN_CssState_t {
+	SCAN_CSS_STATE_OFF      = 0U,
+	SCAN_CSS_STATE_SCANNING = 1U,
+	SCAN_CSS_STATE_FOUND    = 2U,
+	SCAN_CSS_STATE_FAILED   = 3U,
+};
+
+typedef enum SCAN_CssState_t SCAN_CssState_t;
+
 extern DCS_CodeType_t gCS_ScannedType;
 extern uint8_t gCS_ScannedIndex;
+extern bool gFlagStartScan;
+extern bool gFlagStopScan;
+extern bool gScanSingleFrequency;
+extern uint8_t gScannerEditState;
+extern uint8_t gScanChannel;
+extern uint32_t gScanFrequency;
+extern uint8_t gScanPauseMode;
+extern SCAN_CssState_t gScanCssState;
+extern volatile bool gScheduleScanListen;
+extern volatile uint16_t ScanPauseDelayIn10msec;
 
 void SCANNER_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
