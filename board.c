@@ -353,7 +353,7 @@ void BOARD_EEPROM_Init(void)
 	} else {
 		gEeprom.CHAN_1_CALL = 0;
 	}
-	if (Data[0] < 10) {
+	if (Data[1] < 10) {
 		gEeprom.SQUELCH_LEVEL = Data[1];
 	} else {
 		gEeprom.SQUELCH_LEVEL = 4;
