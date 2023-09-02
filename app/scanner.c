@@ -97,19 +97,19 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	if (!bKeyPressed) {
 		return;
 	}
-	if (gScanState == 0 && g_20000458 == 0) {
+	if (gScanCssState == SCAN_CSS_STATE_OFF && g_20000458 == 0) {
 		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		return;
 	}
 
-	if (gScanState == 1) {
+	if (gScanCssState == SCAN_CSS_STATE_SCANNING) {
 		if (g_20000458 == 1) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			return;
 		}
 	}
 
-	if (gScanState == 3) {
+	if (gScanCssState == SCAN_CSS_STATE_FAILED) {
 		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		return;
 	}
@@ -151,7 +151,7 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 		} else {
 			gScannerEditState = 2;
 		}
-		gScanState = 2;
+		gScanCssState = SCAN_CSS_STATE_FOUND;
 		gAnotherVoiceID = VOICE_ID_MEMORY_CHANNEL;
 		gRequestDisplayScreen = DISPLAY_SCANNER;
 		break;

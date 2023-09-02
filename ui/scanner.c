@@ -33,7 +33,7 @@ void UI_DisplayScanner(void)
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 	memset(String, 0, sizeof(String));
 
-	if (g_20000458 == 1 || (gScanState != 0 && gScanState != 3)) {
+	if (g_20000458 == 1 || (gScanCssState != SCAN_CSS_STATE_OFF && gScanCssState != SCAN_CSS_STATE_FAILED)) {
 		sprintf(String, "FREQ:%.5f", gScanFrequency * 1e-05);
 	} else {
 		sprintf(String, "FREQ:**.*****");
@@ -41,7 +41,7 @@ void UI_DisplayScanner(void)
 	UI_PrintString(String, 2, 127, 1, 8, 0);
 	memset(String, 0, sizeof(String));
 
-	if (gScanState < 2 || g_2000045C != 1) {
+	if (gScanCssState < SCAN_CSS_STATE_FOUND || g_2000045C != 1) {
 		sprintf(String, "CTC:******");
 	} else if (gCS_ScannedType == CODE_TYPE_CONTINUOUS_TONE) {
 		sprintf(String, "CTC:%.1fHz", CTCSS_Options[gCS_ScannedIndex] * 0.1);
@@ -59,11 +59,11 @@ void UI_DisplayScanner(void)
 		if (gScannerEditState == 1) {
 			strcpy(String, "SAVE:");
 			UI_GenerateChannelStringEx(String + 5, gShowChPrefix, gScanChannel);
-		} else if (gScanState < 2) {
+		} else if (gScanCssState < SCAN_CSS_STATE_FOUND) {
 			strcpy(String, "SCAN");
 			memset(String + 4, '.', (g_20000464 & 7) + 1);
 		} else {
-			if (gScanState == 2) {
+			if (gScanCssState == SCAN_CSS_STATE_FOUND) {
 				strcpy(String, "SCAN CMP.");
 			} else {
 				strcpy(String, "SCAN FAIL.");

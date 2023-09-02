@@ -150,7 +150,7 @@ bool gF_LOCK;
 uint8_t gScanChannel;
 uint32_t gScanFrequency;
 uint8_t gScanPauseMode;
-uint8_t gScanState;
+SCAN_CssState_t gScanCssState;
 uint8_t gShowChPrefix;
 volatile uint16_t gSystickCountdown2;
 volatile uint8_t gFoundCDCSSCountdown;

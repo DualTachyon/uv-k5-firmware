@@ -918,8 +918,8 @@ void APP_TimeSlice10ms(void)
 			return;
 		}
 
-		switch (gScanState) {
-		case 0:
+		switch (gScanCssState) {
+		case SCAN_CSS_STATE_OFF:
 			if (!BK4819_GetFrequencyScanResult(&Result)) {
 				break;
 			}
@@ -944,13 +944,13 @@ void APP_TimeSlice10ms(void)
 				g_2000045F = 0;
 				g_2000045C = 0;
 				g_20000464 = 0;
-				gScanState = 1;
+				gScanCssState = SCAN_CSS_STATE_SCANNING;
 				GUI_SelectNextDisplay(DISPLAY_SCANNER);
 			}
 			g_2000045D = 0x15;
 			break;
 
-		case 1:
+		case SCAN_CSS_STATE_SCANNING:
 			ScanResult = BK4819_GetCxCSSScanResult(&Result, &CtcssFreq);
 			if (ScanResult == 0) {
 				break;
@@ -963,7 +963,7 @@ void APP_TimeSlice10ms(void)
 				if (Index != 0xFF) {
 					gCS_ScannedIndex = Index;
 					gCS_ScannedType = CODE_TYPE_DIGITAL;
-					gScanState = 2;
+					gScanCssState = SCAN_CSS_STATE_FOUND;
 					g_2000045C = 1;
 				}
 			} else if (ScanResult == BK4819_CSS_RESULT_CTCSS) {
@@ -974,7 +974,7 @@ void APP_TimeSlice10ms(void)
 					if (Index == gCS_ScannedIndex && gCS_ScannedType == CODE_TYPE_CONTINUOUS_TONE) {
 						g_2000045F++;
 						if (1 < g_2000045F) {
-							gScanState = 2;
+							gScanCssState = SCAN_CSS_STATE_FOUND;
 							g_2000045C = 1;
 						}
 					} else {
@@ -984,12 +984,14 @@ void APP_TimeSlice10ms(void)
 					gCS_ScannedIndex = Index;
 				}
 			}
-			if (gScanState < 2) {
+			if (gScanCssState < SCAN_CSS_STATE_FOUND) {
 				BK4819_SetScanFrequency(gScanFrequency);
 				g_2000045D = 0x15;
 				break;
 			}
 			GUI_SelectNextDisplay(DISPLAY_SCANNER);
+			break;
+		default:
 			break;
 		}
 	}
@@ -1059,7 +1061,7 @@ void APP_TimeSlice500ms(void)
 					GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 				}
 			}
-			if (gScreenToDisplay != DISPLAY_AIRCOPY && (gScreenToDisplay != DISPLAY_SCANNER || (1 < gScanState))) {
+			if (gScreenToDisplay != DISPLAY_AIRCOPY && (gScreenToDisplay != DISPLAY_SCANNER || (gScanCssState >= SCAN_CSS_STATE_FOUND))) {
 				if (gEeprom.AUTO_KEYPAD_LOCK && gKeyLockCountdown && !gDTMF_InputMode) {
 					gKeyLockCountdown--;
 					if (gKeyLockCountdown == 0) {
@@ -1136,13 +1138,13 @@ LAB_00004b08:
 		}
 	}
 
-	if (gScreenToDisplay == DISPLAY_SCANNER && gScannerEditState == 0 && gScanState < 2) {
+	if (gScreenToDisplay == DISPLAY_SCANNER && gScannerEditState == 0 && gScanCssState < SCAN_CSS_STATE_FOUND) {
 		g_20000464++;
 		if (0x20 < g_20000464) {
-			if (gScanState == 1 && g_20000458 == 0) {
-				gScanState = 2;
+			if (gScanCssState == SCAN_CSS_STATE_SCANNING && g_20000458 == 0) {
+				gScanCssState = SCAN_CSS_STATE_FOUND;
 			} else {
-				gScanState = 3;
+				gScanCssState = SCAN_CSS_STATE_FAILED;
 			}
 		}
 		gUpdateDisplay = true;
@@ -1220,13 +1222,13 @@ void FUN_000075b0(void)
 
 	gIsNoaaMode = false;
 	if (g_20000458 == 1) {
-		gScanState = 1;
+		gScanCssState = SCAN_CSS_STATE_SCANNING;
 		gScanFrequency = gRxInfo->pCurrent->Frequency;
 		gStepSetting = gRxInfo->STEP_SETTING;
 		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
 		BK4819_SetScanFrequency(gScanFrequency);
 	} else {
-		gScanState = 0;
+		gScanCssState = SCAN_CSS_STATE_OFF;
 		gScanFrequency = 0xFFFFFFFF;
 		BK4819_PickRXFilterPathBasedOnFrequency(0xFFFFFFFF);
 		BK4819_EnableFrequencyScan();

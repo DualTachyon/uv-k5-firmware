@@ -47,6 +47,15 @@ enum {
 	VFO_CONFIGURE_RELOAD = 2U,
 };
 
+enum SCAN_CssState_t {
+	SCAN_CSS_STATE_OFF      = 0U,
+	SCAN_CSS_STATE_SCANNING = 1U,
+	SCAN_CSS_STATE_FOUND    = 2U,
+	SCAN_CSS_STATE_FAILED   = 3U,
+};
+
+typedef enum SCAN_CssState_t SCAN_CssState_t;
+
 extern const uint32_t *gUpperLimitFrequencyBandTable;
 extern const uint32_t *gLowerLimitFrequencyBandTable;
 
@@ -177,7 +186,7 @@ extern bool gF_LOCK;
 extern uint8_t gScanChannel;
 extern uint32_t gScanFrequency;
 extern uint8_t gScanPauseMode;
-extern uint8_t gScanState;
+extern SCAN_CssState_t gScanCssState;
 extern uint8_t gShowChPrefix;
 extern volatile uint16_t gSystickCountdown2;
 extern volatile uint8_t gFoundCDCSSCountdown;
