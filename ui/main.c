@@ -132,8 +132,9 @@ void UI_DisplayMain(void)
 			if (g_20000383 == 2) {
 				SomeValue = 2;
 			} else {
-				Channel = gEeprom.RX_CHANNEL;
-				if (gEeprom.CROSS_BAND_RX_TX != CROSS_BAND_OFF) {
+				if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
+					Channel = gEeprom.RX_CHANNEL;
+				} else {
 					Channel = gEeprom.TX_CHANNEL;
 				}
 				if (Channel == i) {
