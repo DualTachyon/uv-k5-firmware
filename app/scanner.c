@@ -24,8 +24,8 @@
 #include "ui/inputbox.h"
 #include "ui/ui.h"
 
-DCS_CodeType_t gCS_ScannedType;
-uint8_t gCS_ScannedIndex;
+DCS_CodeType_t gScanCssResultType;
+uint8_t gScanCssResultIndex;
 bool gFlagStartScan;
 bool gFlagStopScan;
 bool gScanSingleFrequency;
@@ -37,6 +37,8 @@ SCAN_CssState_t gScanCssState;
 volatile bool gScheduleScanListen;
 volatile uint16_t ScanPauseDelayIn10msec;
 uint8_t gScanProgressIndicator;
+uint8_t gScanHitCount;
+bool gScanUseCssResult;
 
 static void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
@@ -178,19 +180,19 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	case 2:
 		if (!gScanSingleFrequency) {
 			RADIO_InitInfo(gTxInfo, gTxInfo->CHANNEL_SAVE, FREQUENCY_GetBand(gScanFrequency), gScanFrequency);
-			if (g_2000045C == 1) {
-				gTxInfo->ConfigRX.CodeType = gCS_ScannedType;
-				gTxInfo->ConfigRX.Code = gCS_ScannedIndex;
+			if (gScanUseCssResult) {
+				gTxInfo->ConfigRX.CodeType = gScanCssResultType;
+				gTxInfo->ConfigRX.Code = gScanCssResultIndex;
 			}
 			gTxInfo->ConfigTX = gTxInfo->ConfigRX;
 			gTxInfo->STEP_SETTING = gStepSetting;
 		} else {
 			RADIO_ConfigureChannel(0, 2);
 			RADIO_ConfigureChannel(1, 2);
-			gTxInfo->ConfigRX.CodeType = gCS_ScannedType;
-			gTxInfo->ConfigRX.Code = gCS_ScannedIndex;
-			gTxInfo->ConfigTX.CodeType = gCS_ScannedType;
-			gTxInfo->ConfigTX.Code = gCS_ScannedIndex;
+			gTxInfo->ConfigRX.CodeType = gScanCssResultType;
+			gTxInfo->ConfigRX.Code = gScanCssResultIndex;
+			gTxInfo->ConfigTX.CodeType = gScanCssResultType;
+			gTxInfo->ConfigTX.Code = gScanCssResultIndex;
 		}
 
 		if (IS_MR_CHANNEL(gTxInfo->CHANNEL_SAVE)) {

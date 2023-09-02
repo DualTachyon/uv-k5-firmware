@@ -41,12 +41,12 @@ void UI_DisplayScanner(void)
 	UI_PrintString(String, 2, 127, 1, 8, 0);
 	memset(String, 0, sizeof(String));
 
-	if (gScanCssState < SCAN_CSS_STATE_FOUND || g_2000045C != 1) {
+	if (gScanCssState < SCAN_CSS_STATE_FOUND || !gScanUseCssResult) {
 		sprintf(String, "CTC:******");
-	} else if (gCS_ScannedType == CODE_TYPE_CONTINUOUS_TONE) {
-		sprintf(String, "CTC:%.1fHz", CTCSS_Options[gCS_ScannedIndex] * 0.1);
+	} else if (gScanCssResultType == CODE_TYPE_CONTINUOUS_TONE) {
+		sprintf(String, "CTC:%.1fHz", CTCSS_Options[gScanCssResultIndex] * 0.1);
 	} else {
-		sprintf(String, "DCS:D%03oN", DCS_Options[gCS_ScannedIndex]);
+		sprintf(String, "DCS:D%03oN", DCS_Options[gScanCssResultIndex]);
 	}
 	UI_PrintString(String, 2, 127, 3, 8, 0);
 	memset(String, 0, sizeof(String));
