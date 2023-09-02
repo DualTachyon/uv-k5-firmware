@@ -77,8 +77,8 @@ static void FUN_00005144(void)
 			FUNCTION_Select(FUNCTION_3);
 			return;
 		}
-		g_2000033A = 100;
-		gSystickFlag7 = false;
+		gDualWatchCountdown = 100;
+		gScheduleDualWatch = false;
 	} else {
 		if (g_20000411) {
 			FUNCTION_Select(FUNCTION_3);
@@ -124,8 +124,8 @@ void FUN_000051e8(void)
 		if (gRxInfo->DTMF_DECODING_ENABLE || gSetting_KILLED) {
 			if (gDTMF_CallState == DTMF_CALL_STATE_NONE) {
 				if (g_20000411 == 0x01) {
-					g_2000033A = 500;
-					gSystickFlag7 = false;
+					gDualWatchCountdown = 500;
+					gScheduleDualWatch = false;
 					g_20000411 = 2;
 					return;
 				}
@@ -342,8 +342,8 @@ void APP_StartListening(FUNCTION_Type_t Function)
 		}
 		if ((gStepDirection == 0 || g_20000381 == 0) && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 			g_2000041F = 1;
-			g_2000033A = 360;
-			gSystickFlag7 = false;
+			gDualWatchCountdown = 360;
+			gScheduleDualWatch = false;
 		}
 		if (gRxInfo->IsAM) {
 			BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
@@ -456,7 +456,7 @@ void NOAA_IncreaseChannel(void)
 	}
 }
 
-void FUN_00007f4c(void)
+void DUALWATCH_Alternate(void)
 {
 	if (gIsNoaaMode) {
 		if (IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[0]) || IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[1])) {
@@ -474,9 +474,9 @@ void FUN_00007f4c(void)
 	}
 	RADIO_SetupRegisters(false);
 	if (gIsNoaaMode) {
-		g_2000033A = 7;
+		gDualWatchCountdown = 7;
 	} else {
-		g_2000033A = 10;
+		gDualWatchCountdown = 10;
 	}
 }
 
@@ -530,9 +530,9 @@ void APP_CheckRadioInterrupts(void)
 					gBatterySave = 20;
 					gBatterySaveCountdownExpired = 0;
 				}
-				if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && (gSystickFlag7 || g_2000033A < 20)) {
-					g_2000033A = 20;
-					gSystickFlag7 = false;
+				if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && (gScheduleDualWatch || gDualWatchCountdown < 20)) {
+					gDualWatchCountdown = 20;
+					gScheduleDualWatch = false;
 				}
 			}
 		}
@@ -671,17 +671,17 @@ void APP_Update(void)
 	}
 
 	if (gScreenToDisplay != DISPLAY_SCANNER && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
-		if (gSystickFlag7 && gVoiceWriteIndex == 0) {
+		if (gScheduleDualWatch && gVoiceWriteIndex == 0) {
 			if (gStepDirection == 0 && g_20000381 == 0) {
 				if (!gPttIsPressed && !gFmRadioMode && gDTMF_CallState == DTMF_CALL_STATE_NONE && gCurrentFunction != FUNCTION_POWER_SAVE) {
-					FUN_00007f4c();
+					DUALWATCH_Alternate();
 					if (g_2000041F == 1 && gScreenToDisplay == DISPLAY_MAIN) {
 						GUI_SelectNextDisplay(DISPLAY_MAIN);
 					}
 					g_2000041F = 0;
 					gScanPauseMode = 0;
 					g_20000411 = 0;
-					gSystickFlag7 = false;
+					gScheduleDualWatch = false;
 				}
 			}
 		}
@@ -716,7 +716,7 @@ void APP_Update(void)
 				BK4819_EnableVox(gEeprom.VOX1_THRESHOLD, gEeprom.VOX0_THRESHOLD);
 			}
 			if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && gStepDirection == 0 && g_20000381 == 0) {
-				FUN_00007f4c();
+				DUALWATCH_Alternate();
 				g_20000382 = 0;
 			}
 			FUNCTION_Init();
@@ -732,7 +732,7 @@ void APP_Update(void)
 			BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
 			// Authentic device checked removed
 		} else {
-			FUN_00007f4c();
+			DUALWATCH_Alternate();
 			g_20000382 = 1;
 			gBatterySave = 10;
 		}

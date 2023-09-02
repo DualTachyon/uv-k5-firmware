@@ -709,8 +709,8 @@ void RADIO_SomethingElse(uint8_t Arg)
 void RADIO_SomethingWithTransmit(void)
 {
 	if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
-		g_2000033A = 360;
-		gSystickFlag7 = 0;
+		gDualWatchCountdown = 360;
+		gScheduleDualWatch = false;
 		if (g_2000041F == 0) {
 			gEeprom.RX_CHANNEL = gEeprom.TX_CHANNEL;
 			gRxInfo = gEeprom.VfoInfo + gEeprom.TX_CHANNEL;

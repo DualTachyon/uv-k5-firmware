@@ -64,10 +64,10 @@ void SystickHandler(void)
 	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_RECEIVE) {
-				if (g_2000033A) {
-					g_2000033A--;
-					if (g_2000033A == 0) {
-						gSystickFlag7 = true;
+				if (gDualWatchCountdown) {
+					gDualWatchCountdown--;
+					if (!gDualWatchCountdown) {
+						gScheduleDualWatch = true;
 					}
 				}
 			}

@@ -79,7 +79,7 @@ extern uint8_t gMR_ChannelAttributes[207];
 
 extern volatile bool gNextTimeslice500ms;
 extern volatile uint16_t gBatterySaveCountdown;
-extern volatile uint16_t g_2000033A;
+extern volatile uint16_t gDualWatchCountdown;
 extern volatile uint16_t gTxTimerCountdown;
 extern volatile uint16_t g_20000342;
 extern volatile uint16_t gFmPlayCountdown;
@@ -188,7 +188,7 @@ extern volatile bool gTxTimeoutReached;
 extern volatile bool gNextTimeslice40ms;
 extern volatile bool gSchedulePowerSave;
 extern volatile bool gBatterySaveCountdownExpired;
-extern volatile bool gSystickFlag7;
+extern volatile bool gScheduleDualWatch;
 extern volatile bool gScheduleNOAA;
 extern volatile bool gSystickFlag9;
 extern volatile bool gSystickFlag10;

@@ -55,7 +55,7 @@ uint8_t gMR_ChannelAttributes[207];
 
 volatile bool gNextTimeslice500ms;
 volatile uint16_t gBatterySaveCountdown;
-volatile uint16_t g_2000033A;
+volatile uint16_t gDualWatchCountdown;
 volatile uint16_t gTxTimerCountdown = 1000;
 volatile uint16_t g_20000342;
 volatile uint16_t gNOAA_Countdown;
@@ -161,7 +161,7 @@ volatile bool gTxTimeoutReached;
 volatile bool gNextTimeslice40ms;
 volatile bool gSchedulePowerSave;
 volatile bool gBatterySaveCountdownExpired;
-volatile bool gSystickFlag7;
+volatile bool gScheduleDualWatch;
 volatile bool gScheduleNOAA;
 volatile bool gSystickFlag9;
 volatile bool gSystickFlag10;
