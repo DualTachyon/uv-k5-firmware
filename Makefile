@@ -66,6 +66,7 @@ OBJS += ui/scanner.o
 OBJS += ui/status.o
 OBJS += ui/ui.o
 OBJS += ui/welcome.o
+OBJS += version.o
 
 OBJS += main.o
 
@@ -81,9 +82,12 @@ LD = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 SIZE = arm-none-eabi-size
 
+GIT_HASH := $(shell git rev-parse --short HEAD)
+
 ASFLAGS = -mcpu=cortex-m0
 CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-builtin -fshort-enums -fno-delete-null-pointer-checks -std=c11 -MMD
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
+CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
 
 ifeq ($(DEBUG),1)
@@ -111,6 +115,8 @@ debug:
 flash:
 	/opt/openocd/bin/openocd -c "bindto 0.0.0.0" -f interface/jlink.cfg -f dp32g030.cfg -c "write_image firmware.bin 0; shutdown;"
 
+version.o: .FORCE
+
 $(TARGET): $(OBJS)
 	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
@@ -121,6 +127,8 @@ bsp/dp32g030/%.h: hardware/dp32g030/%.def
 
 %.o: %.S
 	$(AS) $(ASFLAGS) $< -o $@
+
+.FORCE:
 
 -include $(DEPS)
 

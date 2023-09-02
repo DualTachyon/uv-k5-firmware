@@ -22,6 +22,7 @@
 #include "settings.h"
 #include "ui/helper.h"
 #include "ui/welcome.h"
+#include "version.h"
 
 void UI_DisplayWelcome(void)
 {
@@ -45,6 +46,7 @@ void UI_DisplayWelcome(void)
 		}
 		UI_PrintString(WelcomeString0, 0, 127, 1, 10, true);
 		UI_PrintString(WelcomeString1, 0, 127, 3, 10, true);
+		UI_PrintString(Version, 0, 127, 5, 10, true);
 		ST7565_BlitStatusLine();
 		ST7565_BlitFullScreen();
 	}
