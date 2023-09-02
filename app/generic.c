@@ -129,9 +129,9 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 				}
 				g_200003A0 = 1;
 				if (gDTMF_InputMode) {
-					if (gDTMF_InputIndex || g_200003C0) {
+					if (gDTMF_InputIndex || gDTMF_PreviousIndex) {
 						if (gDTMF_InputIndex == 0) {
-							gDTMF_InputIndex = g_200003C0;
+							gDTMF_InputIndex = gDTMF_PreviousIndex;
 						}
 						gDTMF_InputBox[gDTMF_InputIndex] = 0;
 						if (gDTMF_InputIndex == 3) {
@@ -140,7 +140,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 							gDTMF_CallMode = DTMF_CALL_MODE_DTMF;
 						}
 						sprintf(gDTMF_String, "%s", gDTMF_InputBox);
-						g_200003C0 = gDTMF_InputIndex;
+						gDTMF_PreviousIndex = gDTMF_InputIndex;
 						gDTMF_ReplyState = DTMF_REPLY_ANI;
 						gDTMF_State = DTMF_STATE_0;
 					}

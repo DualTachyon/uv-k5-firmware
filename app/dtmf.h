@@ -65,6 +65,7 @@ extern bool gDTMF_DecodeRing;
 extern uint8_t gDTMF_DecodeRingCountdown;
 extern uint8_t gDTMFChosenContact;
 extern uint8_t gDTMF_WriteIndex;
+extern uint8_t gDTMF_PreviousIndex;
 extern uint8_t gDTMF_AUTO_RESET_TIME;
 extern uint8_t gDTMF_InputIndex;
 extern bool gDTMF_InputMode;

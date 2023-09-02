@@ -39,6 +39,7 @@ bool gDTMF_DecodeRing;
 uint8_t gDTMF_DecodeRingCountdown;
 uint8_t gDTMFChosenContact;
 uint8_t gDTMF_WriteIndex;
+uint8_t gDTMF_PreviousIndex;
 uint8_t gDTMF_AUTO_RESET_TIME;
 uint8_t gDTMF_InputIndex;
 bool gDTMF_InputMode;

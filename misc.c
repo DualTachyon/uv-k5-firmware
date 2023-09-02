@@ -105,7 +105,6 @@ uint8_t gFlashLightState;
 uint8_t g_200003B4;
 uint16_t g_200003B6;
 uint16_t g_200003B8;
-uint8_t g_200003C0;
 uint16_t g_200003E2;
 volatile uint16_t gFlashLightBlinkCounter;
 uint8_t g_200003FD;
