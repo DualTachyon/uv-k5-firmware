@@ -164,7 +164,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gRequestDisplayScreen = DISPLAY_MENU;
 		}
 	} else {
-		FM_Play();
+		FM_PlayAndUpdate();
 		gRequestDisplayScreen = DISPLAY_FM;
 	}
 	gAnotherVoiceID = VOICE_ID_SCANNING_STOP;

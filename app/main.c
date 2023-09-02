@@ -27,7 +27,6 @@
 #include "ui/inputbox.h"
 #include "ui/ui.h"
 
-extern void APP_SwitchToFM(void);
 extern void FUN_0000773c(void);
 extern void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step);
 extern void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction);
@@ -136,7 +135,7 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	gUpdateStatus = true;
 	switch (Key) {
 	case KEY_0:
-		APP_SwitchToFM();
+		FM_Switch();
 		break;
 
 	case KEY_1:
@@ -283,7 +282,7 @@ static void MAIN_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			return;
 		}
-		APP_SwitchToFM();
+		FM_Switch();
 	}
 }
 

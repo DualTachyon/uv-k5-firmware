@@ -22,13 +22,13 @@
 #include "driver/bk1080.h"
 #include "driver/eeprom.h"
 #include "driver/gpio.h"
+#include "functions.h"
 #include "misc.h"
 #include "settings.h"
 #include "ui/inputbox.h"
 #include "ui/ui.h"
 
 extern void APP_StartScan(bool bFlag);
-extern void APP_SwitchToFM(void);
 
 uint16_t gFM_Channels[20];
 bool gFmRadioMode;
@@ -136,7 +136,7 @@ void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag)
 	BK1080_SetFrequency(gEeprom.FM_FrequencyPlaying);
 }
 
-void FM_Play(void)
+void FM_PlayAndUpdate(void)
 {
 	gFM_Step = 0;
 	if (gFM_AutoScan) {
@@ -286,7 +286,7 @@ static void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		gRequestDisplayScreen = DISPLAY_FM;
 		switch (Key) {
 		case KEY_0:
-			APP_SwitchToFM();
+			FM_Switch();
 			break;
 
 		case KEY_1:
@@ -326,7 +326,7 @@ static void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 	if (gFM_Step == 0) {
 		if (gInputBoxIndex == 0) {
 			if (!gAskToSave && !gAskToDelete) {
-				APP_SwitchToFM();
+				FM_Switch();
 				return;
 			}
 			gAskToSave = false;
@@ -348,7 +348,7 @@ static void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 		}
 		gAnotherVoiceID = VOICE_ID_CANCEL;
 	} else {
-		FM_Play();
+		FM_PlayAndUpdate();
 		gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 	}
 	gRequestDisplayScreen = DISPLAY_FM;
@@ -492,3 +492,70 @@ void FM_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 	}
 }
+
+void FM_Play(void)
+{
+	if (!FM_CheckFrequencyLock(gEeprom.FM_FrequencyPlaying, gEeprom.FM_LowerLimit)) {
+		if (!gFM_AutoScan) {
+			gFmPlayCountdown = 0;
+			g_20000427 = 1;
+			if (!gEeprom.FM_IsMrMode) {
+				gEeprom.FM_SelectedFrequency = gEeprom.FM_FrequencyPlaying;
+			}
+			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+			gEnableSpeaker = true;
+		} else {
+			if (gFM_ChannelPosition < 20) {
+				gFM_Channels[gFM_ChannelPosition++] = gEeprom.FM_FrequencyPlaying;
+				if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyPlaying) {
+					FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
+				} else {
+					FM_PlayAndUpdate();
+				}
+			} else {
+				FM_PlayAndUpdate();
+			}
+		}
+	} else if (gFM_AutoScan) {
+		if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyPlaying) {
+			FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
+		} else {
+			FM_PlayAndUpdate();
+		}
+	} else {
+		FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
+	}
+
+	GUI_SelectNextDisplay(DISPLAY_FM);
+}
+
+void FM_Start(void)
+{
+	gFmRadioMode = true;
+	gFM_Step = 0;
+	g_2000038E = 0;
+	BK1080_Init(gEeprom.FM_FrequencyPlaying, true);
+	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+	gEnableSpeaker = true;
+	gUpdateStatus = true;
+}
+
+void FM_Switch(void)
+{
+	if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR) {
+		if (gFmRadioMode) {
+			FM_TurnOff();
+			gInputBoxIndex = 0;
+			g_200003B6 = 0x50;
+			g_20000398 = 1;
+			gRequestDisplayScreen = DISPLAY_MAIN;
+			return;
+		}
+		RADIO_ConfigureTX();
+		RADIO_SetupRegisters(true);
+		FM_Start();
+		gInputBoxIndex = 0;
+		gRequestDisplayScreen = DISPLAY_FM;
+	}
+}
+

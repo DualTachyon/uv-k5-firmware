@@ -480,53 +480,6 @@ void FUN_00007f4c(void)
 	}
 }
 
-void APP_PlayFM(void)
-{
-	if (!FM_CheckFrequencyLock(gEeprom.FM_FrequencyPlaying, gEeprom.FM_LowerLimit)) {
-		if (!gFM_AutoScan) {
-			gFmPlayCountdown = 0;
-			g_20000427 = 1;
-			if (!gEeprom.FM_IsMrMode) {
-				gEeprom.FM_SelectedFrequency = gEeprom.FM_FrequencyPlaying;
-			}
-			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-			gEnableSpeaker = true;
-		} else {
-			if (gFM_ChannelPosition < 20) {
-				gFM_Channels[gFM_ChannelPosition++] = gEeprom.FM_FrequencyPlaying;
-				if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyPlaying) {
-					FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
-				} else {
-					FM_Play();
-				}
-			} else {
-				FM_Play();
-			}
-		}
-	} else if (gFM_AutoScan) {
-		if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyPlaying) {
-			FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
-		} else {
-			FM_Play();
-		}
-	} else {
-		FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
-	}
-
-	GUI_SelectNextDisplay(DISPLAY_FM);
-}
-
-void APP_StartFM(void)
-{
-	gFmRadioMode = true;
-	gFM_Step = 0;
-	g_2000038E = 0;
-	BK1080_Init(gEeprom.FM_FrequencyPlaying, true);
-	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-	gEnableSpeaker = true;
-	gUpdateStatus = true;
-}
-
 void APP_CheckRadioInterrupts(void)
 {
 	if (gScreenToDisplay == DISPLAY_SCANNER) {
@@ -735,7 +688,7 @@ void APP_Update(void)
 	}
 
 	if (gFM_Step && gScheduleFM && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_TRANSMIT) {
-		APP_PlayFM();
+		FM_Play();
 		gScheduleFM = false;
 	}
 
@@ -948,7 +901,7 @@ void APP_TimeSlice10ms(void)
 	if (gFmRadioMode && g_2000038E) {
 		g_2000038E--;
 		if (g_2000038E == 0) {
-			APP_StartFM();
+			FM_Start();
 			GUI_SelectNextDisplay(DISPLAY_FM);
 		}
 	}
@@ -1153,7 +1106,7 @@ LAB_00004b08:
 		if (g_20000373 == 0) {
 			RADIO_SomethingElse(0);
 			if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR && gFmRadioMode) {
-				APP_StartFM();
+				FM_Start();
 				GUI_SelectNextDisplay(DISPLAY_FM);
 			}
 		}
@@ -1349,7 +1302,7 @@ void APP_StartScan(bool bFlag)
 
 			GUI_SelectNextDisplay(DISPLAY_FM);
 			if (gFM_Step) {
-				FM_Play();
+				FM_PlayAndUpdate();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 				return;
 			}
@@ -1406,29 +1359,10 @@ void FUN_00005770(void)
 	}
 	RADIO_SetupRegisters(true);
 	if (gFmRadioMode) {
-		APP_StartFM();
+		FM_Start();
 		gRequestDisplayScreen = DISPLAY_FM;
 	} else {
 		gRequestDisplayScreen = gScreenToDisplay;
-	}
-}
-
-void APP_SwitchToFM(void)
-{
-	if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR) {
-		if (gFmRadioMode) {
-			FM_TurnOff();
-			gInputBoxIndex = 0;
-			g_200003B6 = 0x50;
-			g_20000398 = 1;
-			gRequestDisplayScreen = DISPLAY_MAIN;
-			return;
-		}
-		RADIO_ConfigureTX();
-		RADIO_SetupRegisters(true);
-		APP_StartFM();
-		gInputBoxIndex = 0;
-		gRequestDisplayScreen = DISPLAY_FM;
 	}
 }
 
@@ -1526,7 +1460,7 @@ void FUN_00004404(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		FUN_000056a0(0);
 		break;
 	case 7:
-		APP_SwitchToFM();
+		FM_Switch();
 		break;
 	case 8:
 		FUN_000056a0(1);
