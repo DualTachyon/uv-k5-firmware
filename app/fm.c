@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include "app/action.h"
 #include "app/fm.h"
 #include "app/generic.h"
 #include "audio.h"
@@ -27,8 +28,6 @@
 #include "settings.h"
 #include "ui/inputbox.h"
 #include "ui/ui.h"
-
-extern void APP_StartScan(bool bFlag);
 
 uint16_t gFM_Channels[20];
 bool gFmRadioMode;
@@ -284,7 +283,7 @@ static void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		gRequestDisplayScreen = DISPLAY_FM;
 		switch (Key) {
 		case KEY_0:
-			FM_Switch();
+			ACTION_FM();
 			break;
 
 		case KEY_1:
@@ -298,11 +297,11 @@ static void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			break;
 
 		case KEY_2:
-			APP_StartScan(true);
+			ACTION_Scan(true);
 			break;
 
 		case KEY_3:
-			APP_StartScan(false);
+			ACTION_Scan(false);
 			break;
 
 		default:
@@ -324,7 +323,7 @@ static void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 	if (gFM_Step == 0) {
 		if (gInputBoxIndex == 0) {
 			if (!gAskToSave && !gAskToDelete) {
-				FM_Switch();
+				ACTION_FM();
 				return;
 			}
 			gAskToSave = false;
@@ -536,24 +535,5 @@ void FM_Start(void)
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	gEnableSpeaker = true;
 	gUpdateStatus = true;
-}
-
-void FM_Switch(void)
-{
-	if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR) {
-		if (gFmRadioMode) {
-			FM_TurnOff();
-			gInputBoxIndex = 0;
-			g_200003B6 = 0x50;
-			g_20000398 = 1;
-			gRequestDisplayScreen = DISPLAY_MAIN;
-			return;
-		}
-		RADIO_ConfigureTX();
-		RADIO_SetupRegisters(true);
-		FM_Start();
-		gInputBoxIndex = 0;
-		gRequestDisplayScreen = DISPLAY_FM;
-	}
 }
 

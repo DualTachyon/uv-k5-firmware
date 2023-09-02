@@ -48,7 +48,6 @@ void FM_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
 void FM_Play(void);
 void FM_Start(void);
-void FM_Switch(void);
 
 #endif
 

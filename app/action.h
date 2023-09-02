@@ -14,19 +14,20 @@
  *     limitations under the License.
  */
 
-#ifndef APP_APP_H
-#define APP_APP_H
+#ifndef APP_ACTION_H
+#define APP_ACTION_H
 
-#include <stdbool.h>
-#include "functions.h"
+#include "driver/keyboard.h"
 
-void FUN_0000773c(void);
-void APP_SetStepDirection(bool bFlag, int8_t Direction);
-void APP_StartListening(FUNCTION_Type_t Function);
+//static void ACTION_FlashLight(void)
+void ACTION_Power(void);
+//static void ACTION_Monitor(void)
+void ACTION_Scan(bool bFlag);
+void ACTION_Vox(void);
+//static void ACTION_AlarmOr1750(bool b1750)
+void ACTION_FM(void);
 
-void APP_Update(void);
-void APP_TimeSlice10ms(void);
-void APP_TimeSlice500ms(void);
+void ACTION_Handle(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
 #endif
 

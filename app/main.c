@@ -15,6 +15,8 @@
  */
 
 #include <string.h>
+#include "app/action.h"
+#include "app/app.h"
 #include "app/fm.h"
 #include "app/generic.h"
 #include "app/main.h"
@@ -28,12 +30,7 @@
 #include "ui/inputbox.h"
 #include "ui/ui.h"
 
-extern void FUN_0000773c(void);
 extern void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step);
-extern void APP_ChangeStepDirectionMaybe(bool bFlag, int8_t Direction);
-extern void APP_CycleOutputPower(void);
-extern void APP_FlipVoxSwitch(void);
-extern void APP_StartScan(bool bFlag);
 
 static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
@@ -136,7 +133,7 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	gUpdateStatus = true;
 	switch (Key) {
 	case KEY_0:
-		FM_Switch();
+		ACTION_FM();
 		break;
 
 	case KEY_1:
@@ -228,11 +225,11 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 
 	case KEY_6:
-		APP_CycleOutputPower();
+		ACTION_Power();
 		break;
 
 	case KEY_7:
-		APP_FlipVoxSwitch();
+		ACTION_Vox();
 		break;
 
 	case KEY_8:
@@ -283,7 +280,7 @@ static void MAIN_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			return;
 		}
-		FM_Switch();
+		ACTION_FM();
 	}
 }
 
@@ -321,7 +318,7 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 			if (!bKeyPressed) {
 				return;
 			}
-			APP_StartScan(false);
+			ACTION_Scan(false);
 			return;
 		}
 		if (gStepDirection == 0 && IS_NOT_NOAA_CHANNEL(gTxInfo->CHANNEL_SAVE)) {
@@ -410,7 +407,7 @@ static void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 		return;
 	}
-	APP_ChangeStepDirectionMaybe(false, Direction);
+	APP_SetStepDirection(false, Direction);
 	g_20000394 = true;
 }
 

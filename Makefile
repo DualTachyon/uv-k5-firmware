@@ -30,6 +30,7 @@ OBJS += driver/systick.o
 OBJS += driver/uart.o
 
 # Main
+OBJS += app/action.o
 OBJS += app/aircopy.o
 OBJS += app/app.o
 OBJS += app/dtmf.o
