@@ -29,7 +29,3 @@ jobs:
         name: firmware
         path: firmware.bin
 
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: firmware.bin
