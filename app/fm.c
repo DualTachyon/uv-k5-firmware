@@ -37,6 +37,7 @@ volatile uint16_t gFmPlayCountdown = 1;
 volatile int8_t gFM_Step;
 bool gFM_AutoScan;
 uint8_t gFM_ChannelPosition;
+bool gFM_FoundFrequency;
 
 bool FM_CheckValidChannel(uint8_t Channel)
 {
@@ -118,7 +119,7 @@ void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag)
 		gFmPlayCountdown = 10;
 	}
 	gScheduleFM = false;
-	g_20000427 = 0;
+	gFM_FoundFrequency = false;
 	gAskToSave = false;
 	gAskToDelete = false;
 	gEeprom.FM_FrequencyPlaying = Frequency;
@@ -387,7 +388,7 @@ static void FM_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 			}
 		}
 	} else {
-		if (gFM_AutoScan || g_20000427 != 1) {
+		if (gFM_AutoScan || !gFM_FoundFrequency) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			gInputBoxIndex = 0;
 			return;
@@ -498,7 +499,7 @@ void FM_Play(void)
 	if (!FM_CheckFrequencyLock(gEeprom.FM_FrequencyPlaying, gEeprom.FM_LowerLimit)) {
 		if (!gFM_AutoScan) {
 			gFmPlayCountdown = 0;
-			g_20000427 = 1;
+			gFM_FoundFrequency = true;
 			if (!gEeprom.FM_IsMrMode) {
 				gEeprom.FM_SelectedFrequency = gEeprom.FM_FrequencyPlaying;
 			}

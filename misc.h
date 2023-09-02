@@ -151,7 +151,6 @@ extern uint32_t g_20000418;
 extern uint8_t g_2000041F;
 extern uint8_t g_20000420;
 extern uint16_t g_20000422;
-extern uint8_t g_20000427;
 extern bool gKeyBeingHeld;
 extern bool gPttIsPressed;
 extern uint8_t gPttDebounceCounter;

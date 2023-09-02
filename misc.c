@@ -126,7 +126,6 @@ uint32_t g_20000418;
 uint8_t g_2000041F;
 uint8_t g_20000420;
 uint16_t g_20000422;
-uint8_t g_20000427;
 bool gKeyBeingHeld;
 bool gPttIsPressed;
 uint8_t gPttDebounceCounter;
