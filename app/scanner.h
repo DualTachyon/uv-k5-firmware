@@ -23,7 +23,7 @@
 extern DCS_CodeType_t gCS_ScannedType;
 extern uint8_t gCS_ScannedIndex;
 
-void APP_ProcessKey_SCANNER(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
+void SCANNER_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
 #endif
 

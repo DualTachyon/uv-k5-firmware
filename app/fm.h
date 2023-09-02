@@ -42,7 +42,7 @@ void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag);
 void FM_Play(void);
 int FM_CheckFrequencyLock(uint16_t Frequency, uint16_t LowerLimit);
 
-void APP_ProcessKey_FM(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
+void FM_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
 #endif
 

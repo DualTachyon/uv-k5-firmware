@@ -459,7 +459,7 @@ Bail:
 	gRequestDisplayScreen = DISPLAY_FM;
 }
 
-void APP_ProcessKey_FM(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+void FM_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	switch (Key) {
 	case KEY_0: case KEY_1: case KEY_2: case KEY_3:

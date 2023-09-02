@@ -1718,19 +1718,19 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		} else if (Key != KEY_SIDE1 && Key != KEY_SIDE2) {
 			switch (gScreenToDisplay) {
 			case DISPLAY_MAIN:
-				APP_ProcessKey_MAIN(Key, bKeyPressed, bKeyHeld);
+				MAIN_ProcessKeys(Key, bKeyPressed, bKeyHeld);
 				break;
 			case DISPLAY_FM:
-				APP_ProcessKey_FM(Key, bKeyPressed, bKeyHeld);
+				FM_ProcessKeys(Key, bKeyPressed, bKeyHeld);
 				break;
 			case DISPLAY_MENU:
-				APP_ProcessKey_MENU(Key, bKeyPressed, bKeyHeld);
+				MENU_ProcessKeys(Key, bKeyPressed, bKeyHeld);
 				break;
 			case DISPLAY_SCANNER:
-				APP_ProcessKey_SCANNER(Key, bKeyPressed, bKeyHeld);
+				SCANNER_ProcessKeys(Key, bKeyPressed, bKeyHeld);
 				break;
 			case DISPLAY_AIRCOPY:
-				APP_ProcessKey_AIRCOPY(Key, bKeyPressed, bKeyHeld);
+				AIRCOPY_ProcessKeys(Key, bKeyPressed, bKeyHeld);
 				break;
 			default:
 				break;

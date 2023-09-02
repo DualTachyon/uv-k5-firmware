@@ -1095,7 +1095,7 @@ static void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 	gRequestDisplayScreen = DISPLAY_MENU;
 }
 
-void APP_ProcessKey_MENU(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+void MENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	switch (Key) {
 	case KEY_0: case KEY_1: case KEY_2: case KEY_3:

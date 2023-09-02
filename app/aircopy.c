@@ -169,7 +169,7 @@ static void AIRCOPY_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void APP_ProcessKey_AIRCOPY(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+void AIRCOPY_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	switch (Key) {
 	case KEY_0: case KEY_1: case KEY_2: case KEY_3:

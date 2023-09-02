@@ -24,7 +24,7 @@ void MENU_AcceptSetting(void);
 void MENU_SelectNextDCS(void);
 void MENU_ShowCurrentSetting(void);
 
-void APP_ProcessKey_MENU(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
+void MENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
 #endif
 
