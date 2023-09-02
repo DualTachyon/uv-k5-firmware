@@ -14,6 +14,7 @@
  *     limitations under the License.
  */
 
+#include "app/generic.h"
 #include "app/scanner.h"
 #include "audio.h"
 #include "frequencies.h"
@@ -26,7 +27,7 @@
 DCS_CodeType_t gCS_ScannedType;
 uint8_t gCS_ScannedIndex;
 
-void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+static void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
 		if (gScannerEditState == 1) {
@@ -52,7 +53,7 @@ void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void SCANNER_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
+static void SCANNER_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
@@ -86,7 +87,7 @@ void SCANNER_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
+static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 {
 	uint8_t Channel;
 
@@ -202,7 +203,7 @@ void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void SCANNER_Key_STAR(bool bKeyPressed, bool bKeyHeld)
+static void SCANNER_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 {
 	if ((!bKeyHeld) && (bKeyPressed)) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
@@ -211,7 +212,7 @@ void SCANNER_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 	return;
 }
 
-void SCANNER_Key_UP_DOWN(bool bKeyPressed, bool pKeyHeld, int8_t Direction)
+static void SCANNER_Key_UP_DOWN(bool bKeyPressed, bool pKeyHeld, int8_t Direction)
 {
 	if (pKeyHeld) {
 		if (!bKeyPressed) {
@@ -230,6 +231,40 @@ void SCANNER_Key_UP_DOWN(bool bKeyPressed, bool pKeyHeld, int8_t Direction)
 		gRequestDisplayScreen = DISPLAY_SCANNER;
 	} else {
 		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+	}
+}
+
+void APP_ProcessKey_SCANNER(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	switch (Key) {
+	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
+	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
+	case KEY_8: case KEY_9:
+		SCANNER_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		break;
+	case KEY_MENU:
+		SCANNER_Key_MENU(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_UP:
+		SCANNER_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
+		break;
+	case KEY_DOWN:
+		SCANNER_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
+		break;
+	case KEY_EXIT:
+		SCANNER_Key_EXIT(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_STAR:
+		SCANNER_Key_STAR(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_PTT:
+		GENERIC_Key_PTT(bKeyPressed);
+		break;
+	default:
+		if (!bKeyHeld && bKeyPressed) {
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+		}
+		break;
 	}
 }
 

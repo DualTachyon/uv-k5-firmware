@@ -16,6 +16,7 @@
 
 #include <string.h>
 #include "app/dtmf.h"
+#include "app/generic.h"
 #include "app/menu.h"
 #include "audio.h"
 #include "board.h"
@@ -815,7 +816,7 @@ void MENU_ShowCurrentSetting(void)
 
 //
 
-void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+static void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	uint16_t Value = 0;
 
@@ -919,7 +920,7 @@ void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 }
 
-void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
+static void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
@@ -948,7 +949,7 @@ void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
+static void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
@@ -997,7 +998,7 @@ void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
+static void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
@@ -1022,7 +1023,7 @@ void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
+static void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 {
 	uint8_t VFO;
 	uint8_t Channel;
@@ -1092,5 +1093,45 @@ void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		gSubMenuSelection = Channel;
 	}
 	gRequestDisplayScreen = DISPLAY_MENU;
+}
+
+void APP_ProcessKey_MENU(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	switch (Key) {
+	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
+	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
+	case KEY_8: case KEY_9:
+		MENU_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		break;
+	case KEY_MENU:
+		MENU_Key_MENU(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_UP:
+		MENU_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
+		break;
+	case KEY_DOWN:
+		MENU_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
+		break;
+	case KEY_EXIT:
+		MENU_Key_EXIT(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_STAR:
+		MENU_Key_STAR(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_F:
+		GENERIC_Key_F(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_PTT:
+		GENERIC_Key_PTT(bKeyPressed);
+		break;
+	default:
+		if (!bKeyHeld && bKeyPressed) {
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+		}
+		break;
+	}
+	if (gScreenToDisplay == DISPLAY_MENU && gMenuCursor == MENU_VOL) {
+		g_20000393 = 0x20;
+	}
 }
 

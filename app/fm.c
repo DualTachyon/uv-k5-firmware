@@ -16,6 +16,7 @@
 
 #include <string.h>
 #include "app/fm.h"
+#include "app/generic.h"
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/bk1080.h"
@@ -198,7 +199,7 @@ Bail:
 	return ret;
 }
 
-void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+static void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 #define STATE_FREQ_MODE 0
 #define STATE_MR_MODE   1
@@ -313,7 +314,7 @@ void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
+static void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 {
 	if (bKeyHeld) {
 		return;
@@ -353,7 +354,7 @@ void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 	gRequestDisplayScreen = DISPLAY_FM;
 }
 
-void FM_Key_MENU(bool bKeyPressed, bool bKeyHeld)
+static void FM_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 {
 	if (bKeyHeld) {
 		return;
@@ -400,7 +401,7 @@ void FM_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	}
 }
 
-void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step)
+static void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step)
 {
 	if (bKeyHeld || !bKeyPressed) {
 		if (gInputBoxIndex) {
@@ -458,3 +459,36 @@ Bail:
 	gRequestDisplayScreen = DISPLAY_FM;
 }
 
+void APP_ProcessKey_FM(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
+{
+	switch (Key) {
+	case KEY_0: case KEY_1: case KEY_2: case KEY_3:
+	case KEY_4: case KEY_5: case KEY_6: case KEY_7:
+	case KEY_8: case KEY_9:
+		FM_Key_DIGITS(Key, bKeyPressed, bKeyHeld);
+		break;
+	case KEY_MENU:
+		FM_Key_MENU(bKeyPressed, bKeyHeld);
+		return;
+	case KEY_UP:
+		FM_Key_UP_DOWN(bKeyPressed, bKeyHeld, 1);
+		break;
+	case KEY_DOWN:
+		FM_Key_UP_DOWN(bKeyPressed, bKeyHeld, -1);
+		break;;
+	case KEY_EXIT:
+		FM_Key_EXIT(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_F:
+		GENERIC_Key_F(bKeyPressed, bKeyHeld);
+		break;
+	case KEY_PTT:
+		GENERIC_Key_PTT(bKeyPressed);
+		break;
+	default:
+		if (!bKeyHeld && bKeyPressed) {
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+		}
+		break;
+	}
+}

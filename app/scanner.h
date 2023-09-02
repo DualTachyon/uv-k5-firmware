@@ -23,11 +23,7 @@
 extern DCS_CodeType_t gCS_ScannedType;
 extern uint8_t gCS_ScannedIndex;
 
-void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
-void SCANNER_Key_EXIT(bool bKeyPressed, bool bKeyHeld);
-void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld);
-void SCANNER_Key_STAR(bool bKeyPressed, bool bKeyHeld);
-void SCANNER_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction);
+void APP_ProcessKey_SCANNER(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
 #endif
 

@@ -37,9 +37,7 @@ extern uint16_t g_FSK_Buffer[36];
 void AIRCOPY_SendMessage(void);
 void AIRCOPY_StorePacket(void);
 
-void AIRCOPY_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
-void AIRCOPY_Key_EXIT(bool bKeyPressed, bool bKeyHeld);
-void AIRCOPY_Key_MENU(bool bKeyPressed, bool bKeyHeld);
+void APP_ProcessKey_AIRCOPY(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
 
 #endif
 
