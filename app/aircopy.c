@@ -48,7 +48,7 @@ void AIRCOPY_SendMessage(void)
 	if (++gAirCopyBlockNumber >= 0x78) {
 		gAircopyState = AIRCOPY_COMPLETE;
 	}
-	RADIO_PrepareTransmit();
+	RADIO_SetTxParameters();
 	BK4819_SendFSKData(g_FSK_Buffer);
 	BK4819_SetupPowerAmplifier(0, 0);
 	BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
@@ -117,13 +117,13 @@ static void AIRCOPY_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		for (i = 0; i < 7; i++) {
 			if (Frequency >= gLowerLimitFrequencyBandTable[i] && Frequency <= gUpperLimitFrequencyBandTable[i]) {
 				gAnotherVoiceID = (VOICE_ID_t)Key;
-				gRxInfo->Band = i;
+				gRxVfo->Band = i;
 				Frequency += 75;
-				Frequency = FREQUENCY_FloorToStep(Frequency, gRxInfo->StepFrequency, 0);
-				gRxInfo->ConfigRX.Frequency = Frequency;
-				gRxInfo->ConfigTX.Frequency = Frequency;
-				RADIO_ConfigureSquelchAndOutputPower(gRxInfo);
-				gCrossTxRadioInfo = gRxInfo;
+				Frequency = FREQUENCY_FloorToStep(Frequency, gRxVfo->StepFrequency, 0);
+				gRxVfo->ConfigRX.Frequency = Frequency;
+				gRxVfo->ConfigTX.Frequency = Frequency;
+				RADIO_ConfigureSquelchAndOutputPower(gRxVfo);
+				gCurrentVfo = gRxVfo;
 				RADIO_SetupRegisters(true);
 				BK4819_SetupAircopy();
 				BK4819_ResetFSK();

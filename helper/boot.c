@@ -73,11 +73,11 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 		gEeprom.KEY_2_SHORT_PRESS_ACTION = 0;
 		gEeprom.KEY_2_LONG_PRESS_ACTION = 0;
 
-		RADIO_InitInfo(gRxInfo, 205, 5, 41002500);
-		gRxInfo->CHANNEL_BANDWIDTH = BANDWIDTH_NARROW;
-		gRxInfo->OUTPUT_POWER = 0;
-		RADIO_ConfigureSquelchAndOutputPower(gRxInfo);
-		gCrossTxRadioInfo = gRxInfo;
+		RADIO_InitInfo(gRxVfo, 205, 5, 41002500);
+		gRxVfo->CHANNEL_BANDWIDTH = BANDWIDTH_NARROW;
+		gRxVfo->OUTPUT_POWER = 0;
+		RADIO_ConfigureSquelchAndOutputPower(gRxVfo);
+		gCurrentVfo = gRxVfo;
 		RADIO_SetupRegisters(true);
 		BK4819_SetupAircopy();
 		BK4819_ResetFSK();

@@ -36,13 +36,13 @@ FUNCTION_Type_t gCurrentFunction;
 
 void FUNCTION_Init(void)
 {
-	if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
+	if (IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
 		gCopyOfCodeType = gCodeType;
-		if (g_20000381 == 0) {
-			if (gRxInfo->IsAM) {
+		if (gCssScanMode == CSS_SCAN_MODE_OFF) {
+			if (gRxVfo->IsAM) {
 				gCopyOfCodeType = CODE_TYPE_OFF;
 			} else {
-				gCopyOfCodeType = gRxInfo->pCurrent->CodeType;
+				gCopyOfCodeType = gRxVfo->pCurrent->CodeType;
 			}
 		}
 	} else {
@@ -62,7 +62,7 @@ void FUNCTION_Init(void)
 	gFoundCDCSS = false;
 	gFoundCTCSSCountdown = 0;
 	gFoundCDCSSCountdown = 0;
-	g_20000377 = 0;
+	gEndOfRxDetectedMaybe = false;
 	gSystickCountdown2 = 0;
 }
 
@@ -78,14 +78,14 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	if (bWasPowerSave) {
 		if (Function != FUNCTION_POWER_SAVE) {
 			BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable();
-			gThisCanEnable_BK4819_Rxon = false;
+			gRxIdleMode = false;
 			UI_DisplayStatus();
 		}
 	}
 
 	if (Function == FUNCTION_0) {
 		if (gDTMF_ReplyState) {
-			RADIO_Something();
+			RADIO_PrepareCssTX();
 		}
 		if (PreviousFunction == FUNCTION_TRANSMIT) {
 			gVFO_RSSI_Level[0] = 0;
@@ -118,7 +118,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 
 	if (Function == FUNCTION_POWER_SAVE) {
 		gBatterySave = gEeprom.BATTERY_SAVE * 10;
-		gThisCanEnable_BK4819_Rxon = true;
+		gRxIdleMode = true;
 		BK4819_DisableVox();
 		BK4819_Sleep();
 		BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
@@ -155,7 +155,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	}
 
 	GUI_DisplayScreen();
-	RADIO_PrepareTransmit();
+	RADIO_SetTxParameters();
 	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
 
 	DTMF_Reply();
@@ -175,8 +175,8 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		gBatterySaveCountdown = 1000;
 		return;
 	}
-	if (gCrossTxRadioInfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
-		BK4819_EnableScramble(gCrossTxRadioInfo->SCRAMBLING_TYPE - 1U);
+	if (gCurrentVfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
+		BK4819_EnableScramble(gCurrentVfo->SCRAMBLING_TYPE - 1U);
 		gBatterySaveCountdown = 1000;
 		gSchedulePowerSave = false;
 		g_2000038E = 0;

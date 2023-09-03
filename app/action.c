@@ -48,8 +48,8 @@ static void ACTION_FlashLight(void)
 
 void ACTION_Power(void)
 {
-	if (++gTxInfo->OUTPUT_POWER > OUTPUT_POWER_HIGH) {
-		gTxInfo->OUTPUT_POWER = OUTPUT_POWER_LOW;
+	if (++gTxVfo->OUTPUT_POWER > OUTPUT_POWER_HIGH) {
+		gTxVfo->OUTPUT_POWER = OUTPUT_POWER_LOW;
 	}
 
 	gRequestSaveChannel = 1;
@@ -60,9 +60,9 @@ void ACTION_Power(void)
 static void ACTION_Monitor(void)
 {
 	if (gCurrentFunction != FUNCTION_MONITOR) {
-		RADIO_ConfigureTX();
-		if (gRxInfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gIsNoaaMode) {
-			gNoaaChannel = gRxInfo->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
+		RADIO_SelectVfos();
+		if (gRxVfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gIsNoaaMode) {
+			gNoaaChannel = gRxVfo->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
 		}
 		RADIO_SetupRegisters(true);
 		APP_StartListening(FUNCTION_MONITOR);
@@ -114,8 +114,8 @@ void ACTION_Scan(bool bFlag)
 			return;
 		}
 	} else if (gScreenToDisplay != DISPLAY_SCANNER) {
-		RADIO_ConfigureTX();
-		if (IS_NOT_NOAA_CHANNEL(gRxInfo->CHANNEL_SAVE)) {
+		RADIO_SelectVfos();
+		if (IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
 			if (gStepDirection) {
 				FUN_0000773c();
@@ -133,7 +133,7 @@ void ACTION_Vox(void)
 {
 	gEeprom.VOX_SWITCH = !gEeprom.VOX_SWITCH;
 	gRequestSaveSettings = true;
-	g_20000398 = 1;
+	g_20000398 = true;
 	gAnotherVoiceID = VOICE_ID_VOX;
 	gUpdateStatus = true;
 }
@@ -157,12 +157,12 @@ void ACTION_FM(void)
 		if (gFmRadioMode) {
 			FM_TurnOff();
 			gInputBoxIndex = 0;
-			g_200003B6 = 0x50;
-			g_20000398 = 1;
+			g_200003B6 = 80;
+			g_20000398 = true;
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			return;
 		}
-		RADIO_ConfigureTX();
+		RADIO_SelectVfos();
 		RADIO_SetupRegisters(true);
 		FM_Start();
 		gInputBoxIndex = 0;

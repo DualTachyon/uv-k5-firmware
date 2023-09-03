@@ -62,7 +62,7 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 		if (gScreenToDisplay != Display) {
 			gInputBoxIndex = 0;
 			gIsInSubMenu = false;
-			g_20000381 = 0;
+			gCssScanMode = CSS_SCAN_MODE_OFF;
 			gStepDirection = 0;
 			gFM_Step = 0;
 			gAskForConfirmation = 0;

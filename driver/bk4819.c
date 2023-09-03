@@ -28,7 +28,7 @@ static const uint16_t FSK_RogerTable[7] = {
 
 static uint16_t gBK4819_GpioOutState;
 
-bool gThisCanEnable_BK4819_Rxon;
+bool gRxIdleMode;
 
 void BK4819_Init(void)
 {
@@ -541,7 +541,7 @@ void BK4819_ExitSubAu(void)
 
 void BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable(void)
 {
-	if (gThisCanEnable_BK4819_Rxon) {
+	if (gRxIdleMode) {
 		BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, true);
 		BK4819_RX_TurnOn();
 	}

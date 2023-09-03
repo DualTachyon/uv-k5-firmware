@@ -426,7 +426,7 @@ void UI_DisplayMenu(void)
 		UI_PrintString(String, 50, 127, 4, 8, true);
 	}
 
-	if ((gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_R_DCS) && g_20000381) {
+	if ((gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_R_DCS) && gCssScanMode != CSS_SCAN_MODE_OFF) {
 		UI_PrintString("SCAN", 50, 127, 4, 8, true);
 	}
 

@@ -157,10 +157,10 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 				gScanFrequency = Freq250;
 			}
 		}
-		if (IS_MR_CHANNEL(gTxInfo->CHANNEL_SAVE)) {
+		if (IS_MR_CHANNEL(gTxVfo->CHANNEL_SAVE)) {
 			gScannerEditState = 1;
-			gScanChannel = gTxInfo->CHANNEL_SAVE;
-			gShowChPrefix = RADIO_CheckValidChannel(gTxInfo->CHANNEL_SAVE, false, 0);
+			gScanChannel = gTxVfo->CHANNEL_SAVE;
+			gShowChPrefix = RADIO_CheckValidChannel(gTxVfo->CHANNEL_SAVE, false, 0);
 		} else {
 			gScannerEditState = 2;
 		}
@@ -179,30 +179,30 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 
 	case 2:
 		if (!gScanSingleFrequency) {
-			RADIO_InitInfo(gTxInfo, gTxInfo->CHANNEL_SAVE, FREQUENCY_GetBand(gScanFrequency), gScanFrequency);
+			RADIO_InitInfo(gTxVfo, gTxVfo->CHANNEL_SAVE, FREQUENCY_GetBand(gScanFrequency), gScanFrequency);
 			if (gScanUseCssResult) {
-				gTxInfo->ConfigRX.CodeType = gScanCssResultType;
-				gTxInfo->ConfigRX.Code = gScanCssResultIndex;
+				gTxVfo->ConfigRX.CodeType = gScanCssResultType;
+				gTxVfo->ConfigRX.Code = gScanCssResultIndex;
 			}
-			gTxInfo->ConfigTX = gTxInfo->ConfigRX;
-			gTxInfo->STEP_SETTING = gStepSetting;
+			gTxVfo->ConfigTX = gTxVfo->ConfigRX;
+			gTxVfo->STEP_SETTING = gStepSetting;
 		} else {
 			RADIO_ConfigureChannel(0, 2);
 			RADIO_ConfigureChannel(1, 2);
-			gTxInfo->ConfigRX.CodeType = gScanCssResultType;
-			gTxInfo->ConfigRX.Code = gScanCssResultIndex;
-			gTxInfo->ConfigTX.CodeType = gScanCssResultType;
-			gTxInfo->ConfigTX.Code = gScanCssResultIndex;
+			gTxVfo->ConfigRX.CodeType = gScanCssResultType;
+			gTxVfo->ConfigRX.Code = gScanCssResultIndex;
+			gTxVfo->ConfigTX.CodeType = gScanCssResultType;
+			gTxVfo->ConfigTX.Code = gScanCssResultIndex;
 		}
 
-		if (IS_MR_CHANNEL(gTxInfo->CHANNEL_SAVE)) {
+		if (IS_MR_CHANNEL(gTxVfo->CHANNEL_SAVE)) {
 			Channel = gScanChannel;
 			gEeprom.MrChannel[gEeprom.TX_CHANNEL] = Channel;
 		} else {
-			Channel = gTxInfo->Band + FREQ_CHANNEL_FIRST;
+			Channel = gTxVfo->Band + FREQ_CHANNEL_FIRST;
 			gEeprom.FreqChannel[gEeprom.TX_CHANNEL] = Channel;
 		}
-		gTxInfo->CHANNEL_SAVE = Channel;
+		gTxVfo->CHANNEL_SAVE = Channel;
 		gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] = Channel;
 		gAnotherVoiceID = VOICE_ID_CONFIRM;
 		gRequestDisplayScreen = DISPLAY_SCANNER;

@@ -183,11 +183,11 @@ void DTMF_HandleRequest(void)
 
 	gDTMF_RequestPending = false;
 
-	if (gStepDirection || g_20000381) {
+	if (gStepDirection || gCssScanMode != CSS_SCAN_MODE_OFF) {
 		return;
 	}
 
-	if (!gRxInfo->DTMF_DECODING_ENABLE && !gSetting_KILLED) {
+	if (!gRxVfo->DTMF_DECODING_ENABLE && !gSetting_KILLED) {
 		return;
 	}
 
@@ -305,7 +305,7 @@ void DTMF_Reply(void)
 		break;
 
 	default:
-		if (gDTMF_CallState != DTMF_CALL_STATE_NONE || (gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOT && gCrossTxRadioInfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOTH)) {
+		if (gDTMF_CallState != DTMF_CALL_STATE_NONE || (gCurrentVfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOT && gCurrentVfo->DTMF_PTT_ID_TX_MODE != PTT_ID_BOTH)) {
 			gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 			return;
 		}

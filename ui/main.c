@@ -296,9 +296,9 @@ void UI_DisplayMain(void)
 		uint8_t Level = 0;
 
 		if (SomeValue == 1) {
-				if (gRxInfo->OUTPUT_POWER == OUTPUT_POWER_LOW) {
+				if (gRxVfo->OUTPUT_POWER == OUTPUT_POWER_LOW) {
 					Level = 2;
-				} else if (gRxInfo->OUTPUT_POWER == OUTPUT_POWER_MID) {
+				} else if (gRxVfo->OUTPUT_POWER == OUTPUT_POWER_MID) {
 					Level = 4;
 				} else {
 					Level = 6;

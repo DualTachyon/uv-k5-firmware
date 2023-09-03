@@ -62,7 +62,7 @@ void SystickHandler(void)
 			gBatterySaveCountdownExpired = true;
 		}
 	}
-	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
+	if (gStepDirection == 0 && gCssScanMode == CSS_SCAN_MODE_OFF && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_RECEIVE) {
 				if (gDualWatchCountdown) {
@@ -75,7 +75,7 @@ void SystickHandler(void)
 		}
 	}
 
-	if (gStepDirection == 0 && g_20000381 == 0 && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
+	if (gStepDirection == 0 && gCssScanMode == CSS_SCAN_MODE_OFF && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
 		if (gIsNoaaMode && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_RECEIVE) {
 				if (gNOAA_Countdown) {
@@ -88,7 +88,7 @@ void SystickHandler(void)
 		}
 	}
 
-	if (gStepDirection || g_20000381 == 1) {
+	if (gStepDirection || gCssScanMode == CSS_SCAN_MODE_SCANNING) {
 		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (ScanPauseDelayIn10msec) {
 				ScanPauseDelayIn10msec--;

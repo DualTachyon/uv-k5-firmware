@@ -48,7 +48,7 @@ enum BK4819_CssScanResult_t {
 
 typedef enum BK4819_CssScanResult_t BK4819_CssScanResult_t;
 
-extern bool gThisCanEnable_BK4819_Rxon;
+extern bool gRxIdleMode;
 
 void BK4819_Init(void);
 uint16_t BK4819_GetRegister(BK4819_REGISTER_t Register);

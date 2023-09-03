@@ -73,13 +73,13 @@ void UI_UpdateRSSI(uint16_t RSSI)
 {
 	uint8_t Level;
 
-	if (RSSI >= gEEPROM_RSSI_CALIB[gRxInfo->Band][3]) {
+	if (RSSI >= gEEPROM_RSSI_CALIB[gRxVfo->Band][3]) {
 		Level = 6;
-	} else if (RSSI >= gEEPROM_RSSI_CALIB[gRxInfo->Band][2]) {
+	} else if (RSSI >= gEEPROM_RSSI_CALIB[gRxVfo->Band][2]) {
 		Level = 4;
-	} else if (RSSI >= gEEPROM_RSSI_CALIB[gRxInfo->Band][1]) {
+	} else if (RSSI >= gEEPROM_RSSI_CALIB[gRxVfo->Band][1]) {
 		Level = 2;
-	} else if (RSSI >= gEEPROM_RSSI_CALIB[gRxInfo->Band][0]) {
+	} else if (RSSI >= gEEPROM_RSSI_CALIB[gRxVfo->Band][0]) {
 		Level = 1;
 	} else {
 		Level = 0;

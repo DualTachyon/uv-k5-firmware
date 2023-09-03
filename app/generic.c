@@ -114,7 +114,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 	}
 
 	if (gFM_Step == 0) {
-		if (g_20000381 == 0) {
+		if (gCssScanMode == CSS_SCAN_MODE_OFF) {
 			if (gScreenToDisplay == DISPLAY_MENU || gScreenToDisplay == DISPLAY_FM) {
 				gRequestDisplayScreen = DISPLAY_MAIN;
 				gInputBoxIndex = 0;
@@ -161,7 +161,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 			gFlagRetuneVfos = true;
 		} else {
-			RADIO_Whatever();
+			RADIO_StopCssScan();
 			gRequestDisplayScreen = DISPLAY_MENU;
 		}
 	} else {

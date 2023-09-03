@@ -83,7 +83,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 
-	if (gCurrentFunction == FUNCTION_POWER_SAVE && gThisCanEnable_BK4819_Rxon) {
+	if (gCurrentFunction == FUNCTION_POWER_SAVE && gRxIdleMode) {
 		BK4819_RX_TurnOn();
 	}
 
@@ -144,7 +144,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	if (gFmRadioMode) {
 		BK1080_Mute(false);
 	}
-	if (gCurrentFunction == FUNCTION_POWER_SAVE && gThisCanEnable_BK4819_Rxon) {
+	if (gCurrentFunction == FUNCTION_POWER_SAVE && gRxIdleMode) {
 		BK4819_Sleep();
 	}
 }
@@ -209,7 +209,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 		if (bFlag) {
 			SYSTEM_DelayMs(Delay * 10);
 			if (gCurrentFunction == FUNCTION_RECEIVE || gCurrentFunction == FUNCTION_MONITOR) {
-				if (gRxInfo->IsAM) {
+				if (gRxVfo->IsAM) {
 					BK4819_SetAF(BK4819_AF_AM);
 				} else {
 					BK4819_SetAF(BK4819_AF_OPEN);
@@ -324,7 +324,7 @@ void AUDIO_PlayQueuedVoice(void)
 	}
 
 	if (gCurrentFunction == FUNCTION_RECEIVE || gCurrentFunction == FUNCTION_MONITOR) {
-		if (gRxInfo->IsAM) {
+		if (gRxVfo->IsAM) {
 			BK4819_SetAF(BK4819_AF_AM);
 		} else {
 			BK4819_SetAF(BK4819_AF_OPEN);

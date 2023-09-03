@@ -89,7 +89,7 @@ void Main(void)
 
 	RADIO_ConfigureChannel(0, 2);
 	RADIO_ConfigureChannel(1, 2);
-	RADIO_ConfigureTX();
+	RADIO_SelectVfos();
 	RADIO_SetupRegisters(true);
 
 	for (i = 0; i < 4; i++) {

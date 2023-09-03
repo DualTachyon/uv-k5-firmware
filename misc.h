@@ -56,6 +56,22 @@ enum AlarmState_t {
 
 typedef enum AlarmState_t AlarmState_t;
 
+enum ReceptionMode_t {
+	RX_MODE_NONE      = 0U,
+	RX_MODE_DETECTED  = 1U,
+	RX_MODE_LISTENING = 2U,
+};
+
+typedef enum ReceptionMode_t ReceptionMode_t;
+
+enum CssScanMode_t {
+	CSS_SCAN_MODE_OFF      = 0U,
+	CSS_SCAN_MODE_SCANNING = 1U,
+	CSS_SCAN_MODE_FOUND    = 2U,
+};
+
+typedef enum CssScanMode_t CssScanMode_t;
+
 extern const uint32_t *gUpperLimitFrequencyBandTable;
 extern const uint32_t *gLowerLimitFrequencyBandTable;
 
@@ -101,11 +117,11 @@ extern uint8_t gUpdateStatus;
 extern uint8_t g_20000370;
 extern uint8_t gFoundCTCSS;
 extern uint8_t gFoundCDCSS;
-extern uint8_t g_20000377;
+extern bool gEndOfRxDetectedMaybe;
 extern uint8_t gVFO_RSSI_Level[2];
 extern uint8_t gReducedService;
 extern uint8_t gBatteryVoltageIndex;
-extern volatile uint8_t g_20000381;
+extern CssScanMode_t gCssScanMode;
 extern uint8_t g_20000382;
 extern AlarmState_t gAlarmState;
 extern uint16_t g_2000038E;
@@ -113,7 +129,7 @@ extern volatile int8_t gFM_Step;
 extern uint8_t g_20000393;
 extern bool gPttWasReleased;
 extern bool gPttWasPressed;
-extern uint8_t g_20000398;
+extern bool g_20000398;
 extern uint8_t gVfoConfigureMode;
 extern bool gFlagRetuneVfos;
 extern bool gRequestSaveVFO;
@@ -142,12 +158,12 @@ extern uint16_t gVoxPauseCountdown;
 extern volatile uint16_t gFlashLightBlinkCounter;
 extern bool gFlagEndTransmission;
 extern uint8_t gLowBatteryCountdown;
-extern uint8_t g_20000410;
-extern uint8_t g_20000411;
+extern uint8_t gNextMrChannel;
+extern ReceptionMode_t gRxReceptionMode;
 extern bool g_20000413;
 extern uint8_t gRestoreMrChannel;
 extern uint8_t gCurrentScanList;
-extern uint8_t g_20000416;
+extern uint8_t gPreviousMrChannel;
 extern uint32_t gRestoreFrequency;
 extern uint8_t g_2000041F;
 extern uint8_t gAlarmToneCounter;
