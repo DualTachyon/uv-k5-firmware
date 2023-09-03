@@ -159,7 +159,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gUpdateStatus = true;
 			gFlagStopScan = true;
 			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
-			gFlagRetuneVfos = true;
+			gFlagResetVfos = true;
 		} else {
 			RADIO_StopCssScan();
 			gRequestDisplayScreen = DISPLAY_MENU;

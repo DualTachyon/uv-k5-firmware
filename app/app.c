@@ -1538,7 +1538,7 @@ Skip:
 
 
 	if (gVfoConfigureMode != VFO_CONFIGURE_0) {
-		if (gFlagRetuneVfos) {
+		if (gFlagResetVfos) {
 			RADIO_ConfigureChannel(0, gVfoConfigureMode);
 			RADIO_ConfigureChannel(1, gVfoConfigureMode);
 		} else {
@@ -1547,12 +1547,12 @@ Skip:
 		if (gRequestDisplayScreen == DISPLAY_INVALID) {
 			gRequestDisplayScreen = DISPLAY_MAIN;
 		}
-		g_20000398 = true;
+		gFlagReconfigureVfos = true;
 		gVfoConfigureMode = VFO_CONFIGURE_0;
-		gFlagRetuneVfos = false;
+		gFlagResetVfos = false;
 	}
 
-	if (g_20000398) {
+	if (gFlagReconfigureVfos) {
 		RADIO_SelectVfos();
 		RADIO_ConfigureNOAA();
 		RADIO_SetupRegisters(true);
@@ -1562,7 +1562,7 @@ Skip:
 		gDTMF_IsTx = false;
 		gVFO_RSSI_Level[0] = 0;
 		gVFO_RSSI_Level[1] = 0;
-		g_20000398 = false;
+		gFlagReconfigureVfos = false;
 	}
 
 	if (gFlagRefreshSetting) {

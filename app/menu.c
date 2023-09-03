@@ -308,7 +308,7 @@ void MENU_AcceptSetting(void)
 			gEeprom.VOX_LEVEL = gSubMenuSelection - 1;
 		}
 		BOARD_EEPROM_LoadMoreSettings();
-		g_20000398 = true;
+		gFlagReconfigureVfos = true;
 		gRequestSaveSettings = true;
 		gUpdateStatus = true;
 		return;
@@ -324,7 +324,7 @@ void MENU_AcceptSetting(void)
 
 	case MENU_TDR:
 		gEeprom.DUAL_WATCH = gSubMenuSelection;
-		g_20000398 = true;
+		gFlagReconfigureVfos = true;
 		gRequestSaveSettings = true;
 		gUpdateStatus = true;
 		return;
@@ -337,7 +337,7 @@ void MENU_AcceptSetting(void)
 			return;
 		}
 		gEeprom.CROSS_BAND_RX_TX = gSubMenuSelection;
-		g_20000398 = true;
+		gFlagReconfigureVfos = true;
 		gRequestSaveSettings = true;
 		gUpdateStatus = true;
 		return;
@@ -373,14 +373,14 @@ void MENU_AcceptSetting(void)
 		gTxVfo->SCANLIST1_PARTICIPATION = gSubMenuSelection;
 		SETTINGS_UpdateChannel(gTxVfo->CHANNEL_SAVE, gTxVfo, true);
 		gVfoConfigureMode = VFO_CONFIGURE_1;
-		gFlagRetuneVfos = true;
+		gFlagResetVfos = true;
 		return;
 
 	case MENU_S_ADD2:
 		gTxVfo->SCANLIST2_PARTICIPATION = gSubMenuSelection;
 		SETTINGS_UpdateChannel(gTxVfo->CHANNEL_SAVE, gTxVfo, true);
 		gVfoConfigureMode = VFO_CONFIGURE_1;
-		gFlagRetuneVfos = true;
+		gFlagResetVfos = true;
 		return;
 
 	case MENU_STE:
@@ -395,7 +395,7 @@ void MENU_AcceptSetting(void)
 		gEeprom.MIC_SENSITIVITY = gSubMenuSelection;
 		BOARD_EEPROM_LoadMoreSettings();
 		gRequestSaveSettings = true;
-		g_20000398 = true;
+		gFlagReconfigureVfos = true;
 		return;
 
 	case MENU_1_CALL:
@@ -463,13 +463,13 @@ void MENU_AcceptSetting(void)
 	case MENU_NOAA_S:
 		gEeprom.NOAA_AUTO_SCAN = gSubMenuSelection;
 		gRequestSaveSettings = true;
-		g_20000398 = true;
+		gFlagReconfigureVfos = true;
 		return;
 
 	case MENU_DEL_CH:
 		SETTINGS_UpdateChannel(gSubMenuSelection, NULL, false);
 		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
-		gFlagRetuneVfos = true;
+		gFlagResetVfos = true;
 		return;
 
 	case MENU_RESET:
@@ -496,13 +496,13 @@ void MENU_AcceptSetting(void)
 		gSetting_350EN = gSubMenuSelection;
 		gRequestSaveSettings = true;
 		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
-		gFlagRetuneVfos = true;
+		gFlagResetVfos = true;
 		return;
 
 	case MENU_SCREN:
 		gSetting_ScrambleEnable = gSubMenuSelection;
 		gRequestSaveSettings = true;
-		g_20000398 = true;
+		gFlagReconfigureVfos = true;
 		return;
 
 	default:

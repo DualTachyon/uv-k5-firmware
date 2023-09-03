@@ -133,7 +133,7 @@ void ACTION_Vox(void)
 {
 	gEeprom.VOX_SWITCH = !gEeprom.VOX_SWITCH;
 	gRequestSaveSettings = true;
-	g_20000398 = true;
+	gFlagReconfigureVfos = true;
 	gAnotherVoiceID = VOICE_ID_VOX;
 	gUpdateStatus = true;
 }
@@ -158,7 +158,7 @@ void ACTION_FM(void)
 			FM_TurnOff();
 			gInputBoxIndex = 0;
 			g_200003B6 = 80;
-			g_20000398 = true;
+			gFlagReconfigureVfos = true;
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			return;
 		}

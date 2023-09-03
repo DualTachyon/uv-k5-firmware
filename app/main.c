@@ -173,7 +173,7 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			gEeprom.TX_CHANNEL = (Vfo == 0);
 		}
 		gRequestSaveSettings = 1;
-		g_20000398 = true;
+		gFlagReconfigureVfos = true;
 		gRequestDisplayScreen = DISPLAY_MAIN;
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		break;

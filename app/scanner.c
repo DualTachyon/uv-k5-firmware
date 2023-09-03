@@ -78,7 +78,7 @@ static void SCANNER_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 			gUpdateStatus = true;
 			gFlagStopScan = true;
 			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
-			gFlagRetuneVfos = true;
+			gFlagResetVfos = true;
 			gAnotherVoiceID = VOICE_ID_CANCEL;
 			break;
 
