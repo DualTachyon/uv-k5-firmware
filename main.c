@@ -14,31 +14,19 @@
  *     limitations under the License.
  */
 
-#include <stdbool.h>
 #include <string.h>
-#include "ARMCM0.h"
-
 #include "app/app.h"
 #include "app/dtmf.h"
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
-#include "bsp/dp32g030/portcon.h"
 #include "bsp/dp32g030/syscon.h"
 #include "board.h"
 #include "driver/backlight.h"
-#include "driver/bk1080.h"
 #include "driver/bk4819.h"
-#include "driver/crc.h"
-#include "driver/eeprom.h"
-#include "driver/flash.h"
 #include "driver/gpio.h"
-#include "driver/keyboard.h"
-#include "driver/st7565.h"
 #include "driver/system.h"
 #include "driver/systick.h"
 #include "driver/uart.h"
-#include "external/printf/printf.h"
-#include "functions.h"
 #include "helper/battery.h"
 #include "helper/boot.h"
 #include "misc.h"

@@ -502,24 +502,21 @@ void FM_Play(void)
 			}
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			gEnableSpeaker = true;
-		} else {
-			if (gFM_ChannelPosition < 20) {
-				gFM_Channels[gFM_ChannelPosition++] = gEeprom.FM_FrequencyPlaying;
-				if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyPlaying) {
-					FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
-				} else {
-					FM_PlayAndUpdate();
-				}
-			} else {
-				FM_PlayAndUpdate();
-			}
+			GUI_SelectNextDisplay(DISPLAY_FM);
+			return;
 		}
-	} else if (gFM_AutoScan) {
-		if (gEeprom.FM_UpperLimit > gEeprom.FM_FrequencyPlaying) {
-			FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
-		} else {
+		if (gFM_ChannelPosition < 20) {
+			gFM_Channels[gFM_ChannelPosition++] = gEeprom.FM_FrequencyPlaying;
+		}
+		if (gFM_ChannelPosition >= 20) {
 			FM_PlayAndUpdate();
+			GUI_SelectNextDisplay(DISPLAY_FM);
+			return;
 		}
+	}
+
+	if (gFM_AutoScan && gEeprom.FM_FrequencyPlaying >= gEeprom.FM_UpperLimit) {
+		FM_PlayAndUpdate();
 	} else {
 		FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
 	}

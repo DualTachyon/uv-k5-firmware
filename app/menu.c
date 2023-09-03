@@ -526,7 +526,7 @@ void MENU_SelectNextDCS(void)
 
 	gSubMenuSelection = NUMBER_AddWithWraparound(gSubMenuSelection, gMenuScrollDirection, 1, UpperLimit);
 	if (gMenuCursor == MENU_R_DCS) {
-		if (gSubMenuSelection > 105) {
+		if (gSubMenuSelection > 104) {
 			gCodeType = CODE_TYPE_REVERSE_DIGITAL;
 			gCode = gSubMenuSelection - 105;
 		} else {

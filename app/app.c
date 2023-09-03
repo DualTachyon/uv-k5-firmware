@@ -337,7 +337,7 @@ void APP_StartListening(FUNCTION_Type_t Function)
 		if (gCssScanMode != CSS_SCAN_MODE_OFF) {
 			gCssScanMode = CSS_SCAN_MODE_FOUND;
 		}
-		if ((gStepDirection == 0 || gCssScanMode == CSS_SCAN_MODE_OFF) && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
+		if ((gStepDirection == 0 && gCssScanMode == CSS_SCAN_MODE_OFF) && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 			g_2000041F = 1;
 			gDualWatchCountdown = 360;
 			gScheduleDualWatch = false;
@@ -419,6 +419,8 @@ void FUN_00007dd4(void)
 		}
 		if (gCurrentScanList == 2) {
 			gNextMrChannel = gPreviousMrChannel;
+		} else {
+			goto Skip;
 		}
 	}
 
@@ -428,6 +430,8 @@ void FUN_00007dd4(void)
 	}
 
 	gNextMrChannel = Ch;
+
+Skip:
 	if (PreviousCh != gNextMrChannel) {
 		gEeprom.MrChannel[gEeprom.RX_CHANNEL] = gNextMrChannel;
 		gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gNextMrChannel;
@@ -453,7 +457,7 @@ void NOAA_IncreaseChannel(void)
 	}
 }
 
-void DUALWATCH_Alternate(void)
+static void DUALWATCH_Alternate(void)
 {
 	if (gIsNoaaMode) {
 		if (IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[0]) || IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[1])) {
@@ -602,7 +606,7 @@ static void FUN_00008334(void)
 					FUNCTION_Select(FUNCTION_0);
 				}
 				if (gCurrentFunction != FUNCTION_TRANSMIT) {
-					gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
+					gDTMF_ReplyState = DTMF_REPLY_NONE;
 					RADIO_PrepareTX();
 					gUpdateDisplay = true;
 				}
@@ -714,7 +718,7 @@ void APP_Update(void)
 			}
 			if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && gStepDirection == 0 && gCssScanMode == CSS_SCAN_MODE_OFF) {
 				DUALWATCH_Alternate();
-				g_20000382 = 0;
+				g_20000382 = false;
 			}
 			FUNCTION_Init();
 			gBatterySave = 10;
@@ -730,7 +734,7 @@ void APP_Update(void)
 			// Authentic device checked removed
 		} else {
 			DUALWATCH_Alternate();
-			g_20000382 = 1;
+			g_20000382 = true;
 			gBatterySave = 10;
 		}
 		gBatterySaveCountdownExpired = false;
@@ -1028,10 +1032,9 @@ void APP_TimeSlice500ms(void)
 	}
 	if (gReducedService) {
 		BOARD_ADC_GetBatteryInfo(&gBatteryCurrentVoltage, &gBatteryCurrent);
-		if ((gBatteryCurrent < 0x1f5) && (gBatteryCurrentVoltage <= gBatteryCalibration[3])) {
-			return;
+		if (gBatteryCurrent > 500 || gBatteryCalibration[3] < gBatteryCurrentVoltage) {
+			overlay_FLASH_RebootToBootloader();
 		}
-		overlay_FLASH_RebootToBootloader();
 		return;
 	}
 

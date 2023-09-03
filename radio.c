@@ -741,7 +741,7 @@ void RADIO_PrepareTX(void)
 		RADIO_SetVfoState(State);
 		gAlarmState = ALARM_STATE_OFF;
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
-		gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
+		gDTMF_ReplyState = DTMF_REPLY_NONE;
 		return;
 	}
 
@@ -765,7 +765,7 @@ Skip:
 	gTxTimeoutReached = false;
 	gFlagEndTransmission = false;
 	gRTTECountdown = 0;
-	gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
+	gDTMF_ReplyState = DTMF_REPLY_NONE;
 }
 
 void RADIO_EnableCxCSS(void)

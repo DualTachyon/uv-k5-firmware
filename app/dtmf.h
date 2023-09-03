@@ -37,7 +37,7 @@ enum DTMF_CallState_t {
 typedef enum DTMF_CallState_t DTMF_CallState_t;
 
 enum DTMF_ReplyState_t {
-	DTMF_REPLY_UP_CODE = 0U,
+	DTMF_REPLY_NONE    = 0U,
 	DTMF_REPLY_ANI     = 1U,
 	DTMF_REPLY_AB      = 2U,
 	DTMF_REPLY_AAAAA   = 3U,
