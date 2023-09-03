@@ -132,7 +132,7 @@ int FREQUENCY_Check(VFO_Info_t *pInfo)
 	}
 	Frequency = pInfo->pReverse->Frequency;
 	if (gSetting_F_LOCK == F_LOCK_FCC) {
-		if ((Frequency + 14400000) < 399991) {
+		if ((Frequency - 14400000) < 399991) {
 			return 0;
 		}
 		if (2999990 < (Frequency - 42000000)) {
