@@ -480,7 +480,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	gEnableSpeaker = false;
-	BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
+	BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28_GREEN, false);
 
 	Bandwidth = gRxInfo->CHANNEL_BANDWIDTH;
 	if (Bandwidth != BK4819_FILTER_BW_WIDE) {
@@ -488,7 +488,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	}
 	BK4819_SetFilterBandwidth(Bandwidth);
 
-	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, false);
+	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, false);
 	BK4819_SetupPowerAmplifier(0, 0);
 	BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
 
@@ -762,7 +762,7 @@ Skip:
 		gTxTimerCountdown = 0;
 	}
 	gTxTimeoutReached = false;
-	g_200003FD = 0;
+	gFlagEndTransmission = false;
 	gRTTECountdown = 0;
 	gDTMF_ReplyState = DTMF_REPLY_UP_CODE;
 }

@@ -182,7 +182,7 @@ void ACTION_Handle(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				gDTMF_InputIndex--;
 				gDTMF_InputBox[gDTMF_InputIndex] = '-';
 				if (gDTMF_InputIndex) {
-					g_20000394 = true;
+					gPttWasReleased = true;
 					gRequestDisplayScreen = DISPLAY_MAIN;
 					return;
 				}
@@ -191,7 +191,7 @@ void ACTION_Handle(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			gRequestDisplayScreen = DISPLAY_MAIN;
 			gDTMF_InputMode = false;
 		}
-		g_20000394 = true;
+		gPttWasReleased = true;
 		return;
 	}
 

@@ -35,6 +35,8 @@ bool gLowBatteryBlink;
 
 volatile uint16_t gBatterySave;
 
+uint16_t gBatteryCheckCounter;
+
 void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 {
 	uint16_t Voltage;

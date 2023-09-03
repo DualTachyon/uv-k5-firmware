@@ -344,7 +344,7 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 		} else {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
-		g_20000394 = true;
+		gPttWasReleased = true;
 	}
 }
 
@@ -408,7 +408,7 @@ static void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		return;
 	}
 	APP_SetStepDirection(false, Direction);
-	g_20000394 = true;
+	gPttWasReleased = true;
 }
 
 void MAIN_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
@@ -425,7 +425,7 @@ void MAIN_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 			DTMF_Append(Character);
 			gRequestDisplayScreen = DISPLAY_MAIN;
-			g_20000394 = true;
+			gPttWasReleased = true;
 			return;
 		}
 	}

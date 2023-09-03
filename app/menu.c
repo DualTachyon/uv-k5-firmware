@@ -373,14 +373,14 @@ void MENU_AcceptSetting(void)
 		gTxInfo->SCANLIST1_PARTICIPATION = gSubMenuSelection;
 		SETTINGS_UpdateChannel(gTxInfo->CHANNEL_SAVE, gTxInfo, true);
 		gVfoConfigureMode = VFO_CONFIGURE_1;
-		g_2000039B = 1;
+		gFlagRetuneVfos = true;
 		return;
 
 	case MENU_S_ADD2:
 		gTxInfo->SCANLIST2_PARTICIPATION = gSubMenuSelection;
 		SETTINGS_UpdateChannel(gTxInfo->CHANNEL_SAVE, gTxInfo, true);
 		gVfoConfigureMode = VFO_CONFIGURE_1;
-		g_2000039B = 1;
+		gFlagRetuneVfos = true;
 		return;
 
 	case MENU_STE:
@@ -469,7 +469,7 @@ void MENU_AcceptSetting(void)
 	case MENU_DEL_CH:
 		SETTINGS_UpdateChannel(gSubMenuSelection, NULL, false);
 		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
-		g_2000039B = 1;
+		gFlagRetuneVfos = true;
 		return;
 
 	case MENU_RESET:
@@ -496,7 +496,7 @@ void MENU_AcceptSetting(void)
 		gSetting_350EN = gSubMenuSelection;
 		gRequestSaveSettings = true;
 		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
-		g_2000039B = 1;
+		gFlagRetuneVfos = true;
 		return;
 
 	case MENU_SCREN:
@@ -946,7 +946,7 @@ static void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 			gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 			gRequestDisplayScreen = DISPLAY_MENU;
 		}
-		g_20000394 = true;
+		gPttWasReleased = true;
 	}
 }
 
@@ -1017,7 +1017,7 @@ static void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 					gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 				}
 			}
-			g_20000394 = true;
+			gPttWasReleased = true;
 			return;
 		}
 		gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
@@ -1042,7 +1042,7 @@ static void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 
 	if (g_20000381) {
 		FUN_000074f8(Direction);
-		g_20000394 = true;
+		gPttWasReleased = true;
 		gRequestDisplayScreen = DISPLAY_MENU;
 		return;
 	}

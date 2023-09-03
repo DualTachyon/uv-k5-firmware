@@ -156,7 +156,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 
 	GUI_DisplayScreen();
 	RADIO_PrepareTransmit();
-	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29, true);
+	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
 
 	DTMF_Reply();
 

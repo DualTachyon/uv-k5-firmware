@@ -123,8 +123,8 @@ void SystickHandler(void)
 			}
 		}
 	}
-	if (gSystickCountdown11) {
-		gSystickCountdown11--;
+	if (gVoxStopCountdown) {
+		gVoxStopCountdown--;
 	}
 }
 

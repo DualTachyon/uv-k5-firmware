@@ -74,7 +74,7 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 			return;
 		}
 		gBeepToPlay = BEEP_440HZ_500MS;
-		g_20000394 = true;
+		gPttWasReleased = true;
 	}
 }
 
@@ -84,7 +84,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 	if (!bKeyPressed) {
 		if (gScreenToDisplay == DISPLAY_MAIN) {
 			if (gCurrentFunction == FUNCTION_TRANSMIT) {
-				if (g_200003FD == 1) {
+				if (gFlagEndTransmission) {
 					FUNCTION_Select(FUNCTION_0);
 				} else {
 					TalkRelatedCode();
@@ -94,7 +94,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 						gRTTECountdown = gEeprom.REPEATER_TAIL_TONE_ELIMINATION * 10;
 					}
 				}
-				g_200003FD = 0;
+				gFlagEndTransmission = false;
 				gVOX_NoiseDetected = false;
 			}
 			RADIO_SetVfoState(VFO_STATE_NORMAL);
@@ -159,7 +159,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gUpdateStatus = true;
 			gFlagStopScan = true;
 			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
-			g_2000039B = 1;
+			gFlagRetuneVfos = true;
 		} else {
 			RADIO_Whatever();
 			gRequestDisplayScreen = DISPLAY_MENU;
@@ -169,6 +169,6 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 		gRequestDisplayScreen = DISPLAY_FM;
 	}
 	gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
-	g_20000395 = 1;
+	gPttWasPressed = true;
 }
 
