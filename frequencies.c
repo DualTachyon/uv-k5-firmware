@@ -131,65 +131,75 @@ int FREQUENCY_Check(VFO_Info_t *pInfo)
 		return -1;
 	}
 	Frequency = pInfo->pReverse->Frequency;
-	if (gSetting_F_LOCK == F_LOCK_FCC) {
-		if ((Frequency - 14400000) < 399991) {
+	switch (gSetting_F_LOCK) {
+	case F_LOCK_FCC:
+		if (Frequency >= 14400000 && Frequency <= 14799990) {
 			return 0;
 		}
-		if (2999990 < (Frequency - 42000000)) {
-			return -1;
-		}
-		return 0;
-	}
-
-	if (gSetting_F_LOCK == F_LOCK_CE) {
-		if ((Frequency - 14400000) < 199991) {
+		if (Frequency >= 42000000 && Frequency <= 44999990) {
 			return 0;
 		}
-	}
+		break;
 
-	if (gSetting_F_LOCK != F_LOCK_GB) {
-		if (gSetting_F_LOCK != F_LOCK_430) {
-			if (gSetting_F_LOCK == F_LOCK_438) {
-				if ((Frequency - 13600000) < 3799991) {
-					return 0;
-				}
-				if ((Frequency - 40000000) < 3799991) {
-					return 0;
-				}
-				return -1;
-			}
-			if ((Frequency - 13600000) < 3799991) {
-				return 0;
-			}
-			if (((Frequency - 35000000) < 4999991 && gSetting_350TX && gSetting_350EN)) {
-				return 0;
-			}
-			if ((Frequency - 40000000) < 6999991) {
-				return 0;
-			}
-			if ((Frequency - 17400000) < 17599991 && gSetting_200TX) {
-				return 0;
-			}
-			if ((Frequency - 47000000) < 13000001 && gSetting_500TX) {
-				return 0;
-			}
-			return -1;
-		}
-		if ((Frequency - 13600000) < 3799991) {
+	case F_LOCK_CE:
+		if (Frequency >= 14400000 && Frequency <= 14599990) {
 			return 0;
 		}
-		if (2999990 < (Frequency - 40000000)) {
-			return -1;
+		break;
+
+	case F_LOCK_GB:
+		if (Frequency >= 14400000 && Frequency <= 14799990) {
+			return 0;
 		}
-	}
-	if ((Frequency - 14400000) < 399991) {
-		return 0;
+		if (Frequency >= 43000000 && Frequency <= 43999990) {
+			return 0;
+		}
+		break;
+
+	case F_LOCK_430:
+		if (Frequency >= 13600000 && Frequency <= 17399990) {
+			return 0;
+		}
+		if (Frequency >= 40000000 && Frequency <= 42999990) {
+			return 0;
+		}
+		break;
+
+	case F_LOCK_438:
+		if (Frequency >= 13600000 && Frequency <= 17399990) {
+			return 0;
+		}
+		if (Frequency >= 40000000 && Frequency <= 43799990) {
+			return 0;
+		}
+		break;
+
+	default:
+		if (Frequency >= 13600000 && Frequency <= 17399990) {
+			return 0;
+		}
+		if (Frequency >= 35000000 && Frequency <= 39999990) {
+			if (gSetting_350TX && gSetting_350EN) {
+				return 0;
+			}
+		}
+		if (Frequency >= 40000000 && Frequency <= 46999990) {
+			return 0;
+		}
+		if (Frequency >= 17400000 && Frequency <= 34999990) {
+			if (gSetting_200TX) {
+				return 0;
+			}
+		}
+
+		if (Frequency >= 47000000 && Frequency <= 60000000) {
+			if (gSetting_500TX) {
+				return 0;
+			}
+		}
+		break;
 	}
 
-	if (999990 < (Frequency - 43000000)) {
-		return -1;
-	}
-
-	return 0;
+	return -1;
 }
 
