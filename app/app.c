@@ -174,78 +174,92 @@ void FUN_000052f0(void)
 
 	if (gSystickFlag10) {
 		Value = 1;
+		goto Skip;
 	} else if (gStepDirection && IS_FREQ_CHANNEL(gNextMrChannel)) {
 		if (g_SquelchLost) {
 			return;
 		}
 		Value = 1;
-	} else if (gCopyOfCodeType == CODE_TYPE_CONTINUOUS_TONE && gFoundCTCSS && gFoundCTCSSCountdown == 0) {
-		gFoundCTCSS = false;
-		gFoundCDCSS = false;
-		Value = 1;
-	} else if ((gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL) && gFoundCDCSS && gFoundCDCSSCountdown == 0) {
-		gFoundCTCSS = false;
-		gFoundCDCSS = false;
-		Value = 1;
-	} else {
-		if (g_SquelchLost) {
-			if (!gEndOfRxDetectedMaybe && IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
-				switch (gCopyOfCodeType) {
-				case CODE_TYPE_OFF:
-					if (gEeprom.SQUELCH_LEVEL) {
-						if (g_CxCSS_TAIL_Found) {
-							Value = 2;
-							g_CxCSS_TAIL_Found = false;
-						}
-					}
-					break;
+		goto Skip;
+	}
+	switch (gCopyOfCodeType) {
+	case CODE_TYPE_CONTINUOUS_TONE:
+		if (gFoundCTCSS && gFoundCTCSSCountdown == 0) {
+			gFoundCTCSS = false;
+			gFoundCDCSS = false;
+			Value = 1;
+			goto Skip;
+		}
+		break;
+	case CODE_TYPE_DIGITAL:
+	case CODE_TYPE_REVERSE_DIGITAL:
+		if (gFoundCDCSS && gFoundCDCSSCountdown == 0) {
+			gFoundCTCSS = false;
+			gFoundCDCSS = false;
+			Value = 1;
+			goto Skip;
+		}
+		break;
+	default:
+		break;
+	}
 
-				case CODE_TYPE_CONTINUOUS_TONE:
-					if (g_CTCSS_Lost) {
-						gFoundCTCSS = false;
-					} else if (!gFoundCTCSS) {
-						gFoundCTCSS = true;
-						gFoundCTCSSCountdown = 100;
-					}
+	if (g_SquelchLost) {
+		if (!gEndOfRxDetectedMaybe && IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
+			switch (gCopyOfCodeType) {
+			case CODE_TYPE_OFF:
+				if (gEeprom.SQUELCH_LEVEL) {
 					if (g_CxCSS_TAIL_Found) {
 						Value = 2;
 						g_CxCSS_TAIL_Found = false;
 					}
-					break;
-
-				case CODE_TYPE_DIGITAL:
-				case CODE_TYPE_REVERSE_DIGITAL:
-					if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE) {
-						gFoundCDCSS = false;
-					} else if (!gFoundCDCSS) {
-						gFoundCDCSS = true;
-						gFoundCDCSSCountdown = 100;
-					}
-					if (g_CxCSS_TAIL_Found) {
-						if (BK4819_GetCTCType() == 1) {
-							Value = 2;
-						}
-						g_CxCSS_TAIL_Found = false;
-					}
-					break;
-
-				default:
-					break;
 				}
+				break;
+
+			case CODE_TYPE_CONTINUOUS_TONE:
+				if (g_CTCSS_Lost) {
+					gFoundCTCSS = false;
+				} else if (!gFoundCTCSS) {
+					gFoundCTCSS = true;
+					gFoundCTCSSCountdown = 100;
+				}
+				if (g_CxCSS_TAIL_Found) {
+					Value = 2;
+					g_CxCSS_TAIL_Found = false;
+				}
+				break;
+
+			case CODE_TYPE_DIGITAL:
+			case CODE_TYPE_REVERSE_DIGITAL:
+				if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE) {
+					gFoundCDCSS = false;
+				} else if (!gFoundCDCSS) {
+					gFoundCDCSS = true;
+					gFoundCDCSSCountdown = 100;
+				}
+				if (g_CxCSS_TAIL_Found) {
+					if (BK4819_GetCTCType() == 1) {
+						Value = 2;
+					}
+					g_CxCSS_TAIL_Found = false;
+				}
+				break;
+
+			default:
+				break;
 			}
-		} else {
-			Value = 1;
 		}
+	} else {
+		Value = 1;
 	}
 
-	if (!gEndOfRxDetectedMaybe && !Value && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL)) {
-		if (BK4819_GetCTCType() == 1) {
-			Value = 2;
-		}
+	if (!gEndOfRxDetectedMaybe && !Value && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL) && BK4819_GetCTCType() == 1) {
+		Value = 2;
+	} else {
+		gNextTimeslice40ms = false;
 	}
 
-	gNextTimeslice40ms = false;
-
+Skip:
 	switch (Value) {
 	case 1:
 		RADIO_SetupRegisters(true);
@@ -630,6 +644,7 @@ void APP_Update(void)
 		RADIO_SetVfoState(VFO_STATE_TIMEOUT);
 		GUI_DisplayScreen();
 	}
+
 	if (gReducedService) {
 		return;
 	}

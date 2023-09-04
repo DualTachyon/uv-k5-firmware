@@ -23,7 +23,6 @@
 #include "driver/bk4819.h"
 #include "driver/gpio.h"
 #include "driver/system.h"
-#include "external/printf/printf.h"
 #include "functions.h"
 #include "helper/battery.h"
 #include "misc.h"
@@ -83,40 +82,35 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		}
 	}
 
-	if (Function == FUNCTION_0) {
-		if (gDTMF_ReplyState) {
+	switch (Function) {
+	case FUNCTION_0:
+		if (gDTMF_ReplyState != DTMF_REPLY_NONE) {
 			RADIO_PrepareCssTX();
 		}
 		if (PreviousFunction == FUNCTION_TRANSMIT) {
 			gVFO_RSSI_Level[0] = 0;
 			gVFO_RSSI_Level[1] = 0;
-		} else if (PreviousFunction != FUNCTION_TRANSMIT) {
-			gBatterySaveCountdown = 1000;
-			gSchedulePowerSave = false;
-			return;
-		}
-		if (gFmRadioMode) {
-			g_2000038E = 500;
-		}
-		if (gDTMF_CallState != DTMF_CALL_STATE_CALL_OUT && gDTMF_CallState != DTMF_CALL_STATE_RECEIVED) {
-			gBatterySaveCountdown = 1000;
-			gSchedulePowerSave = false;
-			return;
+		} else if (PreviousFunction == FUNCTION_RECEIVE) {
+			if (gFmRadioMode) {
+				g_2000038E = 500;
+			}
+			if (gDTMF_CallState == DTMF_CALL_STATE_CALL_OUT || gDTMF_CallState == DTMF_CALL_STATE_RECEIVED) {
+				gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
+			}
 		}
 		gBatterySaveCountdown = 1000;
 		gSchedulePowerSave = false;
-		gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
-		return;
-	}
+		break;
 
-	if (Function == FUNCTION_MONITOR || Function == FUNCTION_3 || Function == FUNCTION_RECEIVE) {
+	case FUNCTION_MONITOR:
+	case FUNCTION_3:
+	case FUNCTION_RECEIVE:
 		gBatterySaveCountdown = 1000;
 		gSchedulePowerSave = false;
 		g_2000038E = 0;
-		return;
-	}
+		break;
 
-	if (Function == FUNCTION_POWER_SAVE) {
+	case FUNCTION_POWER_SAVE:
 		gBatterySave = gEeprom.BATTERY_SAVE * 10;
 		gRxIdleMode = true;
 		BK4819_DisableVox();
@@ -125,66 +119,64 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		gBatterySaveCountdownExpired = false;
 		gUpdateStatus = true;
 		GUI_SelectNextDisplay(DISPLAY_MAIN);
-		return;
-	}
+		break;
 
-	if (Function != FUNCTION_TRANSMIT) {
-		return;
-	}
-
-	if (gFmRadioMode) {
-		BK1080_Init(0, false);
-	}
-
-	if (gAlarmState == ALARM_STATE_TXALARM && gEeprom.ALARM_MODE != ALARM_MODE_TONE) {
-		gAlarmState = ALARM_STATE_ALARM;
-		GUI_DisplayScreen();
-		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		SYSTEM_DelayMs(20);
-		BK4819_PlayTone(500, 0);
-		SYSTEM_DelayMs(2);
-		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		gEnableSpeaker = true;
-		SYSTEM_DelayMs(60);
-		BK4819_ExitTxMute();
-		gBatterySaveCountdown = 1000;
-		gSchedulePowerSave = false;
-		g_2000038E = 0;
-		gAlarmToneCounter = 0;
-		return;
-	}
-
-	GUI_DisplayScreen();
-	RADIO_SetTxParameters();
-	BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
-
-	DTMF_Reply();
-
-	if (gAlarmState != ALARM_STATE_OFF) {
-		if (gAlarmState == ALARM_STATE_TX1750) {
-			BK4819_TransmitTone(true, 1750);
-		} else {
-			BK4819_TransmitTone(true, 500);
+	case FUNCTION_TRANSMIT:
+		if (gFmRadioMode) {
+			BK1080_Init(0, false);
 		}
-		SYSTEM_DelayMs(2);
-		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		gAlarmToneCounter = 0;
-		g_2000038E = 0;
-		gEnableSpeaker = true;
-		gSchedulePowerSave = false;
+
+		if (gAlarmState == ALARM_STATE_TXALARM && gEeprom.ALARM_MODE != ALARM_MODE_TONE) {
+			gAlarmState = ALARM_STATE_ALARM;
+			GUI_DisplayScreen();
+			GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+			SYSTEM_DelayMs(20);
+			BK4819_PlayTone(500, 0);
+			SYSTEM_DelayMs(2);
+			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+			gEnableSpeaker = true;
+			SYSTEM_DelayMs(60);
+			BK4819_ExitTxMute();
+			gBatterySaveCountdown = 1000;
+			gSchedulePowerSave = false;
+			g_2000038E = 0;
+			gAlarmToneCounter = 0;
+			break;
+		}
+
+		GUI_DisplayScreen();
+		RADIO_SetTxParameters();
+		BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
+
+		DTMF_Reply();
+
+		if (gAlarmState != ALARM_STATE_OFF) {
+			if (gAlarmState == ALARM_STATE_TX1750) {
+				BK4819_TransmitTone(true, 1750);
+			} else {
+				BK4819_TransmitTone(true, 500);
+			}
+			SYSTEM_DelayMs(2);
+			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+			gAlarmToneCounter = 0;
+			g_2000038E = 0;
+			gEnableSpeaker = true;
+			gSchedulePowerSave = false;
+			gBatterySaveCountdown = 1000;
+			return;
+		}
+		if (gCurrentVfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
+			BK4819_EnableScramble(gCurrentVfo->SCRAMBLING_TYPE - 1U);
+			gBatterySaveCountdown = 1000;
+			gSchedulePowerSave = false;
+			g_2000038E = 0;
+			return;
+		}
+		BK4819_DisableScramble();
 		gBatterySaveCountdown = 1000;
-		return;
-	}
-	if (gCurrentVfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
-		BK4819_EnableScramble(gCurrentVfo->SCRAMBLING_TYPE - 1U);
-		gBatterySaveCountdown = 1000;
 		gSchedulePowerSave = false;
 		g_2000038E = 0;
-		return;
 	}
-	BK4819_DisableScramble();
-	gBatterySaveCountdown = 1000;
-	gSchedulePowerSave = false;
-	g_2000038E = 0;
 }
+
 
