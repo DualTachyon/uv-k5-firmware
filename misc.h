@@ -156,7 +156,7 @@ extern uint16_t g_200003B6;
 extern uint16_t gVoxPauseCountdown;
 extern volatile uint16_t gFlashLightBlinkCounter;
 extern bool gFlagEndTransmission;
-extern uint8_t gLowBatteryCountdown;
+extern uint16_t gLowBatteryCountdown;
 extern uint8_t gNextMrChannel;
 extern ReceptionMode_t gRxReceptionMode;
 extern bool g_20000413;
@@ -202,7 +202,7 @@ extern uint16_t gCurrentRSSI;
 
 extern volatile int8_t gStepDirection;
 
-extern bool gIsLocked;
+extern uint8_t gIsLocked;
 
 // --------
 

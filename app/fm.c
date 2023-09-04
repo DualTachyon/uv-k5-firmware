@@ -32,7 +32,7 @@
 uint16_t gFM_Channels[20];
 bool gFmRadioMode;
 uint8_t gFmRadioCountdown;
-volatile uint16_t gFmPlayCountdown = 1;
+volatile uint16_t gFmPlayCountdown;
 volatile int8_t gFM_Step;
 bool gFM_AutoScan;
 uint8_t gFM_ChannelPosition;

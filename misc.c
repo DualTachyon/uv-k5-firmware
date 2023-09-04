@@ -27,7 +27,6 @@ bool gSetting_500TX;
 bool gSetting_350EN;
 uint8_t gSetting_F_LOCK;
 bool gSetting_ScrambleEnable;
-uint8_t gSetting_F_LOCK;
 
 const uint32_t gDefaultAesKey[4] = {
 	0x4AA5CC60,
@@ -54,9 +53,9 @@ uint16_t gEEPROM_1F8C;
 uint8_t gMR_ChannelAttributes[207];
 
 volatile bool gNextTimeslice500ms;
-volatile uint16_t gBatterySaveCountdown;
+volatile uint16_t gBatterySaveCountdown = 1000;
 volatile uint16_t gDualWatchCountdown;
-volatile uint16_t gTxTimerCountdown = 1000;
+volatile uint16_t gTxTimerCountdown;
 volatile uint16_t g_20000342;
 volatile uint16_t gNOAA_Countdown;
 bool gEnableSpeaker;
@@ -90,7 +89,7 @@ bool gFlagAcceptSetting;
 bool gFlagRefreshSetting;
 bool gFlagSaveVfo;
 bool gFlagSaveSettings;
-uint8_t gFlagSaveChannel;
+uint8_t gFlagSaveChannel = 0xFF;
 bool gFlagSaveFM;
 uint8_t gDTMF_RequestPending;
 bool g_CDCSS_Lost;
@@ -105,7 +104,7 @@ uint16_t g_200003B6;
 uint16_t gVoxPauseCountdown;
 volatile uint16_t gFlashLightBlinkCounter;
 bool gFlagEndTransmission;
-uint8_t gLowBatteryCountdown;
+uint16_t gLowBatteryCountdown;
 uint8_t gNextMrChannel;
 ReceptionMode_t gRxReceptionMode;
 bool g_20000413;
@@ -141,8 +140,8 @@ volatile bool gTxTimeoutReached;
 volatile bool gNextTimeslice40ms;
 volatile bool gSchedulePowerSave;
 volatile bool gBatterySaveCountdownExpired;
-volatile bool gScheduleDualWatch;
-volatile bool gScheduleNOAA;
+volatile bool gScheduleDualWatch = true;
+volatile bool gScheduleNOAA = true;
 volatile bool gSystickFlag10;
 volatile bool gScheduleFM;
 
@@ -150,7 +149,7 @@ uint16_t gCurrentRSSI;
 
 volatile int8_t gStepDirection;
 
-bool gIsLocked;
+uint8_t gIsLocked = 0xFF;
 
 // --------
 

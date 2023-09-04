@@ -141,7 +141,7 @@ static union {
 
 static uint32_t Timestamp;
 static uint16_t gUART_WriteIndex;
-static bool bIsEncrypted;
+static bool bIsEncrypted = true;
 
 static void SendReply(void *pReply, uint16_t Size)
 {
