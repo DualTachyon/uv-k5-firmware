@@ -33,7 +33,7 @@ uint16_t gFM_Channels[20];
 bool gFmRadioMode;
 uint8_t gFmRadioCountdown;
 volatile uint16_t gFmPlayCountdown;
-volatile int8_t gFM_Step;
+volatile int8_t gFM_ScanState;
 bool gFM_AutoScan;
 uint8_t gFM_ChannelPosition;
 bool gFM_FoundFrequency;
@@ -85,7 +85,7 @@ int FM_ConfigureChannelState(void)
 void FM_TurnOff(void)
 {
 	gFmRadioMode = false;
-	gFM_Step = 0;
+	gFM_ScanState = FM_SCAN_OFF;
 	g_2000038E = 0;
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	gEnableSpeaker = false;
@@ -110,7 +110,7 @@ void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag)
 {
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	gEnableSpeaker = false;
-	if (gFM_Step == 0) {
+	if (gFM_ScanState == FM_SCAN_OFF) {
 		gFmPlayCountdown = 120;
 	} else {
 		gFmPlayCountdown = 10;
@@ -130,13 +130,13 @@ void FM_Tune(uint16_t Frequency, int8_t Step, bool bFlag)
 		gEeprom.FM_FrequencyPlaying = Frequency;
 	}
 
-	gFM_Step = Step;
+	gFM_ScanState = Step;
 	BK1080_SetFrequency(gEeprom.FM_FrequencyPlaying);
 }
 
 void FM_PlayAndUpdate(void)
 {
-	gFM_Step = 0;
+	gFM_ScanState = FM_SCAN_OFF;
 	if (gFM_AutoScan) {
 		gEeprom.FM_IsMrMode = true;
 		gEeprom.FM_SelectedChannel = 0;
@@ -214,7 +214,7 @@ static void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			if (gAskToSave) {
 				State = STATE_SAVE;
 			} else {
-				if (gFM_Step) {
+				if (gFM_ScanState != FM_SCAN_OFF) {
 					gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 					return;
 				}
@@ -321,7 +321,7 @@ static void FM_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 		return;
 	}
 	gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-	if (gFM_Step == 0) {
+	if (gFM_ScanState == FM_SCAN_OFF) {
 		if (gInputBoxIndex == 0) {
 			if (!gAskToSave && !gAskToDelete) {
 				ACTION_FM();
@@ -364,7 +364,7 @@ static void FM_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 	gRequestDisplayScreen = DISPLAY_FM;
 	gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 
-	if (gFM_Step == 0) {
+	if (gFM_ScanState == FM_SCAN_OFF) {
 		if (!gEeprom.FM_IsMrMode) {
 			if (gAskToSave) {
 				gFM_Channels[gFM_ChannelPosition] = gEeprom.FM_FrequencyPlaying;
@@ -420,7 +420,7 @@ static void FM_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Step)
 		gFM_ChannelPosition = NUMBER_AddWithWraparound(gFM_ChannelPosition, Step, 0, 19);
 		return;
 	}
-	if (gFM_Step) {
+	if (gFM_ScanState != FM_SCAN_OFF) {
 		if (gFM_AutoScan) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			return;
@@ -518,7 +518,7 @@ void FM_Play(void)
 	if (gFM_AutoScan && gEeprom.FM_FrequencyPlaying >= gEeprom.FM_UpperLimit) {
 		FM_PlayAndUpdate();
 	} else {
-		FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_Step, false);
+		FM_Tune(gEeprom.FM_FrequencyPlaying, gFM_ScanState, false);
 	}
 
 	GUI_SelectNextDisplay(DISPLAY_FM);
@@ -527,7 +527,7 @@ void FM_Play(void)
 void FM_Start(void)
 {
 	gFmRadioMode = true;
-	gFM_Step = 0;
+	gFM_ScanState = FM_SCAN_OFF;
 	g_2000038E = 0;
 	BK1080_Init(gEeprom.FM_FrequencyPlaying, true);
 	GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);

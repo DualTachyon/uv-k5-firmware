@@ -68,7 +68,7 @@ static void ACTION_Monitor(void)
 		APP_StartListening(FUNCTION_MONITOR);
 		return;
 	}
-	if (gStepDirection) {
+	if (gScanState != SCAN_OFF) {
 		ScanPauseDelayIn10msec = 500;
 		gScheduleScanListen = false;
 		gScanPauseMode = true;
@@ -93,7 +93,7 @@ void ACTION_Scan(bool bRestart)
 			uint16_t Frequency;
 
 			GUI_SelectNextDisplay(DISPLAY_FM);
-			if (gFM_Step) {
+			if (gFM_ScanState != FM_SCAN_OFF) {
 				FM_PlayAndUpdate();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 			} else {
@@ -116,7 +116,7 @@ void ACTION_Scan(bool bRestart)
 		RADIO_SelectVfos();
 		if (IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
-			if (gStepDirection) {
+			if (gScanState != SCAN_OFF) {
 				FUN_0000773c();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 			} else {

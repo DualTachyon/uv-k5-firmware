@@ -16,6 +16,8 @@
 
 #include <string.h>
 #include "app/dtmf.h"
+#include "app/fm.h"
+#include "app/scanner.h"
 #include "driver/keyboard.h"
 #include "misc.h"
 #include "ui/aircopy.h"
@@ -63,8 +65,8 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gInputBoxIndex = 0;
 			gIsInSubMenu = false;
 			gCssScanMode = CSS_SCAN_MODE_OFF;
-			gStepDirection = 0;
-			gFM_Step = 0;
+			gScanState = SCAN_OFF;
+			gFM_ScanState = FM_SCAN_OFF;
 			gAskForConfirmation = 0;
 			gDTMF_InputMode = false;
 			gDTMF_InputIndex = 0;

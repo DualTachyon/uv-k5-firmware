@@ -147,8 +147,6 @@ volatile bool gScheduleFM;
 
 uint16_t gCurrentRSSI;
 
-volatile int8_t gStepDirection;
-
 uint8_t gIsLocked = 0xFF;
 
 // --------

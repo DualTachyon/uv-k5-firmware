@@ -264,7 +264,7 @@ static void MAIN_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 	if (!bKeyHeld && bKeyPressed) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 		if (!gFmRadioMode) {
-			if (gStepDirection == 0) {
+			if (gScanState == SCAN_OFF) {
 				if (gInputBoxIndex == 0) {
 					return;
 				}
@@ -321,7 +321,7 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 			ACTION_Scan(false);
 			return;
 		}
-		if (gStepDirection == 0 && IS_NOT_NOAA_CHANNEL(gTxVfo->CHANNEL_SAVE)) {
+		if (gScanState == SCAN_OFF && IS_NOT_NOAA_CHANNEL(gTxVfo->CHANNEL_SAVE)) {
 			gDTMF_InputMode = true;
 			memcpy(gDTMF_InputBox, gDTMF_String, 15);
 			gDTMF_InputIndex = 0;
@@ -376,7 +376,7 @@ static void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 	}
 
-	if (gStepDirection == 0) {
+	if (gScanState == SCAN_OFF) {
 		if (IS_NOT_NOAA_CHANNEL(Channel)) {
 			uint8_t Next;
 

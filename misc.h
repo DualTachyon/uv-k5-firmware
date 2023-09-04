@@ -124,7 +124,6 @@ extern CssScanMode_t gCssScanMode;
 extern bool g_20000382;
 extern AlarmState_t gAlarmState;
 extern uint16_t g_2000038E;
-extern volatile int8_t gFM_Step;
 extern uint8_t g_20000393;
 extern bool gPttWasReleased;
 extern bool gPttWasPressed;
@@ -199,8 +198,6 @@ extern volatile bool gSystickFlag10;
 extern volatile bool gScheduleFM;
 
 extern uint16_t gCurrentRSSI;
-
-extern volatile int8_t gStepDirection;
 
 extern uint8_t gIsLocked;
 

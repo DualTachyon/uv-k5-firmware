@@ -69,7 +69,7 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 			return;
 		}
-		if (gFM_Step == 0) {
+		if (gFM_ScanState == FM_SCAN_OFF) {
 			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 			return;
 		}
@@ -105,7 +105,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 		return;
 	}
 
-	if (gStepDirection) {
+	if (gScanState != SCAN_OFF) {
 		FUN_0000773c();
 		gPttDebounceCounter = 0;
 		gPttIsPressed = false;
@@ -113,7 +113,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 		return;
 	}
 
-	if (gFM_Step == 0) {
+	if (gFM_ScanState == FM_SCAN_OFF) {
 		if (gCssScanMode == CSS_SCAN_MODE_OFF) {
 			if (gScreenToDisplay == DISPLAY_MENU || gScreenToDisplay == DISPLAY_FM) {
 				gRequestDisplayScreen = DISPLAY_MAIN;

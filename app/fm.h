@@ -22,11 +22,15 @@
 #define FM_CHANNEL_UP	0x01
 #define FM_CHANNEL_DOWN	0xFF
 
+enum {
+	FM_SCAN_OFF = 0U,
+};
+
 extern uint16_t gFM_Channels[20];
 extern bool gFmRadioMode;
 extern uint8_t gFmRadioCountdown;
 extern volatile uint16_t gFmPlayCountdown;
-extern volatile int8_t gFM_Step;
+extern volatile int8_t gFM_ScanState;
 extern bool gFM_AutoScan;
 extern uint8_t gFM_ChannelPosition;
 // Doubts about whether this should be signed or not.

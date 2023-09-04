@@ -16,6 +16,7 @@
 
 #include <string.h>
 #include "app/fm.h"
+#include "app/scanner.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/bk4819.h"
 #include "driver/eeprom.h"
@@ -183,7 +184,7 @@ void DTMF_HandleRequest(void)
 
 	gDTMF_RequestPending = false;
 
-	if (gStepDirection || gCssScanMode != CSS_SCAN_MODE_OFF) {
+	if (gScanState != SCAN_OFF || gCssScanMode != CSS_SCAN_MODE_OFF) {
 		return;
 	}
 

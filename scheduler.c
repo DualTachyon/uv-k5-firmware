@@ -14,6 +14,7 @@
  *     limitations under the License.
  */
 
+#include "app/fm.h"
 #include "app/scanner.h"
 #include "audio.h"
 #include "functions.h"
@@ -61,7 +62,7 @@ void SystickHandler(void)
 		DECREMENT_AND_TRIGGER(gBatterySave, gBatterySaveCountdownExpired);
 	}
 
-	if (gStepDirection == 0 && gCssScanMode == CSS_SCAN_MODE_OFF && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
+	if (gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_RECEIVE) {
 				DECREMENT_AND_TRIGGER(gDualWatchCountdown, gScheduleDualWatch);
@@ -69,7 +70,7 @@ void SystickHandler(void)
 		}
 	}
 
-	if (gStepDirection == 0 && gCssScanMode == CSS_SCAN_MODE_OFF && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
+	if (gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF && gEeprom.DUAL_WATCH == DUAL_WATCH_OFF) {
 		if (gIsNoaaMode && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			if (gCurrentFunction != FUNCTION_RECEIVE) {
 				DECREMENT_AND_TRIGGER(gNOAA_Countdown, gScheduleNOAA);
@@ -77,7 +78,7 @@ void SystickHandler(void)
 		}
 	}
 
-	if (gStepDirection || gCssScanMode == CSS_SCAN_MODE_SCANNING) {
+	if (gScanState != SCAN_OFF || gCssScanMode == CSS_SCAN_MODE_SCANNING) {
 		if (gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			DECREMENT_AND_TRIGGER(ScanPauseDelayIn10msec, gScheduleScanListen);
 		}
@@ -87,7 +88,7 @@ void SystickHandler(void)
 
 	DECREMENT_AND_TRIGGER(gCountdownToPlayNextVoice, gFlagPlayQueuedVoice);
 
-	if (gFM_Step && gCurrentFunction != FUNCTION_MONITOR) {
+	if (gFM_ScanState != FM_SCAN_OFF && gCurrentFunction != FUNCTION_MONITOR) {
 		if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_RECEIVE) {
 			DECREMENT_AND_TRIGGER(gFmPlayCountdown, gScheduleFM);
 		}

@@ -43,7 +43,7 @@ void UI_DisplayFM(void)
 	} else if (gAskToDelete) {
 		strcpy(String, "DEL?");
 	} else {
-		if (gFM_Step == 0) {
+		if (gFM_ScanState == FM_SCAN_OFF) {
 			if (!gEeprom.FM_IsMrMode) {
 				for (i = 0; i < 20; i++) {
 					if (gEeprom.FM_FrequencyPlaying == gFM_Channels[i]) {
