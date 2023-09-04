@@ -34,7 +34,7 @@ extern volatile int8_t gFM_ScanState;
 extern bool gFM_AutoScan;
 extern uint8_t gFM_ChannelPosition;
 // Doubts about whether this should be signed or not.
-extern int16_t gFM_FrequencyDeviation;
+extern uint16_t gFM_FrequencyDeviation;
 extern bool gFM_FoundFrequency;
 extern bool gFM_AutoScan;
 extern uint8_t gFM_ResumeCountdown;

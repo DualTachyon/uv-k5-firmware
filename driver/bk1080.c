@@ -38,7 +38,7 @@ static const uint16_t BK1080_RegisterTable[] = {
 static bool gIsInitBK1080;
 
 uint16_t BK1080_BaseFrequency;
-int16_t BK1080_FrequencyDeviation;
+uint16_t BK1080_FrequencyDeviation;
 
 void BK1080_Init(uint16_t Frequency, bool bDoScan)
 {
@@ -110,7 +110,6 @@ void BK1080_SetFrequency(uint16_t Frequency)
 void BK1080_GetFrequencyDeviation(uint16_t Frequency)
 {
 	BK1080_BaseFrequency = Frequency;
-	// Doubts whether this register is signed or not
-	BK1080_FrequencyDeviation = (int16_t)BK1080_ReadRegister(BK1080_REG_07) / 16;
+	BK1080_FrequencyDeviation = BK1080_ReadRegister(BK1080_REG_07) / 16;
 }
 

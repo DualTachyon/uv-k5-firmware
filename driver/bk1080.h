@@ -22,7 +22,7 @@
 #include "driver/bk1080-regs.h"
 
 extern uint16_t BK1080_BaseFrequency;
-extern int16_t BK1080_FrequencyDeviation;
+extern uint16_t BK1080_FrequencyDeviation;
 
 void BK1080_Init(uint16_t Frequency, bool bDoScan);
 uint16_t BK1080_ReadRegister(BK1080_Register_t Register);

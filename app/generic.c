@@ -14,6 +14,7 @@
  *     limitations under the License.
  */
 
+#include "app/app.h"
 #include "app/fm.h"
 #include "app/generic.h"
 #include "app/scanner.h"
@@ -26,10 +27,6 @@
 #include "settings.h"
 #include "ui/inputbox.h"
 #include "ui/ui.h"
-
-extern void FUN_0000773c(void);
-extern void PlayFMRadio(void);
-extern void TalkRelatedCode(void);
 
 void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 {
@@ -87,7 +84,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 				if (gFlagEndTransmission) {
 					FUNCTION_Select(FUNCTION_0);
 				} else {
-					TalkRelatedCode();
+					APP_EndTransmission();
 					if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
 						FUNCTION_Select(FUNCTION_0);
 					} else {

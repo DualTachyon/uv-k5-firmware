@@ -395,7 +395,7 @@ void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step)
 	}
 }
 
-void APP_MoreRadioStuff(void)
+static void FREQ_NextChannel(void)
 {
 	APP_SetFrequencyByStep(gRxVfo, gScanState);
 	RADIO_ApplyOffset(gRxVfo);
@@ -406,7 +406,7 @@ void APP_MoreRadioStuff(void)
 	g_20000413 = false;
 }
 
-void FUN_00007dd4(void)
+static void MR_NextChannel(void)
 {
 	uint8_t Ch1 = gEeprom.SCANLIST_PRIORITY_CH1[gEeprom.SCAN_LIST_DEFAULT];
 	uint8_t Ch2 = gEeprom.SCANLIST_PRIORITY_CH2[gEeprom.SCAN_LIST_DEFAULT];
@@ -574,7 +574,7 @@ void APP_CheckRadioInterrupts(void)
 	}
 }
 
-void TalkRelatedCode(void)
+void APP_EndTransmission(void)
 {
 	RADIO_SendEndOfTransmission();
 	RADIO_EnableCxCSS();
@@ -603,7 +603,7 @@ static void FUN_00008334(void)
 					if (gFlagEndTransmission) {
 						FUNCTION_Select(FUNCTION_0);
 					} else {
-						TalkRelatedCode();
+						APP_EndTransmission();
 						if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
 							FUNCTION_Select(FUNCTION_0);
 						} else {
@@ -639,7 +639,7 @@ void APP_Update(void)
 	if (gCurrentFunction == FUNCTION_TRANSMIT && gTxTimeoutReached) {
 		gTxTimeoutReached = false;
 		gFlagEndTransmission = true;
-		TalkRelatedCode();
+		APP_EndTransmission();
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP);
 		RADIO_SetVfoState(VFO_STATE_TIMEOUT);
 		GUI_DisplayScreen();
@@ -660,13 +660,13 @@ void APP_Update(void)
 			if (gCurrentFunction == FUNCTION_3) {
 				APP_StartListening(FUNCTION_RECEIVE);
 			} else {
-				APP_MoreRadioStuff();
+				FREQ_NextChannel();
 			}
 		} else {
 			if (gCopyOfCodeType == CODE_TYPE_OFF && gCurrentFunction == FUNCTION_3) {
 				APP_StartListening(FUNCTION_RECEIVE);
 			} else {
-				FUN_00007dd4();
+				MR_NextChannel();
 			}
 		}
 		gScanPauseMode = false;
@@ -1267,7 +1267,7 @@ void FUN_000075b0(void)
 	gScanProgressIndicator = 0;
 }
 
-void APP_SetStepDirection(bool bFlag, int8_t Direction)
+void CHANNEL_Next(bool bFlag, int8_t Direction)
 {
 	RADIO_SelectVfos();
 	gNextMrChannel = gRxVfo->CHANNEL_SAVE;
@@ -1277,12 +1277,12 @@ void APP_SetStepDirection(bool bFlag, int8_t Direction)
 		if (bFlag) {
 			gRestoreMrChannel = gNextMrChannel;
 		}
-		FUN_00007dd4();
+		MR_NextChannel();
 	} else {
 		if (bFlag) {
 			gRestoreFrequency = gRxVfo->ConfigRX.Frequency;
 		}
-		APP_MoreRadioStuff();
+		FREQ_NextChannel();
 	}
 	ScanPauseDelayIn10msec = 50;
 	gScheduleScanListen = false;

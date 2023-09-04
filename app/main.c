@@ -407,7 +407,7 @@ static void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 		gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 		return;
 	}
-	APP_SetStepDirection(false, Direction);
+	CHANNEL_Next(false, Direction);
 	gPttWasReleased = true;
 }
 

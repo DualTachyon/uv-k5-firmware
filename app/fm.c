@@ -153,41 +153,43 @@ void FM_PlayAndUpdate(void)
 
 int FM_CheckFrequencyLock(uint16_t Frequency, uint16_t LowerLimit)
 {
-	uint16_t SNR;
-	int16_t Deviation;
-	uint16_t RSSI;
+	uint16_t Test2;
+	uint16_t Deviation;
 	int ret = -1;
 
-	SNR = BK1080_ReadRegister(BK1080_REG_07);
-	// This cast fails to extend the sign because ReadReg is guaranteed to be U16.
-	Deviation = (int16_t)SNR >> 4;
-	if ((SNR & 0xF) < 2) {
-		goto Bail;
-	}
+	Test2 = BK1080_ReadRegister(BK1080_REG_07);
+	// This is supposed to be a signed value, but above function is unsigned
+	Deviation = BK1080_REG_07_GET_FREQD(Test2);
 
-	RSSI = BK1080_ReadRegister(BK1080_REG_10);
-	if (RSSI & 0x1000 || (RSSI & 0xFF) < 10) {
-		goto Bail;
-	}
+	if (BK1080_REG_07_GET_SNR(Test2) >= 2) {
+		uint16_t Status;
 
-	if (Deviation < 280 || Deviation > 3815) {
-		if ((LowerLimit < Frequency) && (Frequency - BK1080_BaseFrequency) == 1) {
-			if (BK1080_FrequencyDeviation & 0x800) {
-				goto Bail;
-			}
-			if (BK1080_FrequencyDeviation < 20) {
-				goto Bail;
+		Status = BK1080_ReadRegister(BK1080_REG_10);
+		if ((Status & BK1080_REG_10_MASK_AFCRL) == BK1080_REG_10_AFCRL_NOT_RAILED && BK1080_REG_10_GET_RSSI(Status) >= 10) {
+			// if (Deviation > -281 && Deviation < 280)
+			if (Deviation < 280 || Deviation > 3815) {
+				// not BLE(less than or equal)
+				if (Frequency > LowerLimit && (Frequency - BK1080_BaseFrequency) == 1) {
+					if (BK1080_FrequencyDeviation & 0x800) {
+						goto Bail;
+					}
+					if (BK1080_FrequencyDeviation < 20) {
+						goto Bail;
+					}
+				}
+				// not BLT(less than)
+				if (Frequency >= LowerLimit && (BK1080_BaseFrequency - Frequency) == 1) {
+					if ((BK1080_FrequencyDeviation & 0x800) == 0) {
+						goto Bail;
+					}
+					// if (BK1080_FrequencyDeviation > -21) {
+					if (BK1080_FrequencyDeviation > 4075) {
+						goto Bail;
+					}
+				}
+				ret = 0;
 			}
 		}
-		if ((LowerLimit <= Frequency) && (BK1080_BaseFrequency - Frequency) == 1) {
-			if ((BK1080_FrequencyDeviation & 0x800) == 0) {
-				goto Bail;
-			}
-			if (4075 < BK1080_FrequencyDeviation) {
-				goto Bail;
-			}
-		}
-		ret = 0;
 	}
 
 Bail:
@@ -292,9 +294,9 @@ static void FM_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			if (!FM_ConfigureChannelState()) {
 				BK1080_SetFrequency(gEeprom.FM_FrequencyPlaying);
 				gRequestSaveFM = true;
-				return;
+			} else {
+				gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			}
-			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			break;
 
 		case KEY_2:
