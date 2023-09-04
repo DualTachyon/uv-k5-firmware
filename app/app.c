@@ -326,10 +326,10 @@ void APP_StartListening(FUNCTION_Type_t Function)
 		if (gStepDirection) {
 			switch (gEeprom.SCAN_RESUME_MODE) {
 			case SCAN_RESUME_TO:
-				if (gScanPauseMode == 0) {
+				if (!gScanPauseMode) {
 					ScanPauseDelayIn10msec = 500;
 					gScheduleScanListen = false;
-					gScanPauseMode = 1;
+					gScanPauseMode = true;
 				}
 				break;
 			case SCAN_RESUME_CO:
@@ -669,7 +669,7 @@ void APP_Update(void)
 				FUN_00007dd4();
 			}
 		}
-		gScanPauseMode = 0;
+		gScanPauseMode = false;
 		gRxReceptionMode = RX_MODE_NONE;
 		gScheduleScanListen = false;
 	}
@@ -695,7 +695,7 @@ void APP_Update(void)
 						GUI_SelectNextDisplay(DISPLAY_MAIN);
 					}
 					g_2000041F = 0;
-					gScanPauseMode = 0;
+					gScanPauseMode = false;
 					gRxReceptionMode = RX_MODE_NONE;
 					gScheduleDualWatch = false;
 				}
@@ -971,7 +971,7 @@ void APP_TimeSlice10ms(void)
 
 		case SCAN_CSS_STATE_SCANNING:
 			ScanResult = BK4819_GetCxCSSScanResult(&Result, &CtcssFreq);
-			if (ScanResult == 0) {
+			if (ScanResult == BK4819_CSS_RESULT_NOT_FOUND) {
 				break;
 			}
 			BK4819_Disable();
@@ -1287,7 +1287,7 @@ void APP_SetStepDirection(bool bFlag, int8_t Direction)
 	ScanPauseDelayIn10msec = 50;
 	gScheduleScanListen = false;
 	gRxReceptionMode = RX_MODE_NONE;
-	gScanPauseMode = 0;
+	gScanPauseMode = false;
 	g_20000413 = false;
 }
 

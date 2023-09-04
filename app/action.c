@@ -71,7 +71,7 @@ static void ACTION_Monitor(void)
 	if (gStepDirection) {
 		ScanPauseDelayIn10msec = 500;
 		gScheduleScanListen = false;
-		gScanPauseMode = 1;
+		gScanPauseMode = true;
 	}
 	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode) {
 		gNOAA_Countdown = 500;
@@ -86,7 +86,7 @@ static void ACTION_Monitor(void)
 	}
 }
 
-void ACTION_Scan(bool bFlag)
+void ACTION_Scan(bool bRestart)
 {
 	if (gFmRadioMode) {
 		if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
@@ -96,22 +96,21 @@ void ACTION_Scan(bool bFlag)
 			if (gFM_Step) {
 				FM_PlayAndUpdate();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
-				return;
-			}
-			if (bFlag) {
-				gFM_AutoScan = true;
-				gFM_ChannelPosition = 0;
-				FM_EraseChannels();
-				Frequency = gEeprom.FM_LowerLimit;
 			} else {
-				gFM_AutoScan = false;
-				gFM_ChannelPosition = 0;
-				Frequency = gEeprom.FM_FrequencyPlaying;
+				if (bRestart) {
+					gFM_AutoScan = true;
+					gFM_ChannelPosition = 0;
+					FM_EraseChannels();
+					Frequency = gEeprom.FM_LowerLimit;
+				} else {
+					gFM_AutoScan = false;
+					gFM_ChannelPosition = 0;
+					Frequency = gEeprom.FM_FrequencyPlaying;
+				}
+				BK1080_GetFrequencyDeviation(Frequency);
+				FM_Tune(Frequency, 1, bRestart);
+				gAnotherVoiceID = VOICE_ID_SCANNING_BEGIN;
 			}
-			BK1080_GetFrequencyDeviation(Frequency);
-			FM_Tune(Frequency, 1, bFlag);
-			gAnotherVoiceID = VOICE_ID_SCANNING_BEGIN;
-			return;
 		}
 	} else if (gScreenToDisplay != DISPLAY_SCANNER) {
 		RADIO_SelectVfos();
@@ -120,11 +119,11 @@ void ACTION_Scan(bool bFlag)
 			if (gStepDirection) {
 				FUN_0000773c();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
-				return;
+			} else {
+				APP_SetStepDirection(true, 1);
+				AUDIO_SetVoiceID(0, VOICE_ID_SCANNING_BEGIN);
+				AUDIO_PlaySingleVoice(true);
 			}
-			APP_SetStepDirection(true, 1);
-			AUDIO_SetVoiceID(0, VOICE_ID_SCANNING_BEGIN);
-			AUDIO_PlaySingleVoice(true);
 		}
 	}
 }

@@ -32,7 +32,7 @@ bool gScanSingleFrequency;
 uint8_t gScannerEditState;
 uint8_t gScanChannel;
 uint32_t gScanFrequency;
-uint8_t gScanPauseMode;
+bool gScanPauseMode;
 SCAN_CssState_t gScanCssState;
 volatile bool gScheduleScanListen = true;
 volatile uint16_t ScanPauseDelayIn10msec;
