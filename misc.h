@@ -140,7 +140,7 @@ extern bool gFlagAcceptSetting;
 extern bool gFlagRefreshSetting;
 extern bool gFlagSaveVfo;
 extern bool gFlagSaveSettings;
-extern uint8_t gFlagSaveChannel;
+extern bool gFlagSaveChannel;
 extern bool gFlagSaveFM;
 extern uint8_t gDTMF_RequestPending;
 extern bool g_CDCSS_Lost;

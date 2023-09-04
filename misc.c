@@ -89,7 +89,7 @@ bool gFlagAcceptSetting;
 bool gFlagRefreshSetting;
 bool gFlagSaveVfo;
 bool gFlagSaveSettings;
-uint8_t gFlagSaveChannel;
+bool gFlagSaveChannel;
 bool gFlagSaveFM;
 uint8_t gDTMF_RequestPending;
 bool g_CDCSS_Lost;
