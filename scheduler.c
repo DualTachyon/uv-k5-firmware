@@ -55,7 +55,7 @@ void SystickHandler(void)
 	if (gFoundCTCSSCountdown) {
 		gFoundCTCSSCountdown--;
 	}
-	if (gCurrentFunction == FUNCTION_0) {
+	if (gCurrentFunction == FUNCTION_FOREGROUND) {
 		DECREMENT_AND_TRIGGER(gBatterySaveCountdown, gSchedulePowerSave);
 	}
 	if (gCurrentFunction == FUNCTION_POWER_SAVE) {

@@ -369,7 +369,7 @@ static void CMD_052F(const uint8_t *pBuffer)
 	gEeprom.VfoInfo[0].DTMF_DECODING_ENABLE = false;
 	gIsNoaaMode = false;
 	if (gCurrentFunction == FUNCTION_POWER_SAVE) {
-		FUNCTION_Select(FUNCTION_0);
+		FUNCTION_Select(FUNCTION_FOREGROUND);
 	}
 	Timestamp = pCmd->Timestamp;
 	GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);

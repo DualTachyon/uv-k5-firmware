@@ -602,7 +602,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	FUNCTION_Init();
 
 	if (bSwitchToFunction0) {
-		FUNCTION_Select(FUNCTION_0);
+		FUNCTION_Select(FUNCTION_FOREGROUND);
 	}
 }
 

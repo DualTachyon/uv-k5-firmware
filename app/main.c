@@ -30,8 +30,6 @@
 #include "ui/inputbox.h"
 #include "ui/ui.h"
 
-extern void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step);
-
 static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
 	uint8_t Vfo;

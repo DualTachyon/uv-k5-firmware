@@ -83,7 +83,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	}
 
 	switch (Function) {
-	case FUNCTION_0:
+	case FUNCTION_FOREGROUND:
 		if (gDTMF_ReplyState != DTMF_REPLY_NONE) {
 			RADIO_PrepareCssTX();
 		}
@@ -103,7 +103,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		break;
 
 	case FUNCTION_MONITOR:
-	case FUNCTION_3:
+	case FUNCTION_INCOMING:
 	case FUNCTION_RECEIVE:
 		gBatterySaveCountdown = 1000;
 		gSchedulePowerSave = false;
