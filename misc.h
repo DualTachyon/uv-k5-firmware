@@ -135,7 +135,7 @@ extern uint8_t gRequestSaveChannel;
 extern bool gRequestSaveSettings;
 extern bool gRequestSaveFM;
 extern uint8_t gKeypadLocked;
-extern uint8_t g_200003A0;
+extern bool gFlagPrepareTX;
 extern bool gFlagAcceptSetting;
 extern bool gFlagRefreshSetting;
 extern bool gFlagSaveVfo;

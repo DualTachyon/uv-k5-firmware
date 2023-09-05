@@ -1514,9 +1514,9 @@ Skip:
 		gRequestDisplayScreen = DISPLAY_SCANNER;
 		gFlagStartScan = false;
 	}
-	if (g_200003A0 == 1) {
+	if (gFlagPrepareTX) {
 		RADIO_PrepareTX();
-		g_200003A0 = 0;
+		gFlagPrepareTX = false;
 	}
 	if (gAnotherVoiceID != VOICE_ID_INVALID) {
 		if (gAnotherVoiceID < 76) {

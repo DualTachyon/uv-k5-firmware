@@ -146,7 +146,7 @@ static void ACTION_AlarmOr1750(bool b1750)
 		gAlarmState = ALARM_STATE_TXALARM;
 	}
 	gAlarmRunningCounter = 0;
-	g_200003A0 = 1;
+	gFlagPrepareTX = true;
 	gRequestDisplayScreen = DISPLAY_MAIN;
 }
 

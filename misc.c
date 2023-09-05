@@ -84,7 +84,7 @@ bool gRequestSaveVFO;
 uint8_t gRequestSaveChannel;
 bool gRequestSaveSettings;
 bool gRequestSaveFM;
-uint8_t g_200003A0;
+bool gFlagPrepareTX;
 bool gFlagAcceptSetting;
 bool gFlagRefreshSetting;
 bool gFlagSaveVfo;
