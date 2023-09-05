@@ -319,7 +319,7 @@ void SCANNER_Start(void)
 		BK4819_PickRXFilterPathBasedOnFrequency(0xFFFFFFFF);
 		BK4819_EnableFrequencyScan();
 	}
-	g_2000045D = 21;
+	gScanDelay = 21;
 	gScanCssResultIndex = 0xFF;
 	gScanCssResultType = 0xFF;
 	gScanHitCount = 0;

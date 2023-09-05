@@ -715,11 +715,11 @@ void RADIO_PrepareTX(void)
 	if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
 		gDualWatchCountdown = 360;
 		gScheduleDualWatch = false;
-		if (g_2000041F == 0) {
+		if (!gRxVfoIsActive) {
 			gEeprom.RX_CHANNEL = gEeprom.TX_CHANNEL;
 			gRxVfo = &gEeprom.VfoInfo[gEeprom.TX_CHANNEL];
 		}
-		g_2000041F = 1;
+		gRxVfoIsActive = true;
 	}
 	RADIO_SelectCurrentVfo();
 	if (gAlarmState == ALARM_STATE_OFF || gAlarmState == ALARM_STATE_TX1750 || (gAlarmState == ALARM_STATE_ALARM && gEeprom.ALARM_MODE == ALARM_MODE_TONE)) {

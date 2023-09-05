@@ -60,7 +60,7 @@ void UI_DisplayMain(void)
 		Channel = gEeprom.TX_CHANNEL;
 		bIsSameVfo = !!(Channel == i);
 
-		if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && g_2000041F == 1) {
+		if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && gRxVfoIsActive) {
 			Channel = gEeprom.RX_CHANNEL;
 		}
 

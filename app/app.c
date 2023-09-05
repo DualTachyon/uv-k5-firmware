@@ -320,13 +320,13 @@ void APP_StartListening(FUNCTION_Type_t Function)
 			gCssScanMode = CSS_SCAN_MODE_FOUND;
 		}
 		if (gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF && gEeprom.DUAL_WATCH != DUAL_WATCH_OFF) {
-			g_2000041F = 1;
+			gRxVfoIsActive = true;
 			gDualWatchCountdown = 360;
 			gScheduleDualWatch = false;
 		}
 		if (gRxVfo->IsAM) {
 			BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
-			g_20000474 = 0;
+			gNeverUsed = 0;
 		} else {
 			BK4819_WriteRegister(BK4819_REG_48, 0xB000
 					| (gEeprom.VOLUME_GAIN << 4)
@@ -659,10 +659,10 @@ void APP_Update(void)
 			if (gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF) {
 				if (!gPttIsPressed && !gFmRadioMode && gDTMF_CallState == DTMF_CALL_STATE_NONE && gCurrentFunction != FUNCTION_POWER_SAVE) {
 					DUALWATCH_Alternate();
-					if (g_2000041F == 1 && gScreenToDisplay == DISPLAY_MAIN) {
+					if (gRxVfoIsActive && gScreenToDisplay == DISPLAY_MAIN) {
 						GUI_SelectNextDisplay(DISPLAY_MAIN);
 					}
-					g_2000041F = 0;
+					gRxVfoIsActive = false;
 					gScanPauseMode = false;
 					gRxReceptionMode = RX_MODE_NONE;
 					gScheduleDualWatch = false;
@@ -701,12 +701,12 @@ void APP_Update(void)
 			}
 			if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF) {
 				DUALWATCH_Alternate();
-				g_20000382 = false;
+				gUpdateRSSI = false;
 			}
 			FUNCTION_Init();
 			gBatterySave = 10;
 			gRxIdleMode = false;
-		} else if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF || gScanState != SCAN_OFF || gCssScanMode != CSS_SCAN_MODE_OFF || g_20000382) {
+		} else if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF || gScanState != SCAN_OFF || gCssScanMode != CSS_SCAN_MODE_OFF || gUpdateRSSI) {
 			gCurrentRSSI = BK4819_GetRSSI();
 			UI_UpdateRSSI(gCurrentRSSI);
 			gBatterySave = gEeprom.BATTERY_SAVE * 10;
@@ -717,7 +717,7 @@ void APP_Update(void)
 			// Authentic device checked removed
 		} else {
 			DUALWATCH_Alternate();
-			g_20000382 = true;
+			gUpdateRSSI = true;
 			gBatterySave = 10;
 		}
 		gBatterySaveCountdownExpired = false;
@@ -895,8 +895,8 @@ void APP_TimeSlice10ms(void)
 		BK4819_CssScanResult_t ScanResult;
 		uint16_t CtcssFreq;
 
-		if (g_2000045D) {
-			g_2000045D--;
+		if (gScanDelay) {
+			gScanDelay--;
 			APP_CheckKeys();
 			return;
 		}
@@ -934,7 +934,7 @@ void APP_TimeSlice10ms(void)
 				gScanCssState = SCAN_CSS_STATE_SCANNING;
 				GUI_SelectNextDisplay(DISPLAY_SCANNER);
 			}
-			g_2000045D = 21;
+			gScanDelay = 21;
 			break;
 
 		case SCAN_CSS_STATE_SCANNING:
@@ -973,7 +973,7 @@ void APP_TimeSlice10ms(void)
 			}
 			if (gScanCssState < SCAN_CSS_STATE_FOUND) {
 				BK4819_SetScanFrequency(gScanFrequency);
-				g_2000045D = 21;
+				gScanDelay = 21;
 				break;
 			}
 			GUI_SelectNextDisplay(DISPLAY_SCANNER);
