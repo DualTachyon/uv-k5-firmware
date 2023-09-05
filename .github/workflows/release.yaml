@@ -13,6 +13,9 @@ jobs:
       with:
         release: '10.3-2021.10'
 
+    - name: Install Python dependencies
+      run: python3 -m pip install --upgrade pip crcmod
+
     - name: Checkout
       uses: actions/checkout@v3
 
@@ -29,10 +32,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: firmware
-        path: firmware.bin
+        path: firmware*.bin
 
     - name: 'Create Release'
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "firmware.bin"
+        artifacts: "firmware*.bin"
 
