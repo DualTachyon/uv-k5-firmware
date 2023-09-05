@@ -17,6 +17,7 @@
 #include "app/generic.h"
 #include "app/scanner.h"
 #include "audio.h"
+#include "driver/bk4819.h"
 #include "frequencies.h"
 #include "misc.h"
 #include "radio.h"
@@ -280,5 +281,88 @@ void SCANNER_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 		break;
 	}
+}
+
+void SCANNER_Start(void)
+{
+	uint8_t BackupStep;
+	uint16_t BackupFrequency;
+
+	BK4819_StopScan();
+	RADIO_SelectVfos();
+
+	if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
+		gRxVfo->CHANNEL_SAVE = FREQ_CHANNEL_FIRST + 5;
+	}
+
+	BackupStep = gRxVfo->STEP_SETTING;
+	BackupFrequency = gRxVfo->StepFrequency;
+
+	RADIO_InitInfo(gRxVfo, gRxVfo->CHANNEL_SAVE, gRxVfo->Band, gRxVfo->pCurrent->Frequency);
+
+	gRxVfo->STEP_SETTING = BackupStep;
+	gRxVfo->StepFrequency = BackupFrequency;
+
+	RADIO_SetupRegisters(true);
+
+	gIsNoaaMode = false;
+	if (gScanSingleFrequency) {
+		gScanCssState = SCAN_CSS_STATE_SCANNING;
+		gScanFrequency = gRxVfo->pCurrent->Frequency;
+		gStepSetting = gRxVfo->STEP_SETTING;
+		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
+		BK4819_SetScanFrequency(gScanFrequency);
+	} else {
+		gScanCssState = SCAN_CSS_STATE_OFF;
+		gScanFrequency = 0xFFFFFFFF;
+		BK4819_PickRXFilterPathBasedOnFrequency(0xFFFFFFFF);
+		BK4819_EnableFrequencyScan();
+	}
+	g_2000045D = 21;
+	gScanCssResultIndex = 0xFF;
+	gScanCssResultType = 0xFF;
+	gScanHitCount = 0;
+	gScanUseCssResult = false;
+	gDTMF_RequestPending = false;
+	g_CxCSS_TAIL_Found = false;
+	g_CDCSS_Lost = false;
+	gCDCSSCodeType = 0;
+	g_CTCSS_Lost = false;
+	g_VOX_Lost = false;
+	g_SquelchLost = false;
+	gScannerEditState = 0;
+	gScanProgressIndicator = 0;
+}
+
+void SCANNER_Stop(void)
+{
+	uint8_t Previous;
+
+	Previous = gRestoreMrChannel;
+	gScanState = SCAN_OFF;
+
+	if (!g_20000413) {
+		if (IS_MR_CHANNEL(gNextMrChannel)) {
+			gEeprom.MrChannel[gEeprom.RX_CHANNEL] = gRestoreMrChannel;
+			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = Previous;
+			RADIO_ConfigureChannel(gEeprom.RX_CHANNEL, 2);
+		} else {
+			gRxVfo->ConfigRX.Frequency = gRestoreFrequency;
+			RADIO_ApplyOffset(gRxVfo);
+			RADIO_ConfigureSquelchAndOutputPower(gRxVfo);
+		}
+		RADIO_SetupRegisters(true);
+		gUpdateDisplay = true;
+		return;
+	}
+
+	if (!IS_MR_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
+		RADIO_ApplyOffset(gRxVfo);
+		RADIO_ConfigureSquelchAndOutputPower(gRxVfo);
+		SETTINGS_SaveChannel(gRxVfo->CHANNEL_SAVE, gEeprom.RX_CHANNEL, gRxVfo, 1);
+		return;
+	}
+
+	SETTINGS_SaveVfoIndices();
 }
 

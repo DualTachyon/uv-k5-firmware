@@ -21,7 +21,6 @@
 #include "functions.h"
 #include "radio.h"
 
-void FUN_0000773c(void);
 void APP_EndTransmission(void);
 void CHANNEL_Next(bool bFlag, int8_t Direction);
 void APP_StartListening(FUNCTION_Type_t Function);

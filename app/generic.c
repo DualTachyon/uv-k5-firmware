@@ -103,7 +103,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 	}
 
 	if (gScanState != SCAN_OFF) {
-		FUN_0000773c();
+		SCANNER_Stop();
 		gPttDebounceCounter = 0;
 		gPttIsPressed = false;
 		gRequestDisplayScreen = DISPLAY_MAIN;

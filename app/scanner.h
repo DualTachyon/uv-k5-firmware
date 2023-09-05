@@ -51,6 +51,8 @@ extern bool gScanUseCssResult;
 extern uint8_t gScanState;
 
 void SCANNER_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
+void SCANNER_Start(void);
+void SCANNER_Stop(void);
 
 #endif
 

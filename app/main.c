@@ -272,7 +272,7 @@ static void MAIN_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 					gAnotherVoiceID = VOICE_ID_CANCEL;
 				}
 			} else {
-				FUN_0000773c();
+				SCANNER_Stop();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 			}
 			gRequestDisplayScreen = DISPLAY_MAIN;

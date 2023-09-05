@@ -117,7 +117,7 @@ void ACTION_Scan(bool bRestart)
 		if (IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
 			if (gScanState != SCAN_OFF) {
-				FUN_0000773c();
+				SCANNER_Stop();
 				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 			} else {
 				CHANNEL_Next(true, 1);

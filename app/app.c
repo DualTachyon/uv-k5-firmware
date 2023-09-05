@@ -134,39 +134,7 @@ static void APP_HandleIncoming(void)
 	APP_StartListening(FUNCTION_RECEIVE);
 }
 
-void FUN_0000773c(void)
-{
-	uint8_t Previous;
-
-	Previous = gRestoreMrChannel;
-	gScanState = SCAN_OFF;
-
-	if (!g_20000413) {
-		if (IS_MR_CHANNEL(gNextMrChannel)) {
-			gEeprom.MrChannel[gEeprom.RX_CHANNEL] = gRestoreMrChannel;
-			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = Previous;
-			RADIO_ConfigureChannel(gEeprom.RX_CHANNEL, 2);
-		} else {
-			gRxVfo->ConfigRX.Frequency = gRestoreFrequency;
-			RADIO_ApplyOffset(gRxVfo);
-			RADIO_ConfigureSquelchAndOutputPower(gRxVfo);
-		}
-		RADIO_SetupRegisters(true);
-		gUpdateDisplay = true;
-		return;
-	}
-
-	if (!IS_MR_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
-		RADIO_ApplyOffset(gRxVfo);
-		RADIO_ConfigureSquelchAndOutputPower(gRxVfo);
-		SETTINGS_SaveChannel(gRxVfo->CHANNEL_SAVE, gEeprom.RX_CHANNEL, gRxVfo, 1);
-		return;
-	}
-
-	SETTINGS_SaveVfoIndices();
-}
-
-void FUN_000052f0(void)
+static void APP_HandleReceive(void)
 {
 	uint8_t Value;
 
@@ -274,7 +242,7 @@ Skip:
 				gScheduleScanListen = false;
 				break;
 			case SCAN_RESUME_SE:
-				FUN_0000773c();
+				SCANNER_Stop();
 				break;
 			}
 		}
@@ -291,7 +259,7 @@ Skip:
 	}
 }
 
-void FUN_0000510c(void)
+static void APP_HandleFunction(void)
 {
 	switch (gCurrentFunction) {
 	case FUNCTION_FOREGROUND:
@@ -306,7 +274,7 @@ void FUN_0000510c(void)
 		APP_HandleIncoming();
 		break;
 	case FUNCTION_RECEIVE:
-		FUN_000052f0();
+		APP_HandleReceive();
 		break;
 	default:
 		break;
@@ -649,7 +617,7 @@ void APP_Update(void)
 		return;
 	}
 	if (gCurrentFunction != FUNCTION_TRANSMIT) {
-		FUN_0000510c();
+		APP_HandleFunction();
 	}
 	if (gFmRadioCountdown) {
 		return;
@@ -1204,7 +1172,7 @@ LAB_00004b08:
 	}
 }
 
-void FUN_00001150(void)
+static void ALARM_Off(void)
 {
 	gAlarmState = ALARM_STATE_OFF;
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
@@ -1217,54 +1185,6 @@ void FUN_00001150(void)
 	SYSTEM_DelayMs(5);
 	RADIO_SetupRegisters(true);
 	gRequestDisplayScreen = DISPLAY_MAIN;
-}
-
-void FUN_000075b0(void)
-{
-	uint8_t StepSetting;
-	uint16_t StepFrequency;
-
-	BK4819_StopScan();
-	RADIO_SelectVfos();
-
-	if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
-		gRxVfo->CHANNEL_SAVE = FREQ_CHANNEL_FIRST + 5;
-	}
-	StepSetting = gRxVfo->STEP_SETTING;
-	StepFrequency = gRxVfo->StepFrequency;
-	RADIO_InitInfo(gRxVfo, gRxVfo->CHANNEL_SAVE, gRxVfo->Band, gRxVfo->pCurrent->Frequency);
-
-	gRxVfo->STEP_SETTING = StepSetting;
-	gRxVfo->StepFrequency = StepFrequency;
-	RADIO_SetupRegisters(true);
-
-	gIsNoaaMode = false;
-	if (gScanSingleFrequency) {
-		gScanCssState = SCAN_CSS_STATE_SCANNING;
-		gScanFrequency = gRxVfo->pCurrent->Frequency;
-		gStepSetting = gRxVfo->STEP_SETTING;
-		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
-		BK4819_SetScanFrequency(gScanFrequency);
-	} else {
-		gScanCssState = SCAN_CSS_STATE_OFF;
-		gScanFrequency = 0xFFFFFFFF;
-		BK4819_PickRXFilterPathBasedOnFrequency(0xFFFFFFFF);
-		BK4819_EnableFrequencyScan();
-	}
-	g_2000045D = 21;
-	gScanCssResultIndex = 0xFF;
-	gScanCssResultType = 0xFF;
-	gScanHitCount = 0;
-	gScanUseCssResult = false;
-	gDTMF_RequestPending = false;
-	g_CxCSS_TAIL_Found = false;
-	g_CDCSS_Lost = false;
-	gCDCSSCodeType = 0;
-	g_CTCSS_Lost = false;
-	g_VOX_Lost = false;
-	g_SquelchLost = false;
-	gScannerEditState = 0;
-	gScanProgressIndicator = 0;
 }
 
 void CHANNEL_Next(bool bFlag, int8_t Direction)
@@ -1401,7 +1321,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 	}
 
-	if (gWasFKeyPressed && KEY_9 < Key && Key != KEY_F && Key != KEY_STAR) {
+	if (gWasFKeyPressed && Key > KEY_9 && Key != KEY_F && Key != KEY_STAR) {
 		gWasFKeyPressed = false;
 		gUpdateStatus = true;
 	}
@@ -1460,7 +1380,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 					}
 				}
 			} else if (!bKeyHeld && bKeyPressed) {
-				FUN_00001150();
+				ALARM_Off();
 				if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
 					FUNCTION_Select(FUNCTION_FOREGROUND);
 				} else {
@@ -1590,7 +1510,7 @@ Skip:
 	if (gFlagStartScan) {
 		AUDIO_SetVoiceID(0, VOICE_ID_SCANNING_BEGIN);
 		AUDIO_PlaySingleVoice(true);
-		FUN_000075b0();
+		SCANNER_Start();
 		gRequestDisplayScreen = DISPLAY_SCANNER;
 		gFlagStartScan = false;
 	}
