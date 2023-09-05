@@ -24,8 +24,8 @@ static void AES_Setup_ENC_CBC(bool IsDecrypt, const void *pKey, const void *pIv)
 	const uint32_t *pK = (const uint32_t *)pKey;
 	const uint32_t *pI = (const uint32_t *)pIv;
 
-	AES_CR = (AES_CR & ~AES_CR_EN_MASK) | AES_CR_EN_VALUE_DISABLE;
-	AES_CR = AES_CR_CHMOD_VALUE_CBC;
+	AES_CR = (AES_CR & ~AES_CR_EN_MASK) | AES_CR_EN_BITS_DISABLE;
+	AES_CR = AES_CR_CHMOD_BITS_CBC;
 	AES_KEYR3 = pK[0];
 	AES_KEYR2 = pK[1];
 	AES_KEYR1 = pK[2];
@@ -34,7 +34,7 @@ static void AES_Setup_ENC_CBC(bool IsDecrypt, const void *pKey, const void *pIv)
 	AES_IVR2 = pI[1];
 	AES_IVR1 = pI[2];
 	AES_IVR0 = pI[3];
-	AES_CR = (AES_CR & ~AES_CR_EN_MASK) | AES_CR_EN_VALUE_ENABLE;
+	AES_CR = (AES_CR & ~AES_CR_EN_MASK) | AES_CR_EN_BITS_ENABLE;
 }
 
 static void AES_Transform(const void *pIn, void *pOut)
@@ -47,7 +47,7 @@ static void AES_Transform(const void *pIn, void *pOut)
 	AES_DINR = pI[2];
 	AES_DINR = pI[3];
 
-	while ((AES_SR & AES_SR_CCF_MASK) == AES_SR_CCF_VALUE_NOT_COMPLETE) {
+	while ((AES_SR & AES_SR_CCF_MASK) == AES_SR_CCF_BITS_NOT_COMPLETE) {
 	}
 
 	pO[0] = AES_DOUTR;
@@ -55,7 +55,7 @@ static void AES_Transform(const void *pIn, void *pOut)
 	pO[2] = AES_DOUTR;
 	pO[3] = AES_DOUTR;
 
-	AES_CR |= AES_CR_CCFC_VALUE_SET;
+	AES_CR |= AES_CR_CCFC_BITS_SET;
 }
 
 void AES_Encrypt(const void *pKey, const void *pIv, const void *pIn, void *pOut, uint8_t NumBlocks)
