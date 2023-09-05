@@ -168,7 +168,6 @@ extern uint16_t gAlarmRunningCounter;
 extern bool gKeyBeingHeld;
 extern bool gPttIsPressed;
 extern uint8_t gPttDebounceCounter;
-extern bool g_20000439;
 extern uint8_t gMenuListCount;
 extern uint8_t gBackupCROSS_BAND_RX_TX;
 extern uint8_t g_2000045D;

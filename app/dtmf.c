@@ -50,6 +50,7 @@ DTMF_ReplyState_t gDTMF_ReplyState;
 DTMF_CallMode_t gDTMF_CallMode;
 bool gDTMF_IsTx;
 uint8_t gDTMF_TxStopCountdown;
+bool gDTMF_IsGroupCall;
 
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 {
@@ -130,28 +131,28 @@ char DTMF_GetCharacter(uint8_t Code)
 	return 0xFF;
 }
 
-bool DTMF_CompareMessage(const char *pDTMF, const char *pTemplate, uint8_t Size, bool bFlag)
+bool DTMF_CompareMessage(const char *pMsg, const char *pTemplate, uint8_t Size, bool bCheckGroup)
 {
 	uint8_t i;
 
 	for (i = 0; i < Size; i++) {
-		if (pDTMF[i] != pTemplate[i]) {
-			if (!bFlag || pDTMF[i] != gEeprom.DTMF_GROUP_CALL_CODE) {
+		if (pMsg[i] != pTemplate[i]) {
+			if (!bCheckGroup || pMsg[i] != gEeprom.DTMF_GROUP_CALL_CODE) {
 				return false;
 			}
-			g_20000439 = true;
+			gDTMF_IsGroupCall = true;
 		}
 	}
 
 	return true;
 }
 
-bool DTMF_IsGroupCall(const char *pDTMF, uint32_t Size)
+bool DTMF_CheckGroupCall(const char *pMsg, uint32_t Size)
 {
 	uint32_t i;
 
 	for (i = 0; i < Size; i++) {
-		if (pDTMF[i] == gEeprom.DTMF_GROUP_CALL_CODE) {
+		if (pMsg[i] == gEeprom.DTMF_GROUP_CALL_CODE) {
 			break;
 		}
 	}
@@ -248,7 +249,7 @@ void DTMF_HandleRequest(void)
 	if (gDTMF_WriteIndex >= 7) {
 		Offset = gDTMF_WriteIndex - 7;
 		sprintf(String, "%s%c", gEeprom.ANI_DTMF_ID, gEeprom.DTMF_SEPARATE_CODE);
-		g_20000439 = false;
+		gDTMF_IsGroupCall = false;
 		if (DTMF_CompareMessage(gDTMF_Received + Offset, String, 4, true)) {
 			gDTMF_CallState = DTMF_CALL_STATE_RECEIVED;
 			memcpy(gDTMF_Callee, gDTMF_Received + Offset, 3);
@@ -274,7 +275,7 @@ void DTMF_HandleRequest(void)
 				break;
 			}
 
-			if (g_20000439) {
+			if (gDTMF_IsGroupCall) {
 				gDTMF_ReplyState = DTMF_REPLY_NONE;
 			}
 		}

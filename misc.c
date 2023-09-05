@@ -117,7 +117,6 @@ uint16_t gAlarmRunningCounter;
 bool gKeyBeingHeld;
 bool gPttIsPressed;
 uint8_t gPttDebounceCounter;
-bool g_20000439;
 uint8_t gMenuListCount;
 uint8_t gBackupCROSS_BAND_RX_TX;
 uint8_t g_2000045D;
