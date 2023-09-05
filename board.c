@@ -546,7 +546,7 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 	memcpy(gEEPROM_RSSI_CALIB[1], gEEPROM_RSSI_CALIB[0], 8);
 	memcpy(gEEPROM_RSSI_CALIB[2], gEEPROM_RSSI_CALIB[0], 8);
 
-	EEPROM_ReadBuffer(0x1F40, gBatteryCalibration,  12);
+	EEPROM_ReadBuffer(0x1F40, gBatteryCalibration, 12);
 	if (gBatteryCalibration[0] >= 5000) {
 		gBatteryCalibration[0] = 1900;
 		gBatteryCalibration[1] = 2000;
@@ -598,7 +598,7 @@ void BOARD_FactoryReset(bool bIsAll)
 				!(i >= 0x0F50 && i < 0x1C00) && // MR Channel NAmes
 				!(i >= 0x0E40 && i < 0x0E70) && // FM Channels
 				!(i >= 0x0E88 && i < 0x0E90))) // FM settings
-		   ) {
+			) {
 			EEPROM_WriteBuffer(i, Template);
 		}
 	}

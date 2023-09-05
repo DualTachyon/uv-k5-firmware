@@ -809,23 +809,23 @@ void BK4819_Disable(void)
 
 void BK4819_StopScan(void)
 {
-        BK4819_DisableFrequencyScan();
-        BK4819_Disable();
+	BK4819_DisableFrequencyScan();
+	BK4819_Disable();
 }
 
 uint8_t BK4819_GetDTMF_5TONE_Code(void)
 {
-        return (BK4819_GetRegister(BK4819_REG_0B) >> 8) & 0x0F;
+	return (BK4819_GetRegister(BK4819_REG_0B) >> 8) & 0x0F;
 }
 
 uint8_t BK4819_GetCDCSSCodeType(void)
 {
-        return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
+	return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
 }
 
 uint8_t BK4819_GetCTCType(void)
 {
-        return (BK4819_GetRegister(BK4819_REG_0C) >> 10) & 3;
+	return (BK4819_GetRegister(BK4819_REG_0C) >> 10) & 3;
 }
 
 void BK4819_SendFSKData(uint16_t *pData)
@@ -937,27 +937,27 @@ void BK4819_Enable_AfDac_DiscMode_TxDsp(void)
 
 void BK4819_GetVoxAmp(uint16_t *pResult)
 {
-	*pResult =  BK4819_GetRegister(BK4819_REG_64) & 0x7FFF;
+	*pResult = BK4819_GetRegister(BK4819_REG_64) & 0x7FFF;
 }
 
 void BK4819_SetScrambleFrequencyControlWord(uint32_t Frequency)
 {
-        BK4819_WriteRegister(BK4819_REG_71, (uint16_t)(Frequency * 10.32444));
+	BK4819_WriteRegister(BK4819_REG_71, (uint16_t)(Frequency * 10.32444));
 }
 
 void BK4819_PlayDTMFEx(bool bLocalLoopback, char Code)
 {
-        BK4819_EnableDTMF();
-        BK4819_EnterTxMute();
-        if (bLocalLoopback) {
-                BK4819_SetAF(BK4819_AF_BEEP);
-        } else {
-                BK4819_SetAF(BK4819_AF_MUTE);
-        }
-        BK4819_WriteRegister(BK4819_REG_70, 0xD3D3);
-        BK4819_EnableTXLink();
-        SYSTEM_DelayMs(50);
-        BK4819_PlayDTMF(Code);
-        BK4819_ExitTxMute();
+	BK4819_EnableDTMF();
+	BK4819_EnterTxMute();
+	if (bLocalLoopback) {
+		BK4819_SetAF(BK4819_AF_BEEP);
+	} else {
+		BK4819_SetAF(BK4819_AF_MUTE);
+	}
+	BK4819_WriteRegister(BK4819_REG_70, 0xD3D3);
+	BK4819_EnableTXLink();
+	SYSTEM_DelayMs(50);
+	BK4819_PlayDTMF(Code);
+	BK4819_ExitTxMute();
 }
 
