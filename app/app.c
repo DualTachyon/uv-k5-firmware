@@ -882,9 +882,9 @@ void APP_TimeSlice10ms(void)
 			}
 		}
 	}
-	if (gFmRadioMode && g_2000038E) {
-		g_2000038E--;
-		if (g_2000038E == 0) {
+	if (gFmRadioMode && gFM_RestoreCountdown) {
+		gFM_RestoreCountdown--;
+		if (gFM_RestoreCountdown == 0) {
 			FM_Start();
 			GUI_SelectNextDisplay(DISPLAY_FM);
 		}

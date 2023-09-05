@@ -69,6 +69,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 {
 	FUNCTION_Type_t PreviousFunction;
 	bool bWasPowerSave;
+	uint16_t Countdown = 0;
 
 	PreviousFunction = gCurrentFunction;
 	bWasPowerSave = (PreviousFunction == FUNCTION_POWER_SAVE);
@@ -92,22 +93,17 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 			gVFO_RSSI_Level[1] = 0;
 		} else if (PreviousFunction == FUNCTION_RECEIVE) {
 			if (gFmRadioMode) {
-				g_2000038E = 500;
+				Countdown = 500;
 			}
 			if (gDTMF_CallState == DTMF_CALL_STATE_CALL_OUT || gDTMF_CallState == DTMF_CALL_STATE_RECEIVED) {
 				gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
 			}
 		}
-		gBatterySaveCountdown = 1000;
-		gSchedulePowerSave = false;
-		break;
+		return;
 
 	case FUNCTION_MONITOR:
 	case FUNCTION_INCOMING:
 	case FUNCTION_RECEIVE:
-		gBatterySaveCountdown = 1000;
-		gSchedulePowerSave = false;
-		g_2000038E = 0;
 		break;
 
 	case FUNCTION_POWER_SAVE:
@@ -119,7 +115,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		gBatterySaveCountdownExpired = false;
 		gUpdateStatus = true;
 		GUI_SelectNextDisplay(DISPLAY_MAIN);
-		break;
+		return;
 
 	case FUNCTION_TRANSMIT:
 		if (gFmRadioMode) {
@@ -137,9 +133,6 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 			gEnableSpeaker = true;
 			SYSTEM_DelayMs(60);
 			BK4819_ExitTxMute();
-			gBatterySaveCountdown = 1000;
-			gSchedulePowerSave = false;
-			g_2000038E = 0;
 			gAlarmToneCounter = 0;
 			break;
 		}
@@ -159,24 +152,18 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 			SYSTEM_DelayMs(2);
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			gAlarmToneCounter = 0;
-			g_2000038E = 0;
 			gEnableSpeaker = true;
-			gSchedulePowerSave = false;
-			gBatterySaveCountdown = 1000;
-			return;
+			break;
 		}
 		if (gCurrentVfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
 			BK4819_EnableScramble(gCurrentVfo->SCRAMBLING_TYPE - 1U);
-			gBatterySaveCountdown = 1000;
-			gSchedulePowerSave = false;
-			g_2000038E = 0;
-			return;
+		} else {
+			BK4819_DisableScramble();
 		}
-		BK4819_DisableScramble();
-		gBatterySaveCountdown = 1000;
-		gSchedulePowerSave = false;
-		g_2000038E = 0;
+		break;
 	}
+	gBatterySaveCountdown = 1000;
+	gSchedulePowerSave = false;
+	gFM_RestoreCountdown = Countdown;
 }
-
 

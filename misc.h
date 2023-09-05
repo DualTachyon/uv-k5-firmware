@@ -123,7 +123,6 @@ extern uint8_t gBatteryVoltageIndex;
 extern CssScanMode_t gCssScanMode;
 extern bool gUpdateRSSI;
 extern AlarmState_t gAlarmState;
-extern uint16_t g_2000038E;
 extern uint8_t g_20000393;
 extern bool gPttWasReleased;
 extern bool gPttWasPressed;

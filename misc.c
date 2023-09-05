@@ -72,7 +72,6 @@ uint8_t gBatteryVoltageIndex;
 CssScanMode_t gCssScanMode;
 bool gUpdateRSSI;
 AlarmState_t gAlarmState;
-uint16_t g_2000038E;
 uint8_t g_20000393;
 bool gPttWasReleased;
 bool gPttWasPressed;
