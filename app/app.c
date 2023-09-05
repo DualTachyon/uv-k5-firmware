@@ -1036,48 +1036,46 @@ void APP_TimeSlice500ms(void)
 		if (gCurrentFunction != FUNCTION_POWER_SAVE) {
 			gCurrentRSSI = BK4819_GetRSSI();
 			UI_UpdateRSSI(gCurrentRSSI);
-			if (gCurrentFunction == FUNCTION_TRANSMIT) {
-				goto LAB_00004b08;
-			}
-		}
-		if ((gFM_ScanState == FM_SCAN_OFF || gAskToSave) && gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF) {
-			if (gBacklightCountdown) {
-				gBacklightCountdown--;
-				if (gBacklightCountdown == 0) {
-					GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
-				}
-			}
-			if (gScreenToDisplay != DISPLAY_AIRCOPY && (gScreenToDisplay != DISPLAY_SCANNER || (gScanCssState >= SCAN_CSS_STATE_FOUND))) {
-				if (gEeprom.AUTO_KEYPAD_LOCK && gKeyLockCountdown && !gDTMF_InputMode) {
-					gKeyLockCountdown--;
-					if (gKeyLockCountdown == 0) {
-						gEeprom.KEY_LOCK = true;
+		} else {
+			if ((gFM_ScanState == FM_SCAN_OFF || gAskToSave) && gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF) {
+				if (gBacklightCountdown) {
+					gBacklightCountdown--;
+					if (gBacklightCountdown == 0) {
+						GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 					}
-					gUpdateStatus = true;
 				}
-				if (gVoltageMenuCountdown) {
-					gVoltageMenuCountdown--;
-					if (gVoltageMenuCountdown == 0) {
-						if (gInputBoxIndex || gDTMF_InputMode || gScreenToDisplay == DISPLAY_MENU) {
-							AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
+				if (gScreenToDisplay != DISPLAY_AIRCOPY && (gScreenToDisplay != DISPLAY_SCANNER || (gScanCssState >= SCAN_CSS_STATE_FOUND))) {
+					if (gEeprom.AUTO_KEYPAD_LOCK && gKeyLockCountdown && !gDTMF_InputMode) {
+						gKeyLockCountdown--;
+						if (gKeyLockCountdown == 0) {
+							gEeprom.KEY_LOCK = true;
 						}
-						if (gScreenToDisplay == DISPLAY_SCANNER) {
-							BK4819_StopScan();
-							RADIO_ConfigureChannel(0, 2);
-							RADIO_ConfigureChannel(1, 2);
-							RADIO_SetupRegisters(true);
-						}
-						gWasFKeyPressed = false;
 						gUpdateStatus = true;
-						gInputBoxIndex = 0;
-						gDTMF_InputMode = false;
-						gDTMF_InputIndex = 0;
-						gAskToSave = false;
-						gAskToDelete = false;
-						if (gFmRadioMode && gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
-							GUI_SelectNextDisplay(DISPLAY_FM);
-						} else {
-							GUI_SelectNextDisplay(DISPLAY_MAIN);
+					}
+					if (gVoltageMenuCountdown) {
+						gVoltageMenuCountdown--;
+						if (gVoltageMenuCountdown == 0) {
+							if (gInputBoxIndex || gDTMF_InputMode || gScreenToDisplay == DISPLAY_MENU) {
+								AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
+							}
+							if (gScreenToDisplay == DISPLAY_SCANNER) {
+								BK4819_StopScan();
+								RADIO_ConfigureChannel(0, 2);
+								RADIO_ConfigureChannel(1, 2);
+								RADIO_SetupRegisters(true);
+							}
+							gWasFKeyPressed = false;
+							gUpdateStatus = true;
+							gInputBoxIndex = 0;
+							gDTMF_InputMode = false;
+							gDTMF_InputIndex = 0;
+							gAskToSave = false;
+							gAskToDelete = false;
+							if (gFmRadioMode && gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
+								GUI_SelectNextDisplay(DISPLAY_FM);
+							} else {
+								GUI_SelectNextDisplay(DISPLAY_MAIN);
+							}
 						}
 					}
 				}
@@ -1085,7 +1083,6 @@ void APP_TimeSlice500ms(void)
 		}
 	}
 
-LAB_00004b08:
 	if (!gPttIsPressed && gFM_ResumeCountdown) {
 		gFM_ResumeCountdown--;
 		if (gFM_ResumeCountdown == 0) {
