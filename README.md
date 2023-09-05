@@ -1,13 +1,19 @@
 # Open reimplementation of the Quan Sheng UV K5 v2.1.27 firmware
 
-This currently works for me, but use at your own risk.
+This repository is a preservation project of the UV K5 v2.1.27 firmware.
+It is dedicated to understanding how the radio works and help developers making their own customisations/fixes/etc.
+It is by no means fully understood or has all variables/functions properly named, as this is best effort only.
+As a result, this repository will not include any customisations or improvements over the original firmware.
 
+You can find such firmware at the following repositories:
+
+* https://github.com/fagci/uv-k5-firmware-fagci-mod
 
 # Compiler
 
 arm-none-eabi GCC version 10.3.1 is recommended, which is the current version on Ubuntu 22.04.03 LTS.
 Other versions may generate a flash file that is too big.
-You can get a correct version from: https://developer.arm.com/downloads/-/gnu-rm
+You can get an appropriate version from: https://developer.arm.com/downloads/-/gnu-rm
 
 # Building
 
@@ -16,6 +22,19 @@ To build the firmware, you need to fetch the submodules and then run make:
 git submodule update --init --recursive --depth=1
 make
 ```
+
+# Credits
+
+Many thanks to various people on Telegram for putting up with me during this effort and helping:
+
+* [Mikhail](https://github.com/fagci/)
+* [Andrej](https://github.com/Tunas1337)
+* @wagner
+* @Lohtse Shar
+* [@Matoz](https://github.com/spm81)
+* @Davide
+* @Ismo OH2FTG
+* and others I forget
 
 # License
 
