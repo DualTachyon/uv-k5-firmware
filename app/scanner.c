@@ -41,6 +41,7 @@ uint8_t gScanProgressIndicator;
 uint8_t gScanHitCount;
 bool gScanUseCssResult;
 uint8_t gScanState;
+bool bScanKeepFrequency;
 
 static void SCANNER_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
@@ -341,7 +342,7 @@ void SCANNER_Stop(void)
 	Previous = gRestoreMrChannel;
 	gScanState = SCAN_OFF;
 
-	if (!g_20000413) {
+	if (!bScanKeepFrequency) {
 		if (IS_MR_CHANNEL(gNextMrChannel)) {
 			gEeprom.MrChannel[gEeprom.RX_CHANNEL] = gRestoreMrChannel;
 			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = Previous;

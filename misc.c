@@ -107,7 +107,6 @@ bool gFlagEndTransmission;
 uint16_t gLowBatteryCountdown;
 uint8_t gNextMrChannel;
 ReceptionMode_t gRxReceptionMode;
-bool g_20000413;
 uint8_t gRestoreMrChannel;
 uint8_t gCurrentScanList;
 uint8_t gPreviousMrChannel;

@@ -158,7 +158,6 @@ extern bool gFlagEndTransmission;
 extern uint16_t gLowBatteryCountdown;
 extern uint8_t gNextMrChannel;
 extern ReceptionMode_t gRxReceptionMode;
-extern bool g_20000413;
 extern uint8_t gRestoreMrChannel;
 extern uint8_t gCurrentScanList;
 extern uint8_t gPreviousMrChannel;

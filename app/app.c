@@ -306,7 +306,7 @@ void APP_StartListening(FUNCTION_Type_t Function)
 				gScheduleScanListen = false;
 				break;
 			}
-			g_20000413 = true;
+			bScanKeepFrequency = true;
 		}
 		if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE) && gIsNoaaMode) {
 			gRxVfo->CHANNEL_SAVE = gNoaaChannel + NOAA_CHANNEL_FIRST;
@@ -371,7 +371,7 @@ static void FREQ_NextChannel(void)
 	RADIO_SetupRegisters(true);
 	gUpdateDisplay = true;
 	ScanPauseDelayIn10msec = 10;
-	g_20000413 = false;
+	bScanKeepFrequency = false;
 }
 
 static void MR_NextChannel(void)
@@ -422,7 +422,7 @@ Skip:
 		gUpdateDisplay = true;
 	}
 	ScanPauseDelayIn10msec = 20;
-	g_20000413 = false;
+	bScanKeepFrequency = false;
 	if (bEnabled) {
 		gCurrentScanList++;
 		if (gCurrentScanList >= 2) {
@@ -1208,7 +1208,7 @@ void CHANNEL_Next(bool bFlag, int8_t Direction)
 	gScheduleScanListen = false;
 	gRxReceptionMode = RX_MODE_NONE;
 	gScanPauseMode = false;
-	g_20000413 = false;
+	bScanKeepFrequency = false;
 }
 
 static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
