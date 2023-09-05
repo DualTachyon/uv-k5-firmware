@@ -1132,7 +1132,7 @@ void MENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		break;
 	}
 	if (gScreenToDisplay == DISPLAY_MENU && gMenuCursor == MENU_VOL) {
-		g_20000393 = 0x20;
+		gVoltageMenuCountdown = 0x20;
 	}
 }
 

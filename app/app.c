@@ -250,7 +250,7 @@ Skip:
 	case 2:
 		if (gEeprom.TAIL_NOTE_ELIMINATION) {
 			GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-			g_20000342 = 20;
+			gTailNoteEliminationCountdown = 20;
 			gSystickFlag10 = false;
 			gEnableSpeaker = false;
 			gEndOfRxDetectedMaybe = true;
@@ -552,7 +552,7 @@ void APP_EndTransmission(void)
 static void APP_HandleVox(void)
 {
 	if (!gSetting_KILLED) {
-		if (g_200003B6 == 0) {
+		if (gVoxResumeCountdown == 0) {
 			if (gVoxPauseCountdown) {
 				return;
 			}
@@ -832,8 +832,8 @@ void APP_TimeSlice10ms(void)
 	if (gFlashLightState == FLASHLIGHT_BLINK && (gFlashLightBlinkCounter & 15U) == 0) {
 		GPIO_FlipBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
 	}
-	if (g_200003B6) {
-		g_200003B6--;
+	if (gVoxResumeCountdown) {
+		gVoxResumeCountdown--;
 	}
 	if (gVoxPauseCountdown) {
 		gVoxPauseCountdown--;
@@ -1055,9 +1055,9 @@ void APP_TimeSlice500ms(void)
 					}
 					gUpdateStatus = true;
 				}
-				if (g_20000393) {
-					g_20000393--;
-					if (g_20000393 == 0) {
+				if (gVoltageMenuCountdown) {
+					gVoltageMenuCountdown--;
+					if (gVoltageMenuCountdown == 0) {
 						if (gInputBoxIndex || gDTMF_InputMode || gScreenToDisplay == DISPLAY_MENU) {
 							AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
 						}
@@ -1181,7 +1181,7 @@ static void ALARM_Off(void)
 		RADIO_SendEndOfTransmission();
 		RADIO_EnableCxCSS();
 	}
-	g_200003B6 = 0x50;
+	gVoxResumeCountdown = 0x50;
 	SYSTEM_DelayMs(5);
 	RADIO_SetupRegisters(true);
 	gRequestDisplayScreen = DISPLAY_MAIN;
@@ -1248,7 +1248,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		}
 	} else {
 		if (Key != KEY_PTT) {
-			g_20000393 = 0x10;
+			gVoltageMenuCountdown = 0x10;
 		}
 		BACKLIGHT_TurnOn();
 		if (gDTMF_DecodeRing) {

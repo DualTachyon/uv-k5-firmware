@@ -132,7 +132,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 	SYSTEM_DelayMs(20);
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 
-	g_200003B6 = 80;
+	gVoxResumeCountdown = 80;
 
 	SYSTEM_DelayMs(5);
 	BK4819_TurnsOffTones_TurnsOnRX();
@@ -200,7 +200,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 			BK1080_Mute(true);
 		}
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-		g_200003B6 = 2000;
+		gVoxResumeCountdown = 2000;
 		SYSTEM_DelayMs(5);
 		AUDIO_PlayVoice(VoiceID);
 		if (gVoiceWriteIndex == 1) {
@@ -223,7 +223,7 @@ void AUDIO_PlaySingleVoice(bool bFlag)
 			}
 			gVoiceWriteIndex = 0;
 			gVoiceReadIndex = 0;
-			g_200003B6 = 80;
+			gVoxResumeCountdown = 80;
 			return;
 		}
 		gVoiceReadIndex = 1;
@@ -318,7 +318,7 @@ void AUDIO_PlayQueuedVoice(void)
 			AUDIO_PlayVoice(VoiceID);
 			gCountdownToPlayNextVoice = Delay;
 			gFlagPlayQueuedVoice = false;
-			g_200003B6 = 2000;
+			gVoxResumeCountdown = 2000;
 			return;
 		}
 	}
@@ -336,7 +336,7 @@ void AUDIO_PlayQueuedVoice(void)
 	if (!gEnableSpeaker) {
 		GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 	}
-	g_200003B6 = 80;
+	gVoxResumeCountdown = 80;
 	gVoiceWriteIndex = 0;
 	gVoiceReadIndex = 0;
 }
