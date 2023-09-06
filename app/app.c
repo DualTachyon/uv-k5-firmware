@@ -354,7 +354,7 @@ void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step)
 	uint32_t Frequency;
 
 	Frequency = pInfo->ConfigRX.Frequency + (Step * pInfo->StepFrequency);
-	if (Frequency >= gUpperLimitFrequencyBandTable[pInfo->Band]) {
+	if (Frequency > gUpperLimitFrequencyBandTable[pInfo->Band]) {
 		pInfo->ConfigRX.Frequency = gLowerLimitFrequencyBandTable[pInfo->Band];
 	} else if (Frequency < gLowerLimitFrequencyBandTable[pInfo->Band]) {
 		pInfo->ConfigRX.Frequency = FREQUENCY_FloorToStep(gUpperLimitFrequencyBandTable[pInfo->Band], pInfo->StepFrequency, gLowerLimitFrequencyBandTable[pInfo->Band]);
