@@ -191,7 +191,7 @@ extern volatile bool gSchedulePowerSave;
 extern volatile bool gBatterySaveCountdownExpired;
 extern volatile bool gScheduleDualWatch;
 extern volatile bool gScheduleNOAA;
-extern volatile bool gSystickFlag10;
+extern volatile bool gFlagTteComplete;
 extern volatile bool gScheduleFM;
 
 extern uint16_t gCurrentRSSI;

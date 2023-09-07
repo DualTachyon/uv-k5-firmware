@@ -136,18 +136,22 @@ static void APP_HandleIncoming(void)
 
 static void APP_HandleReceive(void)
 {
-	uint8_t Value;
+	uint8_t Mode;
 
-	Value = 0;
+#define END_OF_RX_MODE_SKIP 0
+#define END_OF_RX_MODE_END  1
+#define END_OF_RX_MODE_TTE  2
 
-	if (gSystickFlag10) {
-		Value = 1;
+	Mode = END_OF_RX_MODE_SKIP;
+
+	if (gFlagTteComplete) {
+		Mode = END_OF_RX_MODE_END;
 		goto Skip;
 	} else if (gScanState != SCAN_OFF && IS_FREQ_CHANNEL(gNextMrChannel)) {
 		if (g_SquelchLost) {
 			return;
 		}
-		Value = 1;
+		Mode = END_OF_RX_MODE_END;
 		goto Skip;
 	}
 	switch (gCopyOfCodeType) {
@@ -155,7 +159,7 @@ static void APP_HandleReceive(void)
 		if (gFoundCTCSS && gFoundCTCSSCountdown == 0) {
 			gFoundCTCSS = false;
 			gFoundCDCSS = false;
-			Value = 1;
+			Mode = END_OF_RX_MODE_END;
 			goto Skip;
 		}
 		break;
@@ -164,7 +168,7 @@ static void APP_HandleReceive(void)
 		if (gFoundCDCSS && gFoundCDCSSCountdown == 0) {
 			gFoundCTCSS = false;
 			gFoundCDCSS = false;
-			Value = 1;
+			Mode = END_OF_RX_MODE_END;
 			goto Skip;
 		}
 		break;
@@ -178,7 +182,7 @@ static void APP_HandleReceive(void)
 			case CODE_TYPE_OFF:
 				if (gEeprom.SQUELCH_LEVEL) {
 					if (g_CxCSS_TAIL_Found) {
-						Value = 2;
+						Mode = END_OF_RX_MODE_TTE;
 						g_CxCSS_TAIL_Found = false;
 					}
 				}
@@ -192,7 +196,7 @@ static void APP_HandleReceive(void)
 					gFoundCTCSSCountdown = 100;
 				}
 				if (g_CxCSS_TAIL_Found) {
-					Value = 2;
+					Mode = END_OF_RX_MODE_TTE;
 					g_CxCSS_TAIL_Found = false;
 				}
 				break;
@@ -207,7 +211,7 @@ static void APP_HandleReceive(void)
 				}
 				if (g_CxCSS_TAIL_Found) {
 					if (BK4819_GetCTCType() == 1) {
-						Value = 2;
+						Mode = END_OF_RX_MODE_TTE;
 					}
 					g_CxCSS_TAIL_Found = false;
 				}
@@ -218,18 +222,18 @@ static void APP_HandleReceive(void)
 			}
 		}
 	} else {
-		Value = 1;
+		Mode = END_OF_RX_MODE_END;
 	}
 
-	if (!gEndOfRxDetectedMaybe && !Value && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL) && BK4819_GetCTCType() == 1) {
-		Value = 2;
+	if (!gEndOfRxDetectedMaybe && Mode == END_OF_RX_MODE_SKIP && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL) && BK4819_GetCTCType() == 1) {
+		Mode = END_OF_RX_MODE_TTE;
 	} else {
 		gNextTimeslice40ms = false;
 	}
 
 Skip:
-	switch (Value) {
-	case 1:
+	switch (Mode) {
+	case END_OF_RX_MODE_END:
 		RADIO_SetupRegisters(true);
 		if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
 			gSystickCountdown2 = 300;
@@ -247,11 +251,11 @@ Skip:
 			}
 		}
 		break;
-	case 2:
+	case END_OF_RX_MODE_TTE:
 		if (gEeprom.TAIL_NOTE_ELIMINATION) {
 			GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 			gTailNoteEliminationCountdown = 20;
-			gSystickFlag10 = false;
+			gFlagTteComplete = false;
 			gEnableSpeaker = false;
 			gEndOfRxDetectedMaybe = true;
 		}

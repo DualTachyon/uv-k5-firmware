@@ -139,7 +139,7 @@ volatile bool gSchedulePowerSave;
 volatile bool gBatterySaveCountdownExpired;
 volatile bool gScheduleDualWatch = true;
 volatile bool gScheduleNOAA = true;
-volatile bool gSystickFlag10;
+volatile bool gFlagTteComplete;
 volatile bool gScheduleFM;
 
 uint16_t gCurrentRSSI;

@@ -56,7 +56,7 @@ void FUNCTION_Init(void)
 	g_VOX_Lost = false;
 	g_SquelchLost = false;
 	gTailNoteEliminationCountdown = 0;
-	gSystickFlag10 = false;
+	gFlagTteComplete = false;
 	gFoundCTCSS = false;
 	gFoundCDCSS = false;
 	gFoundCTCSSCountdown = 0;

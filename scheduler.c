@@ -84,7 +84,7 @@ void SystickHandler(void)
 		}
 	}
 
-	DECREMENT_AND_TRIGGER(gTailNoteEliminationCountdown, gSystickFlag10);
+	DECREMENT_AND_TRIGGER(gTailNoteEliminationCountdown, gFlagTteComplete);
 
 	DECREMENT_AND_TRIGGER(gCountdownToPlayNextVoice, gFlagPlayQueuedVoice);
 
