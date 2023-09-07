@@ -113,7 +113,7 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			}
 			gInputBoxIndex = 0;
 			Channel = (gInputBox[0] * 10) + gInputBox[1];
-			if ((Channel - 1) < 10) {
+			if (Channel >= 1 && Channel <= 10) {
 				Channel += NOAA_CHANNEL_FIRST;
 				gAnotherVoiceID = (VOICE_ID_t)Key;
 				gEeprom.NoaaChannel[Vfo] = Channel;

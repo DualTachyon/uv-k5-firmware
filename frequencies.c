@@ -72,29 +72,28 @@ const uint16_t StepFrequencyTable[6] = {
 
 FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency)
 {
-	if ((Frequency - 5000000) < 2600001) {
+	if (Frequency >=  5000000 && Frequency <=  7600000) {
 		return BAND1_50MHz;
 	}
-	if ((Frequency - 10800000) < 2799991) {
+	if (Frequency >= 10800000 && Frequency <= 13599990) {
 		return BAND2_108MHz;
 	}
-	if ((Frequency - 13600000) < 3799991) {
+	if (Frequency >= 13600000 && Frequency <= 17399990) {
 		return BAND3_136MHz;
 	}
-	if ((Frequency - 17400000) < 17599991) {
+	if (Frequency >= 17400000 && Frequency <= 34999990) {
 		return BAND4_174MHz;
 	}
-	if ((Frequency - 35000000) < 4999991) {
+	if (Frequency >= 35000000 && Frequency <= 39999990) {
 		return BAND5_350MHz;
 	}
-	if ((Frequency - 40000000) < 6999991) {
+	if (Frequency >= 40000000 && Frequency <= 46999990) {
 		return BAND6_400MHz;
 	}
-	if ((Frequency - 47000000) < 13000001) {
+	if (Frequency >= 47000000 && Frequency <= 60000000) {
 		return BAND7_470MHz;
 	}
 
-	// TODO: Double check the assembly
 	return BAND6_400MHz;
 }
 
