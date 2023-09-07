@@ -129,7 +129,7 @@ int FREQUENCY_Check(VFO_Info_t *pInfo)
 	if (pInfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST) {
 		return -1;
 	}
-	Frequency = pInfo->pReverse->Frequency;
+	Frequency = pInfo->pTX->Frequency;
 	switch (gSetting_F_LOCK) {
 	case F_LOCK_FCC:
 		if (Frequency >= 14400000 && Frequency <= 14799990) {

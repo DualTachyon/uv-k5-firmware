@@ -102,7 +102,7 @@ static void APP_HandleIncoming(void)
 	}
 
 	bFlag = (gScanState == SCAN_OFF && gCopyOfCodeType == CODE_TYPE_OFF);
-	if (gRxVfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gSystickCountdown2) {
+	if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE) && gSystickCountdown2) {
 		bFlag = true;
 		gSystickCountdown2 = 0;
 	}
@@ -314,8 +314,8 @@ void APP_StartListening(FUNCTION_Type_t Function)
 		}
 		if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE) && gIsNoaaMode) {
 			gRxVfo->CHANNEL_SAVE = gNoaaChannel + NOAA_CHANNEL_FIRST;
-			gRxVfo->pCurrent->Frequency = NoaaFrequencyTable[gNoaaChannel];
-			gRxVfo->pReverse->Frequency = NoaaFrequencyTable[gNoaaChannel];
+			gRxVfo->pRX->Frequency = NoaaFrequencyTable[gNoaaChannel];
+			gRxVfo->pTX->Frequency = NoaaFrequencyTable[gNoaaChannel];
 			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gRxVfo->CHANNEL_SAVE;
 			gNOAA_Countdown = 500;
 			gScheduleNOAA = false;
@@ -435,7 +435,7 @@ Skip:
 	}
 }
 
-static void NOAA_IncreaseChannel(void)
+static void NOAA_NextChannel(void)
 {
 	gNoaaChannel++;
 	if (gNoaaChannel > 9) {
@@ -453,7 +453,7 @@ static void DUALWATCH_Alternate(void)
 		}
 		gRxVfo = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
 		if (gEeprom.VfoInfo[0].CHANNEL_SAVE >= NOAA_CHANNEL_FIRST) {
-			NOAA_IncreaseChannel();
+			NOAA_NextChannel();
 		}
 	} else {
 		gEeprom.RX_CHANNEL = gEeprom.RX_CHANNEL == 0;
@@ -652,7 +652,7 @@ void APP_Update(void)
 	}
 
 	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode && gScheduleNOAA && gVoiceWriteIndex == 0) {
-		NOAA_IncreaseChannel();
+		NOAA_NextChannel();
 		RADIO_SetupRegisters(false);
 		gScheduleNOAA = false;
 		gNOAA_Countdown = 7;
@@ -1188,19 +1188,19 @@ static void ALARM_Off(void)
 	gRequestDisplayScreen = DISPLAY_MAIN;
 }
 
-void CHANNEL_Next(bool bFlag, int8_t Direction)
+void CHANNEL_Next(bool bBackup, int8_t Direction)
 {
 	RADIO_SelectVfos();
 	gNextMrChannel = gRxVfo->CHANNEL_SAVE;
 	gCurrentScanList = 0;
 	gScanState = Direction;
 	if (IS_MR_CHANNEL(gNextMrChannel)) {
-		if (bFlag) {
+		if (bBackup) {
 			gRestoreMrChannel = gNextMrChannel;
 		}
 		MR_NextChannel();
 	} else {
-		if (bFlag) {
+		if (bBackup) {
 			gRestoreFrequency = gRxVfo->ConfigRX.Frequency;
 		}
 		FREQ_NextChannel();

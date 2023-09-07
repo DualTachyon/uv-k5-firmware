@@ -299,7 +299,7 @@ void SCANNER_Start(void)
 	BackupStep = gRxVfo->STEP_SETTING;
 	BackupFrequency = gRxVfo->StepFrequency;
 
-	RADIO_InitInfo(gRxVfo, gRxVfo->CHANNEL_SAVE, gRxVfo->Band, gRxVfo->pCurrent->Frequency);
+	RADIO_InitInfo(gRxVfo, gRxVfo->CHANNEL_SAVE, gRxVfo->Band, gRxVfo->pRX->Frequency);
 
 	gRxVfo->STEP_SETTING = BackupStep;
 	gRxVfo->StepFrequency = BackupFrequency;
@@ -309,7 +309,7 @@ void SCANNER_Start(void)
 	gIsNoaaMode = false;
 	if (gScanSingleFrequency) {
 		gScanCssState = SCAN_CSS_STATE_SCANNING;
-		gScanFrequency = gRxVfo->pCurrent->Frequency;
+		gScanFrequency = gRxVfo->pRX->Frequency;
 		gStepSetting = gRxVfo->STEP_SETTING;
 		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
 		BK4819_SetScanFrequency(gScanFrequency);

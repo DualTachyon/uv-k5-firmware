@@ -41,7 +41,7 @@ void FUNCTION_Init(void)
 			if (gRxVfo->IsAM) {
 				gCopyOfCodeType = CODE_TYPE_OFF;
 			} else {
-				gCopyOfCodeType = gRxVfo->pCurrent->CodeType;
+				gCopyOfCodeType = gRxVfo->pRX->CodeType;
 			}
 		}
 	} else {

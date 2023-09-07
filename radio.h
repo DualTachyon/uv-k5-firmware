@@ -80,8 +80,8 @@ typedef struct {
 typedef struct VFO_Info_t {
 	FREQ_Config_t ConfigRX;
 	FREQ_Config_t ConfigTX;
-	FREQ_Config_t *pCurrent;
-	FREQ_Config_t *pReverse;
+	FREQ_Config_t *pRX;
+	FREQ_Config_t *pTX;
 	uint32_t FREQUENCY_OF_DEVIATION;
 	uint16_t StepFrequency;
 	uint8_t CHANNEL_SAVE;

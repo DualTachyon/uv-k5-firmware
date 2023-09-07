@@ -230,12 +230,12 @@ void UI_DisplayMain(void)
 								Channel = gEeprom.TX_CHANNEL;
 							}
 							if (Channel == i) {
-								NUMBER_ToDigits(gEeprom.VfoInfo[i].pReverse->Frequency, String);
+								NUMBER_ToDigits(gEeprom.VfoInfo[i].pTX->Frequency, String);
 							} else {
-								NUMBER_ToDigits(gEeprom.VfoInfo[i].pCurrent->Frequency, String);
+								NUMBER_ToDigits(gEeprom.VfoInfo[i].pRX->Frequency, String);
 							}
 						} else {
-							NUMBER_ToDigits(gEeprom.VfoInfo[i].pCurrent->Frequency, String);
+							NUMBER_ToDigits(gEeprom.VfoInfo[i].pRX->Frequency, String);
 						}
 						UI_DisplayFrequency(String, 31, i * 4, false, false);
 						if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
@@ -270,12 +270,12 @@ void UI_DisplayMain(void)
 							Channel = gEeprom.TX_CHANNEL;
 						}
 						if (Channel == i) {
-							NUMBER_ToDigits(gEeprom.VfoInfo[i].pReverse->Frequency, String);
+							NUMBER_ToDigits(gEeprom.VfoInfo[i].pTX->Frequency, String);
 						} else {
-							NUMBER_ToDigits(gEeprom.VfoInfo[i].pCurrent->Frequency, String);
+							NUMBER_ToDigits(gEeprom.VfoInfo[i].pRX->Frequency, String);
 						}
 					} else {
-						NUMBER_ToDigits(gEeprom.VfoInfo[i].pCurrent->Frequency, String);
+						NUMBER_ToDigits(gEeprom.VfoInfo[i].pRX->Frequency, String);
 					}
 					UI_DisplayFrequency(String, 31, i * 4, false, false);
 					if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
@@ -337,9 +337,9 @@ void UI_DisplayMain(void)
 			const FREQ_Config_t *pConfig;
 
 			if (SomeValue == 1) {
-				pConfig = gEeprom.VfoInfo[i].pReverse;
+				pConfig = gEeprom.VfoInfo[i].pTX;
 			} else {
-				pConfig = gEeprom.VfoInfo[i].pCurrent;
+				pConfig = gEeprom.VfoInfo[i].pRX;
 			}
 			switch (pConfig->CodeType) {
 			case CODE_TYPE_CONTINUOUS_TONE:
