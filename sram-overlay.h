@@ -25,7 +25,7 @@ extern uint32_t overlay_FLASH_MainClock __attribute__((section(".srambss")));
 extern uint32_t overlay_FLASH_ClockMultiplier __attribute__((section(".srambss")));
 extern uint32_t overlay_0x20000478 __attribute__((section(".srambss")));
 
-bool overlay_FLASH_RebootToBootloader(void) __attribute__((section(".sramtext")));
+void overlay_FLASH_RebootToBootloader(void) __attribute__((noreturn)) __attribute__((section(".sramtext")));
 bool overlay_FLASH_IsBusy(void) __attribute__((section(".sramtext")));
 bool overlay_FLASH_IsInitComplete(void) __attribute__((section(".sramtext")));
 void overlay_FLASH_Start(void) __attribute__((section(".sramtext")));

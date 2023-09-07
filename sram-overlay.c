@@ -25,14 +25,12 @@ uint32_t overlay_FLASH_MainClock;
 uint32_t overlay_FLASH_ClockMultiplier;
 uint32_t overlay_0x20000478; // Nothing is using this???
 
-bool overlay_FLASH_RebootToBootloader(void)
+void overlay_FLASH_RebootToBootloader(void)
 {
 	overlay_FLASH_MaskUnlock();
 	overlay_FLASH_SetMaskSel(FLASH_MASK_SELECTION_NONE);
 	overlay_FLASH_MaskLock();
 	overlay_SystemReset();
-
-	return (FLASH_ST & FLASH_ST_BUSY_MASK) != FLASH_ST_BUSY_BITS_READY;
 }
 
 bool overlay_FLASH_IsBusy(void)
