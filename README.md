@@ -29,6 +29,7 @@ Many thanks to various people on Telegram for putting up with me during this eff
 
 * [Mikhail](https://github.com/fagci/)
 * [Andrej](https://github.com/Tunas1337)
+* [Manuel](https://github.com/manujedi)
 * @wagner
 * @Lohtse Shar
 * [@Matoz](https://github.com/spm81)
