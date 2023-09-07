@@ -65,7 +65,7 @@ void AIRCOPY_StorePacket(void)
 
 	gFSKWriteIndex = 0;
 	gUpdateDisplay = true;
-	Status = BK4819_GetRegister(BK4819_REG_0B);
+	Status = BK4819_ReadRegister(BK4819_REG_0B);
 	BK4819_PrepareFSKReceive();
 	// Doc says bit 4 should be 1 = CRC OK, 0 = CRC FAIL, but original firmware checks for FAIL.
 	if ((Status & 0x0010U) == 0 && g_FSK_Buffer[0] == 0xABCD && g_FSK_Buffer[35] == 0xDCBA) {

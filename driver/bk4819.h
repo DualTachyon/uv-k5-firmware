@@ -51,7 +51,7 @@ typedef enum BK4819_CssScanResult_t BK4819_CssScanResult_t;
 extern bool gRxIdleMode;
 
 void BK4819_Init(void);
-uint16_t BK4819_GetRegister(BK4819_REGISTER_t Register);
+uint16_t BK4819_ReadRegister(BK4819_REGISTER_t Register);
 void BK4819_WriteRegister(BK4819_REGISTER_t Register, uint16_t Data);
 void BK4819_WriteU8(uint8_t Data);
 void BK4819_WriteU16(uint16_t Data);

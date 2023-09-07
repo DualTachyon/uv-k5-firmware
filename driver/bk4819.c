@@ -91,7 +91,7 @@ static uint16_t BK4819_ReadU16(void)
 	return Value;
 }
 
-uint16_t BK4819_GetRegister(BK4819_REGISTER_t Register)
+uint16_t BK4819_ReadRegister(BK4819_REGISTER_t Register)
 {
 	uint16_t Value;
 
@@ -278,7 +278,7 @@ void BK4819_EnableVox(uint16_t VoxEnableThreshold, uint16_t VoxDisableThreshold)
 	//else if(voxamp<VoxDisableThreshold) (After Delay) VOX = 0;
 	uint16_t REG_31_Value;
 
-	REG_31_Value = BK4819_GetRegister(BK4819_REG_31);
+	REG_31_Value = BK4819_ReadRegister(BK4819_REG_31);
 	// 0xA000 is undocumented?
 	BK4819_WriteRegister(BK4819_REG_46, 0xA000 | (VoxEnableThreshold & 0x07FF));
 	// 0x1800 is undocumented?
@@ -392,7 +392,7 @@ void BK4819_DisableScramble(void)
 {
 	uint16_t Value;
 
-	Value = BK4819_GetRegister(BK4819_REG_31);
+	Value = BK4819_ReadRegister(BK4819_REG_31);
 	BK4819_WriteRegister(BK4819_REG_31, Value & 0xFFFD);
 }
 
@@ -400,7 +400,7 @@ void BK4819_EnableScramble(uint8_t Type)
 {
 	uint16_t Value;
 
-	Value = BK4819_GetRegister(BK4819_REG_31);
+	Value = BK4819_ReadRegister(BK4819_REG_31);
 	BK4819_WriteRegister(BK4819_REG_31, Value | 2);
 	BK4819_WriteRegister(BK4819_REG_71, (Type * 0x0408) + 0x68DC);
 }
@@ -409,7 +409,7 @@ void BK4819_DisableVox(void)
 {
 	uint16_t Value;
 
-	Value = BK4819_GetRegister(BK4819_REG_31);
+	Value = BK4819_ReadRegister(BK4819_REG_31);
 	BK4819_WriteRegister(BK4819_REG_31, Value & 0xFFFB);
 }
 
@@ -738,7 +738,7 @@ void BK4819_EnableCTCSS(void)
 
 uint16_t BK4819_GetRSSI(void)
 {
-	return BK4819_GetRegister(BK4819_REG_67) & 0x01FF;
+	return BK4819_ReadRegister(BK4819_REG_67) & 0x01FF;
 }
 
 bool BK4819_GetFrequencyScanResult(uint32_t *pFrequency)
@@ -746,10 +746,10 @@ bool BK4819_GetFrequencyScanResult(uint32_t *pFrequency)
 	uint16_t High, Low;
 	bool Finished;
 
-	High = BK4819_GetRegister(BK4819_REG_0D);
+	High = BK4819_ReadRegister(BK4819_REG_0D);
 	Finished = (High & 0x8000) == 0;
 	if (Finished) {
-		Low = BK4819_GetRegister(BK4819_REG_0E);
+		Low = BK4819_ReadRegister(BK4819_REG_0E);
 		*pFrequency = (uint32_t)((High & 0x7FF) << 16) | Low;
 	}
 
@@ -760,14 +760,14 @@ BK4819_CssScanResult_t BK4819_GetCxCSSScanResult(uint32_t *pCdcssFreq, uint16_t 
 {
 	uint16_t High, Low;
 
-	High = BK4819_GetRegister(BK4819_REG_69);
+	High = BK4819_ReadRegister(BK4819_REG_69);
 	if ((High & 0x8000) == 0) {
-		Low = BK4819_GetRegister(BK4819_REG_6A);
+		Low = BK4819_ReadRegister(BK4819_REG_6A);
 		*pCdcssFreq = ((High & 0xFFF) << 12) | (Low & 0xFFF);
 		return BK4819_CSS_RESULT_CDCSS;
 	}
 
-	Low = BK4819_GetRegister(BK4819_REG_68);
+	Low = BK4819_ReadRegister(BK4819_REG_68);
 	if ((Low & 0x8000) == 0) {
 		*pCtcssFreq = (Low & 0x1FFF) * 4843 / 10000;
 		return BK4819_CSS_RESULT_CTCSS;
@@ -815,17 +815,17 @@ void BK4819_StopScan(void)
 
 uint8_t BK4819_GetDTMF_5TONE_Code(void)
 {
-	return (BK4819_GetRegister(BK4819_REG_0B) >> 8) & 0x0F;
+	return (BK4819_ReadRegister(BK4819_REG_0B) >> 8) & 0x0F;
 }
 
 uint8_t BK4819_GetCDCSSCodeType(void)
 {
-	return (BK4819_GetRegister(BK4819_REG_0C) >> 14) & 3;
+	return (BK4819_ReadRegister(BK4819_REG_0C) >> 14) & 3;
 }
 
 uint8_t BK4819_GetCTCType(void)
 {
-	return (BK4819_GetRegister(BK4819_REG_0C) >> 10) & 3;
+	return (BK4819_ReadRegister(BK4819_REG_0C) >> 10) & 3;
 }
 
 void BK4819_SendFSKData(uint16_t *pData)
@@ -850,7 +850,7 @@ void BK4819_SendFSKData(uint16_t *pData)
 	BK4819_WriteRegister(BK4819_REG_59, 0x2868);
 
 	while (Timeout) {
-		if (BK4819_GetRegister(BK4819_REG_0C) & 1U) {
+		if (BK4819_ReadRegister(BK4819_REG_0C) & 1U) {
 			break;
 		}
 		SYSTEM_DelayMs(5);
@@ -937,7 +937,7 @@ void BK4819_Enable_AfDac_DiscMode_TxDsp(void)
 
 void BK4819_GetVoxAmp(uint16_t *pResult)
 {
-	*pResult = BK4819_GetRegister(BK4819_REG_64) & 0x7FFF;
+	*pResult = BK4819_ReadRegister(BK4819_REG_64) & 0x7FFF;
 }
 
 void BK4819_SetScrambleFrequencyControlWord(uint32_t Frequency)

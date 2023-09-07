@@ -494,7 +494,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
 
 	while (1) {
-		Status = BK4819_GetRegister(BK4819_REG_0C);
+		Status = BK4819_ReadRegister(BK4819_REG_0C);
 		if ((Status & 1U) == 0) { // INTERRUPT REQUEST
 			break;
 		}

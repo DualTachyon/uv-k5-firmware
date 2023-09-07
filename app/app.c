@@ -473,11 +473,11 @@ void APP_CheckRadioInterrupts(void)
 		return;
 	}
 
-	while (BK4819_GetRegister(BK4819_REG_0C) & 1U) {
+	while (BK4819_ReadRegister(BK4819_REG_0C) & 1U) {
 		uint16_t Mask;
 
 		BK4819_WriteRegister(BK4819_REG_02, 0);
-		Mask = BK4819_GetRegister(BK4819_REG_02);
+		Mask = BK4819_ReadRegister(BK4819_REG_02);
 		if (Mask & BK4819_REG_02_DTMF_5TONE_FOUND) {
 			gDTMF_RequestPending = true;
 			gDTMF_RecvTimeout = 5;
@@ -539,7 +539,7 @@ void APP_CheckRadioInterrupts(void)
 			uint8_t i;
 
 			for (i = 0; i < 4; i++) {
-				g_FSK_Buffer[gFSKWriteIndex++] = BK4819_GetRegister(BK4819_REG_5F);
+				g_FSK_Buffer[gFSKWriteIndex++] = BK4819_ReadRegister(BK4819_REG_5F);
 			}
 			AIRCOPY_StorePacket();
 		}

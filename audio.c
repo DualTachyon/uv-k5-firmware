@@ -79,7 +79,7 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 		return;
 	}
 
-	ToneConfig = BK4819_GetRegister(BK4819_REG_71);
+	ToneConfig = BK4819_ReadRegister(BK4819_REG_71);
 
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 
