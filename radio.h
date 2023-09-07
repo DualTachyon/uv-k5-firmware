@@ -113,9 +113,9 @@ extern VFO_Info_t *gTxVfo;
 extern VFO_Info_t *gRxVfo;
 extern VFO_Info_t *gCurrentVfo;
 
-extern DCS_CodeType_t gCodeType;
-extern DCS_CodeType_t gCopyOfCodeType;
-extern uint8_t gCode;
+extern DCS_CodeType_t gCurrentCodeType;
+extern DCS_CodeType_t gSelectedCodeType;
+extern uint8_t gSelectedCode;
 
 extern STEP_Setting_t gStepSetting;
 

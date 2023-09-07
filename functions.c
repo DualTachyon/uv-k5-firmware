@@ -36,16 +36,16 @@ FUNCTION_Type_t gCurrentFunction;
 void FUNCTION_Init(void)
 {
 	if (IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
-		gCopyOfCodeType = gCodeType;
+		gCurrentCodeType = gSelectedCodeType;
 		if (gCssScanMode == CSS_SCAN_MODE_OFF) {
 			if (gRxVfo->IsAM) {
-				gCopyOfCodeType = CODE_TYPE_OFF;
+				gCurrentCodeType = CODE_TYPE_OFF;
 			} else {
-				gCopyOfCodeType = gRxVfo->pRX->CodeType;
+				gCurrentCodeType = gRxVfo->pRX->CodeType;
 			}
 		}
 	} else {
-		gCopyOfCodeType = CODE_TYPE_CONTINUOUS_TONE;
+		gCurrentCodeType = CODE_TYPE_CONTINUOUS_TONE;
 	}
 	gDTMF_RequestPending = false;
 	gDTMF_WriteIndex = 0;

@@ -101,16 +101,16 @@ static void APP_HandleIncoming(void)
 		return;
 	}
 
-	bFlag = (gScanState == SCAN_OFF && gCopyOfCodeType == CODE_TYPE_OFF);
+	bFlag = (gScanState == SCAN_OFF && gCurrentCodeType == CODE_TYPE_OFF);
 	if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE) && gSystickCountdown2) {
 		bFlag = true;
 		gSystickCountdown2 = 0;
 	}
-	if (g_CTCSS_Lost && gCopyOfCodeType == CODE_TYPE_CONTINUOUS_TONE) {
+	if (g_CTCSS_Lost && gCurrentCodeType == CODE_TYPE_CONTINUOUS_TONE) {
 		bFlag = true;
 		gFoundCTCSS = false;
 	}
-	if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL)) {
+	if (g_CDCSS_Lost && gCDCSSCodeType == CDCSS_POSITIVE_CODE && (gCurrentCodeType == CODE_TYPE_DIGITAL || gCurrentCodeType == CODE_TYPE_REVERSE_DIGITAL)) {
 		gFoundCDCSS = false;
 	} else if (!bFlag) {
 		return;
@@ -154,7 +154,7 @@ static void APP_HandleReceive(void)
 		Mode = END_OF_RX_MODE_END;
 		goto Skip;
 	}
-	switch (gCopyOfCodeType) {
+	switch (gCurrentCodeType) {
 	case CODE_TYPE_CONTINUOUS_TONE:
 		if (gFoundCTCSS && gFoundCTCSSCountdown == 0) {
 			gFoundCTCSS = false;
@@ -178,7 +178,7 @@ static void APP_HandleReceive(void)
 
 	if (g_SquelchLost) {
 		if (!gEndOfRxDetectedMaybe && IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
-			switch (gCopyOfCodeType) {
+			switch (gCurrentCodeType) {
 			case CODE_TYPE_OFF:
 				if (gEeprom.SQUELCH_LEVEL) {
 					if (g_CxCSS_TAIL_Found) {
@@ -225,7 +225,7 @@ static void APP_HandleReceive(void)
 		Mode = END_OF_RX_MODE_END;
 	}
 
-	if (!gEndOfRxDetectedMaybe && Mode == END_OF_RX_MODE_SKIP && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION && (gCopyOfCodeType == CODE_TYPE_DIGITAL || gCopyOfCodeType == CODE_TYPE_REVERSE_DIGITAL) && BK4819_GetCTCType() == 1) {
+	if (!gEndOfRxDetectedMaybe && Mode == END_OF_RX_MODE_SKIP && gNextTimeslice40ms && gEeprom.TAIL_NOTE_ELIMINATION && (gCurrentCodeType == CODE_TYPE_DIGITAL || gCurrentCodeType == CODE_TYPE_REVERSE_DIGITAL) && BK4819_GetCTCType() == 1) {
 		Mode = END_OF_RX_MODE_TTE;
 	} else {
 		gNextTimeslice40ms = false;
@@ -635,7 +635,7 @@ void APP_Update(void)
 				FREQ_NextChannel();
 			}
 		} else {
-			if (gCopyOfCodeType == CODE_TYPE_OFF && gCurrentFunction == FUNCTION_INCOMING) {
+			if (gCurrentCodeType == CODE_TYPE_OFF && gCurrentFunction == FUNCTION_INCOMING) {
 				APP_StartListening(FUNCTION_RECEIVE);
 			} else {
 				MR_NextChannel();

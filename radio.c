@@ -35,9 +35,9 @@ VFO_Info_t *gTxVfo;
 VFO_Info_t *gRxVfo;
 VFO_Info_t *gCurrentVfo;
 
-DCS_CodeType_t gCodeType;
-DCS_CodeType_t gCopyOfCodeType;
-uint8_t gCode;
+DCS_CodeType_t gCurrentCodeType;
+DCS_CodeType_t gSelectedCodeType;
+uint8_t gSelectedCode;
 
 STEP_Setting_t gStepSetting;
 
@@ -527,8 +527,8 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			uint8_t CodeType;
 			uint8_t Code;
 
-			CodeType = gCodeType;
-			Code = gCode;
+			CodeType = gSelectedCodeType;
+			Code = gSelectedCode;
 			if (gCssScanMode == CSS_SCAN_MODE_OFF) {
 				CodeType = gRxVfo->pRX->CodeType;
 				Code = gRxVfo->pRX->Code;

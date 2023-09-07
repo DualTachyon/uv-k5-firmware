@@ -533,21 +533,21 @@ void MENU_SelectNextDCS(void)
 	gSubMenuSelection = NUMBER_AddWithWraparound(gSubMenuSelection, gMenuScrollDirection, 1, UpperLimit);
 	if (gMenuCursor == MENU_R_DCS) {
 		if (gSubMenuSelection > 104) {
-			gCodeType = CODE_TYPE_REVERSE_DIGITAL;
-			gCode = gSubMenuSelection - 105;
+			gSelectedCodeType = CODE_TYPE_REVERSE_DIGITAL;
+			gSelectedCode = gSubMenuSelection - 105;
 		} else {
-			gCodeType = CODE_TYPE_DIGITAL;
-			gCode = gSubMenuSelection - 1;
+			gSelectedCodeType = CODE_TYPE_DIGITAL;
+			gSelectedCode = gSubMenuSelection - 1;
 		}
 
 	} else {
-		gCodeType = CODE_TYPE_CONTINUOUS_TONE;
-		gCode = gSubMenuSelection - 1;
+		gSelectedCodeType = CODE_TYPE_CONTINUOUS_TONE;
+		gSelectedCode = gSubMenuSelection - 1;
 	}
 
 	RADIO_SetupRegisters(true);
 
-	if (gCodeType == CODE_TYPE_CONTINUOUS_TONE) {
+	if (gSelectedCodeType == CODE_TYPE_CONTINUOUS_TONE) {
 		ScanPauseDelayIn10msec = 20;
 	} else {
 		ScanPauseDelayIn10msec = 30;
