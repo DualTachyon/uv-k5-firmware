@@ -183,7 +183,7 @@ void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, 
 				OffsetVFO = 0x0C90 + ((Channel - FREQ_CHANNEL_FIRST) * 32);
 			}
 		}
-		// Mode 2 == Delete
+
 		if (Mode == 2 || !IS_MR_CHANNEL(Channel)) {
 			uint32_t State32[2];
 			uint8_t State8[8];
