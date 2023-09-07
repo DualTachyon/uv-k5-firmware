@@ -557,7 +557,7 @@ void BOARD_EEPROM_LoadMoreSettings(void)
 	EEPROM_ReadBuffer(0x1F68 + (gEeprom.VOX_LEVEL * 2), &gEeprom.VOX0_THRESHOLD, 2);
 
 	EEPROM_ReadBuffer(0x1F80 + gEeprom.MIC_SENSITIVITY, &Mic, 1);
-	gEeprom.MIC_SENSITIVITY_TUNING = (Mic >= 32) ? Mic : 15;
+	gEeprom.MIC_SENSITIVITY_TUNING = (Mic < 32) ? Mic : 15;
 
 	struct {
 		int16_t BK4819_XtalFreqLow;
