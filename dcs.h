@@ -37,8 +37,8 @@ extern const uint16_t CTCSS_Options[50];
 extern const uint16_t DCS_Options[104];
 
 uint32_t DCS_GetGolayCodeWord(DCS_CodeType_t CodeType, uint8_t Option);
-uint8_t DCS_GetCdcssIndex(uint32_t Code);
-uint8_t DCS_GetCtcssIndex(uint16_t Code);
+uint8_t DCS_GetCdcssCode(uint32_t Code);
+uint8_t DCS_GetCtcssCode(uint16_t Code);
 
 #endif
 

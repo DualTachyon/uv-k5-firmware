@@ -34,7 +34,7 @@ enum {
 };
 
 extern DCS_CodeType_t gScanCssResultType;
-extern uint8_t gScanCssResultIndex;
+extern uint8_t gScanCssResultCode;
 extern bool gFlagStartScan;
 extern bool gFlagStopScan;
 extern bool gScanSingleFrequency;

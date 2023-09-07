@@ -930,7 +930,7 @@ void APP_TimeSlice10ms(void)
 				BK4819_EnableFrequencyScan();
 			} else {
 				BK4819_SetScanFrequency(gScanFrequency);
-				gScanCssResultIndex = 0xFF;
+				gScanCssResultCode = 0xFF;
 				gScanCssResultType = 0xFF;
 				gScanHitCount = 0;
 				gScanUseCssResult = false;
@@ -948,21 +948,21 @@ void APP_TimeSlice10ms(void)
 			}
 			BK4819_Disable();
 			if (ScanResult == BK4819_CSS_RESULT_CDCSS) {
-				uint8_t Index;
+				uint8_t Code;
 
-				Index = DCS_GetCdcssIndex(Result);
-				if (Index != 0xFF) {
-					gScanCssResultIndex = Index;
+				Code = DCS_GetCdcssCode(Result);
+				if (Code != 0xFF) {
+					gScanCssResultCode = Code;
 					gScanCssResultType = CODE_TYPE_DIGITAL;
 					gScanCssState = SCAN_CSS_STATE_FOUND;
 					gScanUseCssResult = true;
 				}
 			} else if (ScanResult == BK4819_CSS_RESULT_CTCSS) {
-				uint8_t Index;
+				uint8_t Code;
 
-				Index = DCS_GetCtcssIndex(CtcssFreq);
-				if (Index != 0xFF) {
-					if (Index == gScanCssResultIndex && gScanCssResultType == CODE_TYPE_CONTINUOUS_TONE) {
+				Code = DCS_GetCtcssCode(CtcssFreq);
+				if (Code != 0xFF) {
+					if (Code == gScanCssResultCode && gScanCssResultType == CODE_TYPE_CONTINUOUS_TONE) {
 						gScanHitCount++;
 						if (gScanHitCount >= 2) {
 							gScanCssState = SCAN_CSS_STATE_FOUND;
@@ -972,7 +972,7 @@ void APP_TimeSlice10ms(void)
 						gScanHitCount = 0;
 					}
 					gScanCssResultType = CODE_TYPE_CONTINUOUS_TONE;
-					gScanCssResultIndex = Index;
+					gScanCssResultCode = Code;
 				}
 			}
 			if (gScanCssState < SCAN_CSS_STATE_FOUND) {
