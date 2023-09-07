@@ -17,6 +17,7 @@
 #include "app/app.h"
 #include "app/fm.h"
 #include "app/generic.h"
+#include "app/menu.h"
 #include "app/scanner.h"
 #include "audio.h"
 #include "driver/keyboard.h"
@@ -158,7 +159,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
 			gFlagResetVfos = true;
 		} else {
-			RADIO_StopCssScan();
+			MENU_StopCssScan();
 			gRequestDisplayScreen = DISPLAY_MENU;
 		}
 	} else {

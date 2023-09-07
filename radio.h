@@ -136,7 +136,6 @@ void RADIO_SetVfoState(VfoState_t State);
 void RADIO_PrepareTX(void);
 void RADIO_EnableCxCSS(void);
 void RADIO_PrepareCssTX(void);
-void RADIO_StopCssScan(void);
 void RADIO_SendEndOfTransmission(void);
 
 #endif

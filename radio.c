@@ -791,12 +791,6 @@ void RADIO_PrepareCssTX(void)
 	RADIO_SetupRegisters(true);
 }
 
-void RADIO_StopCssScan(void)
-{
-	gCssScanMode = CSS_SCAN_MODE_OFF;
-	RADIO_SetupRegisters(true);
-}
-
 void RADIO_SendEndOfTransmission(void)
 {
 	if (gEeprom.ROGER == ROGER_MODE_ROGER) {

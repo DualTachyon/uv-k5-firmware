@@ -93,7 +93,7 @@ static const VOICE_ID_t MenuVoices[] = {
 	VOICE_ID_INVALID,
 };
 
-static void FUN_000074f8(int8_t Direction)
+void MENU_StartCssScan(int8_t Direction)
 {
 	gCssScanMode = CSS_SCAN_MODE_SCANNING;
 	gMenuScrollDirection = Direction;
@@ -101,6 +101,12 @@ static void FUN_000074f8(int8_t Direction)
 	MENU_SelectNextDCS();
 	ScanPauseDelayIn10msec = 50;
 	gScheduleScanListen = false;
+}
+
+void MENU_StopCssScan(void)
+{
+	gCssScanMode = CSS_SCAN_MODE_OFF;
+	RADIO_SetupRegisters(true);
 }
 
 int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax)
@@ -942,7 +948,7 @@ static void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 			gAnotherVoiceID = VOICE_ID_CANCEL;
 			gRequestDisplayScreen = DISPLAY_MAIN;
 		} else {
-			RADIO_StopCssScan();
+			MENU_StopCssScan();
 			gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 			gRequestDisplayScreen = DISPLAY_MENU;
 		}
@@ -1007,12 +1013,12 @@ static void MENU_Key_STAR(bool bKeyPressed, bool bKeyHeld)
 		if (IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE) && !gRxVfo->IsAM) {
 			if (gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_R_DCS) {
 				if (gCssScanMode == CSS_SCAN_MODE_OFF) {
-					FUN_000074f8(1);
+					MENU_StartCssScan(1);
 					gRequestDisplayScreen = DISPLAY_MENU;
 					AUDIO_SetVoiceID(0, VOICE_ID_SCANNING_BEGIN);
 					AUDIO_PlaySingleVoice(1);
 				} else {
-					RADIO_StopCssScan();
+					MENU_StopCssScan();
 					gRequestDisplayScreen = DISPLAY_MENU;
 					gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 				}
@@ -1041,7 +1047,7 @@ static void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 	}
 
 	if (gCssScanMode != CSS_SCAN_MODE_OFF) {
-		FUN_000074f8(Direction);
+		MENU_StartCssScan(Direction);
 		gPttWasReleased = true;
 		gRequestDisplayScreen = DISPLAY_MENU;
 		return;
