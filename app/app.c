@@ -647,7 +647,7 @@ void APP_Update(void)
 	}
 
 	if (gCssScanMode == CSS_SCAN_MODE_SCANNING && gScheduleScanListen && gVoiceWriteIndex == 0) {
-		MENU_SelectNextDCS();
+		MENU_SelectNextCode();
 		gScheduleScanListen = false;
 	}
 

@@ -98,7 +98,7 @@ void MENU_StartCssScan(int8_t Direction)
 	gCssScanMode = CSS_SCAN_MODE_SCANNING;
 	gMenuScrollDirection = Direction;
 	RADIO_SelectVfos();
-	MENU_SelectNextDCS();
+	MENU_SelectNextCode();
 	ScanPauseDelayIn10msec = 50;
 	gScheduleScanListen = false;
 }
@@ -518,7 +518,7 @@ void MENU_AcceptSetting(void)
 	gRequestSaveSettings = true;
 }
 
-void MENU_SelectNextDCS(void)
+void MENU_SelectNextCode(void)
 {
 	uint8_t UpperLimit;
 
