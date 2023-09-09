@@ -8,6 +8,7 @@ As a result, this repository will not include any customisations or improvements
 You can find such firmware at the following repositories:
 
 * https://github.com/fagci/uv-k5-firmware-fagci-mod
+* https://github.com/OneOfEleven/uv-k5-firmware-custom
 
 # Compiler
 
@@ -35,6 +36,7 @@ Many thanks to various people on Telegram for putting up with me during this eff
 * [@Matoz](https://github.com/spm81)
 * @Davide
 * @Ismo OH2FTG
+* [OneOfEleven](https://github.com/OneOfEleven)
 * and others I forget
 
 # License
