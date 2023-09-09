@@ -9,6 +9,7 @@ You can find such firmware at the following repositories:
 
 * https://github.com/fagci/uv-k5-firmware-fagci-mod
 * https://github.com/OneOfEleven/uv-k5-firmware-custom
+* https://github.com/Tunas1337/uv-k5-firmware (Check the branches)
 
 # Compiler
 
@@ -23,6 +24,12 @@ To build the firmware, you need to fetch the submodules and then run make:
 git submodule update --init --recursive --depth=1
 make
 ```
+
+# Flashing
+
+* If you own a JLink or compatible device and want to use the Segger software, you can find a flash loader [here](https://github.com/DualTachyon/dp32g030-flash-loader)
+* If you want to use OpenOCD instead, you can use run "make flash" off this repo.
+* The DP32G030 has flash masking to move the bootloader out of the way. Do not try to flash your own way outside of the above methods or risk losing your bootloader.
 
 # Credits
 
