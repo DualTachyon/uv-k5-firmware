@@ -35,7 +35,7 @@
 #include "ui/lock.h"
 #include "ui/welcome.h"
 
-static const char Version[] = "UV-K5 Firmware, v0.01 Open Edition\r\n";
+static const char Version[] = "UV-K5 Firmware, Open Edition, OEFW-"GIT_HASH"\r\n";
 
 void _putchar(char c)
 {
