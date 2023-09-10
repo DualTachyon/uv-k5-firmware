@@ -10,6 +10,7 @@ You can find such firmware at the following repositories:
 * https://github.com/fagci/uv-k5-firmware-fagci-mod
 * https://github.com/OneOfEleven/uv-k5-firmware-custom
 * https://github.com/Tunas1337/uv-k5-firmware (Check the branches)
+* https://github.com/rebezhir/openquack for Russian users
 
 # Compiler
 
