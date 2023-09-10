@@ -36,10 +36,7 @@
 #include "settings.h"
 #include "ui/lock.h"
 #include "ui/welcome.h"
-
-#if defined(ENABLE_UART)
-static const char Version[] = "UV-K5 Firmware, Open Edition, OEFW-"GIT_HASH"\r\n";
-#endif
+#include "version.h"
 
 void _putchar(char c)
 {
@@ -69,7 +66,7 @@ void Main(void)
 
 #if defined(ENABLE_UART)
 	UART_Init();
-	UART_Send(Version, sizeof(Version));
+	UART_Send(UART_Version, sizeof(UART_Version));
 #endif
 
 	// Not implementing authentic device checks
