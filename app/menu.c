@@ -950,6 +950,7 @@ static void MENU_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 					gInputBoxIndex = 0;
 					gFlagRefreshSetting = true;
 					gAnotherVoiceID = VOICE_ID_CANCEL;
+					gAskForConfirmation = 0;
 				} else {
 					gInputBoxIndex--;
 					gInputBox[gInputBoxIndex] = 10;
