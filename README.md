@@ -5,7 +5,10 @@ It is dedicated to understanding how the radio works and help developers making 
 It is by no means fully understood or has all variables/functions properly named, as this is best effort only.
 As a result, this repository will not include any customisations or improvements over the original firmware.
 
-You can find such firmware at the following repositories:
+You can find an alternate branch called "fixes" that contains fixes for real bugs present in the original firmware.
+This branch will also accumulate fixes/improvements from newer releases by QS (for example v2.01.31).
+
+For improved/better firmware and new features, you can find the following repositories by other collaborators:
 
 * https://github.com/fagci/uv-k5-firmware-fagci-mod
 * https://github.com/OneOfEleven/uv-k5-firmware-custom
