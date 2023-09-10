@@ -318,7 +318,6 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 	} else if (Channel >= FREQ_CHANNEL_FIRST) {
 		pRadio->ConfigRX.Frequency = FREQUENCY_FloorToStep(pRadio->ConfigRX.Frequency, gEeprom.VfoInfo[VFO].StepFrequency, gLowerLimitFrequencyBandTable[Band]);
 	}
-	pRadio->ConfigRX.Frequency = Frequency;
 
 	if (Frequency >= 10800000 && Frequency <= 13599990) {
 		gEeprom.VfoInfo[VFO].FREQUENCY_DEVIATION_SETTING = FREQUENCY_DEVIATION_OFF;
