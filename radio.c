@@ -814,13 +814,15 @@ void RADIO_EnableCxCSS(void)
 	case CODE_TYPE_DIGITAL:
 	case CODE_TYPE_REVERSE_DIGITAL:
 		BK4819_EnableCDCSS();
+		SYSTEM_DelayMs(200);
+		break;
+	case CODE_TYPE_CONTINUOUS_TONE:
+		BK4819_EnableCTCSS();
+		SYSTEM_DelayMs(200);
 		break;
 	default:
-		BK4819_EnableCTCSS();
 		break;
 	}
-
-	SYSTEM_DelayMs(200);
 }
 
 void RADIO_PrepareCssTX(void)
