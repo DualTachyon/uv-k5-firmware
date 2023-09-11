@@ -383,12 +383,12 @@ void BOARD_EEPROM_Init(void)
 
 	// 0E80..0E87
 	EEPROM_ReadBuffer(0x0E80, Data, 8);
-	gEeprom.ScreenChannel[0] = IS_VALID_CHANNEL(Data[0]) ? Data[0] : (FREQ_CHANNEL_FIRST + 5);
-	gEeprom.ScreenChannel[1] = IS_VALID_CHANNEL(Data[3]) ? Data[3] : (FREQ_CHANNEL_FIRST + 5);
+	gEeprom.ScreenChannel[0] = IS_VALID_CHANNEL(Data[0]) ? Data[0] : (FREQ_CHANNEL_FIRST + BAND6_400MHz);
+	gEeprom.ScreenChannel[1] = IS_VALID_CHANNEL(Data[3]) ? Data[3] : (FREQ_CHANNEL_FIRST + BAND6_400MHz);
 	gEeprom.MrChannel[0]     = IS_MR_CHANNEL(Data[1])    ? Data[1] : MR_CHANNEL_FIRST;
 	gEeprom.MrChannel[1]     = IS_MR_CHANNEL(Data[4])    ? Data[4] : MR_CHANNEL_FIRST;
-	gEeprom.FreqChannel[0]   = IS_FREQ_CHANNEL(Data[2])  ? Data[2] : (FREQ_CHANNEL_FIRST + 5);
-	gEeprom.FreqChannel[1]   = IS_FREQ_CHANNEL(Data[5])  ? Data[5] : (FREQ_CHANNEL_FIRST + 5);
+	gEeprom.FreqChannel[0]   = IS_FREQ_CHANNEL(Data[2])  ? Data[2] : (FREQ_CHANNEL_FIRST + BAND6_400MHz);
+	gEeprom.FreqChannel[1]   = IS_FREQ_CHANNEL(Data[5])  ? Data[5] : (FREQ_CHANNEL_FIRST + BAND6_400MHz);
 	gEeprom.NoaaChannel[0]   = IS_NOAA_CHANNEL(Data[6])  ? Data[6] : NOAA_CHANNEL_FIRST;
 	gEeprom.NoaaChannel[1]   = IS_NOAA_CHANNEL(Data[7])  ? Data[7] : NOAA_CHANNEL_FIRST;
 

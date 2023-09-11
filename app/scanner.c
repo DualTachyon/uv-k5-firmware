@@ -293,7 +293,7 @@ void SCANNER_Start(void)
 	RADIO_SelectVfos();
 
 	if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
-		gRxVfo->CHANNEL_SAVE = FREQ_CHANNEL_FIRST + 5;
+		gRxVfo->CHANNEL_SAVE = FREQ_CHANNEL_FIRST + BAND6_400MHz;
 	}
 
 	BackupStep = gRxVfo->STEP_SETTING;
