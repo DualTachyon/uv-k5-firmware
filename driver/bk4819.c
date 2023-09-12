@@ -456,7 +456,7 @@ void BK4819_PlayTone(uint16_t Frequency, bool bTuningGainSwitch)
 			| BK4819_REG_30_ENABLE_TX_DSP);
 			;
 
-	BK4819_WriteRegister(BK4819_REG_71, (uint16_t)(Frequency * 10.32444));
+	BK4819_WriteRegister(BK4819_REG_71, (uint16_t)((Frequency * 1032444) / 100000));
 }
 
 void BK4819_EnterTxMute(void)
@@ -694,7 +694,7 @@ void BK4819_TransmitTone(bool bLocalLoopback, uint32_t Frequency)
 	BK4819_WriteRegister(BK4819_REG_70, 0
 			| BK4819_REG_70_MASK_ENABLE_TONE1
 			| (96U << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
-	BK4819_WriteRegister(BK4819_REG_71, (uint16_t)(Frequency * 10.32444));
+	BK4819_WriteRegister(BK4819_REG_71, (uint16_t)((Frequency * 1032444) / 100000));
 	if (bLocalLoopback) {
 		BK4819_SetAF(BK4819_AF_BEEP);
 	} else {
@@ -946,7 +946,7 @@ void BK4819_GetVoxAmp(uint16_t *pResult)
 
 void BK4819_SetScrambleFrequencyControlWord(uint32_t Frequency)
 {
-	BK4819_WriteRegister(BK4819_REG_71, (uint16_t)(Frequency * 10.32444));
+	BK4819_WriteRegister(BK4819_REG_71, (uint16_t)((Frequency * 1032444) / 100000));
 }
 
 void BK4819_PlayDTMFEx(bool bLocalLoopback, char Code)
