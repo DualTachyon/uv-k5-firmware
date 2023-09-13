@@ -1140,7 +1140,7 @@ void APP_TimeSlice500ms(void)
 						gAskToDelete = false;
 #if defined(ENABLE_FMRADIO)
 						if (gFmRadioMode && gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
-								GUI_SelectNextDisplay(DISPLAY_FM);
+							GUI_SelectNextDisplay(DISPLAY_FM);
 						} else {
 							GUI_SelectNextDisplay(DISPLAY_MAIN);
 						}

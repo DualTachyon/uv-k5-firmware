@@ -73,9 +73,6 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 {
 	FUNCTION_Type_t PreviousFunction;
 	bool bWasPowerSave;
-#if defined(ENABLE_FMRADIO)
-	uint16_t Countdown = 0;
-#endif
 
 	PreviousFunction = gCurrentFunction;
 	bWasPowerSave = (PreviousFunction == FUNCTION_POWER_SAVE);
@@ -97,15 +94,16 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		if (PreviousFunction == FUNCTION_TRANSMIT) {
 			gVFO_RSSI_Level[0] = 0;
 			gVFO_RSSI_Level[1] = 0;
-		} else if (PreviousFunction == FUNCTION_RECEIVE) {
+		} else if (PreviousFunction != FUNCTION_RECEIVE) {
+			break;
+		}
 #if defined(ENABLE_FMRADIO)
-			if (gFmRadioMode) {
-				Countdown = 500;
-			}
+		if (gFmRadioMode) {
+			gFM_RestoreCountdown = 500;
+		}
 #endif
-			if (gDTMF_CallState == DTMF_CALL_STATE_CALL_OUT || gDTMF_CallState == DTMF_CALL_STATE_RECEIVED) {
-				gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
-			}
+		if (gDTMF_CallState == DTMF_CALL_STATE_CALL_OUT || gDTMF_CallState == DTMF_CALL_STATE_RECEIVED) {
+			gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
 		}
 		return;
 
@@ -175,7 +173,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 	gBatterySaveCountdown = 1000;
 	gSchedulePowerSave = false;
 #if defined(ENABLE_FMRADIO)
-	gFM_RestoreCountdown = Countdown;
+	gFM_RestoreCountdown = 0;
 #endif
 }
 
