@@ -126,6 +126,12 @@ void RADIO_InitInfo(VFO_Info_t *pInfo, uint8_t ChannelSave, uint8_t Band, uint32
 	pInfo->pRX = &pInfo->ConfigRX;
 	pInfo->pTX = &pInfo->ConfigTX;
 	pInfo->FREQUENCY_OF_DEVIATION = 1000000;
+
+	if (ChannelSave == (FREQ_CHANNEL_FIRST + BAND2_108MHz)) {
+		pInfo->AM_CHANNEL_MODE = true;
+		pInfo->IsAM = true;
+	}
+
 	RADIO_ConfigureSquelchAndOutputPower(pInfo);
 }
 
