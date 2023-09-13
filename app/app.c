@@ -1122,18 +1122,18 @@ void APP_TimeSlice500ms(void)
 #if defined(ENABLE_FMRADIO)
 			(gFM_ScanState == FM_SCAN_OFF || gAskToSave) &&
 #endif
-			gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF) {
+			gCssScanMode == CSS_SCAN_MODE_OFF) {
 			if (gBacklightCountdown) {
 				gBacklightCountdown--;
 				if (gBacklightCountdown == 0) {
 					GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 				}
 			}
-			if (
+			if (gScanState == SCAN_OFF
 #if defined(ENABLE_AIRCOPY)
-				gScreenToDisplay != DISPLAY_AIRCOPY &&
+				&& gScreenToDisplay != DISPLAY_AIRCOPY
 #endif
-				(gScreenToDisplay != DISPLAY_SCANNER || (gScanCssState >= SCAN_CSS_STATE_FOUND))) {
+				&& (gScreenToDisplay != DISPLAY_SCANNER || (gScanCssState >= SCAN_CSS_STATE_FOUND))) {
 				if (gEeprom.AUTO_KEYPAD_LOCK && gKeyLockCountdown && !gDTMF_InputMode) {
 					gKeyLockCountdown--;
 					if (gKeyLockCountdown == 0) {
