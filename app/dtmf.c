@@ -15,7 +15,9 @@
  */
 
 #include <string.h>
+#if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
+#endif
 #include "app/scanner.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/bk4819.h"
@@ -201,10 +203,12 @@ void DTMF_HandleRequest(void)
 				gSetting_KILLED = true;
 				SETTINGS_SaveSettings();
 				gDTMF_ReplyState = DTMF_REPLY_AB;
+#if defined(ENABLE_FMRADIO)
 				if (gFmRadioMode) {
 					FM_TurnOff();
 					GUI_SelectNextDisplay(DISPLAY_MAIN);
 				}
+#endif
 			} else {
 				gDTMF_ReplyState = DTMF_REPLY_NONE;
 			}

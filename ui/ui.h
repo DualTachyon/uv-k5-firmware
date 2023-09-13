@@ -22,7 +22,9 @@
 
 enum GUI_DisplayType_t {
 	DISPLAY_MAIN	= 0x00U,
+#if defined(ENABLE_FMRADIO)
 	DISPLAY_FM	= 0x01U,
+#endif
 	DISPLAY_MENU	= 0x02U,
 	DISPLAY_SCANNER	= 0x03U,
 #if defined(ENABLE_AIRCOPY)

@@ -15,7 +15,9 @@
  */
 
 #include <string.h>
+#if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
+#endif
 #include "driver/eeprom.h"
 #if defined(ENABLE_UART)
 #include "driver/uart.h"
@@ -25,6 +27,7 @@
 
 EEPROM_Config_t gEeprom;
 
+#if defined(ENABLE_FMRADIO)
 void SETTINGS_SaveFM(void)
 {
 	uint8_t i;
@@ -49,6 +52,7 @@ void SETTINGS_SaveFM(void)
 		EEPROM_WriteBuffer(0x0E40 + (i * 8), &gFM_Channels[i * 4]);
 	}
 }
+#endif
 
 void SETTINGS_SaveVfoIndices(void)
 {

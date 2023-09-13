@@ -15,7 +15,9 @@
  */
 
 #include <string.h>
+#if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
+#endif
 #include "bitmaps.h"
 #include "driver/keyboard.h"
 #include "driver/st7565.h"
@@ -70,9 +72,11 @@ void UI_DisplayStatus(void)
 	if (gSetting_KILLED) {
 		memset(gStatusLine + 21, 0xFF, 10);
 	}
+#if defined(ENABLE_FMRADIO)
 	else if (gFmRadioMode) {
 		memcpy(gStatusLine + 21, BITMAP_FM, sizeof(BITMAP_FM));
 	}
+#endif
 	if (gIsNoaaMode) {
 		memcpy(gStatusLine + 7, BITMAP_NOAA, sizeof(BITMAP_NOAA));
 	}

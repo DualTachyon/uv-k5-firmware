@@ -17,7 +17,9 @@
 #include <string.h>
 #include "app/action.h"
 #include "app/app.h"
+#if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
+#endif
 #include "app/generic.h"
 #include "app/main.h"
 #include "app/scanner.h"
@@ -131,7 +133,9 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 	gUpdateStatus = true;
 	switch (Key) {
 	case KEY_0:
+#if defined(ENABLE_FMRADIO)
 		ACTION_FM();
+#endif
 		break;
 
 	case KEY_1:
@@ -261,24 +265,26 @@ static void MAIN_Key_EXIT(bool bKeyPressed, bool bKeyHeld)
 {
 	if (!bKeyHeld && bKeyPressed) {
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-		if (!gFmRadioMode) {
-			if (gScanState == SCAN_OFF) {
-				if (gInputBoxIndex == 0) {
-					return;
-				}
-				gInputBoxIndex--;
-				gInputBox[gInputBoxIndex] = 10;
-				if (gInputBoxIndex == 0) {
-					gAnotherVoiceID = VOICE_ID_CANCEL;
-				}
-			} else {
-				SCANNER_Stop();
-				gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
-			}
-			gRequestDisplayScreen = DISPLAY_MAIN;
+#if defined(ENABLE_FMRADIO)
+		if (gFmRadioMode) {
+			ACTION_FM();
 			return;
 		}
-		ACTION_FM();
+#endif
+		if (gScanState == SCAN_OFF) {
+			if (gInputBoxIndex == 0) {
+				return;
+			}
+			gInputBoxIndex--;
+			gInputBox[gInputBoxIndex] = 10;
+			if (gInputBoxIndex == 0) {
+				gAnotherVoiceID = VOICE_ID_CANCEL;
+			}
+		} else {
+			SCANNER_Stop();
+			gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
+		}
+		gRequestDisplayScreen = DISPLAY_MAIN;
 	}
 }
 
@@ -411,12 +417,14 @@ static void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 
 void MAIN_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
+#if defined(ENABLE_FMRADIO)
 	if (gFmRadioMode && Key != KEY_PTT && Key != KEY_EXIT) {
 		if (!bKeyHeld && bKeyPressed) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 		}
 		return;
 	}
+#endif
 	if (gDTMF_InputMode && !bKeyHeld && bKeyPressed) {
 		char Character = DTMF_GetCharacter(Key);
 		if (Character != 0xFF) {

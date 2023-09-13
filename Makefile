@@ -1,6 +1,7 @@
 TARGET = firmware
 
 ENABLE_AIRCOPY := 1
+ENABLE_FMRADIO := 1
 ENABLE_OVERLAY := 1
 ENABLE_UART := 1
 
@@ -23,7 +24,9 @@ ifeq ($(ENABLE_UART),1)
 OBJS += driver/aes.o
 endif
 OBJS += driver/backlight.o
+ifeq ($(ENABLE_FMRADIO),1)
 OBJS += driver/bk1080.o
+endif
 OBJS += driver/bk4819.o
 ifeq ($(filter $(ENABLE_AIRCOPY) $(ENABLE_UART),1),1)
 OBJS += driver/crc.o
@@ -50,7 +53,9 @@ OBJS += app/aircopy.o
 endif
 OBJS += app/app.o
 OBJS += app/dtmf.o
+ifeq ($(ENABLE_FMRADIO),1)
 OBJS += app/fm.o
+endif
 OBJS += app/generic.o
 OBJS += app/main.o
 OBJS += app/menu.o
@@ -75,7 +80,9 @@ ifeq ($(ENABLE_AIRCOPY),1)
 OBJS += ui/aircopy.o
 endif
 OBJS += ui/battery.o
+ifeq ($(ENABLE_FMRADIO),1)
 OBJS += ui/fmradio.o
+endif
 OBJS += ui/helper.o
 OBJS += ui/inputbox.o
 OBJS += ui/lock.o
@@ -113,6 +120,9 @@ CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
 ifeq ($(ENABLE_AIRCOPY),1)
 CFLAGS += -DENABLE_AIRCOPY
+endif
+ifeq ($(ENABLE_FMRADIO),1)
+CFLAGS += -DENABLE_FMRADIO
 endif
 ifeq ($(ENABLE_OVERLAY),1)
 CFLAGS += -DENABLE_OVERLAY

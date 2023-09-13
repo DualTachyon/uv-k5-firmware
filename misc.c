@@ -82,14 +82,18 @@ bool gFlagResetVfos;
 bool gRequestSaveVFO;
 uint8_t gRequestSaveChannel;
 bool gRequestSaveSettings;
+#if defined(ENABLE_FMRADIO)
 bool gRequestSaveFM;
+#endif
 bool gFlagPrepareTX;
 bool gFlagAcceptSetting;
 bool gFlagRefreshSetting;
 bool gFlagSaveVfo;
 bool gFlagSaveSettings;
 bool gFlagSaveChannel;
+#if defined(ENABLE_FMRADIO)
 bool gFlagSaveFM;
+#endif
 uint8_t gDTMF_RequestPending;
 bool g_CDCSS_Lost;
 uint8_t gCDCSSCodeType;
@@ -142,7 +146,9 @@ volatile bool gBatterySaveCountdownExpired;
 volatile bool gScheduleDualWatch = true;
 volatile bool gScheduleNOAA = true;
 volatile bool gFlagTteComplete;
+#if defined(ENABLE_FMRADIO)
 volatile bool gScheduleFM;
+#endif
 
 uint16_t gCurrentRSSI;
 

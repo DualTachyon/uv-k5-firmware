@@ -15,7 +15,9 @@
  */
 
 #include "app/app.h"
+#if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
+#endif
 #include "app/generic.h"
 #include "app/menu.h"
 #include "app/scanner.h"
@@ -53,9 +55,15 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 			gEeprom.KEY_LOCK = !gEeprom.KEY_LOCK;
 			gRequestSaveSettings = true;
 		} else {
+#if defined(ENABLE_FMRADIO)
 			if ((gFmRadioMode || gScreenToDisplay != DISPLAY_MAIN) && gScreenToDisplay != DISPLAY_FM) {
 				return;
 			}
+#else
+			if (gScreenToDisplay != DISPLAY_MAIN) {
+				return;
+			}
+#endif
 			gWasFKeyPressed = !gWasFKeyPressed;
 			if (!gWasFKeyPressed) {
 				gAnotherVoiceID = VOICE_ID_CANCEL;
@@ -63,16 +71,17 @@ void GENERIC_Key_F(bool bKeyPressed, bool bKeyHeld)
 			gUpdateStatus = true;
 		}
 	} else {
-		if (gScreenToDisplay != DISPLAY_FM) {
-			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-			return;
-		}
-		if (gFM_ScanState == FM_SCAN_OFF) {
-			gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-			return;
-		}
-		gBeepToPlay = BEEP_440HZ_500MS;
-		gPttWasReleased = true;
+#if defined(ENABLE_FMRADIO)
+		if (gScreenToDisplay == DISPLAY_FM) {
+			if (gFM_ScanState == FM_SCAN_OFF) {
+				gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+				return;
+			}
+			gBeepToPlay = BEEP_440HZ_500MS;
+			gPttWasReleased = true;
+		} else
+#endif
+		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 	}
 }
 
@@ -111,9 +120,17 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 		return;
 	}
 
+#if defined(ENABLE_FMRADIO)
 	if (gFM_ScanState == FM_SCAN_OFF) {
+#else
+	if (1) {
+#endif
 		if (gCssScanMode == CSS_SCAN_MODE_OFF) {
-			if (gScreenToDisplay == DISPLAY_MENU || gScreenToDisplay == DISPLAY_FM) {
+			if (gScreenToDisplay == DISPLAY_MENU
+#if defined(ENABLE_FMRADIO)
+				|| gScreenToDisplay == DISPLAY_FM
+#endif
+				) {
 				gRequestDisplayScreen = DISPLAY_MAIN;
 				gInputBoxIndex = 0;
 				gPttIsPressed = false;
@@ -163,8 +180,10 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 			gRequestDisplayScreen = DISPLAY_MENU;
 		}
 	} else {
+#if defined(ENABLE_FMRADIO)
 		FM_PlayAndUpdate();
 		gRequestDisplayScreen = DISPLAY_FM;
+#endif
 	}
 	gAnotherVoiceID = VOICE_ID_SCANNING_STOP;
 	gPttWasPressed = true;

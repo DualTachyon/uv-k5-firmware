@@ -132,7 +132,9 @@ extern bool gFlagResetVfos;
 extern bool gRequestSaveVFO;
 extern uint8_t gRequestSaveChannel;
 extern bool gRequestSaveSettings;
+#if defined(ENABLE_FMRADIO)
 extern bool gRequestSaveFM;
+#endif
 extern uint8_t gKeypadLocked;
 extern bool gFlagPrepareTX;
 extern bool gFlagAcceptSetting;
@@ -140,7 +142,9 @@ extern bool gFlagRefreshSetting;
 extern bool gFlagSaveVfo;
 extern bool gFlagSaveSettings;
 extern bool gFlagSaveChannel;
+#if defined(ENABLE_FMRADIO)
 extern bool gFlagSaveFM;
+#endif
 extern uint8_t gDTMF_RequestPending;
 extern bool g_CDCSS_Lost;
 extern uint8_t gCDCSSCodeType;
@@ -180,7 +184,6 @@ extern bool gIsNoaaMode;
 extern volatile bool gNextTimeslice;
 extern uint8_t gNoaaChannel;
 extern bool gUpdateDisplay;
-extern uint8_t gFM_ChannelPosition;
 extern bool gF_LOCK;
 extern uint8_t gShowChPrefix;
 extern volatile uint16_t gSystickCountdown2;
@@ -194,7 +197,9 @@ extern volatile bool gBatterySaveCountdownExpired;
 extern volatile bool gScheduleDualWatch;
 extern volatile bool gScheduleNOAA;
 extern volatile bool gFlagTteComplete;
+#if defined(ENABLE_FMRADIO)
 extern volatile bool gScheduleFM;
+#endif
 
 extern uint16_t gCurrentRSSI;
 

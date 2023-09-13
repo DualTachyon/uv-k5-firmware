@@ -17,14 +17,18 @@
 
 #include <string.h>
 #include "app/dtmf.h"
+#if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
+#endif
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
 #include "bsp/dp32g030/saradc.h"
 #include "bsp/dp32g030/syscon.h"
 #include "driver/adc.h"
+#if defined(ENABLE_FMRADIO)
 #include "driver/bk1080.h"
+#endif
 #include "driver/bk4819.h"
 #include "driver/crc.h"
 #include "driver/eeprom.h"
@@ -83,7 +87,9 @@ void BOARD_GPIO_Init(void)
 		| GPIO_DIR_5_MASK
 		);
 
+#if defined(ENABLE_FMRADIO)
 	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_BK1080);
+#endif
 }
 
 void BOARD_PORTCON_Init(void)
@@ -339,7 +345,9 @@ void BOARD_Init(void)
 	BOARD_GPIO_Init();
 	BOARD_ADC_Init();
 	ST7565_Init();
+#if defined(ENABLE_FMRADIO)
 	BK1080_Init(0, false);
+#endif
 #if defined(ENABLE_AIRCOPY) || defined(ENABLE_UART)
 	CRC_Init();
 #endif
@@ -384,6 +392,7 @@ void BOARD_EEPROM_Init(void)
 	gEeprom.NoaaChannel[0]   = IS_NOAA_CHANNEL(Data[6])  ? Data[6] : NOAA_CHANNEL_FIRST;
 	gEeprom.NoaaChannel[1]   = IS_NOAA_CHANNEL(Data[7])  ? Data[7] : NOAA_CHANNEL_FIRST;
 
+#if defined(ENABLE_FMRADIO)
 	// 0E88..0E8F
 	struct {
 		uint16_t SelectedFrequency;
@@ -407,6 +416,7 @@ void BOARD_EEPROM_Init(void)
 	// 0E40..0E67
 	EEPROM_ReadBuffer(0x0E40, gFM_Channels, sizeof(gFM_Channels));
 	FM_ConfigureChannelState();
+#endif
 
 	// 0E90..0E97
 	EEPROM_ReadBuffer(0x0E90, Data, 8);

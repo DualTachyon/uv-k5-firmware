@@ -20,7 +20,9 @@
 #include "app/generic.h"
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
+#if defined(ENABLE_FMRADIO)
 #include "driver/bk1080.h"
+#endif
 #include "driver/eeprom.h"
 #include "driver/gpio.h"
 #include "functions.h"

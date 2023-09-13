@@ -16,7 +16,9 @@
 
 #include <string.h>
 #include "app/dtmf.h"
+#if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
+#endif
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
 #include "dcs.h"
@@ -581,7 +583,11 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 			;
 	}
 
-	if (gEeprom.VOX_SWITCH && !gFmRadioMode && IS_NOT_NOAA_CHANNEL(gCurrentVfo->CHANNEL_SAVE) && !gCurrentVfo->IsAM) {
+	if (gEeprom.VOX_SWITCH
+#if defined(ENABLE_FMRADIO)
+		&& !gFmRadioMode
+#endif
+		&& IS_NOT_NOAA_CHANNEL(gCurrentVfo->CHANNEL_SAVE) && !gCurrentVfo->IsAM) {
 		BK4819_EnableVox(gEeprom.VOX1_THRESHOLD, gEeprom.VOX0_THRESHOLD);
 		InterruptMask |= 0
 			| BK4819_REG_3F_VOX_FOUND
@@ -689,7 +695,9 @@ void RADIO_SetVfoState(VfoState_t State)
 	if (State == VFO_STATE_NORMAL) {
 		VfoState[0] = VFO_STATE_NORMAL;
 		VfoState[1] = VFO_STATE_NORMAL;
+#if defined(ENABLE_FMRADIO)
 		gFM_ResumeCountdown = 0;
+#endif
 	} else {
 		if (State == VFO_STATE_VOL_HIGH) {
 			VfoState[0] = VFO_STATE_VOL_HIGH;
@@ -704,7 +712,9 @@ void RADIO_SetVfoState(VfoState_t State)
 			}
 			VfoState[Channel] = State;
 		}
+#if defined(ENABLE_FMRADIO)
 		gFM_ResumeCountdown = 5;
+#endif
 	}
 	gUpdateDisplay = true;
 }

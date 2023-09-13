@@ -17,7 +17,9 @@
 #include "app/action.h"
 #include "app/app.h"
 #include "app/dtmf.h"
+#if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
+#endif
 #include "app/scanner.h"
 #include "audio.h"
 #include "bsp/dp32g030/gpio.h"
@@ -78,16 +80,21 @@ static void ACTION_Monitor(void)
 		gScheduleNOAA = false;
 	}
 	RADIO_SetupRegisters(true);
+#if defined(ENABLE_FMRADIO)
 	if (gFmRadioMode) {
 		FM_Start();
 		gRequestDisplayScreen = DISPLAY_FM;
 	} else {
+#endif
 		gRequestDisplayScreen = gScreenToDisplay;
+#if defined(ENABLE_FMRADIO)
 	}
+#endif
 }
 
 void ACTION_Scan(bool bRestart)
 {
+#if defined(ENABLE_FMRADIO)
 	if (gFmRadioMode) {
 		if (gCurrentFunction != FUNCTION_RECEIVE && gCurrentFunction != FUNCTION_MONITOR && gCurrentFunction != FUNCTION_TRANSMIT) {
 			uint16_t Frequency;
@@ -112,7 +119,9 @@ void ACTION_Scan(bool bRestart)
 				gAnotherVoiceID = VOICE_ID_SCANNING_BEGIN;
 			}
 		}
-	} else if (gScreenToDisplay != DISPLAY_SCANNER) {
+	} else
+#endif
+	if (gScreenToDisplay != DISPLAY_SCANNER) {
 		RADIO_SelectVfos();
 		if (IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
@@ -150,6 +159,7 @@ static void ACTION_AlarmOr1750(bool b1750)
 	gRequestDisplayScreen = DISPLAY_MAIN;
 }
 
+#if defined(ENABLE_FMRADIO)
 void ACTION_FM(void)
 {
 	if (gCurrentFunction != FUNCTION_TRANSMIT && gCurrentFunction != FUNCTION_MONITOR) {
@@ -168,6 +178,7 @@ void ACTION_FM(void)
 		gRequestDisplayScreen = DISPLAY_FM;
 	}
 }
+#endif
 
 void ACTION_Handle(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 {
@@ -234,7 +245,9 @@ void ACTION_Handle(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		ACTION_AlarmOr1750(false);
 		break;
 	case 7:
+#if defined(ENABLE_FMRADIO)
 		ACTION_FM();
+#endif
 		break;
 	case 8:
 		ACTION_AlarmOr1750(true);
