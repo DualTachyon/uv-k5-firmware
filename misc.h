@@ -72,9 +72,6 @@ enum CssScanMode_t {
 
 typedef enum CssScanMode_t CssScanMode_t;
 
-extern const uint32_t *gUpperLimitFrequencyBandTable;
-extern const uint32_t *gLowerLimitFrequencyBandTable;
-
 extern bool gSetting_350TX;
 extern bool gSetting_KILLED;
 extern bool gSetting_200TX;
