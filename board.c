@@ -36,8 +36,11 @@
 #include "helper/battery.h"
 #include "misc.h"
 #include "settings.h"
+#if defined(ENABLE_OVERLAY)
 #include "sram-overlay.h"
+#endif
 
+#if defined(ENABLE_OVERLAY)
 void BOARD_FLASH_Init(void)
 {
 	FLASH_Init(FLASH_READ_MODE_1_CYCLE);
@@ -47,6 +50,7 @@ void BOARD_FLASH_Init(void)
 	overlay_FLASH_ClockMultiplier = 48;
 	FLASH_Init(FLASH_READ_MODE_2_CYCLE);
 }
+#endif
 
 void BOARD_GPIO_Init(void)
 {
@@ -336,7 +340,9 @@ void BOARD_Init(void)
 	BOARD_ADC_Init();
 	ST7565_Init();
 	BK1080_Init(0, false);
+#if defined(ENABLE_AIRCOPY) || defined(ENABLE_UART)
 	CRC_Init();
+#endif
 }
 
 void BOARD_EEPROM_Init(void)

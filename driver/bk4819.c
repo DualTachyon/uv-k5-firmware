@@ -491,6 +491,7 @@ void BK4819_TurnsOffTones_TurnsOnRX(void)
 			);
 }
 
+#if defined(ENABLE_AIRCOPY)
 void BK4819_SetupAircopy(void)
 {
 	BK4819_WriteRegister(BK4819_REG_70, 0x00E0); // Enable Tone2, tuning gain 48
@@ -508,6 +509,7 @@ void BK4819_ResetFSK(void)
 	SYSTEM_DelayMs(30);
 	BK4819_Idle();
 }
+#endif
 
 void BK4819_Idle(void)
 {
@@ -828,6 +830,7 @@ uint8_t BK4819_GetCTCType(void)
 	return (BK4819_ReadRegister(BK4819_REG_0C) >> 10) & 3;
 }
 
+#if defined(ENABLE_AIRCOPY)
 void BK4819_SendFSKData(uint16_t *pData)
 {
 	uint8_t i;
@@ -882,6 +885,7 @@ void BK4819_PrepareFSKReceive(void)
 	// FSK SyncLength Selection
 	BK4819_WriteRegister(BK4819_REG_59, 0x3068);
 }
+#endif
 
 void BK4819_PlayRoger(void)
 {

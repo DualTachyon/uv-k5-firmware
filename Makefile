@@ -1,5 +1,9 @@
 TARGET = firmware
 
+ENABLE_AIRCOPY := 1
+ENABLE_OVERLAY := 1
+ENABLE_UART := 1
+
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
 BSP_HEADERS := $(patsubst hardware/%,bsp/%,$(BSP_DEFINITIONS))
 BSP_HEADERS := $(patsubst %.def,%.h,$(BSP_HEADERS))
@@ -8,18 +12,26 @@ OBJS =
 # Startup files
 OBJS += start.o
 OBJS += init.o
+ifeq ($(ENABLE_OVERLAY),1)
 OBJS += sram-overlay.o
+endif
 OBJS += external/printf/printf.o
 
 # Drivers
 OBJS += driver/adc.o
+ifeq ($(ENABLE_UART),1)
 OBJS += driver/aes.o
+endif
 OBJS += driver/backlight.o
 OBJS += driver/bk1080.o
 OBJS += driver/bk4819.o
+ifeq ($(filter $(ENABLE_AIRCOPY) $(ENABLE_UART),1),1)
 OBJS += driver/crc.o
+endif
 OBJS += driver/eeprom.o
+ifeq ($(ENABLE_OVERLAY),1)
 OBJS += driver/flash.o
+endif
 OBJS += driver/gpio.o
 OBJS += driver/i2c.o
 OBJS += driver/keyboard.o
@@ -27,11 +39,15 @@ OBJS += driver/spi.o
 OBJS += driver/st7565.o
 OBJS += driver/system.o
 OBJS += driver/systick.o
+ifeq ($(ENABLE_UART),1)
 OBJS += driver/uart.o
+endif
 
 # Main
 OBJS += app/action.o
+ifeq ($(ENABLE_AIRCOPY),1)
 OBJS += app/aircopy.o
+endif
 OBJS += app/app.o
 OBJS += app/dtmf.o
 OBJS += app/fm.o
@@ -39,7 +55,9 @@ OBJS += app/generic.o
 OBJS += app/main.o
 OBJS += app/menu.o
 OBJS += app/scanner.o
+ifeq ($(ENABLE_UART),1)
 OBJS += app/uart.o
+endif
 OBJS += audio.o
 OBJS += bitmaps.o
 OBJS += board.o
@@ -53,7 +71,9 @@ OBJS += misc.o
 OBJS += radio.o
 OBJS += scheduler.o
 OBJS += settings.o
+ifeq ($(ENABLE_AIRCOPY),1)
 OBJS += ui/aircopy.o
+endif
 OBJS += ui/battery.o
 OBJS += ui/fmradio.o
 OBJS += ui/helper.o
@@ -76,7 +96,7 @@ else
 TOP := $(shell pwd)
 endif
 
-AS = arm-none-eabi-as
+AS = arm-none-eabi-gcc
 CC = arm-none-eabi-gcc
 LD = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
@@ -84,10 +104,22 @@ SIZE = arm-none-eabi-size
 
 GIT_HASH := $(shell git rev-parse --short HEAD)
 
-ASFLAGS = -mcpu=cortex-m0
+ASFLAGS = -c -mcpu=cortex-m0
+ifeq ($(ENABLE_OVERLAY),1)
+ASFLAGS += -DENABLE_OVERLAY
+endif
 CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-builtin -fshort-enums -fno-delete-null-pointer-checks -std=c11 -MMD
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
+ifeq ($(ENABLE_AIRCOPY),1)
+CFLAGS += -DENABLE_AIRCOPY
+endif
+ifeq ($(ENABLE_OVERLAY),1)
+CFLAGS += -DENABLE_OVERLAY
+endif
+ifeq ($(ENABLE_UART),1)
+CFLAGS += -DENABLE_UART
+endif
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
 
 ifeq ($(DEBUG),1)

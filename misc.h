@@ -170,7 +170,9 @@ extern uint8_t gPttDebounceCounter;
 extern uint8_t gMenuListCount;
 extern uint8_t gBackupCROSS_BAND_RX_TX;
 extern uint8_t gScanDelay;
+#if defined(ENABLE_AIRCOPY)
 extern uint8_t gAircopySendCountdown;
+#endif
 extern uint8_t gFSKWriteIndex;
 extern uint8_t gNeverUsed;
 

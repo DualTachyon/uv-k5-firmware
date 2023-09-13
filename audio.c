@@ -69,9 +69,11 @@ void AUDIO_PlayBeep(BEEP_Type_t Beep)
 		return;
 	}
 
+#if defined(ENABLE_AIRCOPY)
 	if (gScreenToDisplay == DISPLAY_AIRCOPY) {
 		return;
 	}
+#endif
 	if (gCurrentFunction == FUNCTION_RECEIVE) {
 		return;
 	}

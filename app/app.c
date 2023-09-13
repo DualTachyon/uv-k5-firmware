@@ -16,7 +16,9 @@
 
 #include <string.h>
 #include "app/action.h"
+#if defined(ENABLE_AIRCOPY)
 #include "app/aircopy.h"
+#endif
 #include "app/app.h"
 #include "app/dtmf.h"
 #include "app/fm.h"
@@ -24,7 +26,9 @@
 #include "app/main.h"
 #include "app/menu.h"
 #include "app/scanner.h"
+#if defined(ENABLE_UART)
 #include "app/uart.h"
+#endif
 #include "ARMCM0.h"
 #include "audio.h"
 #include "board.h"
@@ -44,7 +48,9 @@
 #include "misc.h"
 #include "radio.h"
 #include "settings.h"
+#if defined(ENABLE_OVERLAY)
 #include "sram-overlay.h"
+#endif
 #include "ui/battery.h"
 #include "ui/inputbox.h"
 #include "ui/menu.h"
@@ -535,6 +541,7 @@ void APP_CheckRadioInterrupts(void)
 			g_SquelchLost = false;
 			BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28_GREEN, false);
 		}
+#if defined(ENABLE_AIRCOPY)
 		if (Mask & BK4819_REG_02_FSK_FIFO_ALMOST_FULL && gScreenToDisplay == DISPLAY_AIRCOPY && gAircopyState == AIRCOPY_TRANSFER && gAirCopyIsSendMode == 0) {
 			uint8_t i;
 
@@ -543,6 +550,7 @@ void APP_CheckRadioInterrupts(void)
 			}
 			AIRCOPY_StorePacket();
 		}
+#endif
 	}
 }
 
@@ -732,7 +740,11 @@ void APP_CheckKeys(void)
 {
 	KEY_Code_t Key;
 
-	if (gSetting_KILLED || (gScreenToDisplay == DISPLAY_AIRCOPY && gAircopyState != AIRCOPY_READY)) {
+	if (gSetting_KILLED
+#if defined(ENABLE_AIRCOPY)
+		|| (gScreenToDisplay == DISPLAY_AIRCOPY && gAircopyState != AIRCOPY_READY)
+#endif
+		) {
 		return;
 	}
 
@@ -802,11 +814,13 @@ void APP_TimeSlice10ms(void)
 {
 	gFlashLightBlinkCounter++;
 
+#if defined(ENABLE_UART)
 	if (UART_IsCommandAvailable()) {
 		__disable_irq();
 		UART_HandleCommand();
 		__enable_irq();
 	}
+#endif
 
 	if (gReducedService) {
 		return;
@@ -987,6 +1001,7 @@ void APP_TimeSlice10ms(void)
 		}
 	}
 
+#if defined(ENABLE_AIRCOPY)
 	if (gScreenToDisplay == DISPLAY_AIRCOPY && gAircopyState == AIRCOPY_TRANSFER && gAirCopyIsSendMode == 1) {
 		if (gAircopySendCountdown) {
 			gAircopySendCountdown--;
@@ -996,6 +1011,7 @@ void APP_TimeSlice10ms(void)
 			}
 		}
 	}
+#endif
 
 	APP_CheckKeys();
 }
@@ -1020,7 +1036,11 @@ void APP_TimeSlice500ms(void)
 	if (gReducedService) {
 		BOARD_ADC_GetBatteryInfo(&gBatteryCurrentVoltage, &gBatteryCurrent);
 		if (gBatteryCurrent > 500 || gBatteryCalibration[3] < gBatteryCurrentVoltage) {
+#if defined(ENABLE_OVERLAY)
 			overlay_FLASH_RebootToBootloader();
+#else
+			NVIC_SystemReset();
+#endif
 		}
 		return;
 	}
@@ -1048,7 +1068,11 @@ void APP_TimeSlice500ms(void)
 					GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 				}
 			}
-			if (gScreenToDisplay != DISPLAY_AIRCOPY && (gScreenToDisplay != DISPLAY_SCANNER || (gScanCssState >= SCAN_CSS_STATE_FOUND))) {
+			if (
+#if defined(ENABLE_AIRCOPY)
+				gScreenToDisplay != DISPLAY_AIRCOPY &&
+#endif
+				(gScreenToDisplay != DISPLAY_SCANNER || (gScanCssState >= SCAN_CSS_STATE_FOUND))) {
 				if (gEeprom.AUTO_KEYPAD_LOCK && gKeyLockCountdown && !gDTMF_InputMode) {
 					gKeyLockCountdown--;
 					if (gKeyLockCountdown == 0) {
@@ -1406,13 +1430,19 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			case DISPLAY_SCANNER:
 				SCANNER_ProcessKeys(Key, bKeyPressed, bKeyHeld);
 				break;
+#if defined(ENABLE_AIRCOPY)
 			case DISPLAY_AIRCOPY:
 				AIRCOPY_ProcessKeys(Key, bKeyPressed, bKeyHeld);
 				break;
+#endif
 			default:
 				break;
 			}
-		} else if (gScreenToDisplay != DISPLAY_SCANNER && gScreenToDisplay != DISPLAY_AIRCOPY) {
+		} else if (gScreenToDisplay != DISPLAY_SCANNER
+#if defined(ENABLE_AIRCOPY)
+				&& gScreenToDisplay != DISPLAY_AIRCOPY
+#endif
+			) {
 			ACTION_Handle(Key, bKeyPressed, bKeyHeld);
 		} else if (!bKeyHeld && bKeyPressed) {
 			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;

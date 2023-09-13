@@ -17,7 +17,9 @@
 #include <string.h>
 #include "app/fm.h"
 #include "driver/eeprom.h"
+#if defined(ENABLE_UART)
 #include "driver/uart.h"
+#endif
 #include "misc.h"
 #include "settings.h"
 
@@ -33,7 +35,9 @@ void SETTINGS_SaveFM(void)
 		uint8_t Padding[4];
 	} State;
 
+#if defined(ENABLE_UART)
 	UART_LogSend("sFm\r\n", 5);
+#endif
 
 	memset(&State, 0xFF, sizeof(State));
 	State.Channel = gEeprom.FM_SelectedChannel;
@@ -50,7 +54,9 @@ void SETTINGS_SaveVfoIndices(void)
 {
 	uint8_t State[8];
 
+#if defined(ENABLE_UART)
 	UART_LogSend("sidx\r\n", 6);
+#endif
 
 	State[0] = gEeprom.ScreenChannel[0];
 	State[1] = gEeprom.MrChannel[0];
@@ -69,7 +75,9 @@ void SETTINGS_SaveSettings(void)
 	uint8_t State[8];
 	uint32_t Password[2];
 
+#if defined(ENABLE_UART)
 	UART_LogSend("spub\r\n", 6);
+#endif
 
 	State[0] = gEeprom.CHAN_1_CALL;
 	State[1] = gEeprom.SQUELCH_LEVEL;
@@ -168,7 +176,9 @@ void SETTINGS_SaveSettings(void)
 
 void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, uint8_t Mode)
 {
+#if defined(ENABLE_UART)
 	UART_LogSend("schn\r\n", 6);
+#endif
 
 	if (IS_NOT_NOAA_CHANNEL(Channel)) {
 		uint16_t OffsetMR;
@@ -222,7 +232,9 @@ void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, 
 
 void SETTINGS_UpdateChannel(uint8_t Channel, const VFO_Info_t *pVFO, bool bUpdate)
 {
+#if defined(ENABLE_UART)
 	UART_LogSend("svalid\r\n", 8);
+#endif
 
 	if (IS_NOT_NOAA_CHANNEL(Channel)) {
 		uint8_t State[8];
