@@ -909,6 +909,7 @@ void APP_TimeSlice10ms(void)
 		gVoxPauseCountdown--;
 	}
 	if (gCurrentFunction == FUNCTION_TRANSMIT) {
+#if defined(ENABLE_ALARM)
 		if (gAlarmState == ALARM_STATE_TXALARM || gAlarmState == ALARM_STATE_ALARM) {
 			uint16_t Tone;
 
@@ -944,6 +945,7 @@ void APP_TimeSlice10ms(void)
 				}
 			}
 		}
+#endif
 		if (gRTTECountdown) {
 			gRTTECountdown--;
 			if (gRTTECountdown == 0) {
@@ -1263,6 +1265,7 @@ void APP_TimeSlice500ms(void)
 	}
 }
 
+#if defined(ENABLE_ALARM) || defined(ENABLE_TX1750)
 static void ALARM_Off(void)
 {
 	gAlarmState = ALARM_STATE_OFF;
@@ -1277,6 +1280,7 @@ static void ALARM_Off(void)
 	RADIO_SetupRegisters(true);
 	gRequestDisplayScreen = DISPLAY_MAIN;
 }
+#endif
 
 void CHANNEL_Next(bool bBackup, int8_t Direction)
 {
@@ -1433,7 +1437,11 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 	if (!bFlag) {
 		if (gCurrentFunction == FUNCTION_TRANSMIT) {
+#if defined(ENABLE_ALARM) || defined(ENABLE_TX1750)
 			if (gAlarmState == ALARM_STATE_OFF) {
+#else
+			if (1) {
+#endif
 				if (Key == KEY_PTT) {
 					GENERIC_Key_PTT(bKeyPressed);
 				} else {
@@ -1473,6 +1481,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 					}
 				}
 			} else if (!bKeyHeld && bKeyPressed) {
+#if defined(ENABLE_ALARM) || defined(ENABLE_TX1750)
 				ALARM_Off();
 				if (gEeprom.REPEATER_TAIL_TONE_ELIMINATION == 0) {
 					FUNCTION_Select(FUNCTION_FOREGROUND);
@@ -1484,6 +1493,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 				} else {
 					gPttWasReleased = true;
 				}
+#endif
 			}
 		} else if (Key != KEY_SIDE1 && Key != KEY_SIDE2) {
 			switch (gScreenToDisplay) {

@@ -168,8 +168,10 @@ extern uint8_t gCurrentScanList;
 extern uint8_t gPreviousMrChannel;
 extern uint32_t gRestoreFrequency;
 extern uint8_t gRxVfoIsActive;
+#if defined(ENABLE_ALARM)
 extern uint8_t gAlarmToneCounter;
 extern uint16_t gAlarmRunningCounter;
+#endif
 extern bool gKeyBeingHeld;
 extern bool gPttIsPressed;
 extern uint8_t gPttDebounceCounter;

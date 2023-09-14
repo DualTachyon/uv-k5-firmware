@@ -130,6 +130,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		}
 #endif
 
+#if defined(ENABLE_ALARM)
 		if (gAlarmState == ALARM_STATE_TXALARM && gEeprom.ALARM_MODE != ALARM_MODE_TONE) {
 			gAlarmState = ALARM_STATE_ALARM;
 			GUI_DisplayScreen();
@@ -144,6 +145,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 			gAlarmToneCounter = 0;
 			break;
 		}
+#endif
 
 		GUI_DisplayScreen();
 		RADIO_SetTxParameters();
@@ -151,18 +153,27 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 
 		DTMF_Reply();
 
+#if defined(ENABLE_ALARM) || defined(ENABLE_TX1750)
 		if (gAlarmState != ALARM_STATE_OFF) {
+#if defined(ENABLE_TX1750)
 			if (gAlarmState == ALARM_STATE_TX1750) {
 				BK4819_TransmitTone(true, 1750);
-			} else {
+			}
+#endif
+#if defined(ENABLE_ALARM)
+			if (gAlarmState == ALARM_STATE_TXALARM) {
 				BK4819_TransmitTone(true, 500);
 			}
+#endif
 			SYSTEM_DelayMs(2);
 			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+#if defined(ENABLE_ALARM)
 			gAlarmToneCounter = 0;
+#endif
 			gEnableSpeaker = true;
 			break;
 		}
+#endif
 		if (gCurrentVfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
 			BK4819_EnableScramble(gCurrentVfo->SCRAMBLING_TYPE - 1U);
 		} else {

@@ -104,7 +104,10 @@ void Main(void)
 		UI_DisplayWelcome();
 		BACKLIGHT_TurnOn();
 		SYSTEM_DelayMs(1000);
-		gMenuListCount = 50;
+		gMenuListCount = 49;
+#if defined(ENABLE_ALARM)
+		gMenuListCount++;
+#endif
 #if defined(ENABLE_NOAA)
 		gMenuListCount++;
 #endif

@@ -62,7 +62,10 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 		gMenuCursor = MENU_350TX;
 		gSubMenuSelection = gSetting_350TX;
 		GUI_SelectNextDisplay(DISPLAY_MENU);
-		gMenuListCount = 56;
+		gMenuListCount = 55;
+#if defined(ENABLE_ALARM)
+		gMenuListCount++;
+#endif
 #if defined(ENABLE_NOAA)
 		gMenuListCount++;
 #endif

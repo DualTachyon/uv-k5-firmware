@@ -739,7 +739,18 @@ void RADIO_PrepareTX(void)
 		gRxVfoIsActive = true;
 	}
 	RADIO_SelectCurrentVfo();
-	if (gAlarmState == ALARM_STATE_OFF || gAlarmState == ALARM_STATE_TX1750 || (gAlarmState == ALARM_STATE_ALARM && gEeprom.ALARM_MODE == ALARM_MODE_TONE)) {
+#if defined(ENABLE_ALARM) || defined(ENABLE_TX1750)
+	if (gAlarmState == ALARM_STATE_OFF
+#if defined(ENABLE_TX1750)
+		|| gAlarmState == ALARM_STATE_TX1750
+#endif
+#if defined(ENABLE_ALARM)
+		|| (gAlarmState == ALARM_STATE_ALARM && gEeprom.ALARM_MODE == ALARM_MODE_TONE)
+#endif
+		) {
+#else
+	if (1) {
+#endif
 		VfoState_t State;
 
 		if (!FREQUENCY_Check(gCurrentVfo)) {
@@ -756,7 +767,9 @@ void RADIO_PrepareTX(void)
 			State = VFO_STATE_TX_DISABLE;
 		}
 		RADIO_SetVfoState(State);
+#if defined(ENABLE_ALARM) || defined(ENABLE_TX1750)
 		gAlarmState = ALARM_STATE_OFF;
+#endif
 		AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
 		gDTMF_ReplyState = DTMF_REPLY_NONE;
 		return;
@@ -774,11 +787,15 @@ Skip:
 		}
 	}
 	FUNCTION_Select(FUNCTION_TRANSMIT);
+#if defined(ENABLE_ALARM) || defined(ENABLE_TX1750)
 	if (gAlarmState == ALARM_STATE_OFF) {
 		gTxTimerCountdown = gEeprom.TX_TIMEOUT_TIMER * 120;
 	} else {
 		gTxTimerCountdown = 0;
 	}
+#else
+	gTxTimerCountdown = gEeprom.TX_TIMEOUT_TIMER * 120;
+#endif
 	gTxTimeoutReached = false;
 	gFlagEndTransmission = false;
 	gRTTECountdown = 0;

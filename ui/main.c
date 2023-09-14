@@ -130,9 +130,13 @@ void UI_DisplayMain(void)
 		uint32_t SomeValue = 0;
 
 		if (gCurrentFunction == FUNCTION_TRANSMIT) {
+#if defined(ENABLE_ALARM)
 			if (gAlarmState == ALARM_STATE_ALARM) {
 				SomeValue = 2;
 			} else {
+#else
+			if (1) {
+#endif
 				if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 					Channel = gEeprom.RX_CHANNEL;
 				} else {
@@ -181,6 +185,7 @@ void UI_DisplayMain(void)
 		// 0x8FEC
 
 		uint8_t State = VfoState[i];
+#if defined(ENABLE_ALARM)
 		if (gCurrentFunction == FUNCTION_TRANSMIT && gAlarmState == ALARM_STATE_ALARM) {
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
 				Channel = gEeprom.RX_CHANNEL;
@@ -191,6 +196,7 @@ void UI_DisplayMain(void)
 				State = VFO_STATE_ALARM;
 			}
 		}
+#endif
 		if (State) {
 			uint8_t Width = 10;
 
@@ -209,9 +215,11 @@ void UI_DisplayMain(void)
 			case 4:
 				strcpy(String, "TIMEOUT");
 				break;
+#if defined(ENABLE_ALARM)
 			case 5:
 				strcpy(String, "ALARM");
 				break;
+#endif
 			case 6:
 				sprintf(String, "VOL HIGH");
 				Width = 8;
