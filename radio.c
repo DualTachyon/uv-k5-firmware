@@ -154,6 +154,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 
 	Channel = gEeprom.ScreenChannel[VFO];
 	if (IS_VALID_CHANNEL(Channel)) {
+#if defined(ENABLE_NOAA)
 		if (Channel >= NOAA_CHANNEL_FIRST) {
 			RADIO_InitInfo(pRadio, gEeprom.ScreenChannel[VFO], 2, NoaaFrequencyTable[Channel - NOAA_CHANNEL_FIRST]);
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
@@ -163,6 +164,7 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg)
 			gEeprom.CROSS_BAND_RX_TX = CROSS_BAND_OFF;
 			return;
 		}
+#endif
 		if (IS_MR_CHANNEL(Channel)) {
 			Channel = RADIO_FindNextChannel(Channel, RADIO_CHANNEL_UP, false, VFO);
 			if (Channel == 0xFF) {
@@ -504,11 +506,15 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	}
 	BK4819_WriteRegister(BK4819_REG_3F, 0);
 	BK4819_WriteRegister(BK4819_REG_7D, gEeprom.MIC_SENSITIVITY_TUNING | 0xE940);
+#if defined(ENABLE_NOAA)
 	if (IS_NOT_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE) || !gIsNoaaMode) {
 		Frequency = gRxVfo->pRX->Frequency;
 	} else {
 		Frequency = NoaaFrequencyTable[gNoaaChannel];
 	}
+#else
+	Frequency = gRxVfo->pRX->Frequency;
+#endif
 	BK4819_SetFrequency(Frequency);
 	BK4819_SetupSquelch(
 			gRxVfo->SquelchOpenRSSIThresh, gRxVfo->SquelchCloseRSSIThresh,
@@ -611,6 +617,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0)
 	}
 }
 
+#if defined(ENABLE_NOAA)
 void RADIO_ConfigureNOAA(void)
 {
 	uint8_t ChanAB;
@@ -645,6 +652,7 @@ void RADIO_ConfigureNOAA(void)
 		gIsNoaaMode = false;
 	}
 }
+#endif
 
 void RADIO_SetTxParameters(void)
 {

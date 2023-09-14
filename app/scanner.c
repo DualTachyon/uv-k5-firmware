@@ -306,7 +306,9 @@ void SCANNER_Start(void)
 
 	RADIO_SetupRegisters(true);
 
+#if defined(ENABLE_NOAA)
 	gIsNoaaMode = false;
+#endif
 	if (gScanSingleFrequency) {
 		gScanCssState = SCAN_CSS_STATE_SCANNING;
 		gScanFrequency = gRxVfo->pRX->Frequency;

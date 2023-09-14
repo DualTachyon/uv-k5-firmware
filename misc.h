@@ -108,7 +108,9 @@ extern volatile uint16_t gDualWatchCountdown;
 extern volatile uint16_t gTxTimerCountdown;
 extern volatile uint16_t gTailNoteEliminationCountdown;
 extern volatile uint16_t gFmPlayCountdown;
+#if defined(ENABLE_NOAA)
 extern volatile uint16_t gNOAA_Countdown;
+#endif
 extern bool gEnableSpeaker;
 extern uint8_t gKeyLockCountdown;
 extern uint8_t gRTTECountdown;
@@ -180,9 +182,13 @@ extern uint8_t gAircopySendCountdown;
 extern uint8_t gFSKWriteIndex;
 extern uint8_t gNeverUsed;
 
+#if defined(ENABLE_NOAA)
 extern bool gIsNoaaMode;
+#endif
 extern volatile bool gNextTimeslice;
+#if defined(ENABLE_NOAA)
 extern uint8_t gNoaaChannel;
+#endif
 extern bool gUpdateDisplay;
 extern bool gF_LOCK;
 extern uint8_t gShowChPrefix;
@@ -195,7 +201,9 @@ extern volatile bool gNextTimeslice40ms;
 extern volatile bool gSchedulePowerSave;
 extern volatile bool gBatterySaveCountdownExpired;
 extern volatile bool gScheduleDualWatch;
+#if defined(ENABLE_NOAA)
 extern volatile bool gScheduleNOAA;
+#endif
 extern volatile bool gFlagTteComplete;
 #if defined(ENABLE_FMRADIO)
 extern volatile bool gScheduleFM;

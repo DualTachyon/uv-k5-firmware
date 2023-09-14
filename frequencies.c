@@ -48,6 +48,7 @@ const uint32_t UpperLimitFrequencyBandTable[7] = {
 	60000000,
 };
 
+#if defined(ENABLE_NOAA)
 const uint32_t NoaaFrequencyTable[10] = {
 	16255000,
 	16240000,
@@ -60,6 +61,7 @@ const uint32_t NoaaFrequencyTable[10] = {
 	16177500,
 	16327500,
 };
+#endif
 
 const uint16_t StepFrequencyTable[6] = {
 	250,

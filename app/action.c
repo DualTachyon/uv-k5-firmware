@@ -63,9 +63,11 @@ static void ACTION_Monitor(void)
 {
 	if (gCurrentFunction != FUNCTION_MONITOR) {
 		RADIO_SelectVfos();
+#if defined(ENABLE_NOAA)
 		if (gRxVfo->CHANNEL_SAVE >= NOAA_CHANNEL_FIRST && gIsNoaaMode) {
 			gNoaaChannel = gRxVfo->CHANNEL_SAVE - NOAA_CHANNEL_FIRST;
 		}
+#endif
 		RADIO_SetupRegisters(true);
 		APP_StartListening(FUNCTION_MONITOR);
 		return;
@@ -75,10 +77,12 @@ static void ACTION_Monitor(void)
 		gScheduleScanListen = false;
 		gScanPauseMode = true;
 	}
+#if defined(ENABLE_NOAA)
 	if (gEeprom.DUAL_WATCH == DUAL_WATCH_OFF && gIsNoaaMode) {
 		gNOAA_Countdown = 500;
 		gScheduleNOAA = false;
 	}
+#endif
 	RADIO_SetupRegisters(true);
 #if defined(ENABLE_FMRADIO)
 	if (gFmRadioMode) {

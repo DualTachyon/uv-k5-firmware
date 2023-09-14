@@ -77,9 +77,11 @@ void UI_DisplayStatus(void)
 		memcpy(gStatusLine + 21, BITMAP_FM, sizeof(BITMAP_FM));
 	}
 #endif
+#if defined(ENABLE_NOAA)
 	if (gIsNoaaMode) {
 		memcpy(gStatusLine + 7, BITMAP_NOAA, sizeof(BITMAP_NOAA));
 	}
+#endif
 	ST7565_BlitStatusLine();
 }
 

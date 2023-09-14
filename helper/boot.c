@@ -62,7 +62,10 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 		gMenuCursor = MENU_350TX;
 		gSubMenuSelection = gSetting_350TX;
 		GUI_SelectNextDisplay(DISPLAY_MENU);
-		gMenuListCount = 57;
+		gMenuListCount = 56;
+#if defined(ENABLE_NOAA)
+		gMenuListCount++;
+#endif
 		gF_LOCK = true;
 #if defined(ENABLE_AIRCOPY)
 	} else if (Mode == BOOT_MODE_AIRCOPY) {

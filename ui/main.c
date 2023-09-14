@@ -166,6 +166,7 @@ void UI_DisplayMain(void)
 			c = (gEeprom.ScreenChannel[i] - FREQ_CHANNEL_FIRST) + 1;
 			UI_DisplaySmallDigits(1, &c, 22, Line + 1);
 		} else {
+#if defined(ENABLE_NOAA)
 			memcpy(pLine1 + 7, BITMAP_NarrowBand, sizeof(BITMAP_NarrowBand));
 			if (gInputBoxIndex == 0 || gEeprom.TX_CHANNEL != i) {
 				NUMBER_ToDigits((gEeprom.ScreenChannel[i] - NOAA_CHANNEL_FIRST) + 1, String);
@@ -174,6 +175,7 @@ void UI_DisplayMain(void)
 				String[7] = gInputBox[1];
 			}
 			UI_DisplaySmallDigits(2, String + 6, 15, Line + 1);
+#endif
 		}
 
 		// 0x8FEC

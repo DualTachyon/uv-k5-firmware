@@ -104,7 +104,10 @@ void Main(void)
 		UI_DisplayWelcome();
 		BACKLIGHT_TurnOn();
 		SYSTEM_DelayMs(1000);
-		gMenuListCount = 51;
+		gMenuListCount = 50;
+#if defined(ENABLE_NOAA)
+		gMenuListCount++;
+#endif
 
 		BootMode = BOOT_GetMode();
 		if (gEeprom.POWER_ON_PASSWORD < 1000000) {
@@ -126,7 +129,9 @@ void Main(void)
 			AUDIO_SetVoiceID(1, VOICE_ID_FREQUENCY_MODE);
 		}
 		AUDIO_PlaySingleVoice(0);
+#if defined(ENABLE_NOAA)
 		RADIO_ConfigureNOAA();
+#endif
 	}
 
 	while (1) {

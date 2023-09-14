@@ -35,7 +35,9 @@ typedef enum FREQUENCY_Band_t FREQUENCY_Band_t;
 extern const uint32_t LowerLimitFrequencyBandTable[7];
 extern const uint32_t MiddleFrequencyBandTable[7];
 extern const uint32_t UpperLimitFrequencyBandTable[7];
+#if defined(ENABLE_NOAA)
 extern const uint32_t NoaaFrequencyTable[10];
+#endif
 extern const uint16_t StepFrequencyTable[6];
 
 FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency);
