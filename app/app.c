@@ -386,8 +386,12 @@ void APP_SetFrequencyByStep(VFO_Info_t *pInfo, int8_t Step)
 	if (pInfo->StepFrequency == 833) {
 		const uint32_t Lower = LowerLimitFrequencyBandTable[pInfo->Band];
 		const uint32_t Delta = Frequency - Lower;
-		const uint32_t Base = (Delta / 2500) * 2500;
+		uint32_t Base = (Delta / 2500) * 2500;
 		const uint32_t Index = ((Delta - Base) % 2500) / 833;
+
+		if (Index == 2) {
+			Base++;
+		}
 
 		Frequency = Lower + Base + (Index * 833);
 	}
