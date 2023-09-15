@@ -35,6 +35,10 @@ make
 * If you want to use OpenOCD instead, you can use run "make flash" off this repo.
 * The DP32G030 has flash masking to move the bootloader out of the way. Do not try to flash your own way outside of the above methods or risk losing your bootloader.
 
+# Support
+
+* If you like my work, you can support me through https://ko-fi/DualTachyon
+
 # Credits
 
 Many thanks to various people on Telegram for putting up with me during this effort and helping:
