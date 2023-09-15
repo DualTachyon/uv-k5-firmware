@@ -63,13 +63,14 @@ const uint32_t NoaaFrequencyTable[10] = {
 };
 #endif
 
-const uint16_t StepFrequencyTable[6] = {
+const uint16_t StepFrequencyTable[7] = {
 	250,
 	500,
 	625,
 	1000,
 	1250,
-	2500
+	2500,
+	833,
 };
 
 FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency)
