@@ -29,7 +29,15 @@ git submodule update --init --recursive --depth=1
 make
 ```
 
-# Flashing
+# Flashing with the official updater
+
+* Use the firmware.packed.bin file
+
+# Flashing with [k5prog](https://github.com/piotr022/k5prog)
+
+* ./k5prog -F -YYY -b firmware.bin
+
+# Flashing with SWD
 
 * If you own a JLink or compatible device and want to use the Segger software, you can find a flash loader [here](https://github.com/DualTachyon/dp32g030-flash-loader)
 * If you want to use OpenOCD instead, you can use run "make flash" off this repo.
