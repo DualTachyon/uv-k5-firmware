@@ -115,7 +115,7 @@ static void AIRCOPY_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		gInputBoxIndex = 0;
 		NUMBER_Get(gInputBox, &Frequency);
 		for (i = 0; i < 7; i++) {
-			if (Frequency >= gLowerLimitFrequencyBandTable[i] && Frequency <= gUpperLimitFrequencyBandTable[i]) {
+			if (Frequency >= LowerLimitFrequencyBandTable[i] && Frequency <= UpperLimitFrequencyBandTable[i]) {
 				gAnotherVoiceID = (VOICE_ID_t)Key;
 				gRxVfo->Band = i;
 				Frequency += 75;

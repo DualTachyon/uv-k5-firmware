@@ -17,9 +17,6 @@
 #include <string.h>
 #include "misc.h"
 
-const uint32_t *gUpperLimitFrequencyBandTable;
-const uint32_t *gLowerLimitFrequencyBandTable;
-
 bool gSetting_350TX;
 bool gSetting_KILLED;
 bool gSetting_200TX;
