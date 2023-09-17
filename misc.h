@@ -20,22 +20,32 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "frequencies.h"
 
 #define ARRAY_SIZE(a)    (sizeof(a) / sizeof(a[0]))
 
 #define IS_MR_CHANNEL(x) ((x) >= MR_CHANNEL_FIRST && (x) <= MR_CHANNEL_LAST)
 #define IS_FREQ_CHANNEL(x) ((x) >= FREQ_CHANNEL_FIRST && (x) <= FREQ_CHANNEL_LAST)
+#if defined(ENABLE_NOAA)
 #define IS_NOAA_CHANNEL(x) ((x) >= NOAA_CHANNEL_FIRST && (x) <= NOAA_CHANNEL_LAST)
 #define IS_NOT_NOAA_CHANNEL(x) ((x) >= MR_CHANNEL_FIRST && (x) <= FREQ_CHANNEL_LAST)
-#define IS_VALID_CHANNEL(x) ((x) <= NOAA_CHANNEL_LAST)
+#else
+/* If NOAA is not enabled, it cannot be a NOAA channel */
+#define IS_NOAA_CHANNEL(x) (false)
+#define IS_NOT_NOAA_CHANNEL(x) (true)
+#endif
+#define IS_VALID_CHANNEL(x) ((x) < LAST_CHANNEL)
 
 enum {
 	MR_CHANNEL_FIRST = 0U,
 	MR_CHANNEL_LAST = 199U,
 	FREQ_CHANNEL_FIRST = 200U,
 	FREQ_CHANNEL_LAST = 206U,
+#if defined(ENABLE_NOAA)
 	NOAA_CHANNEL_FIRST = 207U,
-	NOAA_CHANNEL_LAST = 216U,
+	NOAA_CHANNEL_LAST = NOAA_CHANNEL_FIRST + ARRAY_SIZE(NoaaFrequencyTable),
+#endif
+        LAST_CHANNEL,
 };
 
 enum {
