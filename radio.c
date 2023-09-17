@@ -430,10 +430,12 @@ void RADIO_ApplyOffset(VFO_Info_t *pInfo)
 		break;
 	}
 
-	if (Frequency < 5000000) {
-		Frequency = 5000000;
-	} else if (Frequency > 60000000) {
-		Frequency = 60000000;
+        /* Lowest is lower limit of FrequencyBandTable*/
+	if (Frequency < FrequencyBandTable[0].lower) {
+		Frequency = FrequencyBandTable[0].lower;
+        /* Lowest is upper limit of FrequencyBandTable*/
+	} else if (Frequency > FrequencyBandTable[ARRAY_SIZE(FrequencyBandTable) - 1].upper) {
+		Frequency = FrequencyBandTable[ARRAY_SIZE(FrequencyBandTable) - 1].upper;
 	}
 
 	pInfo->ConfigTX.Frequency = Frequency;
