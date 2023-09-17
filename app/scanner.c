@@ -242,7 +242,7 @@ static void SCANNER_Key_UP_DOWN(bool bKeyPressed, bool pKeyHeld, int8_t Directio
 		gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
 	}
 	if (gScannerEditState == 1) {
-		gScanChannel = NUMBER_AddWithWraparound(gScanChannel, Direction, 0, 199);
+		gScanChannel = NUMBER_AddWithWraparound(gScanChannel, Direction, 0, MR_CHANNEL_LAST);
 		gShowChPrefix = RADIO_CheckValidChannel(gScanChannel, false, 0);
 		gRequestDisplayScreen = DISPLAY_SCANNER;
 	} else {

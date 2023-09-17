@@ -175,7 +175,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax)
 	case MENU_SLIST1: case MENU_SLIST2:
 	case MENU_DEL_CH:
 		*pMin = 0;
-		*pMax = 199;
+		*pMax = MR_CHANNEL_LAST;
 		break;
 	case MENU_SAVE: case MENU_MIC:
 		*pMin = 0;
