@@ -21,8 +21,6 @@
 #include "driver/system.h"
 #include "misc.h"
 
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-
 static const uint16_t BK1080_RegisterTable[] = {
 	0x0008, 0x1080, 0x0201, 0x0000,
 	0x40C0, 0x0A1F, 0x002E, 0x02FF,
