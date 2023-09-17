@@ -84,8 +84,8 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			if (gSetting_350EN || (Frequency < 35000000 || Frequency > 39999990)) {
 				uint8_t i;
 
-				for (i = 0; i < 7; i++) {
-					if (Frequency <= UpperLimitFrequencyBandTable[i] && (LowerLimitFrequencyBandTable[i] <= Frequency)) {
+				for (i = 0; i < ARRAY_SIZE(FrequencyBandTable); i++) {
+					if (Frequency <= FrequencyBandTable[i].upper && (FrequencyBandTable[i].lower <= Frequency)) {
 						gAnotherVoiceID = (VOICE_ID_t)Key;
 						if (gTxVfo->Band != i) {
 							gTxVfo->Band = i;
@@ -98,7 +98,7 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 						gTxVfo->ConfigRX.Frequency = FREQUENCY_FloorToStep(
 								Frequency,
 								gTxVfo->StepFrequency,
-								LowerLimitFrequencyBandTable[gTxVfo->Band]
+								FrequencyBandTable[gTxVfo->Band].lower
 								);
 						gRequestSaveChannel = 1;
 						return;

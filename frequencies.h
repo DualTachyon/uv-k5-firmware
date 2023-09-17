@@ -32,9 +32,13 @@ enum FREQUENCY_Band_t {
 
 typedef enum FREQUENCY_Band_t FREQUENCY_Band_t;
 
-extern const uint32_t LowerLimitFrequencyBandTable[7];
-extern const uint32_t MiddleFrequencyBandTable[7];
-extern const uint32_t UpperLimitFrequencyBandTable[7];
+
+struct FrequencyBandInfo {
+    uint32_t lower;
+    uint32_t upper;
+    uint32_t middle;
+};
+extern const struct FrequencyBandInfo FrequencyBandTable[7];
 #if defined(ENABLE_NOAA)
 extern const uint32_t NoaaFrequencyTable[10];
 #endif

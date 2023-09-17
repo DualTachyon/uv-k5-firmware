@@ -18,34 +18,19 @@
 #include "misc.h"
 #include "settings.h"
 
-const uint32_t LowerLimitFrequencyBandTable[7] = {
-	 5000000,
-	10800000,
-	13600000,
-	17400000,
-	35000000,
-	40000000,
-	47000000,
-};
-
-const uint32_t MiddleFrequencyBandTable[7] = {
-	 6500000,
-	12200000,
-	15000000,
-	26000000,
-	37000000,
-	43500000,
-	55000000,
-};
-
-const uint32_t UpperLimitFrequencyBandTable[7] = {
-	 7600000,
-	13599990,
-	17399990,
-	34999990,
-	39999990,
-	46999990,
-	60000000,
+/* This table maps the available frequencies to bands.
+ *
+ * Note that TX power calibration is stored in EEPROM for this table.
+ * See FREQUENCY_CalculateOutputPower and its callers.
+ * */
+const struct FrequencyBandInfo FrequencyBandTable[7] = {
+       [BAND1_50MHz ] = {.lower =  5000000, .middle =  6500000, .upper =  7600000},
+       [BAND2_108MHz] = {.lower = 10800000, .middle = 12200000, .upper = 13599990},
+       [BAND3_136MHz] = {.lower = 13600000, .middle = 15000000, .upper = 17399990},
+       [BAND4_174MHz] = {.lower = 17400000, .middle = 26000000, .upper = 34999990},
+       [BAND5_350MHz] = {.lower = 35000000, .middle = 37000000, .upper = 39999990},
+       [BAND6_400MHz] = {.lower = 40000000, .middle = 43500000, .upper = 46999990},
+       [BAND7_470MHz] = {.lower = 47000000, .middle = 55000000, .upper = 60000000},
 };
 
 #if defined(ENABLE_NOAA)
@@ -75,29 +60,13 @@ const uint16_t StepFrequencyTable[7] = {
 
 FREQUENCY_Band_t FREQUENCY_GetBand(uint32_t Frequency)
 {
-	if (Frequency >=  5000000 && Frequency <=  7600000) {
-		return BAND1_50MHz;
-	}
-	if (Frequency >= 10800000 && Frequency <= 13599990) {
-		return BAND2_108MHz;
-	}
-	if (Frequency >= 13600000 && Frequency <= 17399990) {
-		return BAND3_136MHz;
-	}
-	if (Frequency >= 17400000 && Frequency <= 34999990) {
-		return BAND4_174MHz;
-	}
-	if (Frequency >= 35000000 && Frequency <= 39999990) {
-		return BAND5_350MHz;
-	}
-	if (Frequency >= 40000000 && Frequency <= 46999990) {
-		return BAND6_400MHz;
-	}
-	if (Frequency >= 47000000 && Frequency <= 60000000) {
-		return BAND7_470MHz;
-	}
-
-	return BAND6_400MHz;
+    for(int i = 0; i < ARRAY_SIZE(FrequencyBandTable); i++) {
+        if(Frequency >= FrequencyBandTable[i].lower && Frequency <= FrequencyBandTable[i].upper) {
+            return i;
+        }
+    }
+    //TODO Strange default here
+    return BAND6_400MHz;
 }
 
 uint8_t FREQUENCY_CalculateOutputPower(uint8_t TxpLow, uint8_t TxpMid, uint8_t TxpHigh, int32_t LowerLimit, int32_t Middle, int32_t UpperLimit, int32_t Frequency)
