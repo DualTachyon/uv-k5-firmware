@@ -178,6 +178,9 @@ uint8_t gMenuCursor;
 int8_t gMenuScrollDirection;
 uint32_t gSubMenuSelection;
 
+//Pixel where we split the screen: left is menu selection, right is menu item content
+#define SPLIT   (50)
+
 void UI_DisplayMenu(void)
 {
 	char String[16];
@@ -186,29 +189,39 @@ void UI_DisplayMenu(void)
 
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 
+        /* Print the 3 visible menu items */
 	for (i = 0; i < 3; i++) {
 		if (gMenuCursor || i) {
 			if ((gMenuListCount - 1) != gMenuCursor || (i != 2)) {
-				UI_PrintString(MenuList[gMenuCursor + i - 1], 0, 127, i * 2, 8, false);
+				UI_PrintString(MenuList[gMenuCursor + i - 1], 0, SPLIT - 2, i * 2, 8, false);
 			}
 		}
 	}
-	for (i = 0; i < 48; i++) {
+
+        /* Invert for the select item */
+	for (i = 0; i < SPLIT - 2; i++) {
 		gFrameBuffer[2][i] ^= 0xFF;
 		gFrameBuffer[3][i] ^= 0xFF;
 	}
-	for (i = 0; i < 7; i++) {
-		gFrameBuffer[i][48] = 0xFF;
-		gFrameBuffer[i][49] = 0xFF;
+
+	/* Create a vertical line line, 2 pixels wide */
+	for (i = 0; i < ARRAY_SIZE(gFrameBuffer); i++) {
+		gFrameBuffer[i][SPLIT - 2] = 0xFF;
+		gFrameBuffer[i][SPLIT - 1] = 0xFF;
 	}
+
+        /* Print the number of the current menu item, 2 digits 1 pixel from split */
 	NUMBER_ToDigits(gMenuCursor + 1, String);
-	UI_DisplaySmallDigits(2, String + 6, 33, 6);
+	UI_DisplaySmallDigits(2, String + 6, SPLIT - (2 * 8) - 1, 6);
+
+        /* Display submenu arrow */
 	if (gIsInSubMenu) {
-		memcpy(gFrameBuffer[0] + 50, BITMAP_CurrentIndicator, sizeof(BITMAP_CurrentIndicator));
+		memcpy(gFrameBuffer[0] + SPLIT, BITMAP_CurrentIndicator, sizeof(BITMAP_CurrentIndicator));
 	}
 
 	memset(String, 0, sizeof(String));
 
+	/* Get menu item content as string */
 	switch (gMenuCursor) {
 	case MENU_SQL:
 	case MENU_MIC:
