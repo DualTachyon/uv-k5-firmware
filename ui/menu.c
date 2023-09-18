@@ -181,6 +181,15 @@ uint32_t gSubMenuSelection;
 //Pixel where we split the screen: left is menu selection, right is menu item content
 #define SPLIT   (50)
 
+/* Small helper that does what original code did,
+ * but moving all consts to a single place, and documenting them a bit. */
+static inline void print_item(const char* string, uint8_t line)
+{
+    bool centre = true; //Align centre
+    uint8_t width = 8; //Fixed width in the menu
+    UI_PrintString(string, SPLIT, 127, line, width, centre);
+}
+
 void UI_DisplayMenu(void)
 {
 	char String[16];
@@ -204,7 +213,7 @@ void UI_DisplayMenu(void)
 		gFrameBuffer[3][i] ^= 0xFF;
 	}
 
-	/* Create a vertical line line, 2 pixels wide */
+	/* Create a vertical line, 2 pixels wide */
 	for (i = 0; i < ARRAY_SIZE(gFrameBuffer); i++) {
 		gFrameBuffer[i][SPLIT - 2] = 0xFF;
 		gFrameBuffer[i][SPLIT - 1] = 0xFF;
@@ -437,40 +446,39 @@ void UI_DisplayMenu(void)
 		break;
 	}
 
-	UI_PrintString(String, 50, 127, 2, 8, true);
+	print_item(String, 2);
 
 	if (gMenuCursor == MENU_OFFSET) {
-		UI_PrintString("MHz", 50, 127, 4, 8, true);
+                print_item("Mhz", 4);
 	}
 
 	if ((gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH || gMenuCursor == MENU_DEL_CH) && gAskForConfirmation) {
 		if (gAskForConfirmation == 1) {
-			strcpy(String, "SURE?");
+                        print_item("SURE?", 4);
 		} else {
-			strcpy(String, "WAIT!");
+                        print_item("WAIT!", 4);
 		}
-		UI_PrintString(String, 50, 127, 4, 8, true);
 	}
 
 	if ((gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_R_DCS) && gCssScanMode != CSS_SCAN_MODE_OFF) {
-		UI_PrintString("SCAN", 50, 127, 4, 8, true);
+		print_item("SCAN", 4);
 	}
 
 	if (gMenuCursor == MENU_UPCODE) {
 		if (strlen(gEeprom.DTMF_UP_CODE) > 8) {
-			UI_PrintString(gEeprom.DTMF_UP_CODE + 8, 50, 127, 4, 8, true);
+			print_item(gEeprom.DTMF_UP_CODE + 8, 4);
 		}
 	}
 	if (gMenuCursor == MENU_DWCODE) {
 		if (strlen(gEeprom.DTMF_DOWN_CODE) > 8) {
-			UI_PrintString(gEeprom.DTMF_DOWN_CODE + 8, 50, 127, 4, 8, true);
+			print_item(gEeprom.DTMF_DOWN_CODE + 8, 4);
 		}
 	}
 	if (gMenuCursor == MENU_D_LIST && gIsDtmfContactValid) {
 		Contact[11] = 0;
 		memcpy(&gDTMF_ID, Contact + 8, 4);
 		sprintf(String, "ID:%s", Contact + 8);
-		UI_PrintString(String, 50, 127, 4, 8, true);
+                print_item(String, 4);
 	}
 
 	if (gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_T_CTCS ||
@@ -492,16 +500,16 @@ void UI_DisplayMenu(void)
 		}
 
 		if (gSubMenuSelection == 0xFF || !gEeprom.SCAN_LIST_ENABLED[i]) {
-			UI_PrintString(String, 50, 127, 2, 8, 1);
+			print_item(String, 2);
 		} else {
-			UI_PrintString(String, 50, 127, 0, 8, 1);
+			print_item(String, 0);
 			if (IS_MR_CHANNEL(gEeprom.SCANLIST_PRIORITY_CH1[i])) {
 				sprintf(String, "PRI1:%d", gEeprom.SCANLIST_PRIORITY_CH1[i] + 1);
-				UI_PrintString(String, 50, 127, 2, 8, 1);
+                                print_item(String, 2);
 			}
 			if (IS_MR_CHANNEL(gEeprom.SCANLIST_PRIORITY_CH2[i])) {
 				sprintf(String, "PRI2:%d", gEeprom.SCANLIST_PRIORITY_CH2[i] + 1);
-				UI_PrintString(String, 50, 127, 4, 8, 1);
+                                print_item(String, 4);
 			}
 		}
 	}
