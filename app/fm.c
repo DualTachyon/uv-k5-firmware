@@ -57,7 +57,11 @@ uint8_t FM_FindNextChannel(uint8_t Channel, uint8_t Direction)
 	uint8_t i;
 
 	for (i = 0; i < 20; i++) {
-		Channel %= 20;
+		if (Channel == 0xFF) {
+			Channel = 19;
+		} else if (Channel > 19) {
+			Channel = 0;
+		}
 		if (FM_CheckValidChannel(Channel)) {
 			return Channel;
 		}

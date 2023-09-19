@@ -95,7 +95,7 @@ uint8_t RADIO_FindNextChannel(uint8_t Channel, int8_t Direction, bool bCheckScan
 {
 	uint8_t i;
 
-	for (i = 0; i < 200; i++) {
+	for (i = 0; i <= MR_CHANNEL_LAST; i++) {
 		if (Channel == 0xFF) {
 			Channel = MR_CHANNEL_LAST;
 		} else if (Channel > MR_CHANNEL_LAST) {
