@@ -45,7 +45,7 @@ make
 
 # Support
 
-* If you like my work, you can support me through https://ko-fi/DualTachyon
+* If you like my work, you can support me through https://ko-fi.com/DualTachyon
 
 # Credits
 
