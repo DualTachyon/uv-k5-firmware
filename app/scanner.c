@@ -292,9 +292,11 @@ void SCANNER_Start(void)
 	BK4819_StopScan();
 	RADIO_SelectVfos();
 
+#if defined(ENABLE_NOAA)
 	if (IS_NOAA_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
 		gRxVfo->CHANNEL_SAVE = FREQ_CHANNEL_FIRST + BAND6_400MHz;
 	}
+#endif
 
 	BackupStep = gRxVfo->STEP_SETTING;
 	BackupFrequency = gRxVfo->StepFrequency;

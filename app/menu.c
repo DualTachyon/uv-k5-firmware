@@ -347,12 +347,14 @@ void MENU_AcceptSetting(void)
 		return;
 
 	case MENU_WX:
+#if defined(ENABLE_NOAA)
 		if (IS_NOAA_CHANNEL(gEeprom.ScreenChannel[0])) {
 			return;
 		}
 		if (IS_NOAA_CHANNEL(gEeprom.ScreenChannel[1])) {
 			return;
 		}
+#endif
 		gEeprom.CROSS_BAND_RX_TX = gSubMenuSelection;
 		gFlagReconfigureVfos = true;
 		gRequestSaveSettings = true;
