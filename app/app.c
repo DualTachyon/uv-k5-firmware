@@ -1634,7 +1634,7 @@ Skip:
 		gFlagPrepareTX = false;
 	}
 	if (gAnotherVoiceID != VOICE_ID_INVALID) {
-		if (gAnotherVoiceID < 76) {
+		if (gAnotherVoiceID < VOICE_ID_END)
 			AUDIO_SetVoiceID(0, gAnotherVoiceID);
 		}
 		AUDIO_PlaySingleVoice(false);
