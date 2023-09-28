@@ -253,7 +253,7 @@ Bailout:
 
 void AUDIO_SetVoiceID(uint8_t Index, VOICE_ID_t VoiceID)
 {
-	if (Index >= 8) {
+	if (Index >= ARRAY_SIZE(gVoiceID)) {
 		return;
 	}
 	if (Index == 0) {
@@ -310,14 +310,14 @@ void AUDIO_PlayQueuedVoice(void)
 	if (gVoiceReadIndex != gVoiceWriteIndex && gEeprom.VOICE_PROMPT != VOICE_PROMPT_OFF) {
 		VoiceID = gVoiceID[gVoiceReadIndex];
 		if (gEeprom.VOICE_PROMPT == VOICE_PROMPT_CHINESE) {
-			if (VoiceID < 58) {
+			if (VoiceID < ARRAY_SIZE(VoiceClipLengthChinese)) {
 				Delay = VoiceClipLengthChinese[VoiceID];
 				VoiceID += VOICE_ID_CHI_BASE;
 			} else {
 				Skip = true;
 			}
 		} else {
-			if (VoiceID < 76) {
+			if (VoiceID < ARRAY_SIZE(VoiceClipLengthEnglish)) {
 				Delay = VoiceClipLengthEnglish[VoiceID];
 				VoiceID += VOICE_ID_ENG_BASE;
 			} else {
