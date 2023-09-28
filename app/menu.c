@@ -235,7 +235,7 @@ void MENU_AcceptSetting(void)
 			gRequestSaveChannel = 1;
 			return;
 		}
-		gSubMenuSelection = gTxVfo->STEP_SETTING;
+		gTxVfo->STEP_SETTING = gTxVfo->STEP_SETTING;
 		return;
 
 	case MENU_TXP:
