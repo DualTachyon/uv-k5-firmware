@@ -149,7 +149,7 @@ bool DTMF_CompareMessage(const char *pMsg, const char *pTemplate, uint8_t Size, 
 	return true;
 }
 
-bool DTMF_CheckGroupCall(const char *pMsg, uint32_t Size)
+DTMF_CallMode_t DTMF_CheckGroupCall(const char *pMsg, uint32_t Size)
 {
 	uint32_t i;
 
@@ -159,10 +159,10 @@ bool DTMF_CheckGroupCall(const char *pMsg, uint32_t Size)
 		}
 	}
 	if (i != Size) {
-		return true;
+		return DTMF_CALL_MODE_GROUP;
 	}
 
-	return false;
+	return DTMF_CALL_MODE_NOT_GROUP;
 }
 
 void DTMF_Append(char Code)
