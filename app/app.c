@@ -45,7 +45,6 @@
 #include "driver/st7565.h"
 #include "driver/system.h"
 #include "dtmf.h"
-#include "external/printf/printf.h"
 #include "frequencies.h"
 #include "functions.h"
 #include "helper/battery.h"
@@ -404,8 +403,8 @@ static void FREQ_NextChannel(void)
 
 static void MR_NextChannel(void)
 {
-	uint8_t Ch1 = gEeprom.SCANLIST_PRIORITY_CH1[gEeprom.SCAN_LIST_DEFAULT];
-	uint8_t Ch2 = gEeprom.SCANLIST_PRIORITY_CH2[gEeprom.SCAN_LIST_DEFAULT];
+	const uint8_t Ch1 = gEeprom.SCANLIST_PRIORITY_CH1[gEeprom.SCAN_LIST_DEFAULT];
+	const uint8_t Ch2 = gEeprom.SCANLIST_PRIORITY_CH2[gEeprom.SCAN_LIST_DEFAULT];
 	uint8_t PreviousCh, Ch;
 	bool bEnabled;
 
@@ -429,19 +428,22 @@ static void MR_NextChannel(void)
 		}
 		if (gCurrentScanList == 2) {
 			gNextMrChannel = gPreviousMrChannel;
-		} else {
-			goto Skip;
+			Ch = RADIO_FindNextChannel(gNextMrChannel + gScanState, gScanState, true, gEeprom.SCAN_LIST_DEFAULT);
+			if (Ch == 0xFF) {
+				return;
+			}
+
+			gNextMrChannel = Ch;
 		}
+	} else {
+		Ch = RADIO_FindNextChannel(gNextMrChannel + gScanState, gScanState, true, gEeprom.SCAN_LIST_DEFAULT);
+		if (Ch == 0xFF) {
+			return;
+		}
+
+		gNextMrChannel = Ch;
 	}
 
-	Ch = RADIO_FindNextChannel(gNextMrChannel + gScanState, gScanState, true, gEeprom.SCAN_LIST_DEFAULT);
-	if (Ch == 0xFF) {
-		return;
-	}
-
-	gNextMrChannel = Ch;
-
-Skip:
 	if (PreviousCh != gNextMrChannel) {
 		gEeprom.MrChannel[gEeprom.RX_CHANNEL] = gNextMrChannel;
 		gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gNextMrChannel;
@@ -453,7 +455,7 @@ Skip:
 	bScanKeepFrequency = false;
 	if (bEnabled) {
 		gCurrentScanList++;
-		if (gCurrentScanList >= 2) {
+		if (gCurrentScanList > 2) {
 			gCurrentScanList = 0;
 		}
 	}
