@@ -230,7 +230,7 @@ void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, 
 			SETTINGS_UpdateChannel(Channel, pVFO, true);
 
 			if (IS_MR_CHANNEL(Channel)) {
-				memset(&State32, 0xFF, sizeof(State32));
+				memset(&State32, 0x00, sizeof(State32));
 				EEPROM_WriteBuffer(OffsetMR + 0x0F50, State32);
 				EEPROM_WriteBuffer(OffsetMR + 0x0F58, State32);
 			}
