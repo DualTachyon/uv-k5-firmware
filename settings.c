@@ -120,7 +120,7 @@ void SETTINGS_SaveSettings(void)
 
 	Password[0] = gEeprom.POWER_ON_PASSWORD;
 
-	EEPROM_WriteBuffer(0x0E98, State);
+	EEPROM_WriteBuffer(0x0E98, Password);
 
 	memset(State, 0xFF, sizeof(State));
 
