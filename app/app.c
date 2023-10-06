@@ -1209,7 +1209,7 @@ void APP_TimeSlice500ms(void)
 						AUDIO_PlaySingleVoice(true);
 						gReducedService = true;
 						FUNCTION_Select(FUNCTION_POWER_SAVE);
-						ST7565_Configure_GPIO_B11();
+						ST7565_HardwareReset();
 						GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT);
 					} else {
 						AUDIO_PlaySingleVoice(false);

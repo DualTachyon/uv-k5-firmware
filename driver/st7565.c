@@ -114,7 +114,7 @@ void ST7565_FillScreen(uint8_t Value)
 void ST7565_Init(void)
 {
 	SPI0_Init();
-	ST7565_Configure_GPIO_B11();
+	ST7565_HardwareReset();
 	SPI_ToggleMasterMode(&SPI0->CR, false);
 	ST7565_WriteByte(0xE2);
 	SYSTEM_DelayMs(0x78);
@@ -142,7 +142,7 @@ void ST7565_Init(void)
 	ST7565_FillScreen(0x00);
 }
 
-void ST7565_Configure_GPIO_B11(void)
+void ST7565_HardwareReset(void)
 {
 	GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_RES);
 	SYSTEM_DelayMs(1);
