@@ -104,8 +104,8 @@ typedef struct {
 	uint8_t FreqChannel[2];
 	uint8_t MrChannel[2];
 	uint8_t NoaaChannel[2];
-	uint8_t RX_CHANNEL;
-	uint8_t TX_CHANNEL;
+	uint8_t RX_VFO;
+	uint8_t TX_VFO;
 	uint8_t field7_0xa;
 	uint8_t field8_0xb;
 	uint32_t POWER_ON_PASSWORD;

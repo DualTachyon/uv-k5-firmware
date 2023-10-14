@@ -124,7 +124,7 @@ void Main(void)
 		GPIO_ClearBit(&GPIOA->DATA, GPIOA_PIN_VOICE_0);
 		gUpdateStatus = true;
 		AUDIO_SetVoiceID(0, VOICE_ID_WELCOME);
-		Channel = gEeprom.ScreenChannel[gEeprom.TX_CHANNEL];
+		Channel = gEeprom.ScreenChannel[gEeprom.TX_VFO];
 		if (IS_MR_CHANNEL(Channel)) {
 			AUDIO_SetVoiceID(1, VOICE_ID_CHANNEL_MODE);
 			AUDIO_SetDigitVoice(2, Channel + 1);

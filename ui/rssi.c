@@ -85,9 +85,9 @@ void UI_UpdateRSSI(uint16_t RSSI)
 		Level = 0;
 	}
 
-	if (gVFO_RSSI_Level[gEeprom.RX_CHANNEL] != Level) {
-		gVFO_RSSI_Level[gEeprom.RX_CHANNEL] = Level;
-		Render(Level, gEeprom.RX_CHANNEL);
+	if (gVFO_RSSI_Level[gEeprom.RX_VFO] != Level) {
+		gVFO_RSSI_Level[gEeprom.RX_VFO] = Level;
+		Render(Level, gEeprom.RX_VFO);
 	}
 }
 

@@ -190,8 +190,8 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 			gTxVfo->ConfigTX = gTxVfo->ConfigRX;
 			gTxVfo->STEP_SETTING = gStepSetting;
 		} else {
-			RADIO_ConfigureChannel(0, 2);
-			RADIO_ConfigureChannel(1, 2);
+			RADIO_ConfigureChannel(0, VFO_CONFIGURE_RELOAD);
+			RADIO_ConfigureChannel(1, VFO_CONFIGURE_RELOAD);
 			gTxVfo->ConfigRX.CodeType = gScanCssResultType;
 			gTxVfo->ConfigRX.Code = gScanCssResultCode;
 			gTxVfo->ConfigTX.CodeType = gScanCssResultType;
@@ -200,13 +200,13 @@ static void SCANNER_Key_MENU(bool bKeyPressed, bool bKeyHeld)
 
 		if (IS_MR_CHANNEL(gTxVfo->CHANNEL_SAVE)) {
 			Channel = gScanChannel;
-			gEeprom.MrChannel[gEeprom.TX_CHANNEL] = Channel;
+			gEeprom.MrChannel[gEeprom.TX_VFO] = Channel;
 		} else {
 			Channel = gTxVfo->Band + FREQ_CHANNEL_FIRST;
-			gEeprom.FreqChannel[gEeprom.TX_CHANNEL] = Channel;
+			gEeprom.FreqChannel[gEeprom.TX_VFO] = Channel;
 		}
 		gTxVfo->CHANNEL_SAVE = Channel;
-		gEeprom.ScreenChannel[gEeprom.TX_CHANNEL] = Channel;
+		gEeprom.ScreenChannel[gEeprom.TX_VFO] = Channel;
 		gAnotherVoiceID = VOICE_ID_CONFIRM;
 		gRequestDisplayScreen = DISPLAY_SCANNER;
 		gRequestSaveChannel = 2;
@@ -315,12 +315,12 @@ void SCANNER_Start(void)
 		gScanCssState = SCAN_CSS_STATE_SCANNING;
 		gScanFrequency = gRxVfo->pRX->Frequency;
 		gStepSetting = gRxVfo->STEP_SETTING;
-		BK4819_PickRXFilterPathBasedOnFrequency(gScanFrequency);
+		BK4819_SelectFilter(gScanFrequency);
 		BK4819_SetScanFrequency(gScanFrequency);
 	} else {
 		gScanCssState = SCAN_CSS_STATE_OFF;
 		gScanFrequency = 0xFFFFFFFF;
-		BK4819_PickRXFilterPathBasedOnFrequency(0xFFFFFFFF);
+		BK4819_SelectFilter(0xFFFFFFFF);
 		BK4819_EnableFrequencyScan();
 	}
 	gScanDelay = 21;
@@ -348,9 +348,9 @@ void SCANNER_Stop(void)
 
 	if (!bScanKeepFrequency) {
 		if (IS_MR_CHANNEL(gNextMrChannel)) {
-			gEeprom.MrChannel[gEeprom.RX_CHANNEL] = gRestoreMrChannel;
-			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = Previous;
-			RADIO_ConfigureChannel(gEeprom.RX_CHANNEL, 2);
+			gEeprom.MrChannel[gEeprom.RX_VFO] = gRestoreMrChannel;
+			gEeprom.ScreenChannel[gEeprom.RX_VFO] = Previous;
+			RADIO_ConfigureChannel(gEeprom.RX_VFO, VFO_CONFIGURE_RELOAD);
 		} else {
 			gRxVfo->ConfigRX.Frequency = gRestoreFrequency;
 			RADIO_ApplyOffset(gRxVfo);
@@ -364,7 +364,7 @@ void SCANNER_Stop(void)
 	if (!IS_MR_CHANNEL(gRxVfo->CHANNEL_SAVE)) {
 		RADIO_ApplyOffset(gRxVfo);
 		RADIO_ConfigureSquelchAndOutputPower(gRxVfo);
-		SETTINGS_SaveChannel(gRxVfo->CHANNEL_SAVE, gEeprom.RX_CHANNEL, gRxVfo, 1);
+		SETTINGS_SaveChannel(gRxVfo->CHANNEL_SAVE, gEeprom.RX_VFO, gRxVfo, 1);
 		return;
 	}
 

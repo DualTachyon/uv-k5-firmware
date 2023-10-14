@@ -86,12 +86,12 @@ typedef struct VFO_Info_t {
 	uint16_t StepFrequency;
 	uint8_t CHANNEL_SAVE;
 	uint8_t FREQUENCY_DEVIATION_SETTING;
-	uint8_t SquelchOpenRSSIThresh;
-	uint8_t SquelchOpenNoiseThresh;
-	uint8_t SquelchCloseGlitchThresh;
-	uint8_t SquelchCloseRSSIThresh;
-	uint8_t SquelchCloseNoiseThresh;
-	uint8_t SquelchOpenGlitchThresh;
+	uint8_t SquelchOpenRSSI;
+	uint8_t SquelchOpenNoise;
+	uint8_t SquelchCloseGlitch;
+	uint8_t SquelchCloseRSSI;
+	uint8_t SquelchCloseNoise;
+	uint8_t SquelchOpenGlitch;
 	STEP_Setting_t STEP_SETTING;
 	uint8_t OUTPUT_POWER;
 	uint8_t TXP_CalculatedSetting;

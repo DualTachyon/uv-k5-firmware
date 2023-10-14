@@ -308,7 +308,7 @@ void APP_StartListening(FUNCTION_Type_t Function)
 			BK1080_Init(0, false);
 		}
 #endif
-		gVFO_RSSI_Level[gEeprom.RX_CHANNEL == 0] = 0;
+		gVFO_RSSI_Level[!gEeprom.RX_VFO] = 0;
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
 		gEnableSpeaker = true;
 		BACKLIGHT_TurnOn();
@@ -334,7 +334,7 @@ void APP_StartListening(FUNCTION_Type_t Function)
 			gRxVfo->CHANNEL_SAVE = gNoaaChannel + NOAA_CHANNEL_FIRST;
 			gRxVfo->pRX->Frequency = NoaaFrequencyTable[gNoaaChannel];
 			gRxVfo->pTX->Frequency = NoaaFrequencyTable[gNoaaChannel];
-			gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gRxVfo->CHANNEL_SAVE;
+			gEeprom.ScreenChannel[gEeprom.RX_VFO] = gRxVfo->CHANNEL_SAVE;
 			gNOAA_Countdown = 500;
 			gScheduleNOAA = false;
 		}
@@ -445,9 +445,9 @@ static void MR_NextChannel(void)
 	}
 
 	if (PreviousCh != gNextMrChannel) {
-		gEeprom.MrChannel[gEeprom.RX_CHANNEL] = gNextMrChannel;
-		gEeprom.ScreenChannel[gEeprom.RX_CHANNEL] = gNextMrChannel;
-		RADIO_ConfigureChannel(gEeprom.RX_CHANNEL, 2);
+		gEeprom.MrChannel[gEeprom.RX_VFO] = gNextMrChannel;
+		gEeprom.ScreenChannel[gEeprom.RX_VFO] = gNextMrChannel;
+		RADIO_ConfigureChannel(gEeprom.RX_VFO, VFO_CONFIGURE_RELOAD);
 		RADIO_SetupRegisters(true);
 		gUpdateDisplay = true;
 	}
@@ -476,18 +476,18 @@ static void DUALWATCH_Alternate(void)
 #if defined(ENABLE_NOAA)
 	if (gIsNoaaMode) {
 		if (IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[0]) || IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[1])) {
-			gEeprom.RX_CHANNEL = gEeprom.RX_CHANNEL == 0;
+			gEeprom.RX_VFO = !gEeprom.RX_VFO;
 		} else {
-			gEeprom.RX_CHANNEL = 0;
+			gEeprom.RX_VFO = 0;
 		}
-		gRxVfo = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
+		gRxVfo = &gEeprom.VfoInfo[gEeprom.RX_VFO];
 		if (gEeprom.VfoInfo[0].CHANNEL_SAVE >= NOAA_CHANNEL_FIRST) {
 			NOAA_NextChannel();
 		}
 	} else {
 #endif
-		gEeprom.RX_CHANNEL = gEeprom.RX_CHANNEL == 0;
-		gRxVfo = &gEeprom.VfoInfo[gEeprom.RX_CHANNEL];
+		gEeprom.RX_VFO = !gEeprom.RX_VFO;
+		gRxVfo = &gEeprom.VfoInfo[gEeprom.RX_VFO];
 #if defined(ENABLE_NOAA)
 	}
 #endif
@@ -1153,8 +1153,8 @@ void APP_TimeSlice500ms(void)
 						}
 						if (gScreenToDisplay == DISPLAY_SCANNER) {
 							BK4819_StopScan();
-							RADIO_ConfigureChannel(0, 2);
-							RADIO_ConfigureChannel(1, 2);
+							RADIO_ConfigureChannel(0, VFO_CONFIGURE_RELOAD);
+							RADIO_ConfigureChannel(1, VFO_CONFIGURE_RELOAD);
 							RADIO_SetupRegisters(true);
 						}
 						gWasFKeyPressed = false;
@@ -1337,11 +1337,11 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		if (gFlagSaveChannel) {
 			SETTINGS_SaveChannel(
 				gTxVfo->CHANNEL_SAVE,
-				gEeprom.TX_CHANNEL,
+				gEeprom.TX_VFO,
 				gTxVfo,
 				gFlagSaveChannel);
 			gFlagSaveChannel = false;
-			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, 1);
+			RADIO_ConfigureChannel(gEeprom.TX_VFO, VFO_CONFIGURE);
 			RADIO_SetupRegisters(true);
 			GUI_SelectNextDisplay(DISPLAY_MAIN);
 		}
@@ -1576,9 +1576,9 @@ Skip:
 	}
 	if (gRequestSaveChannel) {
 		if (!bKeyHeld) {
-			SETTINGS_SaveChannel(gTxVfo->CHANNEL_SAVE, gEeprom.TX_CHANNEL, gTxVfo, gRequestSaveChannel);
+			SETTINGS_SaveChannel(gTxVfo->CHANNEL_SAVE, gEeprom.TX_VFO, gTxVfo, gRequestSaveChannel);
 			if (gScreenToDisplay != DISPLAY_SCANNER) {
-				gVfoConfigureMode = VFO_CONFIGURE_1;
+				gVfoConfigureMode = VFO_CONFIGURE;
 			}
 		} else {
 			gFlagSaveChannel = gRequestSaveChannel;
@@ -1590,18 +1590,18 @@ Skip:
 	}
 
 
-	if (gVfoConfigureMode != VFO_CONFIGURE_0) {
+	if (gVfoConfigureMode != VFO_CONFIGURE_NONE) {
 		if (gFlagResetVfos) {
 			RADIO_ConfigureChannel(0, gVfoConfigureMode);
 			RADIO_ConfigureChannel(1, gVfoConfigureMode);
 		} else {
-			RADIO_ConfigureChannel(gEeprom.TX_CHANNEL, gVfoConfigureMode);
+			RADIO_ConfigureChannel(gEeprom.TX_VFO, gVfoConfigureMode);
 		}
 		if (gRequestDisplayScreen == DISPLAY_INVALID) {
 			gRequestDisplayScreen = DISPLAY_MAIN;
 		}
 		gFlagReconfigureVfos = true;
-		gVfoConfigureMode = VFO_CONFIGURE_0;
+		gVfoConfigureMode = VFO_CONFIGURE_NONE;
 		gFlagResetVfos = false;
 	}
 

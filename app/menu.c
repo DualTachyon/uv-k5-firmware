@@ -226,7 +226,7 @@ void MENU_AcceptSetting(void)
 	case MENU_SQL:
 		gEeprom.SQUELCH_LEVEL = gSubMenuSelection;
 		gRequestSaveSettings = true;
-		gVfoConfigureMode = VFO_CONFIGURE_1;
+		gVfoConfigureMode = VFO_CONFIGURE;
 		return;
 
 	case MENU_STEP:
@@ -391,14 +391,14 @@ void MENU_AcceptSetting(void)
 	case MENU_S_ADD1:
 		gTxVfo->SCANLIST1_PARTICIPATION = gSubMenuSelection;
 		SETTINGS_UpdateChannel(gTxVfo->CHANNEL_SAVE, gTxVfo, true);
-		gVfoConfigureMode = VFO_CONFIGURE_1;
+		gVfoConfigureMode = VFO_CONFIGURE;
 		gFlagResetVfos = true;
 		return;
 
 	case MENU_S_ADD2:
 		gTxVfo->SCANLIST2_PARTICIPATION = gSubMenuSelection;
 		SETTINGS_UpdateChannel(gTxVfo->CHANNEL_SAVE, gTxVfo, true);
-		gVfoConfigureMode = VFO_CONFIGURE_1;
+		gVfoConfigureMode = VFO_CONFIGURE;
 		gFlagResetVfos = true;
 		return;
 

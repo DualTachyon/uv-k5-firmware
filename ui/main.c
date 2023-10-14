@@ -57,11 +57,11 @@ void UI_DisplayMain(void)
 			Line = 4;
 		}
 
-		Channel = gEeprom.TX_CHANNEL;
+		Channel = gEeprom.TX_VFO;
 		bIsSameVfo = !!(Channel == i);
 
 		if (gEeprom.DUAL_WATCH != DUAL_WATCH_OFF && gRxVfoIsActive) {
-			Channel = gEeprom.RX_CHANNEL;
+			Channel = gEeprom.RX_VFO;
 		}
 
 		if (Channel != i) {
@@ -138,9 +138,9 @@ void UI_DisplayMain(void)
 			if (1) {
 #endif
 				if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
-					Channel = gEeprom.RX_CHANNEL;
+					Channel = gEeprom.RX_VFO;
 				} else {
-					Channel = gEeprom.TX_CHANNEL;
+					Channel = gEeprom.TX_VFO;
 				}
 				if (Channel == i) {
 					SomeValue = 1;
@@ -149,7 +149,7 @@ void UI_DisplayMain(void)
 			}
 		} else {
 			SomeValue = 2;
-			if ((gCurrentFunction == FUNCTION_RECEIVE || gCurrentFunction == FUNCTION_MONITOR) && gEeprom.RX_CHANNEL == i) {
+			if ((gCurrentFunction == FUNCTION_RECEIVE || gCurrentFunction == FUNCTION_MONITOR) && gEeprom.RX_VFO == i) {
 				memcpy(pLine0 + 14, BITMAP_RX, sizeof(BITMAP_RX));
 			}
 		}
@@ -157,7 +157,7 @@ void UI_DisplayMain(void)
 		// 0x8F3C
 		if (IS_MR_CHANNEL(gEeprom.ScreenChannel[i])) {
 			memcpy(pLine1 + 2, BITMAP_M, sizeof(BITMAP_M));
-			if (gInputBoxIndex == 0 || gEeprom.TX_CHANNEL != i) {
+			if (gInputBoxIndex == 0 || gEeprom.TX_VFO != i) {
 				NUMBER_ToDigits(gEeprom.ScreenChannel[i] + 1, String);
 			} else {
 				memcpy(String + 5, gInputBox, 3);
@@ -172,7 +172,7 @@ void UI_DisplayMain(void)
 		} else {
 #if defined(ENABLE_NOAA)
 			memcpy(pLine1 + 7, BITMAP_NarrowBand, sizeof(BITMAP_NarrowBand));
-			if (gInputBoxIndex == 0 || gEeprom.TX_CHANNEL != i) {
+			if (gInputBoxIndex == 0 || gEeprom.TX_VFO != i) {
 				NUMBER_ToDigits((gEeprom.ScreenChannel[i] - NOAA_CHANNEL_FIRST) + 1, String);
 			} else {
 				String[6] = gInputBox[0];
@@ -188,9 +188,9 @@ void UI_DisplayMain(void)
 #if defined(ENABLE_ALARM)
 		if (gCurrentFunction == FUNCTION_TRANSMIT && gAlarmState == ALARM_STATE_ALARM) {
 			if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
-				Channel = gEeprom.RX_CHANNEL;
+				Channel = gEeprom.RX_VFO;
 			} else {
-				Channel = gEeprom.TX_CHANNEL;
+				Channel = gEeprom.TX_VFO;
 			}
 			if (Channel == i) {
 				State = VFO_STATE_ALARM;
@@ -227,15 +227,15 @@ void UI_DisplayMain(void)
 			}
 			UI_PrintString(String, 31, 111, i * 4, Width, true);
 		} else {
-			if (gInputBoxIndex && IS_FREQ_CHANNEL(gEeprom.ScreenChannel[i]) && gEeprom.TX_CHANNEL == i) {
+			if (gInputBoxIndex && IS_FREQ_CHANNEL(gEeprom.ScreenChannel[i]) && gEeprom.TX_VFO == i) {
 				UI_DisplayFrequency(gInputBox, 31, i * 4, true, false);
 			} else {
 				if (!IS_MR_CHANNEL(gEeprom.ScreenChannel[i]) || gEeprom.CHANNEL_DISPLAY_MODE == MDF_FREQUENCY) {
 					if (gCurrentFunction == FUNCTION_TRANSMIT) {
 						if (gEeprom.CROSS_BAND_RX_TX == CROSS_BAND_OFF) {
-							Channel = gEeprom.RX_CHANNEL;
+							Channel = gEeprom.RX_VFO;
 						} else {
-							Channel = gEeprom.TX_CHANNEL;
+							Channel = gEeprom.TX_VFO;
 						}
 						if (Channel == i) {
 							NUMBER_ToDigits(gEeprom.VfoInfo[i].pTX->Frequency, String);

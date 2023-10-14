@@ -374,7 +374,7 @@ void BK4819_RX_TurnOn(void)
 	BK4819_WriteRegister(BK4819_REG_30, 0xBFF1);
 }
 
-void BK4819_PickRXFilterPathBasedOnFrequency(uint32_t Frequency)
+void BK4819_SelectFilter(uint32_t Frequency)
 {
 	if (Frequency < 28000000) {
 		BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, true);
