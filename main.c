@@ -81,7 +81,7 @@ void Main(void)
 	BK4819_Init();
 	BOARD_ADC_GetBatteryInfo(&gBatteryCurrentVoltage, &gBatteryCurrent);
 	BOARD_EEPROM_Init();
-	BOARD_EEPROM_LoadMoreSettings();
+	BOARD_EEPROM_LoadCalibration();
 
 	RADIO_ConfigureChannel(0, 2);
 	RADIO_ConfigureChannel(1, 2);

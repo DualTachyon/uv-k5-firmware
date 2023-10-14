@@ -324,7 +324,7 @@ void MENU_AcceptSetting(void)
 		if (gEeprom.VOX_SWITCH) {
 			gEeprom.VOX_LEVEL = gSubMenuSelection - 1;
 		}
-		BOARD_EEPROM_LoadMoreSettings();
+		BOARD_EEPROM_LoadCalibration();
 		gFlagReconfigureVfos = true;
 		gRequestSaveSettings = true;
 		gUpdateStatus = true;
@@ -412,7 +412,7 @@ void MENU_AcceptSetting(void)
 
 	case MENU_MIC:
 		gEeprom.MIC_SENSITIVITY = gSubMenuSelection;
-		BOARD_EEPROM_LoadMoreSettings();
+		BOARD_EEPROM_LoadCalibration();
 		gRequestSaveSettings = true;
 		gFlagReconfigureVfos = true;
 		return;
