@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-#include "bk4819.h"
+#include "driver/bk4819.h"
 #include "bsp/dp32g030/gpio.h"
 #include "bsp/dp32g030/portcon.h"
 #include "driver/gpio.h"

@@ -14,8 +14,8 @@
  *     limitations under the License.
  */
 
-#include "backlight.h"
 #include "bsp/dp32g030/gpio.h"
+#include "driver/backlight.h"
 #include "driver/gpio.h"
 #include "settings.h"
 

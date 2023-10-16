@@ -15,7 +15,7 @@
  */
 
 #include "bsp/dp32g030/gpio.h"
-#include "bk1080.h"
+#include "driver/bk1080.h"
 #include "driver/gpio.h"
 #include "driver/i2c.h"
 #include "driver/system.h"
