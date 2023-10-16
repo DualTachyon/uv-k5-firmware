@@ -117,7 +117,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		gRxIdleMode = true;
 		BK4819_DisableVox();
 		BK4819_Sleep();
-		BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
+		BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
 		gBatterySaveCountdownExpired = false;
 		gUpdateStatus = true;
 		GUI_SelectNextDisplay(DISPLAY_MAIN);
@@ -149,7 +149,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 
 		GUI_DisplayScreen();
 		RADIO_SetTxParameters();
-		BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
+		BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1_RED, true);
 
 		DTMF_Reply();
 
