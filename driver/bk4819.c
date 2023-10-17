@@ -377,14 +377,14 @@ void BK4819_RX_TurnOn(void)
 void BK4819_SelectFilter(uint32_t Frequency)
 {
 	if (Frequency < 28000000) {
-		BK4819_ToggleGpioOut(BK4819_GPIO4_PIN32, true);
-		BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, false);
+		BK4819_ToggleGpioOut(BK4819_GPIO4_PIN32_VHF_LNA, true);
+		BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31_UHF_LNA, false);
 	} else if (Frequency == 0xFFFFFFFF) {
-		BK4819_ToggleGpioOut(BK4819_GPIO4_PIN32, false);
-		BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, false);
+		BK4819_ToggleGpioOut(BK4819_GPIO4_PIN32_VHF_LNA, false);
+		BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31_UHF_LNA, false);
 	} else {
-		BK4819_ToggleGpioOut(BK4819_GPIO4_PIN32, false);
-		BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, true);
+		BK4819_ToggleGpioOut(BK4819_GPIO4_PIN32_VHF_LNA, false);
+		BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31_UHF_LNA, true);
 	}
 }
 
@@ -545,7 +545,7 @@ void BK4819_ExitSubAu(void)
 void BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable(void)
 {
 	if (gRxIdleMode) {
-		BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, true);
+		BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28_RX_ENABLE, true);
 		BK4819_RX_TurnOn();
 	}
 }

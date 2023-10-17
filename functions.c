@@ -117,7 +117,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 		gRxIdleMode = true;
 		BK4819_DisableVox();
 		BK4819_Sleep();
-		BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28, false);
+		BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28_RX_ENABLE, false);
 		gBatterySaveCountdownExpired = false;
 		gUpdateStatus = true;
 		GUI_SelectNextDisplay(DISPLAY_MAIN);
