@@ -759,7 +759,7 @@ void APP_Update(void)
 
 	if (gBatterySaveCountdownExpired && gCurrentFunction == FUNCTION_POWER_SAVE && gVoiceWriteIndex == 0) {
 		if (gRxIdleMode) {
-			BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable();
+			BK4819_EnableRX();
 			if (gEeprom.VOX_SWITCH) {
 				BK4819_EnableVox(gEeprom.VOX1_THRESHOLD, gEeprom.VOX0_THRESHOLD);
 			}

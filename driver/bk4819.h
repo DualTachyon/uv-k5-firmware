@@ -93,7 +93,7 @@ void BK4819_PrepareTransmit(void);
 void BK4819_TxOn_Beep(void);
 void BK4819_ExitSubAu(void);
 
-void BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable(void);
+void BK4819_EnableRX(void);
 
 void BK4819_EnterDTMF_TX(bool bLocalLoopback);
 void BK4819_ExitDTMF_TX(bool bKeep);

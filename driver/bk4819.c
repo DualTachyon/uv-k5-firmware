@@ -542,7 +542,7 @@ void BK4819_ExitSubAu(void)
 	BK4819_WriteRegister(BK4819_REG_51, 0x0000);
 }
 
-void BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable(void)
+void BK4819_EnableRX(void)
 {
 	if (gRxIdleMode) {
 		BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28_RX_ENABLE, true);

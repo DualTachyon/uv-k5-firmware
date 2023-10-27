@@ -19,12 +19,9 @@
 
 #include "driver/keyboard.h"
 
-//static void ACTION_FlashLight(void)
 void ACTION_Power(void);
-//static void ACTION_Monitor(void)
 void ACTION_Scan(bool bFlag);
 void ACTION_Vox(void);
-//static void ACTION_AlarmOr1750(bool b1750)
 void ACTION_FM(void);
 
 void ACTION_Handle(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);

@@ -80,7 +80,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function)
 
 	if (bWasPowerSave) {
 		if (Function != FUNCTION_POWER_SAVE) {
-			BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable();
+			BK4819_EnableRX();
 			gRxIdleMode = false;
 			UI_DisplayStatus();
 		}
