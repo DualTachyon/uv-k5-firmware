@@ -27,6 +27,12 @@
 #include "ui/inputbox.h"
 #include "ui/main.h"
 
+enum {
+	LEVEL_MODE_OFF = 0,
+	LEVEL_MODE_TX,
+	LEVEL_MODE_RSSI,
+};
+
 void UI_DisplayMain(void)
 {
 	char String[16];
@@ -127,12 +133,12 @@ void UI_DisplayMain(void)
 		}
 
 		// 0x8EE2
-		uint32_t SomeValue = 0;
+		uint32_t LevelMode = LEVEL_MODE_OFF;
 
 		if (gCurrentFunction == FUNCTION_TRANSMIT) {
 #if defined(ENABLE_ALARM)
 			if (gAlarmState == ALARM_STATE_ALARM) {
-				SomeValue = 2;
+				LevelMode = LEVEL_MODE_RSSI;
 			} else {
 #else
 			if (1) {
@@ -143,12 +149,12 @@ void UI_DisplayMain(void)
 					Channel = gEeprom.TX_VFO;
 				}
 				if (Channel == i) {
-					SomeValue = 1;
+					LevelMode = LEVEL_MODE_TX;
 					memcpy(pLine0 + 14, BITMAP_TX, sizeof(BITMAP_TX));
 				}
 			}
 		} else {
-			SomeValue = 2;
+			LevelMode = LEVEL_MODE_RSSI;
 			if ((gCurrentFunction == FUNCTION_RECEIVE || gCurrentFunction == FUNCTION_MONITOR) && gEeprom.RX_VFO == i) {
 				memcpy(pLine0 + 14, BITMAP_RX, sizeof(BITMAP_RX));
 			}
@@ -273,15 +279,15 @@ void UI_DisplayMain(void)
 		// 0x926E
 		uint8_t Level = 0;
 
-		if (SomeValue == 1) {
-				if (gRxVfo->OUTPUT_POWER == OUTPUT_POWER_LOW) {
-					Level = 2;
-				} else if (gRxVfo->OUTPUT_POWER == OUTPUT_POWER_MID) {
-					Level = 4;
-				} else {
-					Level = 6;
-				}		
-		} else if (SomeValue == 2) {
+		if (LevelMode == LEVEL_MODE_TX) {
+			if (gRxVfo->OUTPUT_POWER == OUTPUT_POWER_LOW) {
+				Level = 2;
+			} else if (gRxVfo->OUTPUT_POWER == OUTPUT_POWER_MID) {
+				Level = 4;
+			} else {
+				Level = 6;
+			}
+		} else if (LevelMode == LEVEL_MODE_RSSI) {
 			if (gVFO_RSSI_Level[i]) {
 				Level = gVFO_RSSI_Level[i];
 			}
@@ -314,7 +320,7 @@ void UI_DisplayMain(void)
 		} else {
 			const FREQ_Config_t *pConfig;
 
-			if (SomeValue == 1) {
+			if (LevelMode == LEVEL_MODE_TX) {
 				pConfig = gEeprom.VfoInfo[i].pTX;
 			} else {
 				pConfig = gEeprom.VfoInfo[i].pRX;
