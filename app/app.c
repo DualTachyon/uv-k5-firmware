@@ -138,8 +138,8 @@ static void APP_HandleIncoming(void)
 					gDualWatchCountdown = 500;
 					gScheduleDualWatch = false;
 					gRxReceptionMode = RX_MODE_LISTENING;
-					return;
 				}
+				return;
 			}
 		}
 	}
