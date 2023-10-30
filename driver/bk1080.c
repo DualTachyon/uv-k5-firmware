@@ -38,11 +38,11 @@ static bool gIsInitBK1080;
 uint16_t BK1080_BaseFrequency;
 uint16_t BK1080_FrequencyDeviation;
 
-void BK1080_Init(uint16_t Frequency, bool bDoScan)
+void BK1080_Init(uint16_t Frequency, bool bEnable)
 {
 	uint8_t i;
 
-	if (bDoScan) {
+	if (bEnable) {
 		GPIO_ClearBit(&GPIOB->DATA, GPIOB_PIN_BK1080);
 
 		if (!gIsInitBK1080) {
